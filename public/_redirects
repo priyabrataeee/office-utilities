@@ -8,12 +8,16 @@
 # Uncomment and edit, putting your PRIMARY domain on the right. The :splat
 # preserves the rest of the path.
 #
-# https://alternate-domain.com/*   https://your-primary-domain.com/:splat   301!
+# https://alternate-domain.com/*          https://your-primary-domain.com/:splat   301!
 # https://www.your-primary-domain.com/*   https://your-primary-domain.com/:splat   301!
 
 # ---------------------------------------------------------------------------
-# SPA fallback
+# No SPA fallback rule here — on purpose.
 # ---------------------------------------------------------------------------
-# Every route is prerendered to its own index.html, so this only catches URLs
-# introduced after the last publish. Keep it last — rules match top-down.
-/*    /index.html    200
+# A `/*  /index.html  200` rule is INVALID on Workers Static Assets: the
+# `html_handling: "auto-trailing-slash"` setting already strips `/index` and
+# `.html`, so such a rule rewrites `/index.html` back to `/`, matches itself
+# again, and Cloudflare rejects the deploy with "Infinite loop detected".
+#
+# Fallback is configured in wrangler.jsonc via `not_found_handling` instead,
+# which serves 404.html (a copy of the app shell) with a correct 404 status.
