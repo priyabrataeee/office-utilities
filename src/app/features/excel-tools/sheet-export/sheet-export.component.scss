@@ -1,0 +1,9 @@
+@use 'tool';
+@use 'split';
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-4);
+  margin-top: var(--ou-s-4);
+}

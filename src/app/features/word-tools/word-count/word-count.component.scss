@@ -1,0 +1,70 @@
+@use 'tool';
+@use 'mixins' as *;
+
+.editor {
+  min-height: 200px;
+  font-size: var(--ou-fs-base);
+  line-height: 1.6;
+}
+
+.stats {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.stat--hero {
+  grid-column: span 2;
+  background: var(--ou-accent-soft);
+  border-color: var(--ou-accent-border);
+
+  .stat__value {
+    font-size: var(--ou-fs-3xl);
+    color: var(--ou-accent-text);
+  }
+}
+
+.keywords {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-2);
+
+  li {
+    display: grid;
+    grid-template-columns: minmax(80px, 150px) 1fr auto;
+    align-items: center;
+    gap: var(--ou-s-3);
+  }
+}
+
+.keywords__word {
+  font-size: var(--ou-fs-sm);
+  font-weight: 540;
+  @include truncate;
+}
+
+.keywords__bar {
+  height: 8px;
+  border-radius: var(--ou-r-full);
+  background: var(--ou-surface-3);
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 100%;
+    background: var(--ou-accent);
+  }
+}
+
+.keywords__count {
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-subtle);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .stat--hero {
+    grid-column: span 1;
+  }
+}

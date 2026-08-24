@@ -1,0 +1,153 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.docx']"
+      [compact]="hasContent()"
+      [title]="'Drop a Word document to convert to ' + meta().label"
+      hint="Headings, lists, tables and inline images are all carried across."
+      [icon]="meta().icon"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (hasContent()) {
+      @if (isPdf()) {
+        <div class="panel">
+          <h2 class="panel__title">Page setup</h2>
+          <p class="panel__hint">{{ blockCount() }} blocks of content to lay out.</p>
+
+          <div class="options">
+            <label class="ou-field">
+              <span class="ou-label">Page size</span>
+              <select class="ou-select" [value]="pageSize()" (change)="setPageSize($event)">
+                <option value="A4">A4</option>
+                <option value="Letter">Letter</option>
+                <option value="Legal">Legal</option>
+                <option value="A5">A5</option>
+              </select>
+            </label>
+
+            <label class="ou-field">
+              <span class="ou-label">Typeface</span>
+              <select class="ou-select" [value]="fontFamily()" (change)="setFont($event)">
+                <option value="serif">Serif (Times)</option>
+                <option value="sans">Sans (Helvetica)</option>
+              </select>
+            </label>
+
+            <label class="ou-field">
+              <span class="ou-label">Body size — {{ fontSize() }}pt</span>
+              <input
+                type="range"
+                class="ou-range"
+                min="8"
+                max="16"
+                step="0.5"
+                [value]="fontSize()"
+                (input)="setFontSize($event)"
+              />
+            </label>
+
+            <label class="ou-field">
+              <span class="ou-label">Margin — {{ margin() }}pt</span>
+              <input
+                type="range"
+                class="ou-range"
+                min="20"
+                max="110"
+                step="4"
+                [value]="margin()"
+                (input)="setMargin($event)"
+              />
+            </label>
+          </div>
+
+          <label class="ou-check pagenums">
+            <input
+              type="checkbox"
+              [checked]="pageNumbers()"
+              (change)="togglePageNumbers($event)"
+            />
+            Add page numbers in the footer
+          </label>
+        </div>
+      } @else if (target() === 'html') {
+        <div class="panel">
+          <label class="ou-check">
+            <input type="checkbox" [checked]="standalone()" (change)="toggleStandalone($event)" />
+            <span>
+              <strong>Complete HTML page</strong>
+              <small>Includes a document wrapper and styles. Untick for a bare fragment.</small>
+            </span>
+          </label>
+        </div>
+      }
+
+      @if (conversionNotes().length) {
+        <details class="notes">
+          <summary>
+            {{ conversionNotes().length }} conversion notes
+            <app-icon name="chevron-down" [size]="15" />
+          </summary>
+          <ul>
+            @for (note of conversionNotes(); track note) {
+              <li>{{ note }}</li>
+            }
+          </ul>
+        </details>
+      }
+
+      <div class="split">
+        <section class="split__pane">
+          <header class="split__head">
+            <h2>Document preview</h2>
+          </header>
+          <div class="rendered ou-prose" [innerHTML]="safePreview()"></div>
+        </section>
+
+        @if (isTextual()) {
+          <section class="split__pane">
+            <header class="split__head">
+              <h2>{{ meta().label }} output</h2>
+              <app-copy-button [text]="textOutput()" label="Copy" [small]="true" />
+            </header>
+            <pre class="preview"><code>{{ textOutput().slice(0, 30000) }}</code></pre>
+            @if (textOutput().length > 30000) {
+              <p class="hint">Preview truncated — the download contains everything.</p>
+            }
+          </section>
+        }
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy()"
+          (click)="download()"
+        >
+          <app-icon [name]="meta().icon" [size]="17" />
+          Download {{ meta().label }}
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+
+      @if (isPdf()) {
+        <p class="hint">
+          Word's own layout engine is proprietary, so intricate floating layouts and custom fonts
+          may reflow. Reports, letters and CVs convert faithfully.
+        </p>
+      }
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Conversion complete" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

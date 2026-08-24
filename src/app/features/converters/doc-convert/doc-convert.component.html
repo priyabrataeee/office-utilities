@@ -1,0 +1,159 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="sourceMeta().accepts"
+      [compact]="hasContent()"
+      [title]="'Drop a ' + sourceMeta().label + ' file'"
+      [hint]="'Or paste below — everything converts in this tab.'"
+      [icon]="targetMeta().icon"
+      (filesChange)="onFiles($event)"
+    />
+
+    <div class="split">
+      <section class="split__pane">
+        <header class="split__head">
+          <h2>{{ sourceMeta().label }} source</h2>
+          @if (input$()) {
+            <span class="ou-subtle">{{ input$().length.toLocaleString() }} characters</span>
+          }
+        </header>
+        <textarea
+          class="ou-textarea editor"
+          rows="16"
+          spellcheck="false"
+          [value]="input$()"
+          (input)="onInput($event)"
+          [attr.placeholder]="sourceMeta().placeholder"
+        ></textarea>
+      </section>
+
+      <section class="split__pane">
+        <header class="split__head">
+          <h2>{{ isBinaryTarget() ? 'Preview' : targetMeta().label + ' output' }}</h2>
+          @if (!isBinaryTarget() && textOutput()) {
+            <app-copy-button [text]="textOutput()" label="Copy" [small]="true" />
+          }
+        </header>
+
+        @if (isBinaryTarget()) {
+          <div class="rendered ou-prose" [innerHTML]="preview()"></div>
+        } @else {
+          <pre class="preview"><code>{{ textOutput().slice(0, 40000) }}</code></pre>
+        }
+      </section>
+    </div>
+
+    @if (hasContent()) {
+      <div class="panel">
+        <h2 class="panel__title">Output settings</h2>
+
+        @if (isBinaryTarget()) {
+          <div class="options">
+            <label class="ou-field">
+              <span class="ou-label">Page size</span>
+              <select class="ou-select" [value]="pageSize()" (change)="setPageSize($event)">
+                <option value="A4">A4</option>
+                <option value="Letter">Letter</option>
+                <option value="Legal">Legal</option>
+                <option value="A5">A5</option>
+                <option value="A3">A3</option>
+              </select>
+            </label>
+
+            <label class="ou-field">
+              <span class="ou-label">Typeface</span>
+              <select class="ou-select" [value]="fontFamily()" (change)="setFont($event)">
+                <option value="sans">Sans serif</option>
+                <option value="serif">Serif</option>
+                <option value="mono">Monospace</option>
+              </select>
+            </label>
+
+            <label class="ou-field">
+              <span class="ou-label">Body size — {{ fontSize() }}pt</span>
+              <input
+                type="range"
+                class="ou-range"
+                min="8"
+                max="16"
+                step="0.5"
+                [value]="fontSize()"
+                (input)="setFontSize($event)"
+              />
+            </label>
+
+            <label class="ou-field">
+              <span class="ou-label">Margin — {{ margin() }}pt</span>
+              <input
+                type="range"
+                class="ou-range"
+                min="20"
+                max="110"
+                step="4"
+                [value]="margin()"
+                (input)="setMargin($event)"
+              />
+            </label>
+          </div>
+
+          <div class="checks">
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="pageNumbers()"
+                (change)="togglePageNumbers($event)"
+              />
+              Page numbers in the footer
+            </label>
+            @if (source() === 'text') {
+              <label class="ou-check">
+                <input
+                  type="checkbox"
+                  [checked]="lineNumbers()"
+                  (change)="toggleLineNumbers($event)"
+                />
+                Monospaced with line numbers
+              </label>
+            }
+          </div>
+        } @else if (target() === 'html') {
+          <label class="ou-check">
+            <input type="checkbox" [checked]="standalone()" (change)="toggleStandalone($event)" />
+            <span>
+              <strong>Complete HTML page</strong>
+              <small>Includes a document wrapper and styles. Untick for a bare fragment.</small>
+            </span>
+          </label>
+        } @else {
+          <p class="panel__hint">
+            Output is generated as you type — copy it, or download it as a file.
+          </p>
+        }
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy()"
+          (click)="convert()"
+        >
+          <app-icon [name]="targetMeta().icon" [size]="17" />
+          Download {{ targetMeta().label }}
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Clear</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Conversion complete" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

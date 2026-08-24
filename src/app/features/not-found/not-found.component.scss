@@ -1,0 +1,37 @@
+@use 'listing';
+
+.wrap {
+  padding-block: var(--ou-s-12) var(--ou-s-6);
+  text-align: center;
+}
+
+.code {
+  display: inline-block;
+  font-size: var(--ou-fs-4xl);
+  font-weight: 720;
+  letter-spacing: -0.04em;
+  color: var(--ou-text-subtle);
+}
+
+h1 {
+  font-size: var(--ou-fs-2xl);
+  margin-block: var(--ou-s-2);
+}
+
+p {
+  color: var(--ou-text-muted);
+}
+
+code {
+  padding: 2px 6px;
+  border-radius: var(--ou-r-xs);
+  background: var(--ou-surface-3);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--ou-s-3);
+  margin-top: var(--ou-s-5);
+  flex-wrap: wrap;
+}

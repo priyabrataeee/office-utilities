@@ -1,0 +1,139 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pptx']"
+      [compact]="!!deck()"
+      [title]="isPdf() ? 'Drop a deck to export as PDF' : 'Drop a deck to export as images'"
+      hint="Slides are reconstructed from the OpenXML — nothing is uploaded."
+      [icon]="isPdf() ? 'file-pdf' : 'images'"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (deck(); as presentation) {
+      <div class="panel">
+        <h2 class="panel__title">Output</h2>
+        <p class="panel__hint">
+          {{ selectedCount() }} of {{ slides().length }} slides selected ·
+          {{ presentation.width.toFixed(0) }}×{{ presentation.height.toFixed(0) }}pt
+        </p>
+
+        <div class="options">
+          <label class="ou-field">
+            <span class="ou-label">Quality — {{ scale() }}×</span>
+            <input
+              type="range"
+              class="ou-range"
+              min="1"
+              max="4"
+              step="0.5"
+              [value]="scale()"
+              (input)="setScale($event)"
+            />
+          </label>
+
+          @if (!isPdf()) {
+            <label class="ou-field">
+              <span class="ou-label">Format</span>
+              <select class="ou-select" [value]="format()" (change)="setFormat($event)">
+                <option value="image/png">PNG</option>
+                <option value="image/jpeg">JPEG</option>
+                <option value="image/webp">WebP</option>
+              </select>
+            </label>
+          } @else {
+            <label class="ou-field">
+              <span class="ou-label">Layout</span>
+              <select
+                class="ou-select"
+                [value]="handoutPerPage()"
+                (change)="setPerPage($event)"
+              >
+                <option [value]="1">One slide per page</option>
+                <option [value]="2">Handout — 2 per page</option>
+                <option [value]="3">Handout — 3 per page</option>
+                <option [value]="4">Handout — 4 per page</option>
+              </select>
+            </label>
+          }
+        </div>
+
+        @if (isPdf() && handoutPerPage() === 1) {
+          <label class="ou-check notes-check">
+            <input type="checkbox" [checked]="includeNotes()" (change)="toggleNotes($event)" />
+            Add a page of speaker notes after each slide
+          </label>
+        }
+      </div>
+
+      <div class="toolbar">
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="selectAll()">
+          Select all
+        </button>
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="selectNone()">
+          Select none
+        </button>
+        <span class="ou-spacer"></span>
+        @if (presentation.warnings.length) {
+          <span class="ou-badge ou-badge--warning">{{ presentation.warnings.length }} notes</span>
+        }
+      </div>
+
+      <ul class="slides">
+        @for (preview of previews(); track $index; let i = $index) {
+          <li class="slide" [class.is-selected]="isSelected(i)">
+            <button
+              type="button"
+              class="slide__button"
+              (click)="toggle(i)"
+              [attr.aria-pressed]="isSelected(i)"
+              [attr.aria-label]="'Slide ' + (i + 1)"
+            >
+              <span class="slide__canvas" [style.aspect-ratio]="aspect()" [innerHTML]="preview"></span>
+              @if (isSelected(i)) {
+                <span class="slide__check"><app-icon name="check" [size]="12" /></span>
+              }
+              <span class="slide__num">{{ i + 1 }}</span>
+            </button>
+            @if (slides()[i].title) {
+              <span class="slide__title" [title]="slides()[i].title">{{ slides()[i].title }}</span>
+            }
+          </li>
+        }
+      </ul>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="!selectedCount() || busy()"
+          (click)="export()"
+        >
+          <app-icon [name]="isPdf() ? 'file-pdf' : 'images'" [size]="17" />
+          Export {{ selectedCount() }} slides
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+
+      <p class="hint">
+        Charts, SmartArt and animations are not re-rendered — they appear as labelled placeholders
+        rather than being silently dropped.
+      </p>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel
+      [outputs]="outputs()"
+      title="Export ready"
+      zipName="slides.zip"
+      (reset)="startOver()"
+    />
+  </div>
+</app-tool-shell>

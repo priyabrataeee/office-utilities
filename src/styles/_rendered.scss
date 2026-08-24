@@ -1,0 +1,48 @@
+@use 'mixins' as *;
+
+/** Scrollable frame around rendered document previews. */
+.rendered {
+  max-height: 52vh;
+  overflow: auto;
+  padding: var(--ou-s-6);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-surface);
+  @include scrollbar;
+}
+
+.notes {
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--ou-s-3) var(--ou-s-4);
+    cursor: pointer;
+    font-size: var(--ou-fs-sm);
+    color: var(--ou-text-muted);
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  &[open] summary app-icon {
+    transform: rotate(180deg);
+  }
+
+  app-icon {
+    transition: transform var(--ou-dur) var(--ou-ease);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0 var(--ou-s-6) var(--ou-s-4) var(--ou-s-8);
+    font-size: var(--ou-fs-sm);
+    color: var(--ou-text-muted);
+  }
+}

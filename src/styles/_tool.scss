@@ -1,0 +1,158 @@
+@use 'mixins' as *;
+
+/**
+ * Chrome shared by tool pages. Included per component, so the rules stay
+ * style-scoped while the vocabulary stays consistent across 89 tools.
+ */
+
+:host {
+  display: block;
+}
+
+.tool {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-5);
+}
+
+.panel {
+  padding: var(--ou-s-5);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-surface);
+}
+
+.panel__title {
+  font-size: var(--ou-fs-md);
+  margin-bottom: var(--ou-s-1);
+}
+
+.panel__hint {
+  font-size: var(--ou-fs-sm);
+  color: var(--ou-text-muted);
+  margin-bottom: var(--ou-s-4);
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: var(--ou-s-4);
+}
+
+.actions {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--ou-s-3);
+}
+
+.actions__name {
+  flex: 1 1 240px;
+}
+
+.hint {
+  font-size: var(--ou-fs-sm);
+  color: var(--ou-text-subtle);
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ou-s-2);
+  padding: var(--ou-s-3) var(--ou-s-4);
+  border: 1px solid var(--ou-danger);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-danger-soft);
+  color: var(--ou-danger);
+  font-size: var(--ou-fs-sm);
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ou-s-2);
+  padding: var(--ou-s-3) var(--ou-s-4);
+  border: 1px solid var(--ou-info);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-info-soft);
+  color: var(--ou-info);
+  font-size: var(--ou-fs-sm);
+
+  app-icon {
+    margin-top: 1px;
+  }
+}
+
+.warn {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ou-s-2);
+  padding: var(--ou-s-3) var(--ou-s-4);
+  border: 1px solid var(--ou-warning);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-warning-soft);
+  color: var(--ou-warning);
+  font-size: var(--ou-fs-sm);
+
+  app-icon {
+    margin-top: 1px;
+  }
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ou-s-2);
+  padding: var(--ou-s-2);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+}
+
+.toolbar__group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ou-s-1);
+}
+
+.toolbar__divider {
+  width: 1px;
+  height: 22px;
+  background: var(--ou-border);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--ou-s-3);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--ou-s-3) var(--ou-s-4);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+}
+
+.stat__label {
+  font-size: var(--ou-fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ou-text-subtle);
+}
+
+.stat__value {
+  font-size: var(--ou-fs-xl);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat__note {
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-subtle);
+}

@@ -1,0 +1,122 @@
+@use 'tool';
+@use 'mixins' as *;
+
+.bar {
+  display: flex;
+  height: 26px;
+  border-radius: var(--ou-r-sm);
+  overflow: hidden;
+  background: var(--ou-surface-3);
+  margin-bottom: var(--ou-s-4);
+}
+
+.bar__slice {
+  min-width: 2px;
+  transition: width var(--ou-dur) var(--ou-ease);
+}
+
+.legend {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-2);
+
+  li {
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr) auto auto auto;
+    align-items: center;
+    gap: var(--ou-s-3);
+    font-size: var(--ou-fs-sm);
+  }
+}
+
+.legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.legend__name {
+  @include truncate;
+}
+
+.legend__count,
+.legend__size,
+.legend__share {
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-subtle);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.legend__share {
+  min-width: 46px;
+  text-align: right;
+  color: var(--ou-text-muted);
+  font-weight: 600;
+}
+
+.parts {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-2);
+}
+
+.part {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) auto;
+  align-items: center;
+  gap: var(--ou-s-3);
+  font-size: var(--ou-fs-sm);
+}
+
+.part__name {
+  font-family: var(--ou-font-mono);
+  font-size: var(--ou-fs-xs);
+  @include truncate;
+}
+
+.part__bar {
+  height: 8px;
+  border-radius: var(--ou-r-full);
+  background: var(--ou-surface-3);
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 100%;
+    background: var(--ou-accent);
+  }
+}
+
+.part__size {
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  min-width: 70px;
+  text-align: right;
+}
+
+.more {
+  margin-top: var(--ou-s-4);
+}
+
+@media (max-width: 640px) {
+  .legend li {
+    grid-template-columns: 12px minmax(0, 1fr) auto;
+  }
+  .legend__count,
+  .legend__size {
+    display: none;
+  }
+  .part {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .part__bar {
+    display: none;
+  }
+}

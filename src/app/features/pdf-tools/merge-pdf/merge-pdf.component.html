@@ -1,0 +1,170 @@
+<app-tool-shell toolId="merge-pdf">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pdf']"
+      [multiple]="true"
+      [showSelection]="false"
+      [compact]="queue().length > 0"
+      title="Add PDFs to merge"
+      hint="Drop two or more PDFs, or click to browse. Nothing is uploaded."
+      icon="merge"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (queue().length) {
+      <section class="queue">
+        <header class="queue__head">
+          <div>
+            <strong>{{ queue().length }} PDFs</strong>
+            <span>
+              {{ totalPages() || '—' }} pages · {{ totalSize() | fileSize }} · drag to reorder
+            </span>
+          </div>
+          <div class="queue__actions">
+            <button type="button" class="ou-btn ou-btn--sm" (click)="sortByName()">
+              <app-icon name="arrows-updown" [size]="14" />
+              Sort by name
+            </button>
+            <button type="button" class="ou-btn ou-btn--sm" (click)="reverse()">Reverse</button>
+          </div>
+        </header>
+
+        <ul class="items">
+          @for (item of queue(); track item.id; let i = $index) {
+            <li
+              class="item"
+              draggable="true"
+              (dragstart)="onDragStart(i)"
+              (dragover)="onDragOver($event)"
+              (drop)="onDrop(i)"
+              [class.is-dragging]="dragIndex() === i"
+            >
+              <span class="item__handle" aria-hidden="true">
+                <app-icon name="more" [size]="16" />
+              </span>
+              <span class="item__index">{{ i + 1 }}</span>
+
+              <div class="item__main">
+                <span class="item__name" [title]="item.file.name">{{ item.file.name }}</span>
+                <span class="item__meta">
+                  {{ item.file.size | fileSize }}
+                  @if (item.pageCount !== null) {
+                    · {{ item.pageCount }} pages
+                  }
+                  @if (item.error) {
+                    · <span class="item__error">{{ item.error }}</span>
+                  }
+                </span>
+              </div>
+
+              @if (item.needsPassword) {
+                <div class="item__unlock">
+                  <input
+                    type="password"
+                    class="ou-input"
+                    placeholder="Password"
+                    [value]="item.password"
+                    (input)="setPassword(item.id, $event)"
+                    (keyup.enter)="unlock(item.id)"
+                  />
+                  <button type="button" class="ou-btn ou-btn--sm" (click)="unlock(item.id)">
+                    <app-icon name="unlock" [size]="14" />
+                    Unlock
+                  </button>
+                </div>
+              } @else {
+                <input
+                  type="text"
+                  class="ou-input item__range"
+                  placeholder="All pages"
+                  [value]="item.range"
+                  (input)="setRange(item.id, $event)"
+                  [attr.aria-label]="'Pages to take from ' + item.file.name"
+                  title="Pages to include, e.g. 1, 3-5. Leave blank for all."
+                />
+              }
+
+              <div class="item__buttons">
+                <button
+                  type="button"
+                  class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                  (click)="move(i, -1)"
+                  [disabled]="i === 0"
+                  aria-label="Move up"
+                >
+                  <app-icon name="chevron-up" [size]="14" />
+                </button>
+                <button
+                  type="button"
+                  class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                  (click)="move(i, 1)"
+                  [disabled]="i === queue().length - 1"
+                  aria-label="Move down"
+                >
+                  <app-icon name="chevron-down" [size]="14" />
+                </button>
+                <button
+                  type="button"
+                  class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                  (click)="remove(item.id)"
+                  [attr.aria-label]="'Remove ' + item.file.name"
+                >
+                  <app-icon name="x" [size]="14" />
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <div class="actions">
+        <label class="ou-field actions__name">
+          <span class="ou-label">Output file name</span>
+          <input
+            type="text"
+            class="ou-input"
+            [value]="outputName()"
+            (input)="setOutputName($event)"
+          />
+        </label>
+
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="!canMerge() || busy()"
+          (click)="merge()"
+        >
+          <app-icon name="merge" [size]="17" />
+          Merge {{ queue().length }} PDFs
+        </button>
+
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Clear</button>
+      </div>
+
+      @if (queue().length < 2) {
+        <p class="hint">Add at least one more PDF to merge.</p>
+      }
+    }
+
+    <app-busy-overlay
+      [active]="busy()"
+      [percent]="percent()"
+      [label]="progressLabel()"
+      note="Merging happens in this tab — the files are never uploaded."
+    />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel
+      [outputs]="outputs()"
+      title="Merged PDF ready"
+      zipName="merged-pdfs.zip"
+      (reset)="startOver()"
+    />
+  </div>
+</app-tool-shell>

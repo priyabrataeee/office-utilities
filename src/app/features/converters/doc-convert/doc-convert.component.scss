@@ -1,0 +1,45 @@
+@use 'tool';
+@use 'split';
+@use 'rendered';
+
+.editor {
+  min-height: 340px;
+  font-family: var(--ou-font-mono);
+  font-size: var(--ou-fs-xs);
+  line-height: 1.6;
+}
+
+.preview {
+  min-height: 340px;
+  max-height: 46vh;
+}
+
+.rendered {
+  min-height: 340px;
+  max-height: 46vh;
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-4);
+  margin-top: var(--ou-s-4);
+}
+
+.panel > .ou-check {
+  align-items: flex-start;
+
+  input {
+    margin-top: 3px;
+  }
+
+  span {
+    display: flex;
+    flex-direction: column;
+  }
+
+  small {
+    font-size: var(--ou-fs-xs);
+    color: var(--ou-text-muted);
+  }
+}

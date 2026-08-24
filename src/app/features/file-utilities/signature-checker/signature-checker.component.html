@@ -1,0 +1,104 @@
+<app-tool-shell toolId="file-signature-checker">
+  <div class="tool">
+    <app-file-drop-zone
+      [multiple]="true"
+      [compact]="checked().length > 0"
+      title="Drop files to identify"
+      hint="Only the first few kilobytes are read — the extension is ignored."
+      icon="shield-check"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (checked().length) {
+      @if (mismatches().length) {
+        <p class="warn">
+          <app-icon name="alert-triangle" [size]="16" />
+          <span>
+            <strong>{{ mismatches().length }}
+            {{ mismatches().length === 1 ? 'file does' : 'files do' }} not match their extension.</strong>
+            That can be innocent — a renamed export, or a format that shares a container. It can
+            also be how a harmful file gets opened by mistake. Check each one below.
+          </span>
+        </p>
+      }
+
+      @if (executables().length) {
+        <p class="error">
+          <app-icon name="alert-circle" [size]="16" />
+          <span>
+            <strong>Executable content detected.</strong>
+            {{ executables().length === 1 ? 'One file is' : executables().length + ' files are' }}
+            a program rather than a document. Do not run anything you did not expect to receive.
+          </span>
+        </p>
+      }
+
+      <div class="toolbar">
+        <span class="ou-subtle">{{ checked().length }} files checked</span>
+        <span class="ou-spacer"></span>
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="startOver()">
+          Clear
+        </button>
+      </div>
+
+      <ul class="results">
+        @for (entry of checked(); track entry.name) {
+          <li class="result" [class]="'result--' + statusOf(entry)">
+            <span class="result__icon">
+              <app-icon [name]="iconFor(entry)" [size]="18" />
+            </span>
+
+            <div class="result__body">
+              <span class="result__name" [title]="entry.name">{{ entry.name }}</span>
+
+              <div class="result__facts">
+                <span>
+                  <small>Detected</small>
+                  <strong>{{ entry.detection.format }}</strong>
+                </span>
+                <span>
+                  <small>Extension says</small>
+                  <strong>{{ entry.detection.declaredExtension || '(none)' }}</strong>
+                </span>
+                <span>
+                  <small>Browser reports</small>
+                  <strong>{{ entry.detection.declaredMime }}</strong>
+                </span>
+                <span>
+                  <small>Size</small>
+                  <strong>{{ entry.size | fileSize }}</strong>
+                </span>
+              </div>
+
+              @if (entry.detection.mismatch) {
+                <p class="result__note">
+                  The bytes look like {{ entry.detection.format }}, which normally uses
+                  {{ entry.detection.expectedExtensions.join(' or ') }}.
+                </p>
+              } @else if (entry.detection.confidence === 'none') {
+                <p class="result__note">
+                  No known signature matched. It may be a plain binary format, encrypted data, or
+                  simply a format not in the database.
+                </p>
+              }
+
+              <div class="result__bytes">
+                <code class="hex">{{ entry.detection.hex }}</code>
+                <code class="ascii">{{ entry.detection.ascii }}</code>
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+  </div>
+</app-tool-shell>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Office Utilities — Your files never leave your computer.</title>
+    <base href="/" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta
+      name="description"
+      content="A privacy-first suite of browser-based office tools. View, convert, edit and generate PDF, Word, Excel and PowerPoint documents entirely on your own device — no uploads, no accounts, no servers."
+    />
+    <meta name="theme-color" content="#5b5bd6" />
+    <meta name="color-scheme" content="light dark" />
+
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' blob:; worker-src 'self' blob:; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'self'"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Office Utilities" />
+    <meta property="og:title" content="Office Utilities — Your files never leave your computer." />
+    <meta
+      property="og:description"
+      content="A privacy-first suite of browser-based office tools. Nothing is uploaded."
+    />
+    <meta property="og:image" content="/og/cover.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Office Utilities" />
+    <meta
+      name="twitter:description"
+      content="Browser-based office tools with no uploads, no accounts and no servers."
+    />
+    <meta name="twitter:image" content="/og/cover.svg" />
+
+    <link rel="canonical" href="https://officeutilities.app/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+
+    <style>
+      /* Paints a background matching the theme before the app boots, so the
+         first paint is not a white flash on dark-mode systems. */
+      :root {
+        color-scheme: light dark;
+        --_bg: #fbfbfd;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --_bg: #0b0c10;
+        }
+      }
+      :root[data-theme='dark'] {
+        --_bg: #0b0c10;
+      }
+      html,
+      body {
+        background: var(--_bg);
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <app-root>
+      <noscript>
+        <div
+          style="padding: 3rem 1.25rem; max-width: 44rem; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #16181f"
+        >
+          <h1>Office Utilities</h1>
+          <p>
+            This app runs entirely inside your browser — which means it needs JavaScript to be
+            turned on. That is also what makes it possible to promise that your files never leave
+            your computer.
+          </p>
+        </div>
+      </noscript>
+    </app-root>
+  </body>
+</html>

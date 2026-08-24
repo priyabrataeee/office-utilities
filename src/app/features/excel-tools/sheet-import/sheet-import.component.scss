@@ -1,0 +1,15 @@
+@use 'tool';
+@use 'split';
+
+.paste {
+  font-family: var(--ou-font-mono);
+  font-size: var(--ou-fs-xs);
+  min-height: 130px;
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-4);
+  margin-top: var(--ou-s-3);
+}

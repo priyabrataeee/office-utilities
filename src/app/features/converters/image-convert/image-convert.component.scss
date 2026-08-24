@@ -1,0 +1,19 @@
+@use 'tool';
+@use 'media-grid';
+
+.color {
+  padding: 2px;
+  cursor: pointer;
+}
+
+.keep {
+  margin-top: var(--ou-s-4);
+}
+
+.warn {
+  margin-top: var(--ou-s-4);
+}
+
+.card__spec strong {
+  color: var(--ou-success);
+}

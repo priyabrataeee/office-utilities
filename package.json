@@ -1,0 +1,77 @@
+{
+  "name": "office-utility",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build && node scripts/generate-sitemap.mjs",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "serve:ssr:office-utility": "node dist/office-utility/server/server.mjs",
+    "build:ssr": "ng build --configuration ssr",
+    "analyze": "node scripts/generate-sitemap.mjs",
+    "build:zip": "npm run build && node scripts/package-dist.mjs",
+    "package": "node scripts/package-dist.mjs"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^20.3.0",
+    "@angular/compiler": "^20.3.0",
+    "@angular/core": "^20.3.0",
+    "@angular/forms": "^20.3.0",
+    "@angular/platform-browser": "^20.3.0",
+    "@angular/platform-server": "^20.3.0",
+    "@angular/router": "^20.3.0",
+    "@angular/service-worker": "^20.3.0",
+    "@angular/ssr": "^20.3.34",
+    "@cantoo/pdf-lib": "^2.9.1",
+    "browser-image-compression": "^2.0.2",
+    "docx": "^9.7.1",
+    "dompurify": "^3.4.14",
+    "express": "^5.1.0",
+    "file-saver": "^2.0.5",
+    "jszip": "^3.10.1",
+    "mammoth": "^1.12.1",
+    "marked": "^18.0.10",
+    "mermaid": "^11.17.0",
+    "papaparse": "^5.6.0",
+    "pdfjs-dist": "^6.2.108",
+    "pptxgenjs": "^4.0.1",
+    "prismjs": "^1.30.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.3.34",
+    "@angular/cli": "^20.3.34",
+    "@angular/compiler-cli": "^20.3.0",
+    "@types/express": "^5.0.1",
+    "@types/file-saver": "^2.0.7",
+    "@types/jasmine": "~5.1.0",
+    "@types/node": "^20.17.19",
+    "@types/papaparse": "^5.5.2",
+    "@types/prismjs": "^1.26.6",
+    "jasmine-core": "~5.9.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.9.2"
+  },
+  "description": "Privacy-first office document tools that run entirely in your browser."
+}

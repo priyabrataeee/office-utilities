@@ -1,0 +1,95 @@
+<app-tool-shell toolId="slide-selector" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pptx']"
+      [compact]="!!deck()"
+      title="Drop a presentation to trim"
+      hint="Tick the slides worth keeping — layouts and media come with them."
+      icon="layout-grid"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (deck()) {
+      <div class="toolbar">
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="selectAll()">
+          All
+        </button>
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="selectNone()">
+          None
+        </button>
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="invert()">
+          Invert
+        </button>
+
+        <span class="toolbar__divider"></span>
+
+        <div class="toolbar__group range">
+          <input
+            type="text"
+            class="ou-input"
+            placeholder="e.g. 1, 4-8"
+            [value]="rangeInput()"
+            (input)="setRange($event)"
+            (keyup.enter)="applyRange()"
+            aria-label="Select slides by range"
+          />
+          <button type="button" class="ou-btn ou-btn--sm" (click)="applyRange()">Select</button>
+        </div>
+
+        <span class="ou-spacer"></span>
+        <span class="ou-subtle">
+          Keeping {{ selectedCount() }} · removing {{ removedCount() }}
+        </span>
+      </div>
+
+      <ul class="slides">
+        @for (preview of previews(); track $index; let i = $index) {
+          <li class="slide" [class.is-selected]="isSelected(i)" [class.is-dropped]="!isSelected(i)">
+            <button
+              type="button"
+              class="slide__button"
+              (click)="toggle(i)"
+              [attr.aria-pressed]="isSelected(i)"
+              [attr.aria-label]="'Slide ' + (i + 1)"
+            >
+              <span class="slide__canvas" [style.aspect-ratio]="aspect()" [innerHTML]="preview"></span>
+              @if (isSelected(i)) {
+                <span class="slide__check"><app-icon name="check" [size]="12" /></span>
+              } @else {
+                <span class="slide__cross"><app-icon name="x" [size]="12" /></span>
+              }
+              <span class="slide__num">{{ i + 1 }}</span>
+            </button>
+            @if (slides()[i].title) {
+              <span class="slide__title" [title]="slides()[i].title">{{ slides()[i].title }}</span>
+            }
+          </li>
+        }
+      </ul>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="!selectedCount() || busy()"
+          (click)="export()"
+        >
+          <app-icon name="file-ppt" [size]="17" />
+          Export {{ selectedCount() }} slides
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Trimmed deck ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

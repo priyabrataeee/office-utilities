@@ -1,0 +1,189 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="config().accepts"
+      [multiple]="true"
+      [showSelection]="false"
+      [compact]="entries().length > 0"
+      [title]="config().title"
+      hint="Encoded by your browser's own codecs — nothing is uploaded."
+      [icon]="config().icon"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (entries().length) {
+      <div class="panel">
+        <h2 class="panel__title">Output</h2>
+        <p class="panel__hint">
+          {{ entries().length }} images · {{ totalIn() | fileSize }} in total.
+        </p>
+
+        <div class="options">
+          <label class="ou-field">
+            <span class="ou-label">Format</span>
+            <select class="ou-select" [value]="target()" (change)="setTarget($event)">
+              @for (format of formats; track format.value) {
+                <option [value]="format.value">{{ format.label }}</option>
+              }
+            </select>
+          </label>
+
+          @if (isLossy()) {
+            <label class="ou-field">
+              <span class="ou-label">Quality — {{ (quality() * 100).toFixed(0) }}%</span>
+              <input
+                type="range"
+                class="ou-range"
+                min="0.2"
+                max="1"
+                step="0.02"
+                [value]="quality()"
+                (input)="setQuality($event)"
+              />
+            </label>
+          }
+
+          @if (isSvg()) {
+            <label class="ou-field">
+              <span class="ou-label">Scale — {{ scale() }}×</span>
+              <input
+                type="range"
+                class="ou-range"
+                min="0.5"
+                max="8"
+                step="0.5"
+                [value]="scale()"
+                (input)="setScale($event)"
+              />
+            </label>
+          } @else {
+            <label class="ou-field">
+              <span class="ou-label">
+                Max size — {{ maxDimension() ? maxDimension() + 'px' : 'original' }}
+              </span>
+              <input
+                type="range"
+                class="ou-range"
+                min="0"
+                max="4000"
+                step="100"
+                [value]="maxDimension()"
+                (input)="setMaxDimension($event)"
+              />
+            </label>
+          }
+
+          @if (needsBackground()) {
+            <label class="ou-field">
+              <span class="ou-label">Background</span>
+              <input
+                type="color"
+                class="ou-input color"
+                [value]="background()"
+                (input)="setBackground($event)"
+              />
+            </label>
+          }
+        </div>
+
+        @if (target() !== 'image/jpeg') {
+          <label class="ou-check keep">
+            <input
+              type="checkbox"
+              [checked]="keepTransparency()"
+              (change)="toggleTransparency($event)"
+            />
+            Keep transparency
+          </label>
+        }
+
+        @if (unsupported().length) {
+          <p class="warn">
+            <app-icon name="alert-triangle" [size]="16" />
+            <span>
+              This browser cannot encode {{ unsupported().join(' or ') }}. Those options will fall
+              back to PNG, and the file names will say so.
+            </span>
+          </p>
+        }
+      </div>
+
+      <ul class="grid">
+        @for (entry of entries(); track entry.id) {
+          <li class="card">
+            <div class="card__thumb">
+              <img [src]="entry.url" [alt]="entry.file.name" />
+            </div>
+            <div class="card__meta">
+              <span class="card__name" [title]="entry.file.name">{{ entry.file.name }}</span>
+              <span class="card__spec">
+                {{ entry.width ? entry.width + '×' + entry.height : '—' }} ·
+                {{ entry.file.size | fileSize }}
+                @if (entry.outputSize !== null) {
+                  → <strong>{{ entry.outputSize | fileSize }}</strong>
+                }
+              </span>
+            </div>
+            <button
+              type="button"
+              class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--block"
+              (click)="remove(entry.id)"
+            >
+              <app-icon name="x" [size]="13" />
+              Remove
+            </button>
+          </li>
+        }
+      </ul>
+
+      @if (totalOut() > 0) {
+        <div class="stats">
+          <div class="stat">
+            <span class="stat__label">Before</span>
+            <span class="stat__value">{{ totalIn() | fileSize }}</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">After</span>
+            <span class="stat__value">{{ totalOut() | fileSize }}</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Change</span>
+            <span class="stat__value">
+              {{ totalIn() ? (((totalOut() - totalIn()) / totalIn()) * 100).toFixed(0) : 0 }}%
+            </span>
+          </div>
+        </div>
+      }
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy()"
+          (click)="convert()"
+        >
+          <app-icon name="shuffle" [size]="17" />
+          Convert {{ entries().length }} images
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Clear</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel
+      [outputs]="outputs()"
+      title="Images converted"
+      zipName="converted-images.zip"
+      [originalSize]="totalIn()"
+      (reset)="startOver()"
+    />
+  </div>
+</app-tool-shell>

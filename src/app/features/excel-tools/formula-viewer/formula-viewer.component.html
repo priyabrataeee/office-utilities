@@ -1,0 +1,135 @@
+<app-tool-shell toolId="formula-viewer" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.xlsx', '.xlsm', '.xls', '.ods']"
+      [compact]="hasData()"
+      title="Drop a workbook to audit its formulas"
+      hint="Every formula is listed with its cell, sheet and last calculated result."
+      icon="function"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (hasData()) {
+      @if (allFormulas().length) {
+        <div class="stats">
+          <div class="stat">
+            <span class="stat__label">Formulas</span>
+            <span class="stat__value">{{ allFormulas().length.toLocaleString() }}</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Distinct functions</span>
+            <span class="stat__value">{{ functionUsage().length }}</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Sheets</span>
+            <span class="stat__value">{{ sheetNames().length }}</span>
+          </div>
+        </div>
+
+        @if (functionUsage().length) {
+          <div class="panel">
+            <h2 class="panel__title">Functions used</h2>
+            <p class="panel__hint">Click one to filter the list below.</p>
+            <div class="functions">
+              @for (item of functionUsage(); track item.name) {
+                <button type="button" class="fn" (click)="searchFunction(item.name)">
+                  <code>{{ item.name }}</code>
+                  <span>{{ item.count }}</span>
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="toolbar">
+          <div class="toolbar__group search">
+            <app-icon name="search" [size]="15" />
+            <input
+              type="search"
+              class="ou-input"
+              placeholder="Filter by function, cell or sheet…"
+              [value]="query()"
+              (input)="setQuery($event)"
+              aria-label="Filter formulas"
+            />
+          </div>
+
+          <label class="ou-field scope">
+            <select class="ou-select" [value]="scope()" (change)="setScope($event)" aria-label="Scope">
+              <option value="all">All sheets</option>
+              <option value="sheet">This sheet only</option>
+            </select>
+          </label>
+
+          @if (scope() === 'sheet' && sheetNames().length > 1) {
+            <label class="ou-field scope">
+              <select
+                class="ou-select"
+                [value]="activeSheetName()"
+                (change)="onSheetChange($event)"
+                aria-label="Sheet"
+              >
+                @for (name of sheetNames(); track name) {
+                  <option [value]="name">{{ name }}</option>
+                }
+              </select>
+            </label>
+          }
+
+          <span class="ou-spacer"></span>
+          <span class="ou-subtle">{{ filtered().length.toLocaleString() }} shown</span>
+          <app-copy-button [text]="exportText()" label="Copy list" [small]="true" />
+        </div>
+
+        <div class="ou-table-wrap formulas">
+          <table class="ou-table">
+            <thead>
+              <tr>
+                <th>Cell</th>
+                <th>Sheet</th>
+                <th>Formula</th>
+                <th>Cached result</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (cell of filtered().slice(0, 2000); track cell.sheet + cell.address) {
+                <tr>
+                  <td class="ou-mono">{{ cell.address }}</td>
+                  <td>{{ cell.sheet }}</td>
+                  <td class="formula" [title]="cell.formula">{{ cell.formula }}</td>
+                  <td>{{ cell.result }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (filtered().length > 2000) {
+          <p class="hint">
+            Showing the first 2,000 of {{ filtered().length.toLocaleString() }} matches — narrow the
+            filter to see the rest.
+          </p>
+        }
+      } @else {
+        <app-empty-state
+          icon="function"
+          title="No formulas in this workbook"
+          message="Every cell holds a literal value. If you expected formulas, check that the file was not exported as values-only or saved as CSV."
+        />
+      }
+
+      <div class="actions">
+        <button type="button" class="ou-btn" (click)="startOver()">Open another workbook</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+  </div>
+</app-tool-shell>

@@ -1,0 +1,159 @@
+<app-tool-shell toolId="compress-pdf">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pdf']"
+      [compact]="hasFile()"
+      title="Drop a PDF to compress"
+      hint="Images are re-encoded locally; text pages are copied untouched."
+      icon="minimize"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (hasFile()) {
+      @if (hasTextLayer()) {
+        <p class="notice">
+          <app-icon name="info" [size]="16" />
+          <span>
+            This PDF has a real text layer, so its text pages are copied without re-encoding —
+            they stay sharp and searchable. Savings will come from image-heavy pages only, and a
+            document that is mostly text may barely shrink.
+          </span>
+        </p>
+      }
+
+      <div class="panel">
+        <h2 class="panel__title">Compression level</h2>
+        <p class="panel__hint">
+          {{ pageCount() || '—' }} pages · {{ totalInputSize() | fileSize }} to start with.
+        </p>
+
+        <div class="presets">
+          <button
+            type="button"
+            class="preset"
+            [class.is-active]="preset() === 'light'"
+            (click)="setPreset('light')"
+          >
+            <strong>Light</strong>
+            <small>Barely visible change · best for printing</small>
+          </button>
+          <button
+            type="button"
+            class="preset"
+            [class.is-active]="preset() === 'balanced'"
+            (click)="setPreset('balanced')"
+          >
+            <strong>Balanced</strong>
+            <small>Good quality at a much smaller size</small>
+          </button>
+          <button
+            type="button"
+            class="preset"
+            [class.is-active]="preset() === 'strong'"
+            (click)="setPreset('strong')"
+          >
+            <strong>Strong</strong>
+            <small>Smallest file · fine for screen and email</small>
+          </button>
+        </div>
+
+        <details class="advanced" [open]="preset() === 'custom'">
+          <summary>
+            Advanced settings
+            <app-icon name="chevron-down" [size]="15" />
+          </summary>
+
+          <div class="options">
+            <label class="ou-field">
+              <span class="ou-label">Image quality — {{ (quality() * 100).toFixed(0) }}%</span>
+              <input
+                type="range"
+                class="ou-range"
+                min="0.2"
+                max="0.95"
+                step="0.05"
+                [value]="quality()"
+                (input)="setQuality($event)"
+              />
+            </label>
+
+            <label class="ou-field">
+              <span class="ou-label">Max image size — {{ maxDimension() }}px</span>
+              <input
+                type="range"
+                class="ou-range"
+                min="600"
+                max="3000"
+                step="100"
+                [value]="maxDimension()"
+                (input)="setMaxDimension($event)"
+              />
+            </label>
+
+            <label class="ou-check">
+              <input type="checkbox" [checked]="stripMetadata()" (change)="toggleStrip($event)" />
+              Strip metadata (author, title, dates)
+            </label>
+
+            <label class="ou-check">
+              <input type="checkbox" [checked]="grayscale()" (change)="toggleGrayscale($event)" />
+              Convert scanned pages to greyscale
+            </label>
+          </div>
+        </details>
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy()"
+          (click)="compress()"
+        >
+          <app-icon name="minimize" [size]="17" />
+          Compress PDF
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay
+      [active]="busy()"
+      [percent]="percent()"
+      [label]="progressLabel()"
+      note="Each page is examined and only rasterised when that will actually help."
+    />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    @if (outputs().length) {
+      <div class="stats">
+        <div class="stat">
+          <span class="stat__label">Before</span>
+          <span class="stat__value">{{ totalInputSize() | fileSize }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">After</span>
+          <span class="stat__value">{{ outputs()[0].size | fileSize }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Saved</span>
+          <span class="stat__value">{{ savedBytes() | fileSize }}</span>
+          <span class="stat__note">{{ imagesProcessed() }} pages re-encoded</span>
+        </div>
+      </div>
+    }
+
+    <app-result-panel
+      [outputs]="outputs()"
+      title="Compressed PDF ready"
+      [originalSize]="totalInputSize()"
+      (reset)="startOver()"
+    />
+  </div>
+</app-tool-shell>

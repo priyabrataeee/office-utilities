@@ -1,0 +1,217 @@
+<app-tool-shell toolId="batch-rename" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [multiple]="true"
+      [showSelection]="false"
+      [compact]="hasFile()"
+      title="Drop the files to rename"
+      hint="Preview every old-to-new pair before anything is written."
+      icon="pencil"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (hasFile()) {
+      <div class="panel">
+        <h2 class="panel__title">Rules</h2>
+        <p class="panel__hint">
+          Applied in order: find and replace, case, date, numbering, then prefix and suffix.
+        </p>
+
+        <div class="options">
+          <label class="ou-field">
+            <span class="ou-label">Find</span>
+            <input
+              type="text"
+              class="ou-input"
+              [value]="find()"
+              (input)="setText('find', $event)"
+              placeholder="text to replace"
+            />
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Replace with</span>
+            <input
+              type="text"
+              class="ou-input"
+              [value]="replace()"
+              (input)="setText('replace', $event)"
+            />
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Case</span>
+            <select class="ou-select" [value]="caseMode()" (change)="setCaseMode($event)">
+              <option value="none">Leave as it is</option>
+              <option value="lower">lower case</option>
+              <option value="upper">UPPER CASE</option>
+              <option value="title">Title Case</option>
+              <option value="kebab">kebab-case</option>
+              <option value="snake">snake_case</option>
+            </select>
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Prefix</span>
+            <input
+              type="text"
+              class="ou-input"
+              [value]="prefix()"
+              (input)="setText('prefix', $event)"
+            />
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Suffix</span>
+            <input
+              type="text"
+              class="ou-input"
+              [value]="suffix()"
+              (input)="setText('suffix', $event)"
+            />
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Change extension</span>
+            <input
+              type="text"
+              class="ou-input"
+              placeholder="leave blank to keep"
+              [value]="newExtension()"
+              (input)="setText('newExtension', $event)"
+            />
+          </label>
+        </div>
+
+        <div class="checks">
+          <label class="ou-check">
+            <input type="checkbox" [checked]="useRegex()" (change)="toggle('useRegex', $event)" />
+            Treat the find text as a regular expression
+          </label>
+          <label class="ou-check">
+            <input
+              type="checkbox"
+              [checked]="datePrefix()"
+              (change)="toggle('datePrefix', $event)"
+            />
+            Prefix each name with its modified date
+          </label>
+          <label class="ou-check">
+            <input type="checkbox" [checked]="numbering()" (change)="toggle('numbering', $event)" />
+            Add sequential numbering
+          </label>
+        </div>
+
+        @if (regexError()) {
+          <p class="error">
+            <app-icon name="alert-circle" [size]="16" />
+            Invalid regular expression — {{ regexError() }}
+          </p>
+        }
+
+        @if (numbering()) {
+          <div class="options numbering">
+            <label class="ou-field">
+              <span class="ou-label">Start at</span>
+              <input
+                type="number"
+                class="ou-input"
+                min="0"
+                [value]="startAt()"
+                (input)="setNumber('startAt', $event)"
+              />
+            </label>
+            <label class="ou-field">
+              <span class="ou-label">Digits</span>
+              <input
+                type="number"
+                class="ou-input"
+                min="1"
+                max="8"
+                [value]="padding()"
+                (input)="setNumber('padding', $event)"
+              />
+            </label>
+            <label class="ou-field">
+              <span class="ou-label">Position</span>
+              <select
+                class="ou-select"
+                [value]="numberPosition()"
+                (change)="setNumberPosition($event)"
+              >
+                <option value="prefix">Before the name</option>
+                <option value="suffix">After the name</option>
+              </select>
+            </label>
+          </div>
+        }
+      </div>
+
+      <div class="toolbar">
+        <span class="ou-subtle">
+          {{ changedCount() }} of {{ renames().length }} names change
+        </span>
+        @if (collisionCount()) {
+          <span class="ou-badge ou-badge--warning">
+            {{ collisionCount() }} auto-numbered to avoid a clash
+          </span>
+        }
+        <span class="ou-spacer"></span>
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="startOver()">
+          Reset rules
+        </button>
+      </div>
+
+      <div class="ou-table-wrap preview-table">
+        <table class="ou-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Current name</th>
+              <th>New name</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of renames(); track entry.from; let i = $index) {
+              <tr [class.is-changed]="entry.changed">
+                <td>{{ i + 1 }}</td>
+                <td [title]="entry.from">{{ entry.from }}</td>
+                <td [title]="entry.to">
+                  <span [class.new-name]="entry.changed">{{ entry.to }}</span>
+                  @if (entry.collision) {
+                    <app-icon name="alert-triangle" [size]="13" />
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy() || !renames().length"
+          (click)="download()"
+        >
+          <app-icon name="download" [size]="17" />
+          Download renamed files (ZIP)
+        </button>
+      </div>
+
+      <p class="hint">
+        A browser cannot rename files where they sit, so the renamed set is delivered as a ZIP.
+      </p>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    <app-result-panel
+      [outputs]="outputs()"
+      title="Renamed files"
+      zipName="renamed-files.zip"
+      (reset)="clearOutputs()"
+    />
+  </div>
+</app-tool-shell>

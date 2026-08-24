@@ -1,0 +1,134 @@
+<div class="viewer">
+  <div class="bar ou-no-print">
+    @if (tabs().length > 1) {
+      <div class="tabs">
+        @for (name of tabs(); track name) {
+          <button
+            type="button"
+            class="tab"
+            [class.is-active]="tab() === name"
+            (click)="setTab(name)"
+          >
+            {{ name === 'raw' ? 'Source' : name === 'formatted' ? 'Formatted' : name === 'tree' ? 'Tree' : 'Preview' }}
+          </button>
+        }
+      </div>
+      <span class="bar__divider"></span>
+    }
+
+    <div class="find">
+      <app-icon name="search" [size]="14" />
+      <input
+        type="search"
+        class="find__input"
+        placeholder="Search…"
+        [value]="query()"
+        (input)="onQuery($event)"
+        aria-label="Search content"
+      />
+      @if (query() && tab() !== 'tree') {
+        <span class="ou-subtle">{{ matchCount() }}</span>
+      }
+    </div>
+
+    @if (tab() === 'tree') {
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="collapseAll()">
+        Collapse
+      </button>
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="expandAll()">
+        Expand
+      </button>
+    } @else if (tab() !== 'preview') {
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+        (click)="toggleWrap()"
+        [class.is-active]="wrap()"
+        aria-label="Toggle line wrapping"
+        title="Wrap long lines"
+      >
+        <app-icon name="type" [size]="15" />
+      </button>
+    }
+
+    <span class="ou-spacer"></span>
+
+    <span class="ou-subtle">
+      {{ stats().lines.toLocaleString() }} lines
+      @if (stats().nodes) {
+        · {{ stats().nodes.toLocaleString() }} nodes
+      }
+    </span>
+
+    @if (kind() === 'json') {
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="minify()">
+        Minify
+      </button>
+    }
+    <app-copy-button [text]="displayText()" [small]="true" />
+    <button type="button" class="ou-btn ou-btn--sm" (click)="downloadFormatted()">
+      <app-icon name="download" [size]="14" />
+      Save
+    </button>
+  </div>
+
+  @if (error()) {
+    <p class="error parse-error">
+      <app-icon name="alert-circle" [size]="16" />
+      {{ error() }}
+    </p>
+  }
+
+  <div class="content">
+    @if (loading()) {
+      <div class="ou-skeleton loader"></div>
+    } @else if (tab() === 'tree') {
+      <ul class="tree">
+        @for (row of rows(); track row.id) {
+          <li class="node" [style.padding-left.px]="row.depth * 16 + 8">
+            <button
+              type="button"
+              class="node__toggle"
+              [class.is-leaf]="!row.hasChildren"
+              (click)="toggleRow(row)"
+              [attr.aria-expanded]="row.hasChildren ? !isCollapsed(row) : null"
+            >
+              @if (row.hasChildren) {
+                <app-icon [name]="isCollapsed(row) ? 'chevron-right' : 'chevron-down'" [size]="12" />
+              }
+            </button>
+
+            <span class="node__key">{{ row.key }}</span>
+
+            @if (row.hasChildren) {
+              <span class="node__meta">
+                {{ row.kind === 'array' ? '[' + row.childCount + ']' : '{' + row.childCount + '}' }}
+              </span>
+            } @else {
+              <span class="node__value" [class]="'val--' + row.kind">{{ row.value }}</span>
+            }
+          </li>
+        }
+      </ul>
+    } @else if (tab() === 'preview') {
+      <div class="preview-frame ou-prose" [innerHTML]="htmlPreview()"></div>
+    } @else {
+      <div class="code" [class.is-wrapped]="wrap()">
+        @for (line of lines(); track $index; let i = $index) {
+          <div
+            class="code__line"
+            [class.is-match]="query() && line.toLowerCase().includes(query().toLowerCase())"
+          >
+            <span class="code__num">{{ i + 1 }}</span>
+            <span class="code__text">{{ line }}</span>
+          </div>
+        }
+      </div>
+      @if (truncated()) {
+        <p class="hint">
+          Showing the first 20,000 lines. Use Save to get the whole file.
+        </p>
+      }
+    }
+  </div>
+</div>

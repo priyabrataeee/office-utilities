@@ -1,0 +1,76 @@
+<div class="page ou-container">
+  <header class="page__head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a routerLink="/">Home</a>
+      <app-icon name="chevron-right" [size]="13" />
+      <span aria-current="page">All tools</span>
+    </nav>
+    <h1>All tools</h1>
+    <p>
+      {{ registry.tools.length }} browser-based utilities across
+      {{ registry.categories.length }} categories. Nothing you open here is uploaded.
+    </p>
+  </header>
+
+  <div class="controls">
+    <div class="controls__search">
+      <app-icon name="search" [size]="16" />
+      <input
+        type="search"
+        placeholder="Search by name, format or task…"
+        [value]="query()"
+        (input)="onSearch($event)"
+        aria-label="Search tools"
+      />
+    </div>
+
+    <select class="ou-select controls__sort" [value]="sort()" (change)="setSort($event)" aria-label="Sort">
+      <option value="popular">Most popular</option>
+      <option value="relevance">Best match</option>
+      <option value="name">Name (A–Z)</option>
+      <option value="category">Category</option>
+    </select>
+  </div>
+
+  <div class="chips" role="tablist" aria-label="Filter by category">
+    <button
+      type="button"
+      class="chip"
+      [class.is-active]="activeCategory() === 'all'"
+      (click)="setCategory('all')"
+    >
+      All
+      <span class="chip__count">{{ registry.tools.length }}</span>
+    </button>
+    @for (category of registry.categories; track category.id) {
+      <button
+        type="button"
+        class="chip"
+        [class.is-active]="activeCategory() === category.id"
+        [style.--accent]="'var(' + category.accentVar + ')'"
+        (click)="setCategory(category.id)"
+      >
+        <app-icon [name]="category.icon" [size]="14" />
+        {{ category.title }}
+        <span class="chip__count">{{ registry.countInCategory(category.id) }}</span>
+      </button>
+    }
+  </div>
+
+  @if (results().length) {
+    <p class="count">{{ results().length }} {{ results().length === 1 ? 'tool' : 'tools' }}</p>
+    <div class="ou-grid">
+      @for (tool of results(); track tool.id) {
+        <app-tool-card [tool]="tool" [showCategory]="true" />
+      }
+    </div>
+  } @else {
+    <app-empty-state
+      icon="search"
+      title="No tools match those filters"
+      message="Try a different search term, or clear the filters to see everything."
+    >
+      <button type="button" class="ou-btn" (click)="reset()">Clear filters</button>
+    </app-empty-state>
+  }
+</div>

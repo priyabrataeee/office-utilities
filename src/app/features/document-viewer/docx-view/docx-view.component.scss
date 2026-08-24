@@ -1,0 +1,78 @@
+@use 'viewer';
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.outline {
+  flex: none;
+  width: 230px;
+  padding: var(--ou-s-3);
+  border-right: 1px solid var(--ou-border);
+  background: var(--ou-surface);
+  overflow-y: auto;
+  max-height: 78vh;
+  @include scrollbar;
+
+  h3 {
+    font-size: var(--ou-fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ou-text-subtle);
+    margin-bottom: var(--ou-s-2);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    padding: 3px 0;
+    font-size: var(--ou-fs-sm);
+    color: var(--ou-text-muted);
+  }
+}
+
+.page-area {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  padding: var(--ou-s-6);
+  max-height: 78vh;
+  @include scrollbar;
+}
+
+.sheet {
+  max-width: 780px;
+  margin-inline: auto;
+  padding: var(--ou-s-12) var(--ou-s-10);
+  background: #fff;
+  color: #16181f;
+  box-shadow: var(--ou-shadow-md);
+  border-radius: var(--ou-r-sm);
+
+  :where(h1, h2, h3, h4, h5, h6, p, li, td, th, blockquote) {
+    color: #16181f;
+  }
+}
+
+.line {
+  display: block;
+  height: 14px;
+  margin-bottom: var(--ou-s-3);
+  width: 100%;
+}
+
+@media (max-width: 860px) {
+  .outline {
+    display: none;
+  }
+  .page-area {
+    padding: var(--ou-s-3);
+  }
+  .sheet {
+    padding: var(--ou-s-6) var(--ou-s-4);
+  }
+}

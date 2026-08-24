@@ -1,0 +1,82 @@
+@use 'viewer';
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.tabs {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  max-width: 42%;
+  @include scrollbar;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  height: 26px;
+  max-width: 160px;
+  padding-inline: var(--ou-s-3);
+  border: 1px solid transparent;
+  border-radius: var(--ou-r-sm);
+  background: transparent;
+  color: var(--ou-text-muted);
+  font-size: var(--ou-fs-sm);
+  cursor: pointer;
+  @include truncate;
+
+  &:hover {
+    background: var(--ou-surface-3);
+  }
+
+  &.is-active {
+    background: var(--ou-surface);
+    border-color: var(--ou-border);
+    color: var(--ou-text);
+    font-weight: 560;
+  }
+}
+
+.find {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ou-s-2);
+  padding-inline: var(--ou-s-2);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-sm);
+  background: var(--ou-surface);
+  color: var(--ou-text-subtle);
+}
+
+.find__input {
+  width: 160px;
+  height: 26px;
+  border: 0;
+  background: transparent;
+  color: var(--ou-text);
+  outline: none;
+  font-size: var(--ou-fs-sm);
+}
+
+.grid-area {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: var(--ou-s-3);
+}
+
+.loader {
+  width: 100%;
+  height: 320px;
+}
+
+@media (max-width: 700px) {
+  .tabs {
+    max-width: 100%;
+    order: 3;
+    flex-basis: 100%;
+  }
+}

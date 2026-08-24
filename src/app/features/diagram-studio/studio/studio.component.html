@@ -1,0 +1,694 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true" [minimal]="true">
+  <div class="studio">
+    <input
+      #fileInput
+      type="file"
+      accept=".json,application/json"
+      class="ou-sr-only"
+      (change)="onImport($event)"
+    />
+
+    <div class="toolbar ou-no-print">
+      <input
+        type="text"
+        class="ou-input title"
+        [value]="diagram().title"
+        (input)="setTitle($event)"
+        aria-label="Diagram title"
+      />
+
+      <span class="toolbar__divider"></span>
+
+      <div class="toolbar__group">
+        <button
+          type="button"
+          class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+          (click)="undo()"
+          [disabled]="!canUndo()"
+          aria-label="Undo"
+          title="Undo (Ctrl+Z)"
+        >
+          <app-icon name="undo" [size]="15" />
+        </button>
+        <button
+          type="button"
+          class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+          (click)="redo()"
+          [disabled]="!canRedo()"
+          aria-label="Redo"
+          title="Redo (Ctrl+Shift+Z)"
+        >
+          <app-icon name="redo" [size]="15" />
+        </button>
+      </div>
+
+      <span class="toolbar__divider"></span>
+
+      <app-zoom-controls [(zoom)]="zoom" [min]="0.25" [max]="3" (fit)="fitToContent()" />
+
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost"
+        [class.is-active]="diagram().showGrid"
+        (click)="toggleGrid()"
+        title="Toggle grid"
+      >
+        <app-icon name="grid" [size]="14" />
+        Grid
+      </button>
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost"
+        [class.is-active]="diagram().snapToGrid"
+        (click)="toggleSnap()"
+        title="Toggle snap to grid"
+      >
+        Snap
+      </button>
+
+      <span class="ou-spacer"></span>
+
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+        [class.is-active]="showPanel()"
+        (click)="showPanel.set(!showPanel())"
+        aria-label="Toggle properties panel"
+        title="Toggle properties panel"
+      >
+        <app-icon name="settings" [size]="15" />
+      </button>
+
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="importJson()">
+        <app-icon name="upload" [size]="14" />
+        Import
+      </button>
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="exportJson()">
+        JSON
+      </button>
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="exportSvg()">
+        SVG
+      </button>
+      <button type="button" class="ou-btn ou-btn--sm" (click)="exportPng()">
+        <app-icon name="download" [size]="14" />
+        PNG
+      </button>
+    </div>
+
+    @if (connectFrom()) {
+      <p class="notice ou-no-print">
+        <app-icon name="link" [size]="16" />
+        <span>Click a shape to connect to, or press Escape to cancel.</span>
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="cancelConnection()">
+          Cancel
+        </button>
+      </p>
+    }
+
+    <div class="workspace" (pointerup)="onPointerUp()" (pointermove)="onPointerMove($event)">
+      <aside class="stencil ou-no-print" aria-label="Stencils">
+        <div class="stencil__tabs">
+          @for (item of stencils; track item.id) {
+            <button
+              type="button"
+              class="stencil__tab"
+              [class.is-active]="activeStencil() === item.id"
+              (click)="setStencil(item.id)"
+            >
+              {{ item.title }}
+            </button>
+          }
+        </div>
+
+        <div class="stencil__grid">
+          @for (item of stencil().items; track item.label) {
+            <button
+              type="button"
+              class="stencil__item"
+              (click)="addShape(item)"
+              [title]="item.label"
+            >
+              <span
+                class="stencil__preview"
+                [style.background]="item.fill"
+                [style.border-color]="item.stroke"
+              >
+                <app-icon [name]="item.icon" [size]="18" />
+              </span>
+              <span class="stencil__label">{{ item.label }}</span>
+            </button>
+          }
+        </div>
+      </aside>
+
+      <div class="canvas">
+        <svg
+          #surface
+          class="canvas__svg"
+          [attr.viewBox]="viewBox()"
+          preserveAspectRatio="xMidYMid meet"
+          (pointerdown)="onCanvasPointerDown($event)"
+        >
+          <defs>
+            <pattern
+              id="studio-grid"
+              [attr.width]="diagram().gridSize"
+              [attr.height]="diagram().gridSize"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                [attr.d]="'M ' + diagram().gridSize + ' 0 L 0 0 0 ' + diagram().gridSize"
+                fill="none"
+                stroke="#e3e6ec"
+                stroke-width="0.5"
+              />
+            </pattern>
+
+            <marker
+              id="studio-arrow"
+              viewBox="0 0 12 12"
+              refX="10"
+              refY="6"
+              markerWidth="9"
+              markerHeight="9"
+              orient="auto-start-reverse"
+            >
+              <path d="M 1 2 L 11 6 L 1 10 z" fill="context-stroke" stroke="context-stroke" />
+            </marker>
+            <marker
+              id="studio-triangle"
+              viewBox="0 0 12 12"
+              refX="10"
+              refY="6"
+              markerWidth="9"
+              markerHeight="9"
+              orient="auto-start-reverse"
+            >
+              <path d="M 1 1 L 11 6 L 1 11 z" fill="#ffffff" stroke="context-stroke" />
+            </marker>
+            <marker
+              id="studio-diamond"
+              viewBox="0 0 12 12"
+              refX="10"
+              refY="6"
+              markerWidth="9"
+              markerHeight="9"
+              orient="auto-start-reverse"
+            >
+              <path d="M 6 1 L 11 6 L 6 11 L 1 6 z" fill="#ffffff" stroke="context-stroke" />
+            </marker>
+            <marker
+              id="studio-circle"
+              viewBox="0 0 12 12"
+              refX="10"
+              refY="6"
+              markerWidth="9"
+              markerHeight="9"
+              orient="auto-start-reverse"
+            >
+              <circle cx="6" cy="6" r="3" fill="#ffffff" stroke="context-stroke" />
+            </marker>
+          </defs>
+
+          <rect
+            [attr.width]="diagram().width"
+            [attr.height]="diagram().height"
+            [attr.fill]="diagram().background"
+          />
+          @if (diagram().showGrid) {
+            <rect
+              [attr.width]="diagram().width"
+              [attr.height]="diagram().height"
+              fill="url(#studio-grid)"
+            />
+          }
+
+          @for (edge of diagram().edges; track edge.id) {
+            <g
+              class="edge"
+              [class.is-selected]="selectedEdgeId() === edge.id"
+              (pointerdown)="selectEdge(edge.id, $event)"
+            >
+              <path
+                [attr.d]="pathFor(edge)"
+                fill="none"
+                stroke="transparent"
+                stroke-width="14"
+                class="edge__hit"
+              />
+              <path
+                [attr.d]="pathFor(edge)"
+                fill="none"
+                [attr.stroke]="edge.stroke"
+                stroke-width="1.6"
+                [attr.stroke-dasharray]="edge.dashed ? '6 4' : null"
+                [attr.marker-start]="markerUrl(edge.startArrow)"
+                [attr.marker-end]="markerUrl(edge.endArrow)"
+              />
+              @if (edge.label) {
+                <g [attr.transform]="'translate(' + labelPosition(edge).x + ',' + labelPosition(edge).y + ')'">
+                  <rect
+                    [attr.x]="-edge.label.length * 3.5 - 5"
+                    y="-10"
+                    [attr.width]="edge.label.length * 7 + 10"
+                    height="19"
+                    rx="4"
+                    fill="#ffffff"
+                    fill-opacity="0.92"
+                  />
+                  <text text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#52607a">
+                    {{ edge.label }}
+                  </text>
+                </g>
+              }
+            </g>
+          }
+
+          @for (node of orderedNodes(); track node.id) {
+            <g
+              class="node"
+              [class.is-selected]="selectedNodeId() === node.id"
+              [class.is-connect-source]="connectFrom() === node.id"
+              (pointerdown)="selectNode(node.id, $event)"
+            >
+              @switch (node.kind) {
+                @case ('ellipse') {
+                  <ellipse
+                    [attr.cx]="node.x + node.width / 2"
+                    [attr.cy]="node.y + node.height / 2"
+                    [attr.rx]="node.width / 2"
+                    [attr.ry]="node.height / 2"
+                    [attr.fill]="node.fill"
+                    [attr.stroke]="node.stroke"
+                    stroke-width="1.6"
+                  />
+                }
+                @case ('rounded') {
+                  <rect
+                    [attr.x]="node.x"
+                    [attr.y]="node.y"
+                    [attr.width]="node.width"
+                    [attr.height]="node.height"
+                    rx="12"
+                    [attr.fill]="node.fill"
+                    [attr.stroke]="node.stroke"
+                    stroke-width="1.6"
+                  />
+                }
+                @case ('container') {
+                  <rect
+                    [attr.x]="node.x"
+                    [attr.y]="node.y"
+                    [attr.width]="node.width"
+                    [attr.height]="node.height"
+                    rx="10"
+                    [attr.fill]="node.fill"
+                    [attr.stroke]="node.stroke"
+                    stroke-width="1.4"
+                    stroke-dasharray="8 5"
+                  />
+                }
+                @case ('record') {
+                  <rect
+                    [attr.x]="node.x"
+                    [attr.y]="node.y"
+                    [attr.width]="node.width"
+                    [attr.height]="node.height"
+                    rx="4"
+                    [attr.fill]="node.fill"
+                    [attr.stroke]="node.stroke"
+                    stroke-width="1.6"
+                  />
+                  <line
+                    [attr.x1]="node.x"
+                    [attr.y1]="node.y + 30"
+                    [attr.x2]="node.x + node.width"
+                    [attr.y2]="node.y + 30"
+                    [attr.stroke]="node.stroke"
+                    stroke-width="1.4"
+                  />
+                }
+                @case ('text') {
+                  <!-- text-only node has no chrome -->
+                }
+                @default {
+                  @if (shapeOutline(node)) {
+                    <path
+                      [attr.d]="shapeOutline(node)"
+                      [attr.transform]="'translate(' + node.x + ',' + node.y + ')'"
+                      [attr.fill]="node.fill"
+                      [attr.stroke]="node.stroke"
+                      stroke-width="1.6"
+                    />
+                  } @else {
+                    <rect
+                      [attr.x]="node.x"
+                      [attr.y]="node.y"
+                      [attr.width]="node.width"
+                      [attr.height]="node.height"
+                      rx="3"
+                      [attr.fill]="node.fill"
+                      [attr.stroke]="node.stroke"
+                      stroke-width="1.6"
+                    />
+                  }
+                }
+              }
+
+              @if (node.kind === 'record') {
+                <text
+                  [attr.x]="node.x + node.width / 2"
+                  [attr.y]="node.y + 20"
+                  text-anchor="middle"
+                  [attr.font-size]="node.fontSize"
+                  font-weight="700"
+                  [attr.fill]="node.textColor"
+                >
+                  {{ node.text }}
+                </text>
+                @for (row of node.rows; track $index; let i = $index) {
+                  <text
+                    [attr.x]="node.x + 10"
+                    [attr.y]="node.y + 48 + i * 17"
+                    [attr.font-size]="node.fontSize - 1"
+                    font-family="ui-monospace, Consolas, monospace"
+                    [attr.fill]="node.textColor"
+                  >
+                    {{ row }}
+                  </text>
+                }
+              } @else if (node.kind === 'container') {
+                <text
+                  [attr.x]="node.x + 12"
+                  [attr.y]="node.y + 22"
+                  [attr.font-size]="node.fontSize"
+                  font-weight="700"
+                  [attr.fill]="node.textColor"
+                >
+                  {{ textLines(node)[0] }}
+                </text>
+              } @else {
+                @for (line of textLines(node); track $index; let i = $index) {
+                  <text
+                    [attr.x]="centre(node).x"
+                    [attr.y]="lineY(node, i, textLines(node).length)"
+                    text-anchor="middle"
+                    [attr.font-size]="node.fontSize"
+                    [attr.font-weight]="node.bold || i === 0 ? 600 : 400"
+                    [attr.fill]="node.textColor"
+                  >
+                    {{ line }}
+                  </text>
+                }
+              }
+
+              @if (selectedNodeId() === node.id) {
+                <rect
+                  [attr.x]="node.x - 4"
+                  [attr.y]="node.y - 4"
+                  [attr.width]="node.width + 8"
+                  [attr.height]="node.height + 8"
+                  rx="6"
+                  fill="none"
+                  stroke="#5b5bd6"
+                  stroke-width="1.5"
+                  stroke-dasharray="4 3"
+                  pointer-events="none"
+                />
+                <circle
+                  [attr.cx]="node.x + node.width"
+                  [attr.cy]="node.y + node.height"
+                  r="6"
+                  fill="#5b5bd6"
+                  class="handle"
+                  (pointerdown)="startResize(node.id, $event)"
+                />
+                <circle
+                  [attr.cx]="node.x + node.width + 14"
+                  [attr.cy]="node.y - 4"
+                  r="8"
+                  fill="#ffffff"
+                  stroke="#5b5bd6"
+                  stroke-width="1.4"
+                  class="handle"
+                  (pointerdown)="startConnection(node.id, $event)"
+                >
+                  <title>Draw a connection from this shape</title>
+                </circle>
+                <path
+                  [attr.d]="'M ' + (node.x + node.width + 10) + ' ' + (node.y - 4) + ' h 8 M ' + (node.x + node.width + 14) + ' ' + (node.y - 8) + ' v 8'"
+                  stroke="#5b5bd6"
+                  stroke-width="1.4"
+                  pointer-events="none"
+                />
+              }
+            </g>
+          }
+        </svg>
+      </div>
+
+      @if (showPanel()) {
+        <aside class="properties ou-no-print" aria-label="Properties">
+          @if (selectedNode(); as node) {
+            <h3>Shape</h3>
+
+            <label class="ou-field">
+              <span class="ou-label">Text</span>
+              <textarea
+                class="ou-textarea"
+                rows="3"
+                [value]="node.text"
+                (input)="updateNode('text', $event)"
+              ></textarea>
+            </label>
+
+            @if (node.kind === 'record') {
+              <label class="ou-field">
+                <span class="ou-label">Rows (one per line)</span>
+                <textarea
+                  class="ou-textarea"
+                  rows="4"
+                  [value]="(node.rows ?? []).join('\n')"
+                  (input)="updateNodeRows($event)"
+                ></textarea>
+              </label>
+            }
+
+            <div class="two">
+              <label class="ou-field">
+                <span class="ou-label">Fill</span>
+                <input
+                  type="color"
+                  class="ou-input color"
+                  [value]="node.fill"
+                  (input)="updateNode('fill', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Stroke</span>
+                <input
+                  type="color"
+                  class="ou-input color"
+                  [value]="node.stroke"
+                  (input)="updateNode('stroke', $event)"
+                />
+              </label>
+            </div>
+
+            <div class="two">
+              <label class="ou-field">
+                <span class="ou-label">Text colour</span>
+                <input
+                  type="color"
+                  class="ou-input color"
+                  [value]="node.textColor"
+                  (input)="updateNode('textColor', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Font size</span>
+                <input
+                  type="number"
+                  class="ou-input"
+                  min="8"
+                  max="48"
+                  [value]="node.fontSize"
+                  (input)="updateNode('fontSize', $event)"
+                />
+              </label>
+            </div>
+
+            <div class="four">
+              <label class="ou-field">
+                <span class="ou-label">X</span>
+                <input
+                  type="number"
+                  class="ou-input"
+                  [value]="node.x"
+                  (input)="updateNode('x', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Y</span>
+                <input
+                  type="number"
+                  class="ou-input"
+                  [value]="node.y"
+                  (input)="updateNode('y', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Width</span>
+                <input
+                  type="number"
+                  class="ou-input"
+                  min="20"
+                  [value]="node.width"
+                  (input)="updateNode('width', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Height</span>
+                <input
+                  type="number"
+                  class="ou-input"
+                  min="20"
+                  [value]="node.height"
+                  (input)="updateNode('height', $event)"
+                />
+              </label>
+            </div>
+
+            <div class="row-actions">
+              <button type="button" class="ou-btn ou-btn--sm" (click)="duplicateSelected()">
+                <app-icon name="copy" [size]="14" />
+                Duplicate
+              </button>
+              <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="bringToFront()">
+                Bring forward
+              </button>
+              <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="sendToBack()">
+                Send back
+              </button>
+              <button
+                type="button"
+                class="ou-btn ou-btn--sm ou-btn--danger"
+                (click)="deleteSelected()"
+              >
+                <app-icon name="trash" [size]="14" />
+                Delete
+              </button>
+            </div>
+          } @else if (selectedEdge(); as edge) {
+            <h3>Connection</h3>
+
+            <label class="ou-field">
+              <span class="ou-label">Label</span>
+              <input
+                type="text"
+                class="ou-input"
+                [value]="edge.label"
+                (input)="updateEdge('label', $event)"
+              />
+            </label>
+
+            <div class="two">
+              <label class="ou-field">
+                <span class="ou-label">Routing</span>
+                <select
+                  class="ou-select"
+                  [value]="edge.routing"
+                  (change)="updateEdge('routing', $event)"
+                >
+                  <option value="orthogonal">Right-angled</option>
+                  <option value="straight">Straight</option>
+                  <option value="curved">Curved</option>
+                </select>
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Line colour</span>
+                <input
+                  type="color"
+                  class="ou-input color"
+                  [value]="edge.stroke"
+                  (input)="updateEdge('stroke', $event)"
+                />
+              </label>
+            </div>
+
+            <div class="two">
+              <label class="ou-field">
+                <span class="ou-label">Start</span>
+                <select
+                  class="ou-select"
+                  [value]="edge.startArrow"
+                  (change)="updateEdge('startArrow', $event)"
+                >
+                  <option value="none">None</option>
+                  <option value="arrow">Arrow</option>
+                  <option value="triangle">Triangle</option>
+                  <option value="diamond">Diamond</option>
+                  <option value="circle">Circle</option>
+                </select>
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">End</span>
+                <select
+                  class="ou-select"
+                  [value]="edge.endArrow"
+                  (change)="updateEdge('endArrow', $event)"
+                >
+                  <option value="none">None</option>
+                  <option value="arrow">Arrow</option>
+                  <option value="triangle">Triangle</option>
+                  <option value="diamond">Diamond</option>
+                  <option value="circle">Circle</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="edge.dashed"
+                (change)="updateEdge('dashed', $event)"
+              />
+              Dashed line
+            </label>
+
+            <div class="row-actions">
+              <button
+                type="button"
+                class="ou-btn ou-btn--sm ou-btn--danger"
+                (click)="deleteSelected()"
+              >
+                <app-icon name="trash" [size]="14" />
+                Delete
+              </button>
+            </div>
+          } @else {
+            <h3>Diagram</h3>
+            <p class="empty-hint">Click a shape from the stencil, then drop it on the canvas.</p>
+            <ul class="tips">
+              <li><strong>Drag</strong> to move · <strong>Shift-drag</strong> the canvas to pan</li>
+              <li><strong>Click the +</strong> handle on a shape to connect to another one</li>
+              <li>Delete removes the selection · Ctrl+Z / Ctrl+Shift+Z undoes and redoes</li>
+              <li>Diagrams autosave to this browser as you work</li>
+            </ul>
+
+            <div class="row-actions">
+              <button
+                type="button"
+                class="ou-btn ou-btn--sm ou-btn--danger"
+                (click)="clearCanvas()"
+              >
+                <app-icon name="trash" [size]="14" />
+                Clear canvas
+              </button>
+            </div>
+          }
+        </aside>
+      }
+    </div>
+  </div>
+</app-tool-shell>

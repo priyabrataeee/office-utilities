@@ -1,0 +1,342 @@
+@use 'tool';
+@use 'mixins' as *;
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--ou-s-3);
+  flex-wrap: wrap;
+  padding: var(--ou-s-2) var(--ou-s-3);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+}
+
+.title {
+  flex: 0 1 320px;
+  height: 32px;
+  border: 0;
+  background: transparent;
+  font-weight: 620;
+  font-size: var(--ou-fs-md);
+  padding-inline: var(--ou-s-2);
+
+  &:hover,
+  &:focus {
+    background: var(--ou-surface-2);
+    border-radius: var(--ou-r-sm);
+  }
+}
+
+.author {
+  flex: 0 1 200px;
+  height: 32px;
+  font-size: var(--ou-fs-sm);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: var(--ou-s-3);
+  min-height: 60vh;
+}
+
+.rail {
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.rail__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--ou-s-2) var(--ou-s-3);
+  border-bottom: 1px solid var(--ou-border);
+  background: var(--ou-surface-2);
+}
+
+.rail__list {
+  list-style: none;
+  padding: var(--ou-s-2);
+  margin: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-2);
+  max-height: 70vh;
+  @include scrollbar;
+}
+
+.rail__item {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ou-s-2);
+  padding: var(--ou-s-1);
+  border: 1px solid transparent;
+  border-radius: var(--ou-r-sm);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ou-surface-2);
+  }
+
+  &.is-current {
+    border-color: var(--ou-accent);
+    background: var(--ou-accent-soft);
+  }
+}
+
+.rail__num {
+  text-align: center;
+  font-size: var(--ou-fs-xs);
+  font-weight: 700;
+  color: var(--ou-text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail__thumb {
+  width: 100%;
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-xs);
+  overflow: hidden;
+}
+
+.rail__thumb-bg {
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  background: #fff;
+}
+
+.rail__thumb-accent {
+  width: 26px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.rail__thumb-title {
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 1.15;
+  @include truncate(2);
+}
+
+.rail__meta {
+  grid-column: 2;
+  font-size: 10px;
+  color: var(--ou-text-subtle);
+  @include truncate;
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-3);
+  min-width: 0;
+}
+
+.editor__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--ou-s-2);
+  flex-wrap: wrap;
+  padding: var(--ou-s-2);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+}
+
+.toolbar__group {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.toolbar__divider {
+  width: 1px;
+  height: 22px;
+  background: var(--ou-border);
+  margin-inline: var(--ou-s-1);
+}
+
+.editor__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--ou-s-4);
+  min-height: 0;
+}
+
+.editor__preview {
+  padding: var(--ou-s-4);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-bg-subtle);
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+.stage {
+  width: 100%;
+  max-width: 720px;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--ou-r-md);
+  box-shadow: var(--ou-shadow-lg);
+  padding: clamp(1.6rem, 4vw, 3.2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.stage__strip {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+}
+
+.stage__title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin: 0.5rem 0 0.4rem;
+}
+
+.stage__title--hero {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin: 0;
+}
+
+.stage__title--section {
+  font-size: clamp(2.4rem, 5.5vw, 3.4rem);
+  color: #fff;
+}
+
+.stage__title--small {
+  font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+}
+
+.stage__center {
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.stage__rule {
+  display: block;
+  width: 60px;
+  height: 4px;
+  border-radius: 3px;
+}
+
+.stage__lede {
+  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+  max-width: 40ch;
+}
+
+.stage__section {
+  position: absolute;
+  inset: 0;
+  padding: clamp(1.4rem, 4vw, 2.6rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.stage__section-lede {
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.stage__bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: clamp(0.85rem, 1.7vw, 1.05rem);
+
+  li {
+    position: relative;
+    padding-left: 1.2em;
+    line-height: 1.4;
+
+    &::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: currentColor;
+      opacity: 0.6;
+    }
+  }
+}
+
+.stage__columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+  min-height: 0;
+}
+
+.editor__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-3);
+  padding: var(--ou-s-4);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+  overflow-y: auto;
+  max-height: 68vh;
+  @include scrollbar;
+}
+
+.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ou-s-2);
+}
+
+.color {
+  height: 34px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+@media (max-width: 1100px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+  .rail__list {
+    flex-direction: row;
+    overflow-x: auto;
+    max-height: none;
+  }
+  .rail__item {
+    grid-template-columns: 1fr;
+    min-width: 130px;
+  }
+  .rail__num {
+    display: none;
+  }
+  .editor__body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .stage__columns {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,110 @@
+<app-tool-shell toolId="word-count">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.docx', '.txt', '.md', '.markdown']"
+      [compact]="true"
+      title="Drop a document, or type below"
+      hint="DOCX, TXT or Markdown."
+      icon="hash"
+      (filesChange)="onFiles($event)"
+    />
+
+    <label class="ou-field">
+      <span class="ou-label">Text</span>
+      <textarea
+        class="ou-textarea editor"
+        rows="10"
+        placeholder="Paste or type here — counts update as you go…"
+        [value]="text()"
+        (input)="onInput($event)"
+      ></textarea>
+    </label>
+
+    @if (hasText()) {
+      @let s = stats();
+
+      <div class="stats">
+        <div class="stat stat--hero">
+          <span class="stat__label">Words</span>
+          <span class="stat__value">{{ s.words.toLocaleString() }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Characters</span>
+          <span class="stat__value">{{ s.characters.toLocaleString() }}</span>
+          <span class="stat__note">{{ s.charactersNoSpaces.toLocaleString() }} without spaces</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Sentences</span>
+          <span class="stat__value">{{ s.sentences.toLocaleString() }}</span>
+          <span class="stat__note">{{ s.averageSentenceLength.toFixed(1) }} words each</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Paragraphs</span>
+          <span class="stat__value">{{ s.paragraphs.toLocaleString() }}</span>
+          <span class="stat__note">{{ s.lines.toLocaleString() }} lines</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Reading time</span>
+          <span class="stat__value">{{ readingTime() }}</span>
+          <span class="stat__note">at 238 words per minute</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Speaking time</span>
+          <span class="stat__value">{{ speakingTime() }}</span>
+          <span class="stat__note">at 140 words per minute</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Unique words</span>
+          <span class="stat__value">{{ s.uniqueWords.toLocaleString() }}</span>
+          <span class="stat__note">
+            {{ s.words ? ((s.uniqueWords / s.words) * 100).toFixed(0) : 0 }}% of the total
+          </span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Pages</span>
+          <span class="stat__value">{{ s.estimatedPages.toFixed(1) }}</span>
+          <span class="stat__note">at roughly 500 words a page</span>
+        </div>
+      </div>
+
+      @if (s.keywords.length) {
+        <div class="panel">
+          <h2 class="panel__title">Keyword density</h2>
+          <p class="panel__hint">
+            Common filler words are excluded, so this reflects what the text is actually about.
+          </p>
+          <ul class="keywords">
+            @for (item of s.keywords; track item.word) {
+              <li>
+                <span class="keywords__word">{{ item.word }}</span>
+                <span class="keywords__bar">
+                  <span [style.width.%]="(item.count / s.keywords[0].count) * 100"></span>
+                </span>
+                <span class="keywords__count">
+                  {{ item.count }} · {{ item.density.toFixed(2) }}%
+                </span>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+
+      <div class="actions">
+        <app-copy-button [text]="summaryText()" label="Copy summary" />
+        <button type="button" class="ou-btn" (click)="clear()">
+          <app-icon name="eraser" [size]="15" />
+          Clear
+        </button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+  </div>
+</app-tool-shell>

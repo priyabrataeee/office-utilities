@@ -1,0 +1,106 @@
+@use 'viewer';
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+}
+
+.tab {
+  height: 24px;
+  padding-inline: var(--ou-s-3);
+  border: 0;
+  border-radius: var(--ou-r-sm);
+  background: transparent;
+  color: var(--ou-text-muted);
+  font-size: var(--ou-fs-xs);
+  font-weight: 540;
+  cursor: pointer;
+
+  &.is-active {
+    background: var(--ou-accent-soft);
+    color: var(--ou-accent-text);
+  }
+}
+
+.outline {
+  flex: none;
+  width: 230px;
+  padding: var(--ou-s-3);
+  border-right: 1px solid var(--ou-border);
+  background: var(--ou-surface);
+  overflow-y: auto;
+  max-height: 76vh;
+  @include scrollbar;
+
+  h3 {
+    font-size: var(--ou-fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ou-text-subtle);
+    margin-bottom: var(--ou-s-2);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    padding: 3px 0;
+    font-size: var(--ou-fs-sm);
+    color: var(--ou-text-muted);
+  }
+}
+
+.page-area {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  padding: var(--ou-s-5);
+  max-height: 76vh;
+  @include scrollbar;
+}
+
+.sheet {
+  max-width: 780px;
+  margin-inline: auto;
+  padding: var(--ou-s-8);
+  background: var(--ou-surface);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+}
+
+.source {
+  margin: 0;
+  padding: var(--ou-s-4);
+  font-size: var(--ou-fs-xs);
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--ou-surface);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+}
+
+.loader {
+  width: 100%;
+  height: 320px;
+}
+
+@media (max-width: 860px) {
+  .outline {
+    display: none;
+  }
+  .sheet {
+    padding: var(--ou-s-4);
+  }
+}

@@ -1,0 +1,97 @@
+@if (isOpen()) {
+  <div class="scrim ou-no-print" (click)="close()">
+    <div
+      class="palette"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search tools and commands"
+      (click)="$event.stopPropagation()"
+      (keydown)="onKeyDown($event)"
+    >
+      <div class="palette__search">
+        <app-icon name="search" [size]="17" />
+        <input
+          #searchInput
+          type="text"
+          class="palette__input"
+          placeholder="Search 89 tools, or jump to a page…"
+          autocomplete="off"
+          spellcheck="false"
+          [value]="query()"
+          (input)="onInput($event)"
+          aria-label="Search"
+        />
+        <button type="button" class="palette__esc" (click)="close()">esc</button>
+      </div>
+
+      <div class="palette__results" role="listbox">
+        @if (total() === 0) {
+          <p class="palette__empty">
+            No tool matches “{{ query() }}”.
+            <span>Try “pdf”, “merge”, “csv” or “invoice”.</span>
+          </p>
+        }
+
+        @if (toolResults().length) {
+          <div class="palette__group">{{ emptyLabel() }}</div>
+          @for (tool of toolResults(); track tool.id; let i = $index) {
+            <button
+              type="button"
+              class="row"
+              role="option"
+              [class.is-active]="isActive(i)"
+              [attr.aria-selected]="isActive(i)"
+              (click)="selectTool(tool)"
+              (mouseenter)="activeIndex.set(i)"
+            >
+              <span class="row__icon" [style.--accent]="'var(' + tool.categoryRef.accentVar + ')'">
+                <app-icon [name]="tool.icon" [size]="16" />
+              </span>
+              <span class="row__text">
+                <strong>{{ tool.title }}</strong>
+                <small>{{ tool.summary }}</small>
+              </span>
+              <span class="ou-badge">{{ tool.categoryRef.title }}</span>
+              <app-icon class="row__go" name="arrow-right" [size]="14" />
+            </button>
+          }
+        }
+
+        @if (commandResults().length) {
+          <div class="palette__group">Commands</div>
+          @for (command of commandResults(); track command.id; let i = $index) {
+            <button
+              type="button"
+              class="row"
+              role="option"
+              [class.is-active]="isActive(toolResults().length + i)"
+              [attr.aria-selected]="isActive(toolResults().length + i)"
+              (click)="runCommand(command)"
+              (mouseenter)="activeIndex.set(toolResults().length + i)"
+            >
+              <span class="row__icon row__icon--plain">
+                <app-icon [name]="command.icon" [size]="16" />
+              </span>
+              <span class="row__text">
+                <strong>{{ command.title }}</strong>
+                <small>{{ command.subtitle }}</small>
+              </span>
+              <span class="ou-badge">{{ command.group }}</span>
+            </button>
+          }
+        }
+      </div>
+
+      <footer class="palette__foot">
+        <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+        <span><kbd>↵</kbd> open</span>
+        <span><kbd>esc</kbd> close</span>
+        <span class="ou-spacer"></span>
+        <span class="palette__privacy">
+          <app-icon name="shield-check" [size]="13" />
+          Everything runs locally
+        </span>
+      </footer>
+    </div>
+  </div>
+}

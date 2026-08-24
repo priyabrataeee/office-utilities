@@ -1,0 +1,236 @@
+/* =============================================================
+   Office Utilities — Design tokens
+   A single source of truth for colour, type, spacing, motion.
+   Light is the default; `[data-theme='dark']` (or the OS
+   preference when the user has not chosen) swaps the ramp.
+   ============================================================= */
+
+:root {
+  /* ---- Neutral ramp (light) ---- */
+  --ou-bg: #fbfbfd;
+  --ou-bg-subtle: #f4f5f8;
+  --ou-surface: #ffffff;
+  --ou-surface-2: #f7f8fa;
+  --ou-surface-3: #eef0f4;
+  --ou-overlay: rgba(16, 18, 27, 0.42);
+
+  --ou-border: #e3e6ec;
+  --ou-border-strong: #cdd2dc;
+
+  --ou-text: #10121b;
+  --ou-text-muted: #5b6274;
+  --ou-text-subtle: #868da0;
+  --ou-text-inverse: #ffffff;
+
+  /* ---- Brand ---- */
+  --ou-accent: #5b5bd6;
+  --ou-accent-hover: #4f4fc7;
+  --ou-accent-active: #4444b3;
+  --ou-accent-soft: #eeeefc;
+  --ou-accent-border: #d3d3f5;
+  --ou-accent-text: #4141ad;
+
+  /* ---- Semantic ---- */
+  --ou-success: #167c53;
+  --ou-success-soft: #e5f5ed;
+  --ou-warning: #a05e03;
+  --ou-warning-soft: #fdf1de;
+  --ou-danger: #cc2f3f;
+  --ou-danger-soft: #fdebec;
+  --ou-info: #1c68b8;
+  --ou-info-soft: #e8f1fc;
+
+  /* ---- Category accents (used by tool cards / category chips) ---- */
+  --ou-cat-pdf: #e0483c;
+  --ou-cat-word: #2b579a;
+  --ou-cat-excel: #1d7044;
+  --ou-cat-ppt: #c74f2c;
+  --ou-cat-convert: #7c4dcc;
+  --ou-cat-generate: #b3761a;
+  --ou-cat-diagram: #0e7c86;
+  --ou-cat-file: #52607a;
+  --ou-cat-view: #3a63d0;
+
+  /* ---- Radii ---- */
+  --ou-r-xs: 4px;
+  --ou-r-sm: 6px;
+  --ou-r-md: 10px;
+  --ou-r-lg: 14px;
+  --ou-r-xl: 20px;
+  --ou-r-full: 999px;
+
+  /* ---- Elevation ---- */
+  --ou-shadow-xs: 0 1px 2px rgba(16, 18, 27, 0.05);
+  --ou-shadow-sm: 0 1px 3px rgba(16, 18, 27, 0.07), 0 1px 2px rgba(16, 18, 27, 0.04);
+  --ou-shadow-md: 0 4px 12px rgba(16, 18, 27, 0.08), 0 1px 3px rgba(16, 18, 27, 0.04);
+  --ou-shadow-lg: 0 12px 32px rgba(16, 18, 27, 0.12), 0 2px 8px rgba(16, 18, 27, 0.05);
+  --ou-shadow-xl: 0 24px 64px rgba(16, 18, 27, 0.18), 0 4px 12px rgba(16, 18, 27, 0.06);
+  --ou-ring: 0 0 0 3px rgba(91, 91, 214, 0.28);
+
+  /* ---- Type ---- */
+  --ou-font: 'Inter var', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --ou-font-mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+
+  --ou-fs-xs: 0.75rem;
+  --ou-fs-sm: 0.8125rem;
+  --ou-fs-base: 0.9375rem;
+  --ou-fs-md: 1rem;
+  --ou-fs-lg: 1.125rem;
+  --ou-fs-xl: 1.375rem;
+  --ou-fs-2xl: 1.75rem;
+  --ou-fs-3xl: 2.25rem;
+  --ou-fs-4xl: 3rem;
+
+  /* ---- Spacing scale (4px base) ---- */
+  --ou-s-1: 4px;
+  --ou-s-2: 8px;
+  --ou-s-3: 12px;
+  --ou-s-4: 16px;
+  --ou-s-5: 20px;
+  --ou-s-6: 24px;
+  --ou-s-8: 32px;
+  --ou-s-10: 40px;
+  --ou-s-12: 48px;
+  --ou-s-16: 64px;
+  --ou-s-20: 80px;
+
+  /* ---- Layout ---- */
+  --ou-max-w: 1240px;
+  --ou-header-h: 60px;
+
+  /* ---- Motion ---- */
+  --ou-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ou-dur-fast: 120ms;
+  --ou-dur: 200ms;
+  --ou-dur-slow: 380ms;
+
+  color-scheme: light;
+}
+
+@mixin dark-palette {
+  --ou-bg: #0b0c10;
+  --ou-bg-subtle: #101218;
+  --ou-surface: #14161d;
+  --ou-surface-2: #1a1d26;
+  --ou-surface-3: #232733;
+  --ou-overlay: rgba(0, 0, 0, 0.62);
+
+  --ou-border: #262a35;
+  --ou-border-strong: #363c4a;
+
+  --ou-text: #eef0f6;
+  --ou-text-muted: #9aa2b4;
+  --ou-text-subtle: #6f7789;
+  --ou-text-inverse: #0b0c10;
+
+  --ou-accent: #7c7cf0;
+  --ou-accent-hover: #8d8df3;
+  --ou-accent-active: #9c9cf7;
+  --ou-accent-soft: #1c1d38;
+  --ou-accent-border: #32336a;
+  --ou-accent-text: #b3b3fb;
+
+  --ou-success: #4bcd90;
+  --ou-success-soft: #10281f;
+  --ou-warning: #e0a44b;
+  --ou-warning-soft: #2a2013;
+  --ou-danger: #f47c88;
+  --ou-danger-soft: #2c1518;
+  --ou-info: #6fb2f5;
+  --ou-info-soft: #101f2f;
+
+  --ou-cat-pdf: #f4746a;
+  --ou-cat-word: #6f9de6;
+  --ou-cat-excel: #55c48c;
+  --ou-cat-ppt: #f0866a;
+  --ou-cat-convert: #b18df5;
+  --ou-cat-generate: #ecb45f;
+  --ou-cat-diagram: #4dc4cd;
+  --ou-cat-file: #93a1bb;
+  --ou-cat-view: #7d9bf0;
+
+  --ou-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --ou-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --ou-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.35);
+  --ou-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35);
+  --ou-shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.4);
+  --ou-ring: 0 0 0 3px rgba(124, 124, 240, 0.35);
+
+  color-scheme: dark;
+}
+
+/*
+   Medium mode — a warm, low-contrast palette that sits between the two.
+   Softer greys with a warm tint, less punch than full dark, less glare than
+   pure white. Good for long editing sessions in mixed lighting.
+*/
+@mixin medium-palette {
+  --ou-bg: #24252a;
+  --ou-bg-subtle: #2a2b31;
+  --ou-surface: #2f3038;
+  --ou-surface-2: #363740;
+  --ou-surface-3: #40424e;
+  --ou-overlay: rgba(0, 0, 0, 0.5);
+
+  --ou-border: #3d3f4a;
+  --ou-border-strong: #4d5060;
+
+  --ou-text: #e4e2dc;
+  --ou-text-muted: #b0aea8;
+  --ou-text-subtle: #85847e;
+  --ou-text-inverse: #1a1a1e;
+
+  --ou-accent: #a8a5ff;
+  --ou-accent-hover: #b6b3ff;
+  --ou-accent-active: #c4c1ff;
+  --ou-accent-soft: #363548;
+  --ou-accent-border: #4a4a70;
+  --ou-accent-text: #c8c5ff;
+
+  --ou-success: #7dd4a8;
+  --ou-success-soft: #253328;
+  --ou-warning: #e8b872;
+  --ou-warning-soft: #372c1e;
+  --ou-danger: #f19aa2;
+  --ou-danger-soft: #3a2528;
+  --ou-info: #8fc5f0;
+  --ou-info-soft: #1f2c3a;
+
+  --ou-cat-pdf: #f19a90;
+  --ou-cat-word: #90b5e8;
+  --ou-cat-excel: #7ed4a8;
+  --ou-cat-ppt: #f3a48d;
+  --ou-cat-convert: #c1a5f0;
+  --ou-cat-generate: #edc07e;
+  --ou-cat-diagram: #78ced3;
+  --ou-cat-file: #a8b3c3;
+  --ou-cat-view: #9ab2ea;
+
+  --ou-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --ou-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --ou-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.22);
+  --ou-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.42), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --ou-shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --ou-ring: 0 0 0 3px rgba(168, 165, 255, 0.32);
+
+  color-scheme: dark;
+}
+
+/*
+   Explicit user choice always wins over the system preference. The order of
+   these rules matters — the last matching declaration takes effect.
+*/
+:root[data-theme='dark'] {
+  @include dark-palette;
+}
+:root[data-theme='medium'] {
+  @include medium-palette;
+}
+
+/* No explicit choice → follow the OS. Medium is opt-in only. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']):not([data-theme='medium']) {
+    @include dark-palette;
+  }
+}

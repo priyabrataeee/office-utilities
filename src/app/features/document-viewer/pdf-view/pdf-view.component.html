@@ -1,0 +1,262 @@
+<div class="viewer" #shell [class.viewer--fullscreen]="fullscreen()">
+  @if (needsPassword()) {
+    <div class="locked">
+      <app-icon name="lock" [size]="28" />
+      <h2>This PDF is password protected</h2>
+      <p>The password is used here in your browser and never sent anywhere.</p>
+      <div class="locked__row">
+        <input
+          type="password"
+          class="ou-input"
+          placeholder="Password"
+          [value]="password()"
+          (input)="setPassword($event)"
+          (keyup.enter)="retry()"
+        />
+        <button type="button" class="ou-btn ou-btn--primary" (click)="retry()">
+          <app-icon name="unlock" [size]="16" />
+          Open
+        </button>
+      </div>
+      @if (error()) {
+        <p class="locked__error">{{ error() }}</p>
+      }
+    </div>
+  } @else if (error()) {
+    <p class="error">
+      <app-icon name="alert-circle" [size]="16" />
+      {{ error() }}
+    </p>
+  } @else {
+    <div class="bar ou-no-print">
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+        (click)="toggleThumbnails()"
+        [class.is-active]="showThumbnails()"
+        aria-label="Toggle page thumbnails"
+        title="Page thumbnails"
+      >
+        <app-icon name="layout-grid" [size]="16" />
+      </button>
+
+      @if (hasOutline()) {
+        <button
+          type="button"
+          class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+          (click)="toggleOutline()"
+          [class.is-active]="showOutline()"
+          aria-label="Toggle outline"
+          title="Document outline"
+        >
+          <app-icon name="layers" [size]="16" />
+        </button>
+      }
+
+      <span class="bar__divider"></span>
+
+      <div class="pager">
+        <button
+          type="button"
+          class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+          (click)="goToPage(currentPage() - 1)"
+          [disabled]="currentPage() <= 1"
+          aria-label="Previous page"
+        >
+          <app-icon name="chevron-up" [size]="15" />
+        </button>
+        <input
+          type="number"
+          class="pager__input"
+          [value]="currentPage()"
+          min="1"
+          [max]="pageCount()"
+          (change)="onPageInput($event)"
+          aria-label="Page number"
+        />
+        <span class="pager__total">/ {{ pageCount() }}</span>
+        <button
+          type="button"
+          class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+          (click)="goToPage(currentPage() + 1)"
+          [disabled]="currentPage() >= pageCount()"
+          aria-label="Next page"
+        >
+          <app-icon name="chevron-down" [size]="15" />
+        </button>
+      </div>
+
+      <span class="bar__divider"></span>
+
+      <app-zoom-controls [(zoom)]="zoom" [min]="0.25" [max]="4" [showFit]="false" />
+
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+        (click)="rotate()"
+        aria-label="Rotate view"
+        title="Rotate"
+      >
+        <app-icon name="rotate" [size]="16" />
+      </button>
+
+      <span class="ou-spacer"></span>
+
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+        (click)="toggleSearch()"
+        [class.is-active]="searchOpen()"
+        aria-label="Search in document"
+        title="Search"
+      >
+        <app-icon name="search" [size]="16" />
+      </button>
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+        (click)="print()"
+        aria-label="Print"
+        title="Print"
+      >
+        <app-icon name="printer" [size]="16" />
+      </button>
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+        (click)="download()"
+        aria-label="Download"
+        title="Download"
+      >
+        <app-icon name="download" [size]="16" />
+      </button>
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+        (click)="toggleFullscreen()"
+        aria-label="Fullscreen"
+        title="Fullscreen"
+      >
+        <app-icon [name]="fullscreen() ? 'minimize' : 'maximize'" [size]="16" />
+      </button>
+    </div>
+
+    @if (searchOpen()) {
+      <div class="search ou-no-print">
+        <app-icon name="search" [size]="15" />
+        <input
+          type="search"
+          class="search__input"
+          placeholder="Search the document…"
+          [value]="query()"
+          (input)="onSearch($event)"
+          aria-label="Search text"
+        />
+        @if (searching()) {
+          <span class="ou-subtle">indexing…</span>
+        } @else if (query().length > 1) {
+          <span class="ou-subtle">
+            {{ hits().length ? activeHit() + 1 + ' of ' + hits().length : 'no matches' }}
+          </span>
+        }
+        <button
+          type="button"
+          class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+          (click)="nextHit(-1)"
+          [disabled]="!hits().length"
+          aria-label="Previous match"
+        >
+          <app-icon name="chevron-up" [size]="14" />
+        </button>
+        <button
+          type="button"
+          class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+          (click)="nextHit(1)"
+          [disabled]="!hits().length"
+          aria-label="Next match"
+        >
+          <app-icon name="chevron-down" [size]="14" />
+        </button>
+      </div>
+    }
+
+    <div class="body">
+      @if (showThumbnails()) {
+        <aside class="rail ou-no-print" aria-label="Page thumbnails">
+          @for (thumb of thumbnails(); track $index; let i = $index) {
+            <button
+              type="button"
+              class="rail__item"
+              [class.is-current]="currentPage() === i + 1"
+              (click)="goToPage(i + 1)"
+            >
+              @if (thumb) {
+                <img [src]="thumb" [alt]="'Page ' + (i + 1)" />
+              } @else {
+                <span class="rail__placeholder ou-skeleton"></span>
+              }
+              <span class="rail__num">{{ i + 1 }}</span>
+            </button>
+          }
+        </aside>
+      }
+
+      @if (showOutline() && hasOutline()) {
+        <aside class="outline ou-no-print" aria-label="Document outline">
+          <h3>Outline</h3>
+          <ul>
+            @for (entry of info()!.outline; track $index) {
+              <li [style.padding-left.px]="entry.level * 12">{{ entry.title }}</li>
+            }
+          </ul>
+        </aside>
+      }
+
+      <div class="pages" #scroller>
+        @if (loading()) {
+          <div class="loading">
+            <span class="ou-skeleton loading__page"></span>
+            <p class="ou-muted">Opening document…</p>
+          </div>
+        }
+
+        @for (page of pages(); track page.number) {
+          <div
+            class="page"
+            [id]="'pdf-page-' + page.number"
+            [style]="pageStyle(page)"
+            appInView
+            (appInView)="onPageVisible(page.number)"
+          >
+            @if (page.canvasUrl) {
+              <img [src]="page.canvasUrl" [alt]="'Page ' + page.number" />
+            } @else {
+              <span class="page__placeholder ou-skeleton"></span>
+            }
+            <span class="page__label ou-no-print">{{ page.number }}</span>
+          </div>
+        }
+      </div>
+
+      @if (searchOpen() && hits().length) {
+        <aside class="hits ou-no-print" aria-label="Search results">
+          <h3>{{ hits().length }} matches</h3>
+          <ul>
+            @for (hit of hits().slice(0, 200); track $index; let i = $index) {
+              <li>
+                <button
+                  type="button"
+                  [class.is-active]="activeHit() === i"
+                  (click)="jumpToHit(i)"
+                >
+                  <span class="hits__page">p{{ hit.page }}</span>
+                  <span class="hits__text">{{ hit.excerpt }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        </aside>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,72 @@
+@use 'tool';
+@use 'mixins' as *;
+
+.grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--ou-s-3);
+}
+
+.card {
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+  overflow: hidden;
+  cursor: grab;
+
+  &:hover {
+    box-shadow: var(--ou-shadow-md);
+  }
+
+  &.is-dragging {
+    opacity: 0.4;
+  }
+}
+
+.card__thumb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: var(--ou-surface-3);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.card__num {
+  position: absolute;
+  top: var(--ou-s-2);
+  left: var(--ou-s-2);
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding-inline: 5px;
+  border-radius: var(--ou-r-full);
+  background: var(--ou-overlay);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.card__bar {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 2px var(--ou-s-1) 2px var(--ou-s-2);
+  border-top: 1px solid var(--ou-border);
+}
+
+.card__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-muted);
+  @include truncate;
+}

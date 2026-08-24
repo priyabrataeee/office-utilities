@@ -1,0 +1,22 @@
+@use 'tool';
+
+.row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--ou-s-3);
+  flex-wrap: wrap;
+
+  .ou-field {
+    flex: 1 1 260px;
+  }
+}
+
+.reveal {
+  display: flex;
+  gap: var(--ou-s-1);
+
+  input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}

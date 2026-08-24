@@ -1,0 +1,149 @@
+@use 'mixins' as *;
+
+/**
+ * Shared chrome for the listing pages (all tools, categories, favourites,
+ * recent). Included per component so the rules stay style-scoped.
+ */
+
+:host {
+  display: block;
+}
+
+.page {
+  padding-block: var(--ou-s-8) var(--ou-s-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-5);
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--ou-s-2);
+  font-size: var(--ou-fs-sm);
+  color: var(--ou-text-subtle);
+  margin-bottom: var(--ou-s-3);
+
+  a {
+    color: var(--ou-text-muted);
+  }
+  span[aria-current] {
+    color: var(--ou-text);
+    font-weight: 540;
+  }
+}
+
+.page__head {
+  h1 {
+    font-size: var(--ou-fs-3xl);
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    margin-top: var(--ou-s-2);
+    max-width: 68ch;
+    color: var(--ou-text-muted);
+  }
+}
+
+.controls {
+  display: flex;
+  gap: var(--ou-s-3);
+  flex-wrap: wrap;
+}
+
+.controls__search {
+  display: flex;
+  align-items: center;
+  gap: var(--ou-s-2);
+  flex: 1 1 280px;
+  height: 40px;
+  padding-inline: var(--ou-s-3);
+  border: 1px solid var(--ou-border-strong);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+  color: var(--ou-text-subtle);
+
+  &:focus-within {
+    border-color: var(--ou-accent);
+  }
+
+  input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ou-text);
+    outline: none;
+
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+}
+
+.controls__sort {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 160px;
+  height: 40px;
+  background-position:
+    calc(100% - 18px) 17px,
+    calc(100% - 13px) 17px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ou-s-2);
+  height: 32px;
+  padding-inline: var(--ou-s-3);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-full);
+  background: var(--ou-surface);
+  color: var(--ou-text-muted);
+  font-size: var(--ou-fs-sm);
+  font-weight: 520;
+  cursor: pointer;
+  transition:
+    border-color var(--ou-dur-fast) var(--ou-ease),
+    background var(--ou-dur-fast) var(--ou-ease);
+
+  &:hover {
+    border-color: var(--ou-border-strong);
+    color: var(--ou-text);
+  }
+
+  &.is-active {
+    background: var(--ou-surface-3);
+    border-color: var(--ou-border-strong);
+    color: var(--ou-text);
+  }
+
+  app-icon {
+    color: var(--accent, var(--ou-text-subtle));
+  }
+}
+
+.chip__count {
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.count {
+  font-size: var(--ou-fs-sm);
+  color: var(--ou-text-subtle);
+}
+
+@media (max-width: 640px) {
+  .page__head h1 {
+    font-size: var(--ou-fs-2xl);
+  }
+}

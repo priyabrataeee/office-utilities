@@ -1,0 +1,134 @@
+@use 'tool';
+@use 'mixins' as *;
+
+.sources {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--ou-s-4);
+}
+
+.source {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-2);
+}
+
+.source__label {
+  font-size: var(--ou-fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ou-text-subtle);
+}
+
+.added {
+  color: var(--ou-success);
+}
+
+.removed {
+  color: var(--ou-danger);
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface-2);
+}
+
+.tab {
+  height: 26px;
+  padding-inline: var(--ou-s-3);
+  border: 0;
+  border-radius: var(--ou-r-sm);
+  background: transparent;
+  color: var(--ou-text-muted);
+  font-size: var(--ou-fs-sm);
+  cursor: pointer;
+
+  &.is-active {
+    background: var(--ou-surface);
+    color: var(--ou-text);
+    box-shadow: var(--ou-shadow-xs);
+  }
+}
+
+.diff {
+  list-style: none;
+  margin: 0;
+  padding: var(--ou-s-2);
+  max-height: 60vh;
+  overflow: auto;
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-surface);
+  counter-reset: line;
+  @include scrollbar;
+}
+
+.line {
+  display: flex;
+  gap: var(--ou-s-2);
+  padding: 3px var(--ou-s-2);
+  border-radius: var(--ou-r-xs);
+  font-size: var(--ou-fs-sm);
+  line-height: 1.55;
+}
+
+.line--insert {
+  background: color-mix(in srgb, var(--ou-success) 12%, transparent);
+}
+
+.line--delete {
+  background: color-mix(in srgb, var(--ou-danger) 12%, transparent);
+}
+
+.line__sign {
+  flex: none;
+  width: 12px;
+  font-weight: 700;
+  color: var(--ou-text-subtle);
+  font-family: var(--ou-font-mono);
+}
+
+.line--insert .line__sign {
+  color: var(--ou-success);
+}
+
+.line--delete .line__sign {
+  color: var(--ou-danger);
+}
+
+.line__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.seg--insert {
+  background: color-mix(in srgb, var(--ou-success) 28%, transparent);
+  border-radius: 2px;
+}
+
+.seg--delete {
+  background: color-mix(in srgb, var(--ou-danger) 26%, transparent);
+  border-radius: 2px;
+  text-decoration: line-through;
+}
+
+.side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ou-s-3);
+}
+
+.diff--side {
+  max-height: 60vh;
+}
+
+@media (max-width: 760px) {
+  .side {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,179 @@
+<app-tool-shell toolId="remove-watermark-pdf">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pdf']"
+      [compact]="hasFile()"
+      title="Drop a watermarked PDF"
+      hint="We look for stamp annotations and repeated overlay objects."
+      icon="eraser"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (scanned()) {
+      @if (findings().length) {
+        <div class="panel">
+          <h2 class="panel__title">
+            {{ findings().length }} watermark
+            {{ findings().length === 1 ? 'candidate' : 'candidates' }} found
+          </h2>
+          <p class="panel__hint">
+            These objects repeat across the document, which is how watermarks are normally added.
+            Untick anything you want to keep.
+          </p>
+
+          <ul class="findings">
+            @for (finding of findings(); track finding.id) {
+              <li>
+                <label class="ou-check">
+                  <input
+                    type="checkbox"
+                    [checked]="isSelected(finding.id)"
+                    (change)="toggle(finding.id)"
+                  />
+                  <span>
+                    <strong>{{ finding.label }}</strong>
+                    <small>
+                      {{ pagesLabel(finding) }} ·
+                      {{ finding.kind === 'annotation' ? 'annotation layer' : 'page resource' }}
+                    </small>
+                  </span>
+                </label>
+              </li>
+            }
+          </ul>
+        </div>
+      } @else {
+        <p class="warn">
+          <app-icon name="alert-triangle" [size]="16" />
+          <span>
+            <strong>No removable watermark object found.</strong>
+            @if (isScan()) {
+              This document has no text layer, so it is almost certainly a scan — the watermark is
+              part of the page image itself. There is no lossless way to recover what was
+              underneath it.
+            } @else {
+              The watermark may have been flattened into the page content. When that has happened,
+              the pixels are the page, and no tool can separate them.
+            }
+            You can still cover the area below, which is honest about being a cover rather than a
+            removal.
+          </span>
+        </p>
+      }
+
+      <div class="panel">
+        <label class="ou-check">
+          <input type="checkbox" [checked]="useCover()" (change)="toggleCover($event)" />
+          <span>
+            <strong>Also paint over a region on every page</strong>
+            <small>A last resort for flattened watermarks — it hides, it does not remove.</small>
+          </span>
+        </label>
+
+        @if (useCover()) {
+          <div class="cover">
+            <div class="cover__controls">
+              <label class="ou-field">
+                <span class="ou-label">Left — {{ (coverX() * 100).toFixed(0) }}%</span>
+                <input
+                  type="range"
+                  class="ou-range"
+                  min="0"
+                  max="0.95"
+                  step="0.01"
+                  [value]="coverX()"
+                  (input)="setCover('x', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Bottom — {{ (coverY() * 100).toFixed(0) }}%</span>
+                <input
+                  type="range"
+                  class="ou-range"
+                  min="0"
+                  max="0.95"
+                  step="0.01"
+                  [value]="coverY()"
+                  (input)="setCover('y', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Width — {{ (coverW() * 100).toFixed(0) }}%</span>
+                <input
+                  type="range"
+                  class="ou-range"
+                  min="0.05"
+                  max="1"
+                  step="0.01"
+                  [value]="coverW()"
+                  (input)="setCover('w', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Height — {{ (coverH() * 100).toFixed(0) }}%</span>
+                <input
+                  type="range"
+                  class="ou-range"
+                  min="0.02"
+                  max="1"
+                  step="0.01"
+                  [value]="coverH()"
+                  (input)="setCover('h', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Colour</span>
+                <input
+                  type="color"
+                  class="ou-input color"
+                  [value]="coverColor()"
+                  (input)="setCoverColor($event)"
+                />
+              </label>
+            </div>
+
+            <div class="cover__preview">
+              @if (preview()) {
+                <img [src]="preview()" alt="First page preview" />
+              } @else {
+                <div class="ou-skeleton preview__placeholder"></div>
+              }
+              <span
+                class="cover__box"
+                [style.left.%]="coverX() * 100"
+                [style.bottom.%]="coverY() * 100"
+                [style.width.%]="coverW() * 100"
+                [style.height.%]="coverH() * 100"
+                [style.background]="coverColor()"
+              ></span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="!canRemove() || busy()"
+          (click)="remove()"
+        >
+          <app-icon name="eraser" [size]="17" />
+          Clean PDF
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Cleaned PDF ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

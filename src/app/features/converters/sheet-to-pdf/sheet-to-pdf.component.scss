@@ -1,0 +1,13 @@
+@use 'tool';
+@use 'split';
+
+.checks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: var(--ou-s-3);
+  margin-top: var(--ou-s-4);
+}
+
+.warn {
+  margin-top: var(--ou-s-4);
+}

@@ -1,0 +1,287 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  <div class="tool">
+    @if (!pages().length) {
+      <app-file-drop-zone
+        [accepts]="['.pdf']"
+        title="Drop a PDF to open it"
+        [hint]="copy().hint"
+        [icon]="copy().icon"
+        (filesChange)="onFiles($event)"
+      />
+    }
+
+    @if (needsPassword()) {
+      <div class="panel">
+        <h2 class="panel__title">This PDF is protected</h2>
+        <p class="panel__hint">
+          Enter the password to open it. The password is used here in your browser and never sent
+          anywhere.
+        </p>
+        <div class="actions">
+          <label class="ou-field actions__name">
+            <span class="ou-label">Password</span>
+            <input
+              type="password"
+              class="ou-input"
+              [value]="password()"
+              (input)="setPassword($event)"
+              (keyup.enter)="retryWithPassword()"
+            />
+          </label>
+          <button type="button" class="ou-btn ou-btn--primary" (click)="retryWithPassword()">
+            <app-icon name="unlock" [size]="16" />
+            Unlock
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (pages().length) {
+      <div class="toolbar ou-no-print">
+        <div class="toolbar__group">
+          <button
+            type="button"
+            class="ou-btn ou-btn--sm"
+            (click)="rotate(-90)"
+            title="Rotate left (selected pages, or all)"
+          >
+            <app-icon name="rotate" [size]="15" />
+            Left
+          </button>
+          <button
+            type="button"
+            class="ou-btn ou-btn--sm"
+            (click)="rotate(90)"
+            title="Rotate right (selected pages, or all)"
+          >
+            <app-icon name="refresh" [size]="15" />
+            Right
+          </button>
+        </div>
+
+        <span class="toolbar__divider"></span>
+
+        <div class="toolbar__group">
+          <button type="button" class="ou-btn ou-btn--sm" (click)="reverse()">Reverse</button>
+          <button type="button" class="ou-btn ou-btn--sm" (click)="sortOriginal()">
+            Original order
+          </button>
+          @if (selectionCount()) {
+            <button type="button" class="ou-btn ou-btn--sm ou-btn--danger" (click)="removeSelected()">
+              <app-icon name="trash" [size]="14" />
+              Delete {{ selectionCount() }}
+            </button>
+          }
+        </div>
+
+        <span class="toolbar__divider"></span>
+
+        <div class="toolbar__group">
+          <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="selectAll()">
+            All
+          </button>
+          <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="selectNone()">
+            None
+          </button>
+          <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="invertSelection()">
+            Invert
+          </button>
+          <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="selectParity(true)">
+            Odd
+          </button>
+          <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="selectParity(false)">
+            Even
+          </button>
+        </div>
+
+        <span class="toolbar__divider"></span>
+
+        <div class="toolbar__group range">
+          <input
+            type="text"
+            class="ou-input"
+            placeholder="e.g. 1, 4-8"
+            [value]="rangeInput()"
+            (input)="setRange($event)"
+            (keyup.enter)="applyRange()"
+            aria-label="Select pages by range"
+          />
+          <button type="button" class="ou-btn ou-btn--sm" (click)="applyRange()">Select</button>
+        </div>
+
+        <span class="ou-spacer"></span>
+
+        <div class="toolbar__group">
+          <button
+            type="button"
+            class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+            (click)="undo()"
+            [disabled]="!canUndo()"
+            aria-label="Undo"
+            title="Undo"
+          >
+            <app-icon name="undo" [size]="15" />
+          </button>
+          <button
+            type="button"
+            class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+            (click)="redo()"
+            aria-label="Redo"
+            title="Redo"
+          >
+            <app-icon name="redo" [size]="15" />
+          </button>
+        </div>
+      </div>
+
+      <p class="hint">
+        {{ pages().length }} pages
+        @if (selectionCount()) {
+          · {{ selectionCount() }} selected
+        }
+        @if (loadingThumbs()) {
+          · rendering previews…
+        }
+        · {{ copy().hint }}
+      </p>
+
+      <ul class="grid">
+        @for (page of pages(); track page.key; let i = $index) {
+          <li
+            class="card"
+            [class.is-selected]="page.selected"
+            [class.is-dragging]="dragKey() === page.key"
+            draggable="true"
+            (dragstart)="onDragStart(page.key)"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop(page.key)"
+          >
+            <button
+              type="button"
+              class="card__thumb"
+              (click)="toggle(page.key)"
+              [attr.aria-pressed]="page.selected"
+              [attr.aria-label]="'Page ' + page.label"
+            >
+              @if (page.thumbnail) {
+                <img
+                  [src]="page.thumbnail"
+                  [alt]="'Page ' + page.label"
+                  [style.transform]="'rotate(' + page.rotation + 'deg)'"
+                />
+              } @else {
+                <span class="card__placeholder ou-skeleton"></span>
+              }
+
+              @if (page.selected) {
+                <span class="card__check"><app-icon name="check" [size]="13" /></span>
+              }
+            </button>
+
+            <div class="card__bar">
+              <span class="card__num">{{ i + 1 }}</span>
+              @if (page.sourceIndex + 1 !== i + 1) {
+                <span class="card__orig" title="Original page number">
+                  was {{ page.sourceIndex + 1 }}
+                </span>
+              }
+              <span class="ou-spacer"></span>
+              <button
+                type="button"
+                class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                (click)="rotateOne(page.key, -90)"
+                aria-label="Rotate this page left"
+              >
+                <app-icon name="rotate" [size]="13" />
+              </button>
+              <button
+                type="button"
+                class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                (click)="duplicate(page.key)"
+                aria-label="Duplicate this page"
+              >
+                <app-icon name="copy" [size]="13" />
+              </button>
+              <button
+                type="button"
+                class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                (click)="removeOne(page.key)"
+                aria-label="Delete this page"
+              >
+                <app-icon name="x" [size]="13" />
+              </button>
+            </div>
+
+            <div class="card__move">
+              <button
+                type="button"
+                class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                (click)="move(page.key, -1)"
+                [disabled]="i === 0"
+                aria-label="Move earlier"
+              >
+                <app-icon name="chevron-left" [size]="13" />
+              </button>
+              <button
+                type="button"
+                class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                (click)="move(page.key, 1)"
+                [disabled]="i === pages().length - 1"
+                aria-label="Move later"
+              >
+                <app-icon name="chevron-right" [size]="13" />
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+
+      <div class="actions">
+        @if (mode() === 'extract') {
+          <label class="ou-check">
+            <input type="checkbox" [checked]="splitEach()" (change)="toggleSplitEach($event)" />
+            Save each page as its own PDF
+          </label>
+        }
+
+        <span class="ou-spacer"></span>
+
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="!canApply() || busy()"
+          (click)="apply()"
+        >
+          <app-icon [name]="copy().icon" [size]="17" />
+          {{ copy().verb }}
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+
+      @if (needsSelection() && !selectionCount()) {
+        <p class="hint">Select at least one page to continue.</p>
+      }
+    }
+
+    <app-busy-overlay
+      [active]="busy()"
+      [percent]="percent()"
+      [label]="progressLabel()"
+      note="Pages are copied, not re-encoded, so text and images keep their original quality."
+    />
+
+    @if (errorMessage() && !needsPassword()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel
+      [outputs]="outputs()"
+      title="Your PDF is ready"
+      zipName="pdf-pages.zip"
+      (reset)="startOver()"
+    />
+  </div>
+</app-tool-shell>

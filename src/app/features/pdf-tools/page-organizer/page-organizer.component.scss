@@ -1,0 +1,115 @@
+@use 'tool';
+@use 'mixins' as *;
+
+.range input {
+  width: 130px;
+  height: 30px;
+  font-size: var(--ou-fs-sm);
+}
+
+.grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--ou-s-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+  overflow: hidden;
+  cursor: grab;
+  transition:
+    border-color var(--ou-dur-fast) var(--ou-ease),
+    box-shadow var(--ou-dur-fast) var(--ou-ease);
+
+  &:hover {
+    box-shadow: var(--ou-shadow-md);
+  }
+
+  &.is-selected {
+    border-color: var(--ou-accent);
+    box-shadow: 0 0 0 1px var(--ou-accent);
+  }
+
+  &.is-dragging {
+    opacity: 0.4;
+  }
+}
+
+.card__thumb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  padding: var(--ou-s-2);
+  border: 0;
+  border-bottom: 1px solid var(--ou-border);
+  background: var(--ou-surface-3);
+  cursor: pointer;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    background: #fff;
+    box-shadow: var(--ou-shadow-sm);
+    transition: transform var(--ou-dur) var(--ou-ease);
+  }
+}
+
+.card__placeholder {
+  width: 78%;
+  height: 88%;
+}
+
+.card__check {
+  position: absolute;
+  top: var(--ou-s-2);
+  right: var(--ou-s-2);
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--ou-r-full);
+  background: var(--ou-accent);
+  color: #fff;
+}
+
+.card__bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px var(--ou-s-1) 2px var(--ou-s-2);
+  font-size: var(--ou-fs-xs);
+}
+
+.card__num {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ou-text-muted);
+}
+
+.card__orig {
+  color: var(--ou-text-subtle);
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+.card__move {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--ou-border);
+  background: var(--ou-surface-2);
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--ou-s-3);
+  }
+}

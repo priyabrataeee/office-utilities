@@ -1,0 +1,37 @@
+@use 'tool';
+@use 'split';
+
+.checks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--ou-s-3);
+
+  .ou-check {
+    align-items: flex-start;
+  }
+
+  input {
+    margin-top: 3px;
+  }
+
+  span {
+    display: flex;
+    flex-direction: column;
+    font-size: var(--ou-fs-sm);
+  }
+
+  small {
+    font-size: var(--ou-fs-xs);
+    color: var(--ou-text-subtle);
+  }
+
+  .is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.preview {
+  max-height: 50vh;
+  white-space: pre-wrap;
+}

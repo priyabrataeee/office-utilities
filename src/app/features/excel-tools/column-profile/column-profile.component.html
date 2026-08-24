@@ -1,0 +1,172 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.xlsx', '.xls', '.xlsm', '.ods', '.csv', '.tsv']"
+      [compact]="hasData()"
+      [title]="isTypes() ? 'Drop data to check its types' : 'Drop data to profile it'"
+      [hint]="
+        isTypes()
+          ? 'Each column is typed from its contents, and mismatched rows are listed.'
+          : 'Counts, distinct values, min, max, mean, median and distribution per column.'
+      "
+      [icon]="isTypes() ? 'scan' : 'bar-chart'"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (hasData()) {
+      <div class="toolbar">
+        @if (sheetNames().length > 1) {
+          <label class="ou-field scope">
+            <select
+              class="ou-select"
+              [value]="activeSheetName()"
+              (change)="onSheetChange($event)"
+              aria-label="Sheet"
+            >
+              @for (name of sheetNames(); track name) {
+                <option [value]="name">{{ name }}</option>
+              }
+            </select>
+          </label>
+        }
+        <span class="ou-subtle">
+          {{ activeSheet()!.rowCount.toLocaleString() }} rows ×
+          {{ profile().length }} columns
+        </span>
+        <span class="ou-spacer"></span>
+        <app-copy-button [text]="exportText()" label="Copy summary" [small]="true" />
+      </div>
+
+      @if (isTypes()) {
+        @if (totalIssues()) {
+          <p class="warn">
+            <app-icon name="alert-triangle" [size]="16" />
+            <span>
+              <strong>{{ totalIssues().toLocaleString() }} values</strong>
+              across {{ columnsWithIssues().length }}
+              {{ columnsWithIssues().length === 1 ? 'column' : 'columns' }}
+              do not match the type inferred for their column. Expand a column below to see which
+              rows they are.
+            </span>
+          </p>
+        } @else {
+          <p class="notice">
+            <app-icon name="check-circle" [size]="16" />
+            <span>Every value matches the type inferred for its column.</span>
+          </p>
+        }
+      }
+
+      <ul class="columns">
+        @for (column of profile(); track column.index) {
+          <li class="column" [class.is-open]="expanded() === column.index">
+            <button type="button" class="column__head" (click)="toggleExpanded(column.index)">
+              <span class="column__type" [class]="'type--' + column.type">
+                <app-icon [name]="iconFor(column.type)" [size]="14" />
+                {{ column.type }}
+              </span>
+
+              <span class="column__name" [title]="column.name">{{ column.name }}</span>
+
+              <span class="column__fill">
+                <span class="column__bar">
+                  <span [style.width.%]="completeness(column)"></span>
+                </span>
+                <small>{{ completeness(column) }}% filled</small>
+              </span>
+
+              @if (column.histogram.length) {
+                <span class="spark" aria-hidden="true">
+                  @for (bucket of column.histogram; track $index) {
+                    <span [style.height.%]="barHeight(column, $index)"></span>
+                  }
+                </span>
+              }
+
+              <span class="column__distinct">{{ column.distinct.toLocaleString() }} distinct</span>
+
+              @if (column.outliers.length) {
+                <span class="ou-badge ou-badge--warning">{{ column.outliers.length }} odd</span>
+              }
+
+              <app-icon
+                class="column__chevron"
+                [name]="expanded() === column.index ? 'chevron-up' : 'chevron-down'"
+                [size]="15"
+              />
+            </button>
+
+            @if (expanded() === column.index) {
+              <div class="column__body">
+                <div class="metrics">
+                  <div><span>Filled</span><strong>{{ column.filled.toLocaleString() }}</strong></div>
+                  <div><span>Empty</span><strong>{{ column.empty.toLocaleString() }}</strong></div>
+                  <div><span>Distinct</span><strong>{{ column.distinct.toLocaleString() }}</strong></div>
+                  <div><span>Min</span><strong>{{ formatNumber(column.min) }}</strong></div>
+                  <div><span>Max</span><strong>{{ formatNumber(column.max) }}</strong></div>
+                  <div><span>Sum</span><strong>{{ formatNumber(column.sum) }}</strong></div>
+                  <div><span>Mean</span><strong>{{ formatNumber(column.mean) }}</strong></div>
+                  <div><span>Median</span><strong>{{ formatNumber(column.median) }}</strong></div>
+                  <div><span>Std dev</span><strong>{{ formatNumber(column.stdDev) }}</strong></div>
+                </div>
+
+                @if (column.topValues.length) {
+                  <div class="sub">
+                    <h3>Most frequent values</h3>
+                    <ul class="top">
+                      @for (item of column.topValues; track item.value) {
+                        <li>
+                          <span class="top__value" [title]="item.value">{{ item.value }}</span>
+                          <span class="top__count">{{ item.count.toLocaleString() }}</span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+
+                @if (column.outliers.length) {
+                  <div class="sub">
+                    <h3>Values that do not match "{{ column.type }}"</h3>
+                    <ul class="outliers">
+                      @for (item of column.outliers.slice(0, 25); track item.row) {
+                        <li>
+                          <span class="outliers__row">row {{ item.row }}</span>
+                          <code>{{ item.value }}</code>
+                        </li>
+                      }
+                    </ul>
+                    @if (column.outliers.length > 25) {
+                      <p class="hint">
+                        …and {{ column.outliers.length - 25 }} more.
+                      </p>
+                    }
+                  </div>
+                }
+
+                @if (column.shortest !== null) {
+                  <p class="hint">
+                    Shortest value: <code>{{ column.shortest }}</code> · longest:
+                    <code>{{ column.longest }}</code>
+                  </p>
+                }
+              </div>
+            }
+          </li>
+        }
+      </ul>
+
+      <div class="actions">
+        <button type="button" class="ou-btn" (click)="startOver()">Open another file</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+  </div>
+</app-tool-shell>

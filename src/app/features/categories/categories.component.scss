@@ -1,0 +1,84 @@
+@use 'listing';
+@use 'mixins' as *;
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--ou-s-4);
+}
+
+.cat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-3);
+  padding: var(--ou-s-5);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-surface);
+}
+
+.cat__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ou-s-3);
+
+  h2 {
+    font-size: var(--ou-fs-md);
+  }
+  h2 a {
+    color: var(--ou-text);
+  }
+  p {
+    font-size: var(--ou-fs-sm);
+    color: var(--ou-text-muted);
+  }
+  div {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+.cat__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--ou-r-md);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+
+.cat__desc {
+  font-size: var(--ou-fs-sm);
+  color: var(--ou-text-muted);
+}
+
+.cat__tools {
+  list-style: none;
+  padding: var(--ou-s-3) 0 0;
+  margin-top: auto;
+  border-top: 1px solid var(--ou-border);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--ou-s-1) var(--ou-s-3);
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ou-s-2);
+    padding: 3px 0;
+    font-size: var(--ou-fs-sm);
+    color: var(--ou-text-muted);
+    @include truncate;
+
+    &:hover {
+      color: var(--ou-text);
+      text-decoration: none;
+    }
+
+    app-icon {
+      color: var(--accent);
+    }
+  }
+}

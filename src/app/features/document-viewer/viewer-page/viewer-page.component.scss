@@ -1,0 +1,51 @@
+@use 'tool';
+@use 'mixins' as *;
+
+.filebar {
+  display: flex;
+  align-items: center;
+  gap: var(--ou-s-3);
+  padding: var(--ou-s-2) var(--ou-s-3);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface);
+  color: var(--ou-text-subtle);
+}
+
+.filebar__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--ou-fs-sm);
+  font-weight: 540;
+  color: var(--ou-text);
+  @include truncate;
+}
+
+.filebar__size {
+  font-size: var(--ou-fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.stage-skeleton {
+  width: 100%;
+  height: 420px;
+  border-radius: var(--ou-r-lg);
+}
+
+.image-stage {
+  display: grid;
+  place-items: center;
+  padding: var(--ou-s-6);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-bg-subtle);
+
+  img {
+    max-width: 100%;
+    max-height: 72vh;
+    object-fit: contain;
+    background: #fff;
+    box-shadow: var(--ou-shadow-md);
+    border-radius: var(--ou-r-sm);
+  }
+}

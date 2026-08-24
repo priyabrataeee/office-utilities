@@ -1,0 +1,147 @@
+<app-tool-shell toolId="file-hash-generator">
+  <div class="tool">
+    <app-file-drop-zone
+      [multiple]="true"
+      [compact]="hashes().length > 0"
+      title="Drop files to hash"
+      hint="Any file, any size — hashing runs in a background thread."
+      icon="fingerprint"
+      (filesChange)="onFiles($event)"
+    />
+
+    <div class="panel">
+      <h2 class="panel__title">Algorithms</h2>
+      <p class="panel__hint">
+        SHA-256 and CRC32 stream in chunks, so they handle files larger than memory.
+      </p>
+
+      <div class="algos">
+        @for (algorithm of algorithms; track algorithm.value) {
+          <label class="ou-check">
+            <input
+              type="checkbox"
+              [checked]="isSelected(algorithm.value)"
+              (change)="toggle(algorithm.value)"
+            />
+            <span>
+              <strong>{{ algorithm.label }}</strong>
+              <small>{{ algorithm.note }}</small>
+            </span>
+          </label>
+        }
+      </div>
+
+      @if (wideSelected() && hasLargeFile()) {
+        <p class="warn">
+          <app-icon name="alert-triangle" [size]="16" />
+          <span>
+            SHA-384 and SHA-512 use the browser's crypto API, which needs the entire file in
+            memory at once. For a file this large, SHA-256 is the safer choice.
+          </span>
+        </p>
+      }
+
+      @if (hasFile()) {
+        <div class="actions">
+          <button
+            type="button"
+            class="ou-btn ou-btn--primary"
+            [disabled]="busy()"
+            (click)="compute()"
+          >
+            <app-icon name="fingerprint" [size]="16" />
+            Compute hashes
+          </button>
+        </div>
+      }
+    </div>
+
+    <app-busy-overlay
+      [active]="busy()"
+      [percent]="percent()"
+      [label]="progressLabel()"
+      [note]="usesWorker() ? 'Running in a Web Worker — the page stays responsive.' : ''"
+    />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    @if (hashes().length) {
+      <div class="panel">
+        <h2 class="panel__title">Verify a download</h2>
+        <p class="panel__hint">
+          Paste the checksum published by whoever distributed the file.
+        </p>
+        <input
+          type="text"
+          class="ou-input mono"
+          placeholder="Paste an expected checksum…"
+          [value]="expected()"
+          (input)="setExpected($event)"
+        />
+
+        @if (verification(); as check) {
+          @if (check.matched) {
+            <p class="notice match">
+              <app-icon name="check-circle" [size]="16" />
+              <span>
+                <strong>Match.</strong>
+                The {{ check.algorithm }} hash of <code>{{ check.file }}</code> is identical to the
+                checksum you pasted.
+              </span>
+            </p>
+          } @else {
+            <p class="error">
+              <app-icon name="x-circle" [size]="16" />
+              <span>
+                <strong>No match.</strong>
+                That checksum does not equal any hash computed here. Check that you selected the
+                right algorithm, and treat the file as untrusted until it verifies.
+              </span>
+            </p>
+          }
+        }
+      </div>
+
+      <div class="toolbar">
+        <span class="ou-subtle">{{ hashes().length }} files hashed</span>
+        <span class="ou-spacer"></span>
+        <app-copy-button [text]="exportText()" label="Copy all" [small]="true" />
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="startOver()">
+          Clear
+        </button>
+      </div>
+
+      @for (file of hashes(); track file.name) {
+        <div class="result">
+          <header class="result__head">
+            <app-icon name="file" [size]="15" />
+            <span class="result__name" [title]="file.name">{{ file.name }}</span>
+            <span class="result__meta">
+              {{ file.size | fileSize }}
+              @if (throughput(file)) {
+                · {{ throughput(file) }}
+              }
+            </span>
+          </header>
+
+          <dl class="digests">
+            @for (entry of file.results | keyvalue; track entry.key) {
+              <div>
+                <dt>{{ entry.key }}</dt>
+                <dd>
+                  <code>{{ entry.value }}</code>
+                  <app-copy-button [text]="entry.value" [small]="true" />
+                </dd>
+              </div>
+            }
+          </dl>
+        </div>
+      }
+    }
+  </div>
+</app-tool-shell>

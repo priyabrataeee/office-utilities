@@ -1,0 +1,92 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true" [minimal]="hasFile()">
+  <div class="tool">
+    @if (!hasFile()) {
+      <app-file-drop-zone
+        [accepts]="accepts()"
+        [allowFolders]="false"
+        title="Drop a document to open it"
+        hint="Nothing is uploaded — the file is read straight into this page."
+        icon="eye"
+        (filesChange)="onFiles($event)"
+      />
+    } @else {
+      <div class="filebar ou-no-print">
+        <app-icon name="file" [size]="16" />
+        <span class="filebar__name" [title]="primaryFile()!.name">
+          {{ primaryFile()!.name }}
+        </span>
+        <span class="filebar__size">{{ primaryFile()!.size | fileSize }}</span>
+        <span class="ou-badge ou-badge--success">
+          <app-icon name="shield-check" [size]="11" />
+          local only
+        </span>
+        <span class="ou-spacer"></span>
+        <button type="button" class="ou-btn ou-btn--sm" (click)="startOver()">
+          <app-icon name="refresh" [size]="14" />
+          Open another
+        </button>
+      </div>
+
+      @switch (effectiveKind()) {
+        @case ('pdf') {
+          @defer (on immediate) {
+            <app-pdf-view [file]="primaryFile()!" />
+          } @placeholder {
+            <div class="ou-skeleton stage-skeleton"></div>
+          }
+        }
+        @case ('docx') {
+          @defer (on immediate) {
+            <app-docx-view [file]="primaryFile()!" />
+          } @placeholder {
+            <div class="ou-skeleton stage-skeleton"></div>
+          }
+        }
+        @case ('sheet') {
+          @defer (on immediate) {
+            <app-sheet-view [file]="primaryFile()!" />
+          } @placeholder {
+            <div class="ou-skeleton stage-skeleton"></div>
+          }
+        }
+        @case ('pptx') {
+          @defer (on immediate) {
+            <app-pptx-view [file]="primaryFile()!" />
+          } @placeholder {
+            <div class="ou-skeleton stage-skeleton"></div>
+          }
+        }
+        @case ('markdown') {
+          @defer (on immediate) {
+            <app-markdown-view [file]="primaryFile()!" />
+          } @placeholder {
+            <div class="ou-skeleton stage-skeleton"></div>
+          }
+        }
+        @case ('image') {
+          <div class="image-stage">
+            <img [src]="imageUrl()" [alt]="primaryFile()!.name" />
+          </div>
+        }
+        @case ('unsupported') {
+          <app-empty-state
+            icon="alert-circle"
+            title="That format is not supported yet"
+            message="Office Utilities opens PDF, Word, Excel, PowerPoint, CSV, Markdown, JSON, XML, HTML, text and images. If this file has an unusual extension, try renaming it to the right one."
+          >
+            <button type="button" class="ou-btn ou-btn--primary" (click)="startOver()">
+              Try another file
+            </button>
+          </app-empty-state>
+        }
+        @default {
+          @defer (on immediate) {
+            <app-code-view [file]="primaryFile()!" [kind]="codeKind()" />
+          } @placeholder {
+            <div class="ou-skeleton stage-skeleton"></div>
+          }
+        }
+      }
+    }
+  </div>
+</app-tool-shell>

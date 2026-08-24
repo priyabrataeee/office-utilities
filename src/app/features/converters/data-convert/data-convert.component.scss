@@ -1,0 +1,20 @@
+@use 'tool';
+@use 'split';
+
+.editor {
+  min-height: 260px;
+  font-family: var(--ou-font-mono);
+  font-size: var(--ou-fs-xs);
+}
+
+.preview {
+  min-height: 260px;
+  max-height: 40vh;
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-4);
+  margin-top: var(--ou-s-3);
+}

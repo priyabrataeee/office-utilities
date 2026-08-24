@@ -1,0 +1,143 @@
+@use 'tool';
+@use 'mixins' as *;
+
+.queue {
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-surface);
+  overflow: hidden;
+}
+
+.queue__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ou-s-3);
+  flex-wrap: wrap;
+  padding: var(--ou-s-3) var(--ou-s-4);
+  border-bottom: 1px solid var(--ou-border);
+  background: var(--ou-surface-2);
+
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  strong {
+    font-size: var(--ou-fs-base);
+  }
+
+  span {
+    font-size: var(--ou-fs-xs);
+    color: var(--ou-text-muted);
+  }
+}
+
+.queue__actions {
+  display: flex;
+  gap: var(--ou-s-2);
+}
+
+.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--ou-s-3);
+  padding: var(--ou-s-2) var(--ou-s-3);
+  border-bottom: 1px solid var(--ou-border);
+  background: var(--ou-surface);
+  cursor: grab;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &.is-dragging {
+    opacity: 0.45;
+  }
+
+  &:hover {
+    background: var(--ou-surface-2);
+  }
+}
+
+.item__handle {
+  color: var(--ou-text-subtle);
+  transform: rotate(90deg);
+}
+
+.item__index {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--ou-r-full);
+  background: var(--ou-surface-3);
+  font-size: var(--ou-fs-xs);
+  font-weight: 700;
+  color: var(--ou-text-muted);
+}
+
+.item__main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item__name {
+  font-size: var(--ou-fs-sm);
+  font-weight: 540;
+  @include truncate;
+}
+
+.item__meta {
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-subtle);
+}
+
+.item__error {
+  color: var(--ou-danger);
+}
+
+.item__range {
+  flex: 0 0 130px;
+  height: 30px;
+  font-size: var(--ou-fs-sm);
+}
+
+.item__unlock {
+  display: flex;
+  gap: var(--ou-s-2);
+  flex: 0 0 auto;
+
+  input {
+    width: 130px;
+    height: 30px;
+  }
+}
+
+.item__buttons {
+  display: flex;
+  gap: 2px;
+  flex: none;
+}
+
+@media (max-width: 720px) {
+  .item {
+    flex-wrap: wrap;
+  }
+  .item__main {
+    flex-basis: calc(100% - 90px);
+  }
+  .item__range,
+  .item__unlock {
+    flex-basis: 100%;
+  }
+}

@@ -1,0 +1,36 @@
+@use 'tool';
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-4);
+  margin-top: var(--ou-s-4);
+}
+
+.numbering {
+  margin-top: var(--ou-s-4);
+  max-width: 520px;
+}
+
+.panel .error {
+  margin-top: var(--ou-s-3);
+}
+
+.preview-table {
+  max-height: 50vh;
+}
+
+.is-changed td {
+  background: color-mix(in srgb, var(--ou-accent) 6%, transparent);
+}
+
+.new-name {
+  color: var(--ou-accent-text);
+  font-weight: 560;
+}
+
+td app-icon {
+  color: var(--ou-warning);
+  vertical-align: middle;
+  margin-left: 4px;
+}

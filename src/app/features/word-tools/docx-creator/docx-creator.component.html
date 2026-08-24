@@ -1,0 +1,179 @@
+<app-tool-shell toolId="docx-creator" [wide]="true">
+  <div class="tool">
+    <div class="topbar ou-no-print">
+      <input
+        type="text"
+        class="ou-input title"
+        [value]="title()"
+        (input)="setTitle($event)"
+        aria-label="Document title"
+      />
+      @if (savedAt()) {
+        <span class="ou-badge ou-badge--success">
+          <app-icon name="save" [size]="11" />
+          draft saved locally
+        </span>
+      }
+      <span class="ou-subtle">{{ wordCount() }} words</span>
+      <span class="ou-spacer"></span>
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="discardDraft()">
+        Discard draft
+      </button>
+    </div>
+
+    <div class="toolbar ou-no-print">
+      <div class="toolbar__group">
+        <button
+          type="button"
+          class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+          (click)="undo()"
+          aria-label="Undo"
+          title="Undo (Ctrl+Z)"
+        >
+          <app-icon name="undo" [size]="15" />
+        </button>
+        <button
+          type="button"
+          class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+          (click)="redo()"
+          aria-label="Redo"
+          title="Redo (Ctrl+Shift+Z)"
+        >
+          <app-icon name="redo" [size]="15" />
+        </button>
+      </div>
+
+      <span class="toolbar__divider"></span>
+
+      <div class="toolbar__group">
+        <button
+          type="button"
+          class="btn-fmt"
+          (click)="exec(formatButtons[0])"
+          title="Bold (Ctrl+B)"
+          style="font-weight: 700"
+        >B</button>
+        <button
+          type="button"
+          class="btn-fmt"
+          (click)="exec(formatButtons[1])"
+          title="Italic (Ctrl+I)"
+          style="font-style: italic"
+        >I</button>
+        <button
+          type="button"
+          class="btn-fmt"
+          (click)="exec(formatButtons[2])"
+          title="Underline (Ctrl+U)"
+          style="text-decoration: underline"
+        >U</button>
+        <button
+          type="button"
+          class="btn-fmt"
+          (click)="exec(formatButtons[3])"
+          title="Strikethrough"
+          style="text-decoration: line-through"
+        >S</button>
+      </div>
+
+      <span class="toolbar__divider"></span>
+
+      <div class="toolbar__group">
+        @for (button of blockButtons; track button.value) {
+          <button type="button" class="btn-block" (click)="exec(button)" [title]="button.label">
+            {{ button.value === 'P' ? 'Text' : button.value === 'BLOCKQUOTE' ? '“ ”' : button.value }}
+          </button>
+        }
+      </div>
+
+      <span class="toolbar__divider"></span>
+
+      <div class="toolbar__group">
+        @for (button of listButtons; track button.command) {
+          <button
+            type="button"
+            class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+            (click)="exec(button)"
+            [title]="button.label"
+            [attr.aria-label]="button.label"
+          >
+            <app-icon [name]="button.icon" [size]="15" />
+          </button>
+        }
+      </div>
+
+      <span class="toolbar__divider"></span>
+
+      <div class="toolbar__group">
+        @for (button of alignButtons; track button.command) {
+          <button
+            type="button"
+            class="btn-fmt"
+            (click)="exec(button)"
+            [title]="button.label"
+          >
+            {{ button.command === 'justifyLeft' ? '⇤' : button.command === 'justifyCenter' ? '⇔' : '⇥' }}
+          </button>
+        }
+      </div>
+
+      <span class="toolbar__divider"></span>
+
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="insertLink()">
+        <app-icon name="link" [size]="14" />
+        Link
+      </button>
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost"
+        (click)="insertHorizontalRule()"
+      >
+        HR
+      </button>
+
+      <span class="ou-spacer"></span>
+
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm"
+        [disabled]="busy()"
+        (click)="downloadDocx()"
+      >
+        <app-icon name="file-word" [size]="14" />
+        .docx
+      </button>
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm"
+        [disabled]="busy()"
+        (click)="downloadPdf()"
+      >
+        <app-icon name="file-pdf" [size]="14" />
+        .pdf
+      </button>
+    </div>
+
+    <div
+      #editor
+      class="editor ou-prose"
+      contenteditable="true"
+      spellcheck="true"
+      role="textbox"
+      aria-multiline="true"
+      aria-label="Document body"
+      (input)="onInput()"
+      (paste)="onPaste($event)"
+    ></div>
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Document ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

@@ -1,0 +1,81 @@
+@use 'mixins' as *;
+
+/** Slide thumbnail grid shared by the PowerPoint tools. */
+.slides {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--ou-s-3);
+}
+
+.slide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-1);
+}
+
+.slide__button {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-sm);
+  background: #fff;
+  overflow: hidden;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: var(--ou-shadow-md);
+  }
+}
+
+.slide.is-selected .slide__button {
+  border-color: var(--ou-accent);
+  box-shadow: 0 0 0 1px var(--ou-accent);
+}
+
+.slide__canvas {
+  display: block;
+  width: 100%;
+  background: #fff;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.slide__check {
+  position: absolute;
+  top: var(--ou-s-1);
+  right: var(--ou-s-1);
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border-radius: var(--ou-r-full);
+  background: var(--ou-accent);
+  color: #fff;
+}
+
+.slide__num {
+  position: absolute;
+  bottom: 3px;
+  left: 5px;
+  padding: 0 5px;
+  border-radius: var(--ou-r-xs);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.slide__title {
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-muted);
+  padding-inline: 2px;
+  @include truncate;
+}

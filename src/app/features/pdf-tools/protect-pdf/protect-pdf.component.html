@@ -1,0 +1,142 @@
+<app-tool-shell toolId="protect-pdf">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pdf']"
+      [compact]="hasFile()"
+      title="Drop a PDF to protect"
+      hint="Encryption happens here — the password never reaches a server."
+      icon="lock"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (hasFile()) {
+      <div class="panel">
+        <h2 class="panel__title">Password</h2>
+        <p class="panel__hint">
+          Anyone opening the document will need this. It is applied with AES encryption on your
+          device.
+        </p>
+
+        <div class="options">
+          <label class="ou-field">
+            <span class="ou-label">Password to open</span>
+            <div class="reveal">
+              <input
+                [type]="showPassword() ? 'text' : 'password'"
+                class="ou-input"
+                autocomplete="new-password"
+                [value]="userPassword()"
+                (input)="set('user', $event)"
+              />
+              <button
+                type="button"
+                class="ou-btn ou-btn--ghost ou-btn--icon"
+                (click)="toggleVisibility()"
+                [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+              >
+                <app-icon [name]="showPassword() ? 'eye-off' : 'eye'" [size]="16" />
+              </button>
+            </div>
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Confirm password</span>
+            <input
+              [type]="showPassword() ? 'text' : 'password'"
+              class="ou-input"
+              autocomplete="new-password"
+              [value]="confirmPassword()"
+              (input)="set('confirm', $event)"
+            />
+          </label>
+        </div>
+
+        @if (strength(); as report) {
+          <div class="strength" [class]="'strength--' + report.tone">
+            <div class="strength__bar">
+              @for (step of [1, 2, 3, 4, 5, 6]; track step) {
+                <span [class.is-on]="report.score >= step"></span>
+              }
+            </div>
+            <p><strong>{{ report.label }}</strong> — {{ report.advice }}</p>
+          </div>
+        }
+
+        @if (confirmPassword() && !passwordsMatch()) {
+          <p class="error">
+            <app-icon name="alert-circle" [size]="16" />
+            The two passwords do not match.
+          </p>
+        }
+
+        <label class="ou-check owner">
+          <input type="checkbox" [checked]="useOwnerPassword()" (change)="toggleOwner($event)" />
+          Set a separate owner password for changing permissions
+        </label>
+
+        @if (useOwnerPassword()) {
+          <label class="ou-field owner__field">
+            <span class="ou-label">Owner password</span>
+            <input
+              [type]="showPassword() ? 'text' : 'password'"
+              class="ou-input"
+              autocomplete="new-password"
+              [value]="ownerPassword()"
+              (input)="set('owner', $event)"
+            />
+          </label>
+        }
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title">What readers may do</h2>
+        <p class="panel__hint">
+          Permissions are recorded in the PDF and respected by compliant readers. They are a
+          statement of intent, not a hard guarantee — a determined reader can ignore them.
+        </p>
+
+        <ul class="perms">
+          @for (row of permissionRows; track row.key) {
+            <li>
+              <label class="ou-check">
+                <input
+                  type="checkbox"
+                  [checked]="permissions()[row.key]"
+                  (change)="setPermission(row.key, $event)"
+                />
+                <span>
+                  <strong>{{ row.label }}</strong>
+                  <small>{{ row.hint }}</small>
+                </span>
+              </label>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="!canProtect() || busy()"
+          (click)="protect()"
+        >
+          <app-icon name="lock" [size]="17" />
+          Protect PDF
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Protected PDF ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

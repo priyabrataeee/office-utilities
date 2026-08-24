@@ -1,0 +1,215 @@
+<section class="hero">
+  <div class="hero__inner">
+    <span class="hero__pill">
+      <app-icon name="shield-check" [size]="14" />
+      100% client-side · no uploads · no accounts
+    </span>
+
+    <h1 class="hero__title">
+      Office documents,<br />
+      <span class="hero__gradient">without the upload.</span>
+    </h1>
+
+    <p class="hero__lede">
+      {{ registry.tools.length }} tools for PDF, Word, Excel, PowerPoint, diagrams and file
+      inspection — all running inside this browser tab. Your files never leave your computer.
+    </p>
+
+    <div class="hero__search">
+      <app-icon name="search" [size]="18" />
+      <input
+        type="search"
+        class="hero__input"
+        placeholder="What do you need to do? Try “merge pdf” or “csv to excel”…"
+        [value]="query()"
+        (input)="onSearch($event)"
+        aria-label="Search tools"
+      />
+      @if (query()) {
+        <button type="button" class="ou-btn ou-btn--ghost ou-btn--sm ou-btn--icon" (click)="query.set('')">
+          <app-icon name="x" [size]="15" />
+        </button>
+      }
+    </div>
+
+    @if (searchResults().length) {
+      <div class="hero__results">
+        @for (tool of searchResults(); track tool.id) {
+          <a class="hero__result" [routerLink]="tool.path">
+            <app-icon [name]="tool.icon" [size]="15" />
+            <strong>{{ tool.title }}</strong>
+            <small>{{ tool.summary }}</small>
+          </a>
+        }
+      </div>
+    } @else if (query()) {
+      <p class="hero__noresult">
+        Nothing matched “{{ query() }}”. <a routerLink="/tools">Browse all tools</a>
+      </p>
+    }
+
+    <div class="hero__drop">
+      <app-file-drop-zone
+        [multiple]="true"
+        [showSelection]="false"
+        title="Drop any document to get started"
+        hint="PDF, DOCX, XLSX, PPTX, CSV, images and more — we will suggest the right tool"
+        icon="upload"
+        (filesChange)="onDropped($event)"
+      />
+
+      @if (suggestions().length) {
+        <div class="picker ou-animate-in">
+          <header class="picker__head">
+            <div>
+              <strong>{{ droppedSummary() }}</strong>
+              <span>Choose what to do next</span>
+            </div>
+            <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="clearDrop()">
+              Clear
+            </button>
+          </header>
+          <div class="picker__grid">
+            @for (tool of suggestions(); track tool.id) {
+              <button type="button" class="picker__tool" (click)="openWith(tool)">
+                <span class="picker__icon" [style.--accent]="'var(' + tool.categoryRef.accentVar + ')'">
+                  <app-icon [name]="tool.icon" [size]="16" />
+                </span>
+                <span class="picker__text">
+                  <strong>{{ tool.title }}</strong>
+                  <small>{{ tool.summary }}</small>
+                </span>
+                <app-icon name="arrow-right" [size]="14" />
+              </button>
+            }
+          </div>
+        </div>
+      } @else if (dropped().length) {
+        <p class="hero__noresult">
+          No tool here handles that file type yet. <a routerLink="/tools">See everything we support</a>
+        </p>
+      }
+    </div>
+
+    <ul class="hero__proof">
+      <li><app-icon name="zap" [size]="15" /> No queue or size caps</li>
+      <li><app-icon name="cloud" [size]="15" /> Works offline once loaded</li>
+      <li><app-icon name="user" [size]="15" /> Nothing to sign up for</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section ou-container">
+  <header class="section__head">
+    <div>
+      <h2>Popular tools</h2>
+      <p>The ones people reach for most.</p>
+    </div>
+    <a class="ou-btn ou-btn--subtle" routerLink="/tools">
+      All {{ registry.tools.length }} tools
+      <app-icon name="arrow-right" [size]="15" />
+    </a>
+  </header>
+
+  <div class="ou-grid">
+    @for (tool of registry.popular(); track tool.id) {
+      <app-tool-card [tool]="tool" [showCategory]="true" />
+    }
+  </div>
+</section>
+
+@if (registry.recentTools().length) {
+  <section class="section ou-container">
+    <header class="section__head">
+      <div>
+        <h2>Pick up where you left off</h2>
+        <p>Stored on this device only.</p>
+      </div>
+      <a class="ou-btn ou-btn--subtle" routerLink="/recent">
+        Recent files
+        <app-icon name="arrow-right" [size]="15" />
+      </a>
+    </header>
+
+    <div class="ou-grid">
+      @for (tool of registry.recentTools().slice(0, 6); track tool.id) {
+        <app-tool-card [tool]="tool" [compact]="true" [showCategory]="true" />
+      }
+    </div>
+  </section>
+}
+
+<section class="section ou-container">
+  <header class="section__head">
+    <div>
+      <h2>Browse by category</h2>
+      <p>Nine toolkits, one privacy model.</p>
+    </div>
+  </header>
+
+  <div class="cats">
+    @for (category of registry.categories; track category.id) {
+      <a class="cat" [routerLink]="['/', category.slug]" [style.--accent]="'var(' + category.accentVar + ')'">
+        <span class="cat__icon"><app-icon [name]="category.icon" [size]="22" /></span>
+        <h3 class="cat__title">{{ category.title }}</h3>
+        <p class="cat__text">{{ category.tagline }}</p>
+        <span class="cat__count">
+          {{ registry.countInCategory(category.id) }} tools
+          <app-icon name="arrow-right" [size]="13" />
+        </span>
+      </a>
+    }
+  </div>
+</section>
+
+<section class="section ou-container">
+  <div class="promise">
+    <div class="promise__text">
+      <h2>Why nothing is uploaded</h2>
+      <p>
+        Traditional online converters send your document to a server, process it there, and ask you
+        to trust a privacy policy about what happens next. {{ site.name }} does the work in the same
+        tab you are reading this in, using the browser's own PDF, ZIP, image and crypto engines.
+      </p>
+      <p>
+        That means contracts, payslips and client spreadsheets never touch a third party — and it is
+        why the tools keep working when your connection drops.
+      </p>
+      <a class="ou-btn ou-btn--primary" routerLink="/privacy">
+        Read the privacy model
+        <app-icon name="arrow-right" [size]="15" />
+      </a>
+    </div>
+
+    <ul class="promise__list">
+      <li>
+        <app-icon name="shield-check" [size]="18" />
+        <div>
+          <strong>No file ever leaves the device</strong>
+          <span>There is no upload endpoint to send it to — the app is static files only.</span>
+        </div>
+      </li>
+      <li>
+        <app-icon name="zap" [size]="18" />
+        <div>
+          <strong>Heavy work runs off the main thread</strong>
+          <span>Hashing, parsing and rendering happen in Web Workers, so the UI stays smooth.</span>
+        </div>
+      </li>
+      <li>
+        <app-icon name="cloud" [size]="18" />
+        <div>
+          <strong>Installable and offline-capable</strong>
+          <span>Add it to your desktop and the whole toolkit keeps working on a plane.</span>
+        </div>
+      </li>
+      <li>
+        <app-icon name="eye-off" [size]="18" />
+        <div>
+          <strong>No analytics on your documents</strong>
+          <span>We cannot see what you convert, because it never reaches us.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>

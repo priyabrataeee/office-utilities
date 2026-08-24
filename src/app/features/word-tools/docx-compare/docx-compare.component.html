@@ -1,0 +1,137 @@
+<app-tool-shell toolId="compare-docx" [wide]="true">
+  <div class="tool">
+    <div class="sources">
+      <div class="source">
+        <span class="source__label">Original</span>
+        <app-file-drop-zone
+          [accepts]="['.docx', '.txt', '.md']"
+          [compact]="!!leftName()"
+          [title]="leftName() || 'Drop the original'"
+          hint="DOCX, TXT or Markdown"
+          icon="file-word"
+          (filesChange)="onSide('left', $event)"
+        />
+      </div>
+
+      <div class="source">
+        <span class="source__label">Revised</span>
+        <app-file-drop-zone
+          [accepts]="['.docx', '.txt', '.md']"
+          [compact]="!!rightName()"
+          [title]="rightName() || 'Drop the revised version'"
+          hint="DOCX, TXT or Markdown"
+          icon="file-word"
+          (filesChange)="onSide('right', $event)"
+        />
+      </div>
+    </div>
+
+    @if (diff(); as summary) {
+      <div class="stats">
+        <div class="stat">
+          <span class="stat__label">Similarity</span>
+          <span class="stat__value">{{ summary.similarity.toFixed(1) }}%</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Added</span>
+          <span class="stat__value added">+{{ summary.added }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Removed</span>
+          <span class="stat__value removed">−{{ summary.removed }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Unchanged</span>
+          <span class="stat__value">{{ summary.unchanged }}</span>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="tabs">
+          <button
+            type="button"
+            class="tab"
+            [class.is-active]="view() === 'inline'"
+            (click)="setView('inline')"
+          >
+            Inline
+          </button>
+          <button
+            type="button"
+            class="tab"
+            [class.is-active]="view() === 'side'"
+            (click)="setView('side')"
+          >
+            Side by side
+          </button>
+        </div>
+
+        <label class="ou-check">
+          <input type="checkbox" [checked]="hideUnchanged()" (change)="toggleUnchanged($event)" />
+          Changes only
+        </label>
+
+        <span class="ou-spacer"></span>
+
+        <button type="button" class="ou-btn ou-btn--sm" (click)="swap()">
+          <app-icon name="shuffle" [size]="14" />
+          Swap sides
+        </button>
+        <app-copy-button [text]="patchText()" label="Copy diff" [small]="true" />
+      </div>
+
+      @if (view() === 'inline') {
+        <ol class="diff">
+          @for (line of visibleLines(); track $index) {
+            <li class="line" [class]="'line--' + line.op">
+              <span class="line__sign">
+                {{ line.op === 'insert' ? '+' : line.op === 'delete' ? '−' : '' }}
+              </span>
+              <span class="line__text">
+                @if (line.segments) {
+                  @for (segment of line.segments; track $index) {
+                    <span [class]="'seg seg--' + segment.op">{{ segment.text }}</span>
+                  }
+                } @else {
+                  {{ line.op === 'insert' ? line.right : line.left }}
+                }
+              </span>
+            </li>
+          }
+        </ol>
+      } @else {
+        <div class="side">
+          <ol class="diff diff--side">
+            @for (line of visibleLines(); track $index) {
+              <li class="line" [class.line--delete]="line.op !== 'equal' && line.left">
+                <span class="line__text">{{ line.left }}</span>
+              </li>
+            }
+          </ol>
+          <ol class="diff diff--side">
+            @for (line of visibleLines(); track $index) {
+              <li class="line" [class.line--insert]="line.op !== 'equal' && line.right">
+                <span class="line__text">{{ line.right }}</span>
+              </li>
+            }
+          </ol>
+        </div>
+      }
+
+      <div class="actions">
+        <button type="button" class="ou-btn" (click)="startOver()">Compare different files</button>
+      </div>
+    } @else if (!ready()) {
+      <p class="hint">Load both documents to see the comparison.</p>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+  </div>
+</app-tool-shell>

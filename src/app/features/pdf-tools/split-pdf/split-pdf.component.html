@@ -1,0 +1,209 @@
+<app-tool-shell toolId="split-pdf" [wide]="true">
+  <div class="tool">
+    @if (!pageCount()) {
+      <app-file-drop-zone
+        [accepts]="['.pdf']"
+        title="Drop a PDF to split"
+        hint="Choose where it breaks, preview every part, then download."
+        icon="scissors"
+        (filesChange)="onFiles($event)"
+      />
+    }
+
+    @if (needsPassword()) {
+      <div class="panel">
+        <h2 class="panel__title">This PDF is protected</h2>
+        <p class="panel__hint">Enter the password to open it. It stays on your device.</p>
+        <div class="actions">
+          <label class="ou-field actions__name">
+            <span class="ou-label">Password</span>
+            <input
+              type="password"
+              class="ou-input"
+              [value]="password()"
+              (input)="setPassword($event)"
+              (keyup.enter)="retryWithPassword()"
+            />
+          </label>
+          <button type="button" class="ou-btn ou-btn--primary" (click)="retryWithPassword()">
+            <app-icon name="unlock" [size]="16" />
+            Unlock
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (pageCount()) {
+      <div class="panel">
+        <h2 class="panel__title">How should it split?</h2>
+        <p class="panel__hint">{{ pageCount() }} pages in this document.</p>
+
+        <div class="modes">
+          <button
+            type="button"
+            class="mode"
+            [class.is-active]="mode() === 'marks'"
+            (click)="setMode('marks')"
+          >
+            <app-icon name="scissors" [size]="16" />
+            <span>
+              <strong>Split at marks</strong>
+              <small>Click between pages to place a cut</small>
+            </span>
+          </button>
+          <button
+            type="button"
+            class="mode"
+            [class.is-active]="mode() === 'every'"
+            (click)="setMode('every')"
+          >
+            <app-icon name="layers" [size]="16" />
+            <span>
+              <strong>Every N pages</strong>
+              <small>Fixed-size chunks</small>
+            </span>
+          </button>
+          <button
+            type="button"
+            class="mode"
+            [class.is-active]="mode() === 'ranges'"
+            (click)="setMode('ranges')"
+          >
+            <app-icon name="text-select" [size]="16" />
+            <span>
+              <strong>Custom ranges</strong>
+              <small>One document per range</small>
+            </span>
+          </button>
+          <button
+            type="button"
+            class="mode"
+            [class.is-active]="mode() === 'each'"
+            (click)="setMode('each')"
+          >
+            <app-icon name="copy" [size]="16" />
+            <span>
+              <strong>Every page</strong>
+              <small>One PDF per page</small>
+            </span>
+          </button>
+        </div>
+
+        @if (mode() === 'every') {
+          <label class="ou-field chunk">
+            <span class="ou-label">Pages per document</span>
+            <input
+              type="number"
+              class="ou-input"
+              min="1"
+              [max]="pageCount()"
+              [value]="chunkSize()"
+              (input)="setChunkSize($event)"
+            />
+          </label>
+        }
+
+        @if (mode() === 'ranges') {
+          <label class="ou-field">
+            <span class="ou-label">
+              Ranges — one document per line or semicolon, e.g. <code>1-3; 7-9</code>
+            </span>
+            <textarea
+              class="ou-textarea"
+              rows="3"
+              [value]="rangesInput()"
+              (input)="setRanges($event)"
+            ></textarea>
+          </label>
+        }
+      </div>
+
+      @if (mode() === 'marks') {
+        <div class="panel">
+          <h2 class="panel__title">Click a divider to cut there</h2>
+          <p class="panel__hint">
+            Scissors show where the document will break into a new file.
+          </p>
+
+          <div class="strip">
+            @for (thumb of thumbnails(); track $index; let i = $index) {
+              <div class="strip__cell">
+                <div class="strip__page">
+                  @if (thumb) {
+                    <img [src]="thumb" [alt]="'Page ' + (i + 1)" />
+                  } @else {
+                    <span class="strip__placeholder ou-skeleton"></span>
+                  }
+                  <span class="strip__num">{{ i + 1 }}</span>
+                </div>
+
+                @if (i < thumbnails().length - 1) {
+                  <button
+                    type="button"
+                    class="cut"
+                    [class.is-on]="hasBreak(i)"
+                    (click)="toggleBreak(i)"
+                    [attr.aria-pressed]="hasBreak(i)"
+                    [attr.aria-label]="'Split after page ' + (i + 1)"
+                    [title]="'Split after page ' + (i + 1)"
+                  >
+                    <app-icon name="scissors" [size]="14" />
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="panel">
+        <h2 class="panel__title">{{ partCount() }} documents will be created</h2>
+        <p class="panel__hint">Preview the plan before anything is written.</p>
+
+        <ul class="parts">
+          @for (part of parts(); track part.name; let i = $index) {
+            <li class="part">
+              <span class="part__index">{{ i + 1 }}</span>
+              <span class="part__name">{{ part.name }}</span>
+              <span class="part__meta">{{ describe(part) }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="!partCount() || busy()"
+          (click)="split()"
+        >
+          <app-icon name="scissors" [size]="17" />
+          Split into {{ partCount() }} PDFs
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay
+      [active]="busy()"
+      [percent]="percent()"
+      [label]="progressLabel()"
+      note="Each part is built from the original pages, with no quality loss."
+    />
+
+    @if (errorMessage() && !needsPassword()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel
+      [outputs]="outputs()"
+      title="Split complete"
+      zipName="split-pdf.zip"
+      (reset)="startOver()"
+    />
+  </div>
+</app-tool-shell>

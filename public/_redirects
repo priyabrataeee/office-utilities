@@ -1,0 +1,19 @@
+# ---------------------------------------------------------------------------
+# Canonical domain
+# ---------------------------------------------------------------------------
+# When the site answers on more than one domain, pick ONE as canonical and 301
+# the others to it. Without this, search engines see two copies of every page
+# and split the ranking signal between them.
+#
+# Uncomment and edit, putting your PRIMARY domain on the right. The :splat
+# preserves the rest of the path.
+#
+# https://alternate-domain.com/*   https://your-primary-domain.com/:splat   301!
+# https://www.your-primary-domain.com/*   https://your-primary-domain.com/:splat   301!
+
+# ---------------------------------------------------------------------------
+# SPA fallback
+# ---------------------------------------------------------------------------
+# Every route is prerendered to its own index.html, so this only catches URLs
+# introduced after the last publish. Keep it last — rules match top-down.
+/*    /index.html    200

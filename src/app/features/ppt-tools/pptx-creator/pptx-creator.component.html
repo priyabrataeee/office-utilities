@@ -1,0 +1,286 @@
+<app-tool-shell toolId="pptx-creator" [wide]="true">
+  <div class="tool">
+    <div class="topbar ou-no-print">
+      <input
+        type="text"
+        class="ou-input title"
+        [value]="title()"
+        (input)="setTitle($event)"
+        aria-label="Presentation title"
+      />
+      <input
+        type="text"
+        class="ou-input author"
+        [value]="author()"
+        (input)="setAuthor($event)"
+        placeholder="Author"
+        aria-label="Author"
+      />
+      <label class="ou-check">
+        <input
+          type="checkbox"
+          [checked]="widescreen()"
+          (change)="toggleWidescreen($event)"
+        />
+        Widescreen (16:9)
+      </label>
+      @if (savedAt()) {
+        <span class="ou-badge ou-badge--success">
+          <app-icon name="save" [size]="11" />
+          draft saved locally
+        </span>
+      }
+      <span class="ou-spacer"></span>
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="discardDraft()">
+        Discard draft
+      </button>
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--primary"
+        (click)="downloadPptx()"
+        [disabled]="busy()"
+      >
+        <app-icon name="file-ppt" [size]="14" />
+        Download .pptx
+      </button>
+    </div>
+
+    <div class="workspace">
+      <aside class="rail ou-no-print" aria-label="Slides">
+        <div class="rail__head">
+          <span class="ou-label">{{ slides().length }} slides</span>
+          <button
+            type="button"
+            class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+            (click)="addSlide(currentIndex())"
+            aria-label="Add slide after current"
+            title="Add slide after current"
+          >
+            <app-icon name="plus" [size]="14" />
+          </button>
+        </div>
+
+        <ul class="rail__list">
+          @for (slide of slides(); track slide.id; let i = $index) {
+            <li
+              class="rail__item"
+              [class.is-current]="currentId() === slide.id"
+              (click)="select(slide.id)"
+            >
+              <span class="rail__num">{{ i + 1 }}</span>
+              <div class="rail__thumb" [style.aspect-ratio]="aspect()">
+                <div
+                  class="rail__thumb-bg"
+                  [style.background]="slide.background"
+                  [style.color]="textColourFor(slide.background)"
+                >
+                  <span class="rail__thumb-accent" [style.background]="slide.accent"></span>
+                  <span class="rail__thumb-title">{{ slide.title || 'Untitled slide' }}</span>
+                </div>
+              </div>
+              <span class="rail__meta">{{ layoutLabel(slide.layout) }}</span>
+            </li>
+          }
+        </ul>
+      </aside>
+
+      <section class="editor" [attr.aria-label]="'Editing slide ' + (currentIndex() + 1)">
+        @let slide = current();
+
+        <div class="editor__toolbar ou-no-print">
+          <div class="toolbar__group">
+            <button
+              type="button"
+              class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+              (click)="move(-1)"
+              [disabled]="currentIndex() === 0"
+              aria-label="Move slide earlier"
+            >
+              <app-icon name="chevron-up" [size]="14" />
+            </button>
+            <button
+              type="button"
+              class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+              (click)="move(1)"
+              [disabled]="currentIndex() === slides().length - 1"
+              aria-label="Move slide later"
+            >
+              <app-icon name="chevron-down" [size]="14" />
+            </button>
+          </div>
+
+          <span class="toolbar__divider"></span>
+
+          <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="duplicateCurrent()">
+            <app-icon name="copy" [size]="14" />
+            Duplicate
+          </button>
+          <button
+            type="button"
+            class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--danger"
+            (click)="removeCurrent()"
+          >
+            <app-icon name="trash" [size]="14" />
+            Delete slide
+          </button>
+
+          <span class="ou-spacer"></span>
+
+          <span class="ou-subtle">Slide {{ currentIndex() + 1 }} of {{ slides().length }}</span>
+        </div>
+
+        <div class="editor__body">
+          <div class="editor__preview">
+            <div
+              class="stage"
+              [style.aspect-ratio]="aspect()"
+              [style.background]="slide.background"
+              [style.color]="textColourFor(slide.background)"
+            >
+              @switch (slide.layout) {
+                @case ('title') {
+                  <div class="stage__center">
+                    <h2 class="stage__title stage__title--hero">{{ slide.title || 'Untitled slide' }}</h2>
+                    <span class="stage__rule" [style.background]="slide.accent"></span>
+                    @if (slide.body) {
+                      <p class="stage__lede" [style.color]="mutedColourFor(slide.background)">
+                        {{ slide.body }}
+                      </p>
+                    }
+                  </div>
+                }
+                @case ('section') {
+                  <div class="stage__section" [style.background]="slide.accent">
+                    <h2 class="stage__title stage__title--section">{{ slide.title || 'Untitled slide' }}</h2>
+                    @if (slide.body) {
+                      <p class="stage__section-lede">{{ slide.body }}</p>
+                    }
+                  </div>
+                }
+                @case ('blank') {
+                  <h2 class="stage__title stage__title--small">{{ slide.title || 'Untitled slide' }}</h2>
+                }
+                @case ('two-column') {
+                  <div class="stage__strip" [style.background]="slide.accent"></div>
+                  <h2 class="stage__title">{{ slide.title || 'Untitled slide' }}</h2>
+                  <div class="stage__columns">
+                    <ul class="stage__bullets">
+                      @for (line of bodyLines(slide.body); track $index) {
+                        <li>{{ line }}</li>
+                      }
+                    </ul>
+                    <ul class="stage__bullets">
+                      @for (line of bodyLines(slide.bodyRight); track $index) {
+                        <li>{{ line }}</li>
+                      }
+                    </ul>
+                  </div>
+                }
+                @default {
+                  <div class="stage__strip" [style.background]="slide.accent"></div>
+                  <h2 class="stage__title">{{ slide.title || 'Untitled slide' }}</h2>
+                  <ul class="stage__bullets">
+                    @for (line of bodyLines(slide.body); track $index) {
+                      <li>{{ line }}</li>
+                    }
+                  </ul>
+                }
+              }
+            </div>
+          </div>
+
+          <div class="editor__form ou-no-print">
+            <label class="ou-field">
+              <span class="ou-label">Layout</span>
+              <select
+                class="ou-select"
+                [value]="slide.layout"
+                (change)="updateCurrent('layout', $event)"
+              >
+                @for (option of layoutOptions; track option.value) {
+                  <option [value]="option.value">{{ option.label }} — {{ option.hint }}</option>
+                }
+              </select>
+            </label>
+
+            <label class="ou-field">
+              <span class="ou-label">Title</span>
+              <input
+                type="text"
+                class="ou-input"
+                [value]="slide.title"
+                (input)="updateCurrent('title', $event)"
+              />
+            </label>
+
+            <label class="ou-field">
+              <span class="ou-label">
+                {{ slide.layout === 'title' ? 'Subtitle' : slide.layout === 'two-column' ? 'Left column (one bullet per line)' : 'Body (one bullet per line)' }}
+              </span>
+              <textarea
+                class="ou-textarea"
+                rows="5"
+                [value]="slide.body"
+                (input)="updateCurrent('body', $event)"
+              ></textarea>
+            </label>
+
+            @if (slide.layout === 'two-column') {
+              <label class="ou-field">
+                <span class="ou-label">Right column</span>
+                <textarea
+                  class="ou-textarea"
+                  rows="5"
+                  [value]="slide.bodyRight"
+                  (input)="updateCurrent('bodyRight', $event)"
+                ></textarea>
+              </label>
+            }
+
+            <div class="two">
+              <label class="ou-field">
+                <span class="ou-label">Background</span>
+                <input
+                  type="color"
+                  class="ou-input color"
+                  [value]="slide.background"
+                  (input)="updateCurrent('background', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Accent</span>
+                <input
+                  type="color"
+                  class="ou-input color"
+                  [value]="slide.accent"
+                  (input)="updateCurrent('accent', $event)"
+                />
+              </label>
+            </div>
+
+            <label class="ou-field">
+              <span class="ou-label">Speaker notes</span>
+              <textarea
+                class="ou-textarea"
+                rows="3"
+                [value]="slide.notes"
+                (input)="updateCurrent('notes', $event)"
+              ></textarea>
+            </label>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Presentation ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

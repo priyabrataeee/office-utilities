@@ -1,0 +1,271 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.xlsx', '.xls', '.xlsm', '.ods', '.csv', '.tsv']"
+      [compact]="hasData()"
+      title="Drop a spreadsheet"
+      hint="XLSX, XLS, ODS or CSV. Changes are previewed before anything is written."
+      [icon]="isDuplicates() ? 'copy-minus' : 'sparkles'"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (hasData()) {
+      @if (sheetNames().length > 1) {
+        <label class="ou-field sheet-picker">
+          <span class="ou-label">Sheet</span>
+          <select class="ou-select" [value]="activeSheetName()" (change)="onSheetChange($event)">
+            @for (name of sheetNames(); track name) {
+              <option [value]="name">{{ name }}</option>
+            }
+          </select>
+        </label>
+      }
+
+      <div class="panel">
+        @if (isDuplicates()) {
+          <h2 class="panel__title">Matching rules</h2>
+          <p class="panel__hint">
+            Pick the columns that define a duplicate. With none selected, every column must match.
+          </p>
+
+          <div class="columns">
+            @for (header of activeSheet()!.headers; track $index; let i = $index) {
+              <button
+                type="button"
+                class="chip"
+                [class.is-active]="isKeyColumn(i)"
+                (click)="toggleColumnKey(i)"
+              >
+                @if (isKeyColumn(i)) {
+                  <app-icon name="check" [size]="13" />
+                }
+                {{ header }}
+              </button>
+            }
+          </div>
+
+          <div class="options">
+            <label class="ou-field">
+              <span class="ou-label">Which row to keep</span>
+              <select class="ou-select" [value]="keep()" (change)="setKeep($event)">
+                <option value="first">Keep the first occurrence</option>
+                <option value="last">Keep the last occurrence</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="checks">
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="caseInsensitive()"
+                (change)="setFlag('caseInsensitive', $event)"
+              />
+              Ignore letter case
+            </label>
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="ignoreWhitespace()"
+                (change)="setFlag('ignoreWhitespace', $event)"
+              />
+              Ignore extra whitespace
+            </label>
+          </div>
+        } @else if (isBlanks()) {
+          <h2 class="panel__title">What to remove</h2>
+          <p class="panel__hint">
+            Rows and columns that contain nothing but whitespace are treated as empty.
+          </p>
+          <div class="checks">
+            <label class="ou-check">
+              <input type="checkbox" checked disabled />
+              Blank rows
+            </label>
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="removeBlankColumns()"
+                (change)="setFlag('removeBlankColumns', $event)"
+              />
+              Blank columns
+            </label>
+          </div>
+        } @else {
+          <h2 class="panel__title">Cleaning rules</h2>
+          <p class="panel__hint">Every rule is optional — the preview updates as you toggle.</p>
+
+          <div class="checks checks--grid">
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="trimWhitespace()"
+                (change)="setFlag('trimWhitespace', $event)"
+              />
+              Trim leading and trailing spaces
+            </label>
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="collapseSpaces()"
+                (change)="setFlag('collapseSpaces', $event)"
+              />
+              Collapse repeated spaces
+            </label>
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="stripNonPrintable()"
+                (change)="setFlag('stripNonPrintable', $event)"
+              />
+              Strip invisible control characters
+            </label>
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="numbersFromText()"
+                (change)="setFlag('numbersFromText', $event)"
+              />
+              Convert numeric text to real numbers
+            </label>
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="removeBlankRows()"
+                (change)="setFlag('removeBlankRows', $event)"
+              />
+              Remove blank rows
+            </label>
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="removeBlankColumns()"
+                (change)="setFlag('removeBlankColumns', $event)"
+              />
+              Remove blank columns
+            </label>
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="removeDuplicateRows()"
+                (change)="setFlag('removeDuplicateRows', $event)"
+              />
+              Remove duplicate rows
+            </label>
+          </div>
+
+          <label class="ou-field case">
+            <span class="ou-label">Text case</span>
+            <select class="ou-select" [value]="normaliseCase()" (change)="setCase($event)">
+              <option value="none">Leave as it is</option>
+              <option value="lower">lower case</option>
+              <option value="upper">UPPER CASE</option>
+              <option value="title">Title Case</option>
+              <option value="sentence">Sentence case</option>
+            </select>
+          </label>
+        }
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="stat__label">Rows before</span>
+          <span class="stat__value">{{ rowsBefore().toLocaleString() }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Rows after</span>
+          <span class="stat__value">{{ rowsAfter().toLocaleString() }}</span>
+        </div>
+        @if (isDuplicates()) {
+          <div class="stat">
+            <span class="stat__label">Duplicates</span>
+            <span class="stat__value">{{ duplicateRowCount().toLocaleString() }}</span>
+            <span class="stat__note">{{ duplicateGroups().length }} groups</span>
+          </div>
+        } @else if (report(); as summary) {
+          <div class="stat">
+            <span class="stat__label">Cells changed</span>
+            <span class="stat__value">{{ summary.cellsChanged.toLocaleString() }}</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Columns removed</span>
+            <span class="stat__value">{{ summary.columnsRemoved }}</span>
+          </div>
+        }
+      </div>
+
+      @if (isDuplicates() && duplicateGroups().length) {
+        <div class="panel">
+          <h2 class="panel__title">Duplicate groups</h2>
+          <p class="panel__hint">
+            Showing the first 20 groups. Rows are numbered as they appear in the sheet.
+          </p>
+          <ul class="groups">
+            @for (group of duplicateGroups().slice(0, 20); track group.key) {
+              <li>
+                <span class="groups__key" [title]="group.key">{{ group.key || '(blank)' }}</span>
+                <span class="groups__rows">
+                  rows {{ group.rowIndices.slice(0, 8).join(', ') }}
+                  @if (group.rowIndices.length > 8) {
+                    +{{ group.rowIndices.length - 8 }} more
+                  }
+                </span>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+
+      @if (resultRows(); as rows) {
+        <section class="split__pane">
+          <header class="split__head">
+            <h2>Result preview — {{ rows.length.toLocaleString() }} rows</h2>
+            @if (rowsRemoved() > 0) {
+              <span class="ou-badge ou-badge--success">
+                {{ rowsRemoved().toLocaleString() }} rows removed
+              </span>
+            }
+          </header>
+          <app-spreadsheet-grid
+            [headers]="report()?.headers ?? activeSheet()!.headers"
+            [rows]="rows"
+            maxHeight="45vh"
+          />
+        </section>
+      }
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy()"
+          (click)="download('xlsx')"
+        >
+          <app-icon name="file-excel" [size]="17" />
+          Download .xlsx
+        </button>
+        <button
+          type="button"
+          class="ou-btn ou-btn--lg"
+          [disabled]="busy()"
+          (click)="download('csv')"
+        >
+          <app-icon name="table" [size]="17" />
+          Download .csv
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Cleaned file ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

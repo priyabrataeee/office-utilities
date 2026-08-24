@@ -1,0 +1,72 @@
+/* Layout + interaction mixins shared across the app. */
+
+@mixin container($width: var(--ou-max-w)) {
+  width: 100%;
+  max-width: $width;
+  margin-inline: auto;
+  // clamp instead of a nested media query, so callers can keep declaring
+  // properties after the include without tripping Sass's mixed-decls rule.
+  padding-inline: clamp(var(--ou-s-4), 3vw, var(--ou-s-5));
+}
+
+@mixin focus-ring($offset: 2px) {
+  outline: none;
+  box-shadow: var(--ou-ring);
+  outline-offset: $offset;
+}
+
+@mixin truncate($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@mixin card {
+  background: var(--ou-surface);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  box-shadow: var(--ou-shadow-xs);
+}
+
+@mixin scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ou-border-strong) transparent;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--ou-border-strong);
+    border: 3px solid transparent;
+    border-radius: var(--ou-r-full);
+    background-clip: content-box;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--ou-text-subtle);
+    background-clip: content-box;
+  }
+}
+
+@mixin grid-auto($min: 250px, $gap: var(--ou-s-4)) {
+  display: grid;
+  gap: $gap;
+  grid-template-columns: repeat(auto-fill, minmax($min, 1fr));
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}

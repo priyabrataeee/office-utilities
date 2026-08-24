@@ -1,0 +1,75 @@
+@use 'tool';
+@use 'mixins' as *;
+
+.functions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-2);
+  max-height: 160px;
+  overflow-y: auto;
+  @include scrollbar;
+}
+
+.fn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ou-s-2);
+  height: 26px;
+  padding-inline: var(--ou-s-2);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-sm);
+  background: var(--ou-surface);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--ou-accent);
+  }
+
+  code {
+    font-size: var(--ou-fs-xs);
+    color: var(--ou-accent-text);
+  }
+
+  span {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ou-text-subtle);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.search {
+  flex: 1 1 240px;
+  gap: var(--ou-s-2);
+  padding-left: var(--ou-s-2);
+  color: var(--ou-text-subtle);
+
+  input {
+    border: 0;
+    background: transparent;
+    height: 30px;
+  }
+}
+
+.scope {
+  flex: 0 0 auto;
+
+  select {
+    height: 30px;
+    width: auto;
+    min-width: 140px;
+    background-position:
+      calc(100% - 16px) 14px,
+      calc(100% - 11px) 14px;
+  }
+}
+
+.formulas {
+  max-height: 52vh;
+}
+
+.formula {
+  font-family: var(--ou-font-mono);
+  color: var(--ou-accent-text);
+  max-width: 460px;
+}

@@ -1,0 +1,108 @@
+<div class="page ou-container">
+  <header class="page__head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a routerLink="/">Home</a>
+      <app-icon name="chevron-right" [size]="13" />
+      <span aria-current="page">Recent</span>
+    </nav>
+    <h1>Recent</h1>
+    <p>
+      A local history of what you have been working on. File names and sizes are remembered in this
+      browser; file contents are only kept if you switch retention on below.
+    </p>
+  </header>
+
+  <section class="retention">
+    <label class="ou-check">
+      <input type="checkbox" [checked]="recent.retainFiles()" (change)="toggleRetention($event)" />
+      <span>
+        <strong>Keep a local copy of opened files</strong>
+        <small>
+          Stores file contents in this browser's IndexedDB so you can reopen them in one click.
+          Files up to 25 MB, on this device only, deleted the moment you switch this off.
+        </small>
+      </span>
+    </label>
+  </section>
+
+  @if (files().length) {
+    <div class="bar">
+      <p class="count">{{ files().length }} files</p>
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--danger" (click)="clearFiles()">
+        <app-icon name="trash" [size]="14" />
+        Clear file history
+      </button>
+    </div>
+
+    <ul class="files">
+      @for (entry of files(); track entry.id) {
+        <li class="file">
+          <span class="file__icon"><app-icon name="file" [size]="18" /></span>
+
+          <div class="file__main">
+            <span class="file__name" [title]="entry.name">{{ entry.name }}</span>
+            <span class="file__meta">
+              {{ entry.size | fileSize }} · {{ entry.openedAt | timeAgo }}
+              @if (toolTitle(entry)) {
+                · opened with
+                <a [routerLink]="toolPath(entry)">{{ toolTitle(entry) }}</a>
+              }
+            </span>
+          </div>
+
+          @if (entry.cached) {
+            <span class="ou-badge ou-badge--success">
+              <app-icon name="save" [size]="11" />
+              cached
+            </span>
+          } @else {
+            <span class="ou-badge">name only</span>
+          }
+
+          <button
+            type="button"
+            class="ou-btn ou-btn--sm"
+            [disabled]="reopening() === entry.id"
+            (click)="reopen(entry)"
+          >
+            <app-icon name="arrow-right" [size]="14" />
+            {{ entry.cached ? 'Reopen' : 'Open tool' }}
+          </button>
+
+          <button
+            type="button"
+            class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+            (click)="remove(entry)"
+            [attr.aria-label]="'Forget ' + entry.name"
+          >
+            <app-icon name="x" [size]="14" />
+          </button>
+        </li>
+      }
+    </ul>
+  } @else {
+    <app-empty-state
+      icon="clock"
+      title="No files opened yet"
+      message="Once you use a tool, the files you open will be listed here for quick access."
+    >
+      <a class="ou-btn ou-btn--primary" routerLink="/tools">Browse all tools</a>
+    </app-empty-state>
+  }
+
+  @if (registry.recentTools().length) {
+    <section class="tools">
+      <div class="bar">
+        <h2>Recently used tools</h2>
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="clearTools()">
+          Clear
+        </button>
+      </div>
+      <div class="ou-grid">
+        @for (tool of registry.recentTools(); track tool.id) {
+          <app-tool-card [tool]="tool" [compact]="true" [showCategory]="true" />
+        }
+      </div>
+    </section>
+  }
+</div>

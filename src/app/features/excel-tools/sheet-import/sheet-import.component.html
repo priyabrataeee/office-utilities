@@ -1,0 +1,97 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="accepts()"
+      [compact]="ready()"
+      [title]="isCsv() ? 'Drop a CSV or TSV file' : 'Drop a JSON file'"
+      [hint]="
+        isCsv()
+          ? 'The delimiter is detected automatically — or paste the text below.'
+          : 'Objects, arrays and JSON Lines are all accepted — or paste below.'
+      "
+      [icon]="isCsv() ? 'table' : 'braces'"
+      (filesChange)="onFiles($event)"
+    />
+
+    <div class="panel">
+      <h2 class="panel__title">Or paste it here</h2>
+      <textarea
+        class="ou-textarea paste"
+        rows="6"
+        spellcheck="false"
+        [value]="pasted()"
+        (input)="onPaste($event)"
+        [attr.placeholder]="
+          isCsv()
+            ? 'name,email,signups&#10;Ada,ada@example.com,42'
+            : '[{ &quot;name&quot;: &quot;Ada&quot;, &quot;signups&quot;: 42 }]'
+        "
+      ></textarea>
+
+      <div class="checks">
+        @if (isCsv()) {
+          <label class="ou-check">
+            <input type="checkbox" [checked]="firstRowIsHeader()" (change)="toggleHeader($event)" />
+            First row is the header
+          </label>
+          <label class="ou-check">
+            <input type="checkbox" [checked]="coerceTypes()" (change)="toggleCoerce($event)" />
+            Convert numbers and booleans to real types
+          </label>
+        }
+        <label class="ou-check">
+          <input type="checkbox" [checked]="styleHeader()" (change)="toggleStyle($event)" />
+          Frozen, sized header row in the workbook
+        </label>
+      </div>
+
+      @if (detectedDelimiter() && isCsv()) {
+        <p class="hint">Detected delimiter: <strong>{{ detectedDelimiter() }}</strong></p>
+      }
+
+      @if (parseError()) {
+        <p class="error">
+          <app-icon name="alert-circle" [size]="16" />
+          {{ parseError() }}
+        </p>
+      }
+    </div>
+
+    @if (ready()) {
+      <section class="split__pane">
+        <header class="split__head">
+          <h2>Preview — {{ rowCount().toLocaleString() }} rows × {{ columnCount() }} columns</h2>
+        </header>
+        <app-spreadsheet-grid
+          [headers]="sheet()!.headers ?? []"
+          [rows]="sheet()!.rows"
+          maxHeight="45vh"
+        />
+      </section>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy()"
+          (click)="convert()"
+        >
+          <app-icon name="file-excel" [size]="17" />
+          Download .xlsx
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Workbook ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

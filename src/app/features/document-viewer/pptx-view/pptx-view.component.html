@@ -1,0 +1,101 @@
+<div class="viewer">
+  <div class="bar ou-no-print">
+    <div class="pager">
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+        (click)="go(current() - 1)"
+        [disabled]="current() === 0"
+        aria-label="Previous slide"
+      >
+        <app-icon name="chevron-left" [size]="15" />
+      </button>
+      <span class="pager__label">{{ count() ? current() + 1 : 0 }} / {{ count() }}</span>
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+        (click)="go(current() + 1)"
+        [disabled]="current() >= count() - 1"
+        aria-label="Next slide"
+      >
+        <app-icon name="chevron-right" [size]="15" />
+      </button>
+    </div>
+
+    <span class="bar__divider"></span>
+
+    <button
+      type="button"
+      class="ou-btn ou-btn--sm ou-btn--ghost"
+      [class.is-active]="showNotes()"
+      (click)="showNotes.set(!showNotes())"
+    >
+      <app-icon name="clipboard" [size]="14" />
+      Notes
+    </button>
+
+    <span class="ou-spacer"></span>
+    <span class="ou-subtle">Use ← and → to move between slides</span>
+
+    <button
+      type="button"
+      class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+      (click)="download()"
+      aria-label="Download original"
+      title="Download original"
+    >
+      <app-icon name="download" [size]="16" />
+    </button>
+  </div>
+
+  @if (deck(); as presentation) {
+    @if (presentation.warnings.length) {
+      <div class="warnings ou-no-print">
+        <app-icon name="info" [size]="14" />
+        <span>{{ presentation.warnings.join(' ') }}</span>
+      </div>
+    }
+  }
+
+  <div class="body">
+    @if (loading()) {
+      <div class="stage">
+        <div class="ou-skeleton slide-skeleton"></div>
+      </div>
+    } @else if (error()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ error() }}
+      </p>
+    } @else {
+      <aside class="rail ou-no-print" aria-label="Slides">
+        @for (thumb of thumbnails(); track $index; let i = $index) {
+          <button
+            type="button"
+            class="rail__item"
+            [class.is-current]="current() === i"
+            (click)="go(i)"
+          >
+            <span class="rail__svg" [style.aspect-ratio]="aspect()" [innerHTML]="thumb"></span>
+            <span class="rail__num">{{ i + 1 }}</span>
+          </button>
+        }
+      </aside>
+
+      <div class="stage">
+        <div class="slide" [style.aspect-ratio]="aspect()" [innerHTML]="currentSvg()"></div>
+
+        @if (showNotes()) {
+          <section class="notes">
+            <h3>Speaker notes</h3>
+            @if (activeSlide()?.notes) {
+              <p>{{ activeSlide()!.notes }}</p>
+            } @else {
+              <p class="ou-subtle">No notes on this slide.</p>
+            }
+          </section>
+        }
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,317 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  @if (definition(); as generator) {
+    <div class="tool">
+      <div class="toolbar ou-no-print">
+        <button type="button" class="ou-btn ou-btn--sm" (click)="loadSample()">
+          <app-icon name="sparkles" [size]="14" />
+          Load sample
+        </button>
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="clearForm()">
+          Clear form
+        </button>
+        @if (savedAt()) {
+          <span class="ou-badge ou-badge--success">
+            <app-icon name="save" [size]="11" />
+            draft saved locally
+          </span>
+          <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="discardDraft()">
+            Discard draft
+          </button>
+        }
+        <span class="ou-spacer"></span>
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="print()">
+          <app-icon name="printer" [size]="14" />
+          Print
+        </button>
+      </div>
+
+      <div class="layout">
+        <div class="form ou-no-print">
+          <nav class="steps" aria-label="Sections">
+            @for (section of sections(); track section.title; let i = $index) {
+              @if (isVisible(section)) {
+                <button
+                  type="button"
+                  class="step"
+                  [class.is-active]="activeSection() === i"
+                  (click)="activeSection.set(i)"
+                >
+                  <app-icon [name]="section.icon" [size]="14" />
+                  {{ section.title }}
+                </button>
+              }
+            }
+          </nav>
+
+          @for (section of sections(); track section.title; let sectionIndex = $index) {
+            @if (isVisible(section) && activeSection() === sectionIndex) {
+              <section class="panel">
+                <h2 class="panel__title">{{ section.title }}</h2>
+                @if (section.description) {
+                  <p class="panel__hint">{{ section.description }}</p>
+                }
+
+                <div class="fields">
+                  @for (field of section.fields; track field.key) {
+                    @switch (field.type) {
+                      @case ('repeat') {
+                        <div class="field field--3 repeat">
+                          <div class="repeat__head">
+                            <span class="ou-label">{{ field.label }}</span>
+                            <button
+                              type="button"
+                              class="ou-btn ou-btn--sm"
+                              (click)="addRepeatRow(field)"
+                            >
+                              <app-icon name="plus" [size]="13" />
+                              Add {{ field.itemLabel || 'row' }}
+                            </button>
+                          </div>
+
+                          @for (row of repeatValue(field.key); track $index; let rowIndex = $index) {
+                            <div class="repeat__row">
+                              <span class="repeat__index">{{ rowIndex + 1 }}</span>
+
+                              <div class="repeat__cells">
+                                @for (column of field.columns; track column.key) {
+                                  <label
+                                    class="field"
+                                    [class.field--2]="column.span === 2"
+                                    [class.field--3]="column.span === 3"
+                                  >
+                                    <span class="ou-label">{{ column.label }}</span>
+                                    @if (column.type === 'textarea') {
+                                      <textarea
+                                        class="ou-textarea"
+                                        [rows]="column.rows || 2"
+                                        [value]="cell(row, column.key)"
+                                        (input)="
+                                          setRepeatField(field.key, rowIndex, column.key, $event)
+                                        "
+                                      ></textarea>
+                                    } @else {
+                                      <input
+                                        class="ou-input"
+                                        [type]="column.type === 'number' ? 'number' : 'text'"
+                                        [attr.min]="column.min"
+                                        [attr.max]="column.max"
+                                        [attr.step]="column.step"
+                                        [value]="cell(row, column.key)"
+                                        (input)="
+                                          setRepeatField(field.key, rowIndex, column.key, $event)
+                                        "
+                                      />
+                                    }
+                                  </label>
+                                }
+                              </div>
+
+                              <div class="repeat__actions">
+                                <button
+                                  type="button"
+                                  class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                                  (click)="moveRepeatRow(field.key, rowIndex, -1)"
+                                  [disabled]="rowIndex === 0"
+                                  aria-label="Move up"
+                                >
+                                  <app-icon name="chevron-up" [size]="13" />
+                                </button>
+                                <button
+                                  type="button"
+                                  class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                                  (click)="moveRepeatRow(field.key, rowIndex, 1)"
+                                  [disabled]="rowIndex === repeatValue(field.key).length - 1"
+                                  aria-label="Move down"
+                                >
+                                  <app-icon name="chevron-down" [size]="13" />
+                                </button>
+                                <button
+                                  type="button"
+                                  class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                                  (click)="removeRepeatRow(field.key, rowIndex)"
+                                  aria-label="Remove row"
+                                >
+                                  <app-icon name="x" [size]="13" />
+                                </button>
+                              </div>
+                            </div>
+                          }
+
+                          @if (!repeatValue(field.key).length) {
+                            <p class="hint">
+                              No {{ field.itemLabel || 'row' }}s yet — add one to get started.
+                            </p>
+                          }
+                        </div>
+                      }
+
+                      @case ('list') {
+                        <div class="field field--3 repeat">
+                          <div class="repeat__head">
+                            <span class="ou-label">{{ field.label }}</span>
+                            <button
+                              type="button"
+                              class="ou-btn ou-btn--sm"
+                              (click)="addListItem(field.key)"
+                            >
+                              <app-icon name="plus" [size]="13" />
+                              Add {{ field.itemLabel || 'item' }}
+                            </button>
+                          </div>
+
+                          @for (item of listValue(field.key); track $index; let itemIndex = $index) {
+                            <div class="list-row">
+                              <input
+                                class="ou-input"
+                                type="text"
+                                [value]="item"
+                                (input)="setListItem(field.key, itemIndex, $event)"
+                              />
+                              <button
+                                type="button"
+                                class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                                (click)="removeListItem(field.key, itemIndex)"
+                                aria-label="Remove"
+                              >
+                                <app-icon name="x" [size]="13" />
+                              </button>
+                            </div>
+                          }
+                        </div>
+                      }
+
+                      @case ('checkbox') {
+                        <label class="field field--2 ou-check">
+                          <input
+                            type="checkbox"
+                            [checked]="boolValue(field.key)"
+                            (change)="setField(field.key, $event)"
+                          />
+                          {{ field.label }}
+                        </label>
+                      }
+
+                      @case ('textarea') {
+                        <label
+                          class="field"
+                          [class.field--2]="field.span === 2"
+                          [class.field--3]="field.span === 3"
+                        >
+                          <span class="ou-label">{{ field.label }}</span>
+                          <textarea
+                            class="ou-textarea"
+                            [rows]="field.rows || 3"
+                            [attr.placeholder]="field.placeholder"
+                            [value]="stringValue(field.key)"
+                            (input)="setField(field.key, $event)"
+                          ></textarea>
+                          @if (field.help) {
+                            <small class="field__help">{{ field.help }}</small>
+                          }
+                        </label>
+                      }
+
+                      @case ('select') {
+                        <label
+                          class="field"
+                          [class.field--2]="field.span === 2"
+                          [class.field--3]="field.span === 3"
+                        >
+                          <span class="ou-label">{{ field.label }}</span>
+                          <select
+                            class="ou-select"
+                            [value]="stringValue(field.key)"
+                            (change)="setField(field.key, $event)"
+                          >
+                            @for (option of field.options; track option.value) {
+                              <option [value]="option.value">{{ option.label }}</option>
+                            }
+                          </select>
+                        </label>
+                      }
+
+                      @default {
+                        <label
+                          class="field"
+                          [class.field--2]="field.span === 2"
+                          [class.field--3]="field.span === 3"
+                        >
+                          <span class="ou-label">{{ field.label }}</span>
+                          <input
+                            class="ou-input"
+                            [class.color]="field.type === 'color'"
+                            [type]="
+                              field.type === 'number'
+                                ? 'number'
+                                : field.type === 'date'
+                                  ? 'date'
+                                  : field.type === 'color'
+                                    ? 'color'
+                                    : 'text'
+                            "
+                            [attr.min]="field.min"
+                            [attr.max]="field.max"
+                            [attr.step]="field.step"
+                            [attr.placeholder]="field.placeholder"
+                            [value]="stringValue(field.key)"
+                            (input)="setField(field.key, $event)"
+                          />
+                          @if (field.help) {
+                            <small class="field__help">{{ field.help }}</small>
+                          }
+                        </label>
+                      }
+                    }
+                  }
+                </div>
+              </section>
+            }
+          }
+        </div>
+
+        <div class="preview-column">
+          <div class="preview-head ou-no-print">
+            <span class="ou-label">Live preview</span>
+            <span class="ou-badge ou-badge--success">
+              <app-icon name="shield-check" [size]="11" />
+              never uploaded
+            </span>
+          </div>
+
+          <div class="paper ou-prose" [innerHTML]="preview()"></div>
+
+          <div class="actions ou-no-print">
+            <button
+              type="button"
+              class="ou-btn ou-btn--primary"
+              [disabled]="busy()"
+              (click)="exportPdf()"
+            >
+              <app-icon name="file-pdf" [size]="16" />
+              Download PDF
+            </button>
+            <button type="button" class="ou-btn" [disabled]="busy()" (click)="exportDocx()">
+              <app-icon name="file-word" [size]="16" />
+              Download DOCX
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+      @if (errorMessage()) {
+        <p class="error">
+          <app-icon name="alert-circle" [size]="16" />
+          {{ errorMessage() }}
+        </p>
+      }
+
+      <app-result-panel
+        [outputs]="outputs()"
+        title="Document ready"
+        [allowReset]="false"
+      />
+    </div>
+  }
+</app-tool-shell>

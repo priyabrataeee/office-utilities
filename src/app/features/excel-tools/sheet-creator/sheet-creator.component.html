@@ -1,0 +1,174 @@
+<app-tool-shell toolId="xlsx-creator" [wide]="true">
+  <div class="tool">
+    <div class="topbar ou-no-print">
+      <input
+        type="text"
+        class="ou-input title"
+        [value]="title()"
+        (input)="setTitle($event)"
+        aria-label="Workbook title"
+      />
+      @if (savedAt()) {
+        <span class="ou-badge ou-badge--success">
+          <app-icon name="save" [size]="11" />
+          draft saved locally
+        </span>
+      }
+      <span class="ou-subtle">
+        {{ headers().length }} columns × {{ rows().length }} rows · {{ totalCells() }} cells
+      </span>
+      <span class="ou-spacer"></span>
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="clearAll()">
+        <app-icon name="eraser" [size]="14" />
+        Clear
+      </button>
+      <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="discardDraft()">
+        Discard draft
+      </button>
+    </div>
+
+    <div class="toolbar ou-no-print">
+      <button type="button" class="ou-btn ou-btn--sm" (click)="addColumn()">
+        <app-icon name="plus" [size]="14" />
+        Add column
+      </button>
+      <button type="button" class="ou-btn ou-btn--sm" (click)="addRow()">
+        <app-icon name="plus" [size]="14" />
+        Add row
+      </button>
+
+      <span class="toolbar__divider"></span>
+
+      <label class="ou-check">
+        <input
+          type="checkbox"
+          [checked]="detectTypes()"
+          (change)="toggleDetectTypes($event)"
+        />
+        Detect numbers and dates on export
+      </label>
+      <label class="ou-check">
+        <input type="checkbox" [checked]="styleHeader()" (change)="toggleStyleHeader($event)" />
+        Frozen, sized header row
+      </label>
+
+      <span class="ou-spacer"></span>
+
+      <button type="button" class="ou-btn ou-btn--sm" (click)="downloadCsv()" [disabled]="busy()">
+        <app-icon name="table" [size]="14" />
+        .csv
+      </button>
+      <button
+        type="button"
+        class="ou-btn ou-btn--sm ou-btn--primary"
+        (click)="downloadXlsx()"
+        [disabled]="busy()"
+      >
+        <app-icon name="file-excel" [size]="14" />
+        .xlsx
+      </button>
+    </div>
+
+    <div class="ou-table-wrap grid-wrap">
+      <table class="grid">
+        <thead>
+          <tr>
+            <th class="corner"></th>
+            @for (header of headers(); track $index; let ci = $index) {
+              <th class="col">
+                <div class="col__head">
+                  <input
+                    class="col__name"
+                    type="text"
+                    [value]="header"
+                    (input)="setHeader(ci, $event)"
+                    [attr.aria-label]="'Column ' + (ci + 1) + ' name'"
+                  />
+                  <div class="col__actions">
+                    <button
+                      type="button"
+                      class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                      (click)="moveColumn(ci, -1)"
+                      [disabled]="ci === 0"
+                      aria-label="Move column left"
+                    >
+                      <app-icon name="chevron-left" [size]="12" />
+                    </button>
+                    <button
+                      type="button"
+                      class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                      (click)="moveColumn(ci, 1)"
+                      [disabled]="ci === headers().length - 1"
+                      aria-label="Move column right"
+                    >
+                      <app-icon name="chevron-right" [size]="12" />
+                    </button>
+                    <button
+                      type="button"
+                      class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                      (click)="removeColumn(ci)"
+                      [disabled]="headers().length === 1"
+                      aria-label="Delete column"
+                    >
+                      <app-icon name="x" [size]="12" />
+                    </button>
+                  </div>
+                </div>
+                <span class="col__type" [class]="'type--' + columnTypes()[ci]">
+                  {{ labelFor(columnTypes()[ci]) }}
+                </span>
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track $index; let ri = $index) {
+            <tr>
+              <th class="row-num">
+                <span>{{ ri + 1 }}</span>
+                <button
+                  type="button"
+                  class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                  (click)="removeRow(ri)"
+                  aria-label="Delete row"
+                >
+                  <app-icon name="x" [size]="11" />
+                </button>
+              </th>
+              @for (cell of row; track $index; let ci = $index) {
+                <td>
+                  <input
+                    class="cell"
+                    type="text"
+                    [value]="cell"
+                    (input)="setCell(ri, ci, $event)"
+                    [attr.aria-label]="'Row ' + (ri + 1) + ' column ' + headers()[ci]"
+                  />
+                </td>
+              }
+            </tr>
+          }
+          <tr>
+            <td [attr.colspan]="headers().length + 1" class="add-row">
+              <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="addRow()">
+                <app-icon name="plus" [size]="13" />
+                Add row
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Workbook ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

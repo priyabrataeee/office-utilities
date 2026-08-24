@@ -1,0 +1,47 @@
+@use 'listing';
+@use 'mixins' as *;
+
+.hero {
+  display: flex;
+  align-items: center;
+  gap: var(--ou-s-4);
+  margin-bottom: var(--ou-s-3);
+}
+
+.hero__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--ou-r-lg);
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  color: var(--accent);
+}
+
+.hero__tagline {
+  color: var(--accent);
+  font-weight: 560;
+  font-size: var(--ou-fs-md);
+}
+
+.more {
+  margin-top: var(--ou-s-10);
+  padding-top: var(--ou-s-8);
+  border-top: 1px solid var(--ou-border);
+
+  h2 {
+    font-size: var(--ou-fs-lg);
+    margin-bottom: var(--ou-s-4);
+  }
+}
+
+.more__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-2);
+
+  a:hover {
+    text-decoration: none;
+  }
+}

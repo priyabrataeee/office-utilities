@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "office-utility-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "dist/office-utility/browser", "-p", "4321", "--silent", "--cors"],
+      "port": 4321
+    }
+  ]
+}

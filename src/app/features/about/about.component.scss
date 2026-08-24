@@ -1,0 +1,16 @@
+@use 'listing';
+
+.prose {
+  max-width: 74ch;
+
+  h2 {
+    margin-top: 2em;
+  }
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-3);
+  margin-top: var(--ou-s-6);
+}

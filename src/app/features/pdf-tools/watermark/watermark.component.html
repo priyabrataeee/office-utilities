@@ -1,0 +1,259 @@
+<app-tool-shell toolId="watermark-pdf" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pdf']"
+      [compact]="hasFile()"
+      title="Drop a PDF to watermark"
+      hint="Preview shows page 1 with your settings applied."
+      icon="droplet"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (hasFile()) {
+      <div class="split">
+        <div class="split__controls">
+          <div class="panel">
+            <h2 class="panel__title">Watermark</h2>
+
+            <div class="tabs" role="tablist">
+              <button
+                type="button"
+                class="tab"
+                [class.is-active]="kind() === 'text'"
+                (click)="setKind('text')"
+                role="tab"
+                [attr.aria-selected]="kind() === 'text'"
+              >
+                <app-icon name="type" [size]="15" />
+                Text
+              </button>
+              <button
+                type="button"
+                class="tab"
+                [class.is-active]="kind() === 'image'"
+                (click)="setKind('image')"
+                role="tab"
+                [attr.aria-selected]="kind() === 'image'"
+              >
+                <app-icon name="image" [size]="15" />
+                Image
+              </button>
+            </div>
+
+            @if (kind() === 'text') {
+              <label class="ou-field">
+                <span class="ou-label">Text</span>
+                <input
+                  type="text"
+                  class="ou-input"
+                  [value]="text()"
+                  (input)="setText($event)"
+                  placeholder="CONFIDENTIAL"
+                />
+              </label>
+
+              <div class="options">
+                <label class="ou-field">
+                  <span class="ou-label">Size — {{ fontSize() }}pt</span>
+                  <input
+                    type="range"
+                    class="ou-range"
+                    min="10"
+                    max="140"
+                    step="2"
+                    [value]="fontSize()"
+                    (input)="setFontSize($event)"
+                  />
+                </label>
+
+                <label class="ou-field">
+                  <span class="ou-label">Colour</span>
+                  <input
+                    type="color"
+                    class="ou-input color"
+                    [value]="color()"
+                    (input)="setColor($event)"
+                  />
+                </label>
+              </div>
+            } @else {
+              <label class="ou-field">
+                <span class="ou-label">Watermark image</span>
+                <input
+                  type="file"
+                  class="ou-input file"
+                  accept="image/*"
+                  (change)="onWatermarkImage($event)"
+                />
+              </label>
+
+              @if (watermarkImageUrl()) {
+                <label class="ou-field">
+                  <span class="ou-label">Scale — {{ (imageScale() * 100).toFixed(0) }}%</span>
+                  <input
+                    type="range"
+                    class="ou-range"
+                    min="0.05"
+                    max="1.5"
+                    step="0.05"
+                    [value]="imageScale()"
+                    (input)="setScale($event)"
+                  />
+                </label>
+              }
+            }
+
+            <div class="options">
+              <label class="ou-field">
+                <span class="ou-label">Opacity — {{ (opacity() * 100).toFixed(0) }}%</span>
+                <input
+                  type="range"
+                  class="ou-range"
+                  min="0.03"
+                  max="1"
+                  step="0.01"
+                  [value]="opacity()"
+                  (input)="setOpacity($event)"
+                />
+              </label>
+
+              <label class="ou-field">
+                <span class="ou-label">Rotation — {{ rotation() }}°</span>
+                <input
+                  type="range"
+                  class="ou-range"
+                  min="-90"
+                  max="90"
+                  step="5"
+                  [value]="rotation()"
+                  (input)="setRotation($event)"
+                />
+              </label>
+
+              <label class="ou-field">
+                <span class="ou-label">Position</span>
+                <select
+                  class="ou-select"
+                  [value]="position()"
+                  (change)="setPosition($event)"
+                  [disabled]="tile()"
+                >
+                  @for (option of positions; track option.value) {
+                    <option [value]="option.value">{{ option.label }}</option>
+                  }
+                </select>
+              </label>
+            </div>
+
+            <label class="ou-check">
+              <input type="checkbox" [checked]="tile()" (change)="toggleTile($event)" />
+              Repeat across the whole page
+            </label>
+          </div>
+
+          <div class="panel">
+            <h2 class="panel__title">Which pages</h2>
+            <label class="ou-check">
+              <input type="checkbox" [checked]="applyToAll()" (change)="toggleAllPages($event)" />
+              Every page ({{ pageCount() }})
+            </label>
+
+            @if (!applyToAll()) {
+              <label class="ou-field pages">
+                <span class="ou-label">Pages — e.g. 1, 3-5</span>
+                <input
+                  type="text"
+                  class="ou-input"
+                  [value]="pageRange()"
+                  (input)="setPageRange($event)"
+                  placeholder="1, 3-5"
+                />
+              </label>
+            }
+          </div>
+
+          <div class="actions">
+            <button
+              type="button"
+              class="ou-btn ou-btn--primary ou-btn--lg"
+              [disabled]="!ready() || busy()"
+              (click)="apply()"
+            >
+              <app-icon name="droplet" [size]="17" />
+              Add watermark
+            </button>
+            <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+          </div>
+        </div>
+
+        <div class="split__preview">
+          <div class="preview">
+            <span class="preview__label">Live preview — page 1</span>
+            <div class="preview__stage">
+              @if (previewPage()) {
+                <img class="preview__page" [src]="previewPage()" alt="First page preview" />
+              } @else {
+                <div class="preview__page ou-skeleton"></div>
+              }
+
+              <div
+                class="preview__mark"
+                [class.preview__mark--tiled]="tile()"
+                [style.opacity]="opacity()"
+              >
+                @if (tile()) {
+                  @for (row of [0, 1, 2, 3, 4]; track row) {
+                    <div class="preview__row">
+                      @for (col of [0, 1, 2]; track col) {
+                        <span
+                          class="preview__item"
+                          [style.transform]="'rotate(' + -rotation() + 'deg)'"
+                          [style.color]="color()"
+                          [style.font-size.px]="fontSize() / 3"
+                        >
+                          @if (kind() === 'text') {
+                            {{ text() }}
+                          } @else if (watermarkImageUrl()) {
+                            <img [src]="watermarkImageUrl()" alt="" [style.width.px]="60 * imageScale()" />
+                          }
+                        </span>
+                      }
+                    </div>
+                  }
+                } @else {
+                  <span
+                    class="preview__single"
+                    [class]="'pos-' + position()"
+                    [style.transform]="previewTransform()"
+                    [style.color]="color()"
+                    [style.font-size.px]="fontSize() / 2.2"
+                  >
+                    @if (kind() === 'text') {
+                      {{ text() }}
+                    } @else if (watermarkImageUrl()) {
+                      <img [src]="watermarkImageUrl()" alt="" [style.width.px]="140 * imageScale()" />
+                    }
+                  </span>
+                }
+              </div>
+            </div>
+            <p class="preview__note">
+              Approximate — the exported PDF uses exact PDF coordinates.
+            </p>
+          </div>
+        </div>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Watermarked PDF ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

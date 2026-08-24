@@ -1,0 +1,120 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="accepts()"
+      [compact]="hasData()"
+      [title]="toJson() ? 'Drop a CSV or TSV file' : 'Drop a JSON file'"
+      hint="Or paste below — conversion happens as you type."
+      [icon]="toJson() ? 'braces' : 'table'"
+      (filesChange)="onFiles($event)"
+    />
+
+    <div class="split">
+      <section class="split__pane">
+        <header class="split__head">
+          <h2>{{ toJson() ? 'CSV input' : 'JSON input' }}</h2>
+          @if (detectedDelimiter() && toJson()) {
+            <span class="ou-subtle">delimiter: {{ detectedDelimiter() }}</span>
+          }
+        </header>
+        <textarea
+          class="ou-textarea editor"
+          rows="12"
+          spellcheck="false"
+          [value]="source()"
+          (input)="onInput($event)"
+          [attr.placeholder]="
+            toJson()
+              ? 'name,email,signups&#10;Ada,ada@example.com,42'
+              : '[{ &quot;name&quot;: &quot;Ada&quot;, &quot;signups&quot;: 42 }]'
+          "
+        ></textarea>
+      </section>
+
+      <section class="split__pane">
+        <header class="split__head">
+          <h2>{{ toJson() ? 'JSON output' : 'CSV output' }}</h2>
+          @if (result()) {
+            <app-copy-button [text]="result()" label="Copy" [small]="true" />
+          }
+        </header>
+        <pre class="preview"><code>{{ result().slice(0, 40000) }}</code></pre>
+      </section>
+    </div>
+
+    @if (parseError()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ parseError() }}
+      </p>
+    }
+
+    @if (hasData()) {
+      <div class="panel">
+        <h2 class="panel__title">Options</h2>
+        <div class="options">
+          @if (!toJson()) {
+            <label class="ou-field">
+              <span class="ou-label">Delimiter</span>
+              <select class="ou-select" [value]="delimiter()" (change)="setDelimiter($event)">
+                <option value=",">Comma  ,</option>
+                <option value=";">Semicolon  ;</option>
+                <option value="&#9;">Tab</option>
+                <option value="|">Pipe  |</option>
+              </select>
+            </label>
+          }
+        </div>
+        <div class="checks">
+          @if (toJson()) {
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="firstRowIsHeader()"
+                (change)="toggleHeader($event)"
+              />
+              First row is the header
+            </label>
+            <label class="ou-check">
+              <input type="checkbox" [checked]="coerceTypes()" (change)="toggleCoerce($event)" />
+              Convert numbers and booleans to real types
+            </label>
+            <label class="ou-check">
+              <input type="checkbox" [checked]="prettyPrint()" (change)="togglePretty($event)" />
+              Pretty-print
+            </label>
+          } @else {
+            <span class="ou-subtle">
+              Nested objects are flattened into dotted column names, and keys are unioned across
+              records so sparse data still gets a column.
+            </span>
+          }
+        </div>
+      </div>
+
+      <section class="split__pane">
+        <header class="split__head">
+          <h2>Parsed data — {{ rows().length.toLocaleString() }} rows</h2>
+        </header>
+        <app-spreadsheet-grid [headers]="headers()" [rows]="rows()" maxHeight="40vh" />
+      </section>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy()"
+          (click)="download()"
+        >
+          <app-icon [name]="toJson() ? 'braces' : 'table'" [size]="17" />
+          Download {{ toJson() ? 'JSON' : 'CSV' }}
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Clear</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    <app-result-panel [outputs]="outputs()" title="Ready to download" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

@@ -1,0 +1,108 @@
+<app-tool-shell toolId="duplicate-file-detector">
+  <div class="tool">
+    <app-file-drop-zone
+      [multiple]="true"
+      [allowFolders]="true"
+      [showSelection]="false"
+      [compact]="scanned()"
+      title="Drop a folder, or pick multiple files"
+      hint="Files are compared by content, so renamed copies are still caught."
+      icon="copy-minus"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (hasFile() && files().length < 2) {
+      <p class="hint">Add at least two files to compare.</p>
+    }
+
+    @if (scanned()) {
+      <div class="stats">
+        <div class="stat">
+          <span class="stat__label">Files examined</span>
+          <span class="stat__value">{{ files().length.toLocaleString() }}</span>
+          <span class="stat__note">{{ skippedCount().toLocaleString() }} ruled out by size</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Duplicate groups</span>
+          <span class="stat__value">{{ groups().length.toLocaleString() }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Redundant copies</span>
+          <span class="stat__value">{{ duplicateCount().toLocaleString() }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Space reclaimable</span>
+          <span class="stat__value">{{ totalWasted() | fileSize }}</span>
+        </div>
+      </div>
+
+      @if (groups().length) {
+        <p class="notice">
+          <app-icon name="info" [size]="16" />
+          <span>
+            A browser cannot delete files on your computer, and this tool does not try. Use the list
+            below to decide what to remove yourself, in your file manager.
+          </span>
+        </p>
+
+        <div class="toolbar">
+          <span class="ou-subtle">Largest savings first</span>
+          <span class="ou-spacer"></span>
+          <app-copy-button [text]="exportText()" label="Copy report" [small]="true" />
+          <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="startOver()">
+            Clear
+          </button>
+        </div>
+
+        <ul class="groups">
+          @for (group of groups(); track group.hash) {
+            <li class="group">
+              <header class="group__head">
+                <span class="ou-badge ou-badge--warning">
+                  {{ group.files.length }} copies
+                </span>
+                <span class="group__size">{{ group.size | fileSize }} each</span>
+                <span class="ou-spacer"></span>
+                <span class="group__wasted">{{ group.wasted | fileSize }} reclaimable</span>
+              </header>
+
+              <ul class="group__files">
+                @for (file of group.files; track file.path; let i = $index) {
+                  <li>
+                    <app-icon [name]="i === 0 ? 'check-circle' : 'copy'" [size]="14" />
+                    <span class="group__path" [title]="file.path">{{ file.path }}</span>
+                    @if (i === 0) {
+                      <span class="ou-badge ou-badge--success">keep</span>
+                    }
+                  </li>
+                }
+              </ul>
+
+              <code class="group__hash">SHA-256 {{ group.hash }}</code>
+            </li>
+          }
+        </ul>
+      } @else {
+        <app-empty-state
+          icon="check-circle"
+          title="No duplicates found"
+          message="Every file you selected is unique by content. Files with the same name but different contents are correctly left alone."
+        />
+      }
+    }
+
+    <app-busy-overlay
+      [active]="busy()"
+      [percent]="percent()"
+      [label]="progressLabel()"
+      note="Only files that share a size are hashed — the rest cannot possibly match."
+    />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+  </div>
+</app-tool-shell>

@@ -1,0 +1,75 @@
+<input
+  #fileInput
+  type="file"
+  class="ou-sr-only"
+  [attr.accept]="acceptAttr() || null"
+  [attr.multiple]="multiple() ? '' : null"
+  [attr.webkitdirectory]="allowFolders() ? '' : null"
+  [disabled]="disabled()"
+  (change)="onPicked($event)"
+/>
+
+<button
+  type="button"
+  class="dz"
+  [class.dz--dragging]="isDragging()"
+  [class.dz--compact]="compact()"
+  [class.dz--filled]="files().length > 0"
+  [disabled]="disabled()"
+  (click)="browse()"
+>
+  <span class="dz__icon">
+    <app-icon [name]="isDragging() ? 'download' : icon()" [size]="compact() ? 20 : 28" />
+  </span>
+
+  <span class="dz__copy">
+    <span class="dz__title">
+      {{ isDragging() ? 'Release to add' : title() }}
+    </span>
+    <span class="dz__hint">
+      @if (hint()) {
+        {{ hint() }}
+      } @else {
+        <span class="dz__browse">Click to browse</span>, drag &amp; drop or paste
+      }
+    </span>
+  </span>
+
+  @if (!compact()) {
+    <span class="dz__meta">
+      <span class="ou-badge">{{ acceptLabel() }}</span>
+      <span class="ou-badge ou-badge--success">
+        <app-icon name="shield-check" [size]="12" />
+        Stays on your device
+      </span>
+    </span>
+  }
+</button>
+
+@if (showSelection() && files().length) {
+  <ul class="picked" aria-label="Selected files">
+    @for (file of files(); track file.name + file.size + file.lastModified; let i = $index) {
+      <li class="picked__item">
+        <app-icon class="picked__icon" name="file" [size]="16" />
+        <span class="picked__name" [title]="file.name">{{ file.name }}</span>
+        <span class="picked__size">{{ file.size | fileSize }}</span>
+        <button
+          type="button"
+          class="ou-btn ou-btn--ghost ou-btn--sm ou-btn--icon"
+          (click)="removeAt(i)"
+          [attr.aria-label]="'Remove ' + file.name"
+        >
+          <app-icon name="x" [size]="14" />
+        </button>
+      </li>
+    }
+    @if (files().length > 1) {
+      <li class="picked__summary">
+        {{ files().length }} files · {{ totalSize() | fileSize }}
+        <button type="button" class="ou-btn ou-btn--ghost ou-btn--sm" (click)="clear()">
+          Clear all
+        </button>
+      </li>
+    }
+  </ul>
+}

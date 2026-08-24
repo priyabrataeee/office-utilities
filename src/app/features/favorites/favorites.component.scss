@@ -1,0 +1,9 @@
+@use 'listing';
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ou-s-3);
+  flex-wrap: wrap;
+}

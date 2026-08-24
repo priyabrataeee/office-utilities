@@ -1,0 +1,26 @@
+@use 'tool';
+@use 'slides';
+
+.range input {
+  width: 130px;
+  height: 30px;
+  font-size: var(--ou-fs-sm);
+}
+
+.slide.is-dropped .slide__button {
+  opacity: 0.45;
+  filter: grayscale(0.8);
+}
+
+.slide__cross {
+  position: absolute;
+  top: var(--ou-s-1);
+  right: var(--ou-s-1);
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border-radius: var(--ou-r-full);
+  background: var(--ou-danger);
+  color: #fff;
+}

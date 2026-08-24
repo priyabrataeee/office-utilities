@@ -1,0 +1,25 @@
+@use 'tool';
+@use 'split';
+@use 'rendered';
+
+.pagenums {
+  margin-top: var(--ou-s-4);
+}
+
+.panel .ou-check {
+  align-items: flex-start;
+
+  input {
+    margin-top: 3px;
+  }
+
+  span {
+    display: flex;
+    flex-direction: column;
+  }
+
+  small {
+    font-size: var(--ou-fs-xs);
+    color: var(--ou-text-muted);
+  }
+}

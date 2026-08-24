@@ -1,0 +1,132 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.grid {
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-surface);
+  overflow: hidden;
+}
+
+.grid__scroll {
+  overflow: auto;
+  position: relative;
+  @include scrollbar;
+}
+
+.grid__sizer {
+  position: relative;
+  min-width: 100%;
+}
+
+.grid__table {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: max-content;
+  min-width: 100%;
+  font-size: var(--ou-fs-sm);
+  table-layout: fixed;
+  will-change: transform;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  height: var(--row-h);
+  padding: 0 var(--ou-s-3);
+  background: var(--ou-surface-2);
+  border-bottom: 1px solid var(--ou-border-strong);
+  border-right: 1px solid var(--ou-border);
+  text-align: left;
+  font-weight: 600;
+  color: var(--ou-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    color: var(--ou-text);
+    background: var(--ou-surface-3);
+  }
+
+  &.is-sorted {
+    color: var(--ou-accent-text);
+  }
+
+  small {
+    margin-left: 4px;
+    font-size: 9px;
+  }
+}
+
+td {
+  height: var(--row-h);
+  padding: 0 var(--ou-s-3);
+  border-bottom: 1px solid var(--ou-border);
+  border-right: 1px solid var(--ou-border);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.is-number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &.is-empty {
+    background: color-mix(in srgb, var(--ou-text-subtle) 5%, transparent);
+  }
+}
+
+tr.is-alt td {
+  background: color-mix(in srgb, var(--ou-surface-2) 55%, transparent);
+
+  &.is-empty {
+    background: color-mix(in srgb, var(--ou-text-subtle) 7%, transparent);
+  }
+}
+
+.grid__gutter {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 56px;
+  min-width: 56px;
+  text-align: right;
+  color: var(--ou-text-subtle);
+  background: var(--ou-surface-2);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--ou-fs-xs);
+  cursor: default;
+}
+
+thead .grid__gutter {
+  z-index: 4;
+}
+
+.grid__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ou-s-3);
+  padding: var(--ou-s-2) var(--ou-s-4);
+  border-top: 1px solid var(--ou-border);
+  background: var(--ou-surface-2);
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-muted);
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,146 @@
+<div class="page ou-container">
+  <header class="page__head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a routerLink="/">Home</a>
+      <app-icon name="chevron-right" [size]="13" />
+      <span aria-current="page">Privacy</span>
+    </nav>
+    <h1>Privacy</h1>
+    <p class="lede">
+      {{ site.name }} has no backend. Your documents are read, processed and written entirely inside
+      this browser tab — there is no upload endpoint they could be sent to.
+    </p>
+  </header>
+
+  <section class="claims">
+    <article class="claim">
+      <app-icon name="shield-check" [size]="20" />
+      <h2>Files are never transmitted</h2>
+      <p>
+        Choosing a file gives this page a reference to it in memory. Every tool works on that
+        in-memory copy. Nothing is POSTed, streamed or beaconed anywhere.
+      </p>
+    </article>
+
+    <article class="claim">
+      <app-icon name="eye-off" [size]="20" />
+      <h2>No analytics on your documents</h2>
+      <p>
+        We do not record file names, types, sizes or contents. We could not attribute a conversion
+        to you even if we wanted to, because the conversion happens on your machine.
+      </p>
+    </article>
+
+    <article class="claim">
+      <app-icon name="user" [size]="20" />
+      <h2>No accounts, no cookies for tracking</h2>
+      <p>
+        There is nothing to sign up for and no advertising or tracking cookies are set. The only
+        storage used is the local storage described below.
+      </p>
+    </article>
+
+    <article class="claim">
+      <app-icon name="cloud" [size]="20" />
+      <h2>Works offline</h2>
+      <p>
+        Once loaded, the service worker keeps the whole toolkit available without a connection —
+        which is only possible because nothing needs a server round-trip.
+      </p>
+    </article>
+  </section>
+
+  <section class="stored">
+    <h2>What is stored on this device</h2>
+    <p class="ou-muted">
+      To be useful across visits, a few preferences are saved in your browser's local storage. All
+      of it is listed here, and you can erase it at any time.
+    </p>
+
+    <div class="stored__grid">
+      <div class="stat">
+        <span class="stat__label">Preferences &amp; history</span>
+        <span class="stat__value">{{ localBytes() | fileSize }}</span>
+        <span class="stat__note">localStorage, this origin only</span>
+      </div>
+      <div class="stat">
+        <span class="stat__label">Cached file contents</span>
+        <span class="stat__value">
+          @if (cacheBytes() !== null) {
+            {{ cacheBytes() | fileSize }}
+          } @else {
+            n/a
+          }
+        </span>
+        <span class="stat__note">IndexedDB, only if you opted in</span>
+      </div>
+    </div>
+
+    @if (hasData()) {
+      <ul class="keys">
+        @for (key of keys(); track key) {
+          <li>
+            <code>{{ key }}</code>
+            <span>{{ label(key) }}</span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="ou-subtle">Nothing is currently stored.</p>
+    }
+
+    <div class="actions">
+      <button type="button" class="ou-btn ou-btn--danger" (click)="eraseEverything()">
+        <app-icon name="trash" [size]="15" />
+        Erase everything stored locally
+      </button>
+      <button type="button" class="ou-btn ou-btn--ghost" (click)="refresh()">
+        <app-icon name="refresh" [size]="15" />
+        Refresh
+      </button>
+    </div>
+  </section>
+
+  <section class="ou-prose fine">
+    <h2>The fine print</h2>
+
+    <h3>Hosting</h3>
+    <p>
+      The site is served as static files. Whoever hosts those files can see standard web-server
+      request logs — the pages and assets your browser fetched, your IP address and user agent. That
+      is unavoidable for any website. It does not include anything about your documents, because
+      your documents are never part of a request.
+    </p>
+
+    <h3>Third parties</h3>
+    <p>
+      There are no third-party scripts, no ad networks, no embedded trackers and no external font or
+      analytics requests. Every library the app uses is bundled and served from the same origin.
+    </p>
+
+    <h3>Sharing features</h3>
+    <p>
+      Buttons like "Share" use your operating system's native share sheet, which hands the file to
+      an app you pick. That is the one case where a file can leave this browser, and only because
+      you explicitly chose a destination.
+    </p>
+
+    <h3>Children and sensitive data</h3>
+    <p>
+      Because no data is collected, there is no profile, no retention period and no deletion request
+      to make. Clearing your browser storage removes everything this site has ever kept.
+    </p>
+
+    <h3>Changes</h3>
+    <p>
+      If the architecture ever changes — for example if a tool genuinely required a server — that
+      tool would be labelled clearly before you used it, and this page would say so.
+    </p>
+  </section>
+
+  <p class="back">
+    <a routerLink="/about">Read how it works technically</a>
+    ·
+    <a routerLink="/tools">Browse all tools</a>
+  </p>
+</div>

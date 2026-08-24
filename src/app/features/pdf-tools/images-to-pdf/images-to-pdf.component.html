@@ -1,0 +1,153 @@
+<app-tool-shell toolId="images-to-pdf">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.avif']"
+      [multiple]="true"
+      [showSelection]="false"
+      [compact]="entries().length > 0"
+      title="Drop images to turn into a PDF"
+      hint="JPG, PNG, WebP, GIF or BMP — drag them into the order you want."
+      icon="image"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (entries().length) {
+      <div class="panel">
+        <h2 class="panel__title">Page setup</h2>
+        <p class="panel__hint">
+          {{ entries().length }} images · one page each · drag thumbnails to reorder.
+        </p>
+
+        <div class="options">
+          <label class="ou-field">
+            <span class="ou-label">Page size</span>
+            <select class="ou-select" [value]="pageSize()" (change)="setPageSize($event)">
+              @for (size of pageSizes; track size) {
+                <option [value]="size">
+                  {{ size === 'fit' ? 'Fit to image' : size }}
+                </option>
+              }
+            </select>
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Orientation</span>
+            <select
+              class="ou-select"
+              [value]="orientation()"
+              (change)="setOrientation($event)"
+              [disabled]="pageSize() === 'fit'"
+            >
+              <option value="auto">Match each image</option>
+              <option value="portrait">Portrait</option>
+              <option value="landscape">Landscape</option>
+            </select>
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Margin — {{ margin() }}pt</span>
+            <input
+              type="range"
+              class="ou-range"
+              min="0"
+              max="80"
+              step="4"
+              [value]="margin()"
+              (input)="setMargin($event)"
+            />
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">File name</span>
+            <input
+              type="text"
+              class="ou-input"
+              [value]="outputName()"
+              (input)="setOutputName($event)"
+            />
+          </label>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button type="button" class="ou-btn ou-btn--sm" (click)="sortByName()">
+          <app-icon name="arrows-updown" [size]="14" />
+          Sort by name
+        </button>
+        <span class="ou-spacer"></span>
+        <span class="ou-subtle">{{ totalInputSize() | fileSize }} of images</span>
+      </div>
+
+      <ul class="grid">
+        @for (entry of entries(); track entry.id; let i = $index) {
+          <li
+            class="card"
+            draggable="true"
+            (dragstart)="onDragStart(entry.id)"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop(entry.id)"
+            [class.is-dragging]="dragId() === entry.id"
+          >
+            <div class="card__thumb">
+              <img [src]="entry.url" [alt]="entry.file.name" />
+              <span class="card__num">{{ i + 1 }}</span>
+            </div>
+            <div class="card__bar">
+              <span class="card__name" [title]="entry.file.name">{{ entry.file.name }}</span>
+              <button
+                type="button"
+                class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                (click)="move(entry.id, -1)"
+                [disabled]="i === 0"
+                aria-label="Move earlier"
+              >
+                <app-icon name="chevron-left" [size]="13" />
+              </button>
+              <button
+                type="button"
+                class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                (click)="move(entry.id, 1)"
+                [disabled]="i === entries().length - 1"
+                aria-label="Move later"
+              >
+                <app-icon name="chevron-right" [size]="13" />
+              </button>
+              <button
+                type="button"
+                class="ou-btn ou-btn--sm ou-btn--ghost ou-btn--icon"
+                (click)="remove(entry.id)"
+                aria-label="Remove"
+              >
+                <app-icon name="x" [size]="13" />
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy()"
+          (click)="build()"
+        >
+          <app-icon name="file-pdf" [size]="17" />
+          Create PDF from {{ entries().length }} images
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Clear</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="PDF ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

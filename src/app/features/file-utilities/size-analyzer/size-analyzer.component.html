@@ -1,0 +1,125 @@
+<app-tool-shell toolId="file-size-analyzer" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pdf', '.docx', '.xlsx', '.pptx', '.zip']"
+      [compact]="scanned()"
+      title="Drop a file to see what is inside it"
+      hint="PDF, DOCX, XLSX, PPTX or ZIP — the container is opened locally."
+      icon="bar-chart"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (scanned()) {
+      @if (supported() && report(); as data) {
+        <div class="stats">
+          <div class="stat">
+            <span class="stat__label">File size</span>
+            <span class="stat__value">{{ primaryFile()!.size | fileSize }}</span>
+          </div>
+          @if (!isPdf()) {
+            <div class="stat">
+              <span class="stat__label">Uncompressed</span>
+              <span class="stat__value">{{ data.totalUncompressed | fileSize }}</span>
+            </div>
+            @if (compressionRatio() !== null) {
+              <div class="stat">
+                <span class="stat__label">Compression</span>
+                <span class="stat__value">{{ compressionRatio() }}%</span>
+                <span class="stat__note">space saved inside the container</span>
+              </div>
+            }
+          }
+          <div class="stat">
+            <span class="stat__label">Parts</span>
+            <span class="stat__value">{{ data.parts.length.toLocaleString() }}</span>
+          </div>
+        </div>
+
+        @if (isPdf()) {
+          <p class="notice">
+            <app-icon name="info" [size]="16" />
+            <span>
+              A PDF has no part table, so this is a weighting of how much drawing work each page
+              carries — not a byte count. It reliably points at the heavy pages, which is normally
+              what you are looking for.
+            </span>
+          </p>
+        }
+
+        <div class="panel">
+          <h2 class="panel__title">Where the space goes</h2>
+          <p class="panel__hint">Grouped by the kind of content each part holds.</p>
+
+          <div class="bar">
+            @for (group of data.groups; track group.name; let i = $index) {
+              <span
+                class="bar__slice"
+                [style.width.%]="group.share"
+                [style.background]="colorFor(i)"
+                [title]="group.name + ' — ' + group.share.toFixed(1) + '%'"
+              ></span>
+            }
+          </div>
+
+          <ul class="legend">
+            @for (group of data.groups; track group.name; let i = $index) {
+              <li>
+                <span class="legend__dot" [style.background]="colorFor(i)"></span>
+                <span class="legend__name">{{ group.name }}</span>
+                <span class="legend__count">{{ group.count }} parts</span>
+                <span class="legend__size">{{ group.bytes | fileSize }}</span>
+                <span class="legend__share">{{ group.share.toFixed(1) }}%</span>
+              </li>
+            }
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h2 class="panel__title">Largest parts</h2>
+          <ul class="parts">
+            @for (part of visibleParts(); track part.name) {
+              <li class="part">
+                <span class="part__name" [title]="part.name">{{ part.name }}</span>
+                <span class="part__bar">
+                  <span [style.width.%]="shareOf(part.bytes)"></span>
+                </span>
+                <span class="part__size">
+                  @if (isPdf()) {
+                    {{ shareOf(part.bytes).toFixed(1) }}%
+                  } @else {
+                    {{ part.bytes | fileSize }}
+                  }
+                </span>
+              </li>
+            }
+          </ul>
+
+          @if (data.parts.length > 25 && !showAll()) {
+            <button type="button" class="ou-btn ou-btn--sm more" (click)="showAll.set(true)">
+              Show all {{ data.parts.length }} parts
+            </button>
+          }
+        </div>
+      } @else {
+        <app-empty-state
+          icon="bar-chart"
+          title="That format cannot be broken down"
+          message="The analyser opens ZIP-based containers — DOCX, XLSX, PPTX and ZIP — plus PDF. A plain image or text file has no internal parts to report on."
+        />
+      }
+
+      <div class="actions">
+        <button type="button" class="ou-btn" (click)="startOver()">Analyse another file</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+  </div>
+</app-tool-shell>

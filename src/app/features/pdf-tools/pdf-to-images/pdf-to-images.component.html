@@ -1,0 +1,160 @@
+<app-tool-shell toolId="pdf-to-images" [wide]="true">
+  <div class="tool">
+    @if (!pageCount()) {
+      <app-file-drop-zone
+        [accepts]="['.pdf']"
+        title="Drop a PDF to convert to images"
+        hint="Pick pages, resolution and format — rendering happens on your device."
+        icon="images"
+        (filesChange)="onFiles($event)"
+      />
+    }
+
+    @if (needsPassword()) {
+      <div class="panel">
+        <h2 class="panel__title">This PDF is protected</h2>
+        <p class="panel__hint">Enter the password to open it.</p>
+        <div class="actions">
+          <label class="ou-field actions__name">
+            <span class="ou-label">Password</span>
+            <input
+              type="password"
+              class="ou-input"
+              [value]="password()"
+              (input)="setPassword($event)"
+              (keyup.enter)="retryWithPassword()"
+            />
+          </label>
+          <button type="button" class="ou-btn ou-btn--primary" (click)="retryWithPassword()">
+            <app-icon name="unlock" [size]="16" />
+            Unlock
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (pageCount()) {
+      <div class="panel">
+        <h2 class="panel__title">Output</h2>
+        <p class="panel__hint">
+          {{ selectedCount() }} of {{ pageCount() }} pages selected.
+        </p>
+
+        <div class="options">
+          <label class="ou-field">
+            <span class="ou-label">Format</span>
+            <select class="ou-select" [value]="format()" (change)="setFormat($event)">
+              <option value="image/png">PNG — lossless, transparent</option>
+              <option value="image/jpeg">JPEG — smaller files</option>
+              <option value="image/webp">WebP — smallest</option>
+            </select>
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Resolution</span>
+            <select class="ou-select" [value]="dpi()" (change)="setDpi($event)">
+              @for (option of dpiScales; track option.dpi) {
+                <option [value]="option.dpi">{{ option.label }}</option>
+              }
+            </select>
+          </label>
+
+          @if (isJpeg()) {
+            <label class="ou-field">
+              <span class="ou-label">Quality — {{ (quality() * 100).toFixed(0) }}%</span>
+              <input
+                type="range"
+                class="ou-range"
+                min="0.3"
+                max="1"
+                step="0.02"
+                [value]="quality()"
+                (input)="setQuality($event)"
+              />
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="selectAll()">
+          Select all
+        </button>
+        <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="selectNone()">
+          Select none
+        </button>
+        <span class="toolbar__divider"></span>
+        <div class="toolbar__group range">
+          <input
+            type="text"
+            class="ou-input"
+            placeholder="e.g. 1, 4-8"
+            [value]="rangeInput()"
+            (input)="setRange($event)"
+            (keyup.enter)="applyRange()"
+            aria-label="Select pages by range"
+          />
+          <button type="button" class="ou-btn ou-btn--sm" (click)="applyRange()">Apply</button>
+        </div>
+      </div>
+
+      <ul class="grid">
+        @for (thumb of thumbnails(); track $index; let i = $index) {
+          <li class="card" [class.is-selected]="isSelected(i)">
+            <button
+              type="button"
+              class="card__thumb"
+              (click)="toggle(i)"
+              [attr.aria-pressed]="isSelected(i)"
+              [attr.aria-label]="'Page ' + (i + 1)"
+            >
+              @if (thumb) {
+                <img [src]="thumb" [alt]="'Page ' + (i + 1)" />
+              } @else {
+                <span class="card__placeholder ou-skeleton"></span>
+              }
+              @if (isSelected(i)) {
+                <span class="card__check"><app-icon name="check" [size]="12" /></span>
+              }
+              <span class="card__num">{{ i + 1 }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="!selectedCount() || busy()"
+          (click)="convert()"
+        >
+          <app-icon name="images" [size]="17" />
+          Convert {{ selectedCount() }} pages
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay
+      [active]="busy()"
+      [percent]="percent()"
+      [label]="progressLabel()"
+      note="High resolutions need more memory — 300 DPI on A3 is a large canvas."
+    />
+
+    @if (errorMessage() && !needsPassword()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel
+      [outputs]="outputs()"
+      title="Images ready"
+      zipName="pdf-pages.zip"
+      (reset)="startOver()"
+    />
+  </div>
+</app-tool-shell>

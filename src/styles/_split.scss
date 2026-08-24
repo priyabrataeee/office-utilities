@@ -1,0 +1,46 @@
+@use 'mixins' as *;
+
+/** Two-pane "source on the left, result on the right" layout. */
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: var(--ou-s-4);
+  align-items: start;
+}
+
+.split__pane {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-2);
+}
+
+.split__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ou-s-3);
+  min-height: 30px;
+
+  h2 {
+    font-size: var(--ou-fs-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ou-text-subtle);
+  }
+}
+
+.preview {
+  margin: 0;
+  padding: var(--ou-s-4);
+  max-height: 46vh;
+  overflow: auto;
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-surface-2);
+  font-size: var(--ou-fs-xs);
+  line-height: 1.55;
+  white-space: pre;
+  @include scrollbar;
+}

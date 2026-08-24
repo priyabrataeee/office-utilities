@@ -1,0 +1,128 @@
+@use 'viewer';
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.pager__input {
+  width: 52px;
+  height: 26px;
+  padding-inline: var(--ou-s-1);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-sm);
+  background: var(--ou-surface);
+  color: var(--ou-text);
+  text-align: center;
+  font-size: var(--ou-fs-xs);
+  font-variant-numeric: tabular-nums;
+
+  &::-webkit-inner-spin-button {
+    display: none;
+  }
+}
+
+.pager__total {
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-subtle);
+  margin-right: var(--ou-s-1);
+}
+
+.outline {
+  flex: none;
+  width: 230px;
+  padding: var(--ou-s-3);
+  border-right: 1px solid var(--ou-border);
+  background: var(--ou-surface);
+  overflow-y: auto;
+  max-height: 78vh;
+  @include scrollbar;
+
+  h3 {
+    font-size: var(--ou-fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ou-text-subtle);
+    margin-bottom: var(--ou-s-2);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    padding: 3px 0;
+    font-size: var(--ou-fs-sm);
+    color: var(--ou-text-muted);
+  }
+}
+
+.pages {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  padding: var(--ou-s-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ou-s-5);
+  max-height: 78vh;
+  @include scrollbar;
+}
+
+.page {
+  position: relative;
+  flex: none;
+  background: #fff;
+  box-shadow: var(--ou-shadow-md);
+  display: grid;
+  place-items: center;
+  max-width: 100%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.page__placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.page__label {
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-subtle);
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ou-s-3);
+}
+
+.loading__page {
+  width: 420px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1.414;
+}
+
+@media (max-width: 860px) {
+  .rail,
+  .outline,
+  .hits {
+    display: none;
+  }
+}
