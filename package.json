@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build && node scripts/generate-sitemap.mjs",
+    "build": "ng build && node scripts/generate-sitemap.mjs && node scripts/inject-csp-hashes.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:office-utility": "node dist/office-utility/server/server.mjs",
