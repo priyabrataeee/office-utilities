@@ -28,12 +28,12 @@ import { SITE } from '../../core/site.config';
             <div class="footer__col">
               <h3>{{ category.title }}</h3>
               <ul>
-                @for (tool of topOf(category.id); track tool.id) {
+                <!-- @for (tool of topOf(category.id); track tool.id) {
                   <li><a [routerLink]="tool.path">{{ tool.title }}</a></li>
-                }
+                } -->
                 <li>
                   <a class="footer__more" [routerLink]="['/', category.slug]">
-                    All {{ registry.countInCategory(category.id) }} tools
+                    {{ registry.countInCategory(category.id) }} tools
                     <app-icon name="arrow-right" [size]="12" />
                   </a>
                 </li>
