@@ -1,0 +1,27 @@
+{
+  // Cloudflare Workers Static Assets configuration.
+  //
+  // Connecting a repo to Cloudflare now creates a Worker rather than a classic
+  // Pages project, and a Worker serves nothing until it is told where the built
+  // files live. That is what `assets.directory` below does — without it every
+  // request returns 404.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "office-utilities",
+  "compatibility_date": "2025-09-01",
+
+  // No "main" field: this is a pure static site with no server-side Worker
+  // code, so Cloudflare serves the assets directly from its edge.
+  "assets": {
+    "directory": "./dist/office-utility/browser",
+
+    // Every route is prerendered to its own index.html, so a real URL is served
+    // straight from disk. Anything genuinely missing falls through to 404.html,
+    // which is a copy of the app shell — so the client router still renders the
+    // in-app "not found" page, but the response carries a correct 404 status
+    // instead of a misleading 200.
+    "not_found_handling": "404-page",
+
+    // Resolves "/pdf/merge-pdf" to "/pdf/merge-pdf/index.html".
+    "html_handling": "auto-trailing-slash"
+  }
+}

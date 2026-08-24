@@ -1,31 +1,46 @@
-# Long-cache the hashed asset chunks; the file names change on every build.
-/*.js
+# Cloudflare merges EVERY matching rule rather than taking the most specific
+# one, so patterns here must not overlap on the same header. Cache-Control is
+# therefore set only on precise, content-hashed paths, and the catch-all rule
+# below carries security headers exclusively.
+
+# --- Content-hashed build output: safe to cache forever ---------------------
+# The file name changes whenever the contents change, so a stale copy is
+# impossible. These patterns deliberately avoid matching /ngsw-worker.js.
+/main-*.js
   Cache-Control: public, max-age=31536000, immutable
-/*.mjs
+/chunk-*.js
   Cache-Control: public, max-age=31536000, immutable
-/*.css
+/polyfills-*.js
+  Cache-Control: public, max-age=31536000, immutable
+/styles-*.css
+  Cache-Control: public, max-age=31536000, immutable
+/media/*
+  Cache-Control: public, max-age=31536000, immutable
+/vendor/*
   Cache-Control: public, max-age=31536000, immutable
 /icons/*
   Cache-Control: public, max-age=31536000, immutable
 /og/*
   Cache-Control: public, max-age=31536000, immutable
-/vendor/*
-  Cache-Control: public, max-age=31536000, immutable
-/*.woff2
-  Cache-Control: public, max-age=31536000, immutable
 
-# HTML must revalidate — the app updates in place.
+# --- Service worker: must never be cached ----------------------------------
+# A cached service worker pins users to an old build until it happens to
+# expire, which can strand them for days.
+/ngsw-worker.js
+  Cache-Control: no-cache, no-store, must-revalidate
+/ngsw.json
+  Cache-Control: no-cache, no-store, must-revalidate
+/safety-worker.js
+  Cache-Control: no-cache, no-store, must-revalidate
+/manifest.webmanifest
+  Cache-Control: no-cache, must-revalidate
+
+# --- Everything else: security headers only, no Cache-Control --------------
+# HTML is left to Cloudflare's default revalidation so a new deploy is picked
+# up immediately. Adding Cache-Control here would merge into the rules above
+# and produce a contradictory header.
 /*
-  Cache-Control: public, max-age=0, must-revalidate
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: interest-cohort=(), browsing-topics=(), microphone=(), camera=(), geolocation=()
-
-# The service worker itself must never be cached, or updates take a week.
-/ngsw-worker.js
-  Cache-Control: public, max-age=0, must-revalidate
-/ngsw.json
-  Cache-Control: public, max-age=0, must-revalidate
-/manifest.webmanifest
-  Cache-Control: public, max-age=0, must-revalidate
