@@ -13,7 +13,11 @@ export class DownloadService {
 
   async save(blob: Blob, fileName: string): Promise<void> {
     if (!this.isBrowser) return;
-    const { saveAs } = await import('file-saver');
+    // file-saver is CommonJS: its dynamic-import namespace exposes only
+    // `default`, which is the saveAs function itself. Destructuring
+    // `{ saveAs }` off the namespace yields undefined, so every download
+    // — and everything routed through save() — throws.
+    const saveAs = (await import('file-saver')).default;
     saveAs(blob, safeFileName(fileName));
   }
 

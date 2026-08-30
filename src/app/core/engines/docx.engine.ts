@@ -36,8 +36,19 @@ export interface DocxContent {
    Visible content, via Mammoth
    ------------------------------------------------------------------ */
 
+/**
+ * Mammoth is CommonJS, so a dynamic import hands back a namespace object whose
+ * only member is `default`. Reading `mammoth.images` or `mammoth.convertToHtml`
+ * straight off that namespace yields undefined, and the failure surfaces as a
+ * confusing "cannot read properties of undefined" at the first property access
+ * rather than at the import itself. Unwrapping here keeps both callers honest.
+ */
+async function loadMammoth() {
+  return (await import('mammoth')).default;
+}
+
 export async function readDocx(file: Blob): Promise<DocxContent> {
-  const mammoth = await import('mammoth');
+  const mammoth = await loadMammoth();
   const arrayBuffer = await file.arrayBuffer();
 
   const result = await mammoth.convertToHtml(
@@ -97,7 +108,7 @@ function blockToText(block: DocBlock): string {
 
 /** Plain text only, which is much faster than a full HTML conversion. */
 export async function extractDocxText(file: Blob): Promise<string> {
-  const mammoth = await import('mammoth');
+  const mammoth = await loadMammoth();
   const result = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
   return result.value;
 }

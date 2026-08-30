@@ -1,4 +1,4 @@
-import { computed, inject, signal } from '@angular/core';
+import { Injector, afterNextRender, computed, inject, signal } from '@angular/core';
 import { ToastService } from '../core/services/toast.service';
 import { DownloadService } from '../core/services/download.service';
 import { RecentService } from '../core/services/recent.service';
@@ -21,6 +21,7 @@ export abstract class ToolBase {
   protected readonly downloads = inject(DownloadService);
   protected readonly recentFiles = inject(RecentService);
   private readonly handoff = inject(HandoffService);
+  private readonly injector = inject(Injector);
 
   /** Catalog id, used for usage tracking and the shell header. */
   abstract readonly toolId: string;
@@ -43,8 +44,18 @@ export abstract class ToolBase {
    * Call from the subclass constructor.
    */
   protected acceptHandoff(): void {
+    // Claim the handoff synchronously so a later component cannot take it
+    // twice, but deliver it after the first render.
+    //
+    // Tools that serve several routes read their catalog id from route data
+    // via `withComponentInputBinding()`, which makes `toolId` a required
+    // input. Required inputs are not populated until after construction, so
+    // calling onFiles() here — which reads toolId to record the file as
+    // recent — throws NG0950 for exactly those tools, and only when a file
+    // was actually handed over.
     const pending = this.handoff.take();
-    if (pending.length) this.onFiles(pending);
+    if (!pending.length) return;
+    afterNextRender(() => this.onFiles(pending), { injector: this.injector });
   }
 
   /** Wire this to `<app-file-drop-zone (filesChange)>`. */

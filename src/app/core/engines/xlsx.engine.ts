@@ -514,7 +514,7 @@ export function findDuplicates(
         if (options.caseInsensitive) text = text.toLowerCase();
         return text;
       })
-      .join(' ');
+      .join('\u0000');
     buckets.set(key, [...(buckets.get(key) ?? []), index]);
   });
 
