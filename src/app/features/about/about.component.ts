@@ -85,10 +85,10 @@ import { SITE } from '../../core/site.config';
           </li>
         </ul>
 
-        <h2>Cost and tracking</h2>
+        <h2>Cost</h2>
         <p>
-          The tools are free and there is nothing to sign up for. There is no analytics on what you
-          convert, because the app never learns what you converted. See
+          The tools are free and there is nothing to sign up for. Your documents are processed on
+          your own device, so their contents are never sent anywhere. See
           <a routerLink="/privacy">the privacy page</a> for exactly what is stored on your device
           and how to clear it.
         </p>

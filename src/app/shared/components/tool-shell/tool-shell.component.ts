@@ -10,6 +10,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { IconComponent } from '../icon/icon.component';
 import { ToolCardComponent } from '../tool-card/tool-card.component';
+import { AdSlotComponent } from '../ad-slot/ad-slot.component';
 import { ToolRegistryService } from '../../../core/services/tool-registry.service';
 import { FavoritesService } from '../../../core/services/favorites.service';
 import { RecentService } from '../../../core/services/recent.service';
@@ -27,7 +28,7 @@ import { SITE } from '../../../core/site.config';
 @Component({
   selector: 'app-tool-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, IconComponent, ToolCardComponent],
+  imports: [RouterLink, IconComponent, ToolCardComponent, AdSlotComponent],
   templateUrl: './tool-shell.component.html',
   styleUrl: './tool-shell.component.scss',
 })

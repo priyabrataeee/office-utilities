@@ -77,11 +77,13 @@
             <app-icon name="user" [size]="16" />
             <div>
               <strong>No account needed</strong>
-              <span>No sign-up, no email, no tracking of what you convert.</span>
+              <span>No sign-up and no email address required.</span>
             </div>
           </li>
         </ul>
       </section>
+
+      <app-ad-slot placement="toolFooter" />
 
       @if (t.faq?.length) {
         <section class="faq">

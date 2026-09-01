@@ -65,7 +65,7 @@
               ]
             },
             "define": {
-              "_OU_ORIGIN_": "\"https://officeutilities.app\""
+              "_OU_ORIGIN_": "\"https://office-utilities.org\""
             }
           },
           "configurations": {

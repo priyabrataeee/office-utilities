@@ -49,6 +49,19 @@ function htmlFilesIn(dir) {
 }
 
 const pages = htmlFilesIn(browserDir);
+
+/*
+ * A CSP containing any hash makes browsers ignore 'unsafe-inline' outright.
+ * Ads need 'unsafe-inline' (AdSense's inline scripts differ per impression,
+ * so no hash can cover them), which means injecting hashes here would
+ * silently re-block the very scripts the policy was widened to allow.
+ *
+ * Delete 'unsafe-inline' from src/index.html and hashing resumes by itself.
+ */
+if (pages.length && /script-src[^;"]*'unsafe-inline'/.test(readFileSync(pages[0], 'utf8'))) {
+  console.log("CSP hash injection skipped: script-src carries 'unsafe-inline' (ads enabled).");
+  process.exit(0);
+}
 const distinct = new Set();
 let patched = 0;
 let skipped = 0;

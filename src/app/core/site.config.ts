@@ -13,9 +13,9 @@ const resolvedOrigin = (() => {
   try {
     return typeof _OU_ORIGIN_ === 'string' && _OU_ORIGIN_
       ? _OU_ORIGIN_
-      : 'https://officeutilities.app';
+      : 'https://office-utilities.org';
   } catch {
-    return 'https://officeutilities.app';
+    return 'https://office-utilities.org';
   }
 })();
 
@@ -30,4 +30,37 @@ export const SITE = {
   twitter: '@officeutilities',
   themeColor: '#5b5bd6',
   version: '1.0.0',
+} as const;
+
+/**
+ * Revenue configuration.
+ *
+ * Kept here rather than inside components so a provider can be switched on
+ * or off without touching markup. Anything disabled renders nothing at all —
+ * an empty ad frame looks broken and costs trust on a privacy-first site.
+ */
+export const MONETIZATION = {
+  /** Linked from the footer. A plain link, so it costs no third-party JS. */
+  donationUrl: 'https://buymeacoffee.com/priyabrataeee',
+
+  adsense: {
+    enabled: true,
+    client: 'ca-pub-4291402082894202',
+    /**
+     * Ad unit ids from the AdSense dashboard, per placement. A placement
+     * with no id renders nothing: Auto ads still fill the page, and an
+     * <ins> without a valid slot only produces console errors.
+     */
+    slots: {
+      toolFooter: '',
+      listing: '',
+    } as Record<string, string>,
+  },
+
+  /** Awaiting a publisher id; wired up and ready to enable. */
+  ethicalAds: {
+    enabled: false,
+    publisher: '',
+    type: 'text',
+  },
 } as const;

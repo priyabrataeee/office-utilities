@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.ad {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-2);
+  margin-block: var(--ou-s-8);
+  padding: var(--ou-s-3);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-surface-2);
+}
+
+/* Labelled explicitly. Ads that pretend to be content are what make tool sites
+   feel untrustworthy, and this one is trading on not being that. */
+.ad__label {
+  font-size: var(--ou-fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ou-text-subtle);
+}
+
+.ad__unit {
+  display: block;
+  width: 100%;
+  /* Reserves height so filling the slot does not shove content downwards. */
+  min-height: 90px;
+}

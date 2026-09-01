@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ToolRegistryService } from '../../core/services/tool-registry.service';
+import { MonetizationService } from '../../core/services/monetization.service';
 import { SITE } from '../../core/site.config';
 
 @Component({
@@ -19,7 +20,7 @@ import { SITE } from '../../core/site.config';
           <p class="footer__tagline">{{ site.tagline }}</p>
           <p class="footer__privacy">
             <app-icon name="shield-check" [size]="14" />
-            Every tool runs in your browser. No uploads, no accounts, no tracking.
+            Every tool runs in your browser. No uploads and no accounts.
           </p>
         </div>
 
@@ -50,6 +51,13 @@ import { SITE } from '../../core/site.config';
           <a routerLink="/privacy">Privacy</a>
           <a routerLink="/tools">All tools</a>
           <a routerLink="/categories">Categories</a>
+          <a
+            class="footer__support"
+            [href]="money.donationUrl"
+            target="_blank"
+            rel="noopener"
+            >Buy me a coffee</a
+          >
         </nav>
       </div>
     </footer>
@@ -58,6 +66,7 @@ import { SITE } from '../../core/site.config';
 })
 export class SiteFooterComponent {
   protected readonly registry = inject(ToolRegistryService);
+  protected readonly money = inject(MonetizationService);
   protected readonly site = SITE;
   protected readonly year = new Date().getFullYear();
 
