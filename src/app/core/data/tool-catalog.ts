@@ -403,6 +403,70 @@ export const TOOLS: readonly ToolDefinition[] = [
     alsoIn: ['convert'],
   },
   {
+    id: 'pdf-to-word',
+    category: 'pdf',
+    slug: 'pdf-to-word',
+    title: 'PDF to Word',
+    summary: 'Turn a PDF back into an editable .docx.',
+    description:
+      'Recovers the text of a PDF as an editable Word document, rebuilding paragraphs from wrapped lines and promoting larger or bold lines to headings. Running headers and footers are stripped, and every option is shown so you can correct the guesses before downloading. Runs entirely in this tab — the file is never uploaded.',
+    icon: 'file-word',
+    keywords: [
+      'pdf to word',
+      'pdf to docx',
+      'convert pdf to word',
+      'pdf to editable document',
+      'pdf to word without uploading',
+    ],
+    accepts: ['.pdf'],
+    popular: true,
+    alsoIn: ['convert', 'word'],
+    faq: [
+      {
+        q: 'Will the layout match the original exactly?',
+        a: 'No, and no converter can promise that honestly. A PDF stores positioned glyphs rather than paragraphs, so structure is inferred from font size and geometry. Text, headings and lists carry across well; multi-column layouts, tables and precise page design do not.',
+      },
+      {
+        q: 'Does it work on scanned PDFs?',
+        a: 'No. A scan is a picture of text with no text layer to read, so reading it needs OCR, which this release does not include. The tool tells you when it finds no text rather than handing back an empty document.',
+      },
+      {
+        q: 'Is my PDF uploaded anywhere?',
+        a: 'No. The PDF is read by this page and converted on your own device. Nothing is sent to a server, which is why it also works with the network disconnected.',
+      },
+    ],
+  },
+  {
+    id: 'pdf-to-text',
+    category: 'pdf',
+    slug: 'pdf-to-text',
+    title: 'PDF to Text',
+    summary: 'Extract clean plain text from any PDF.',
+    description:
+      'Pulls the text out of a PDF as a plain .txt file, rejoining lines that were wrapped by the layout and optionally removing the running headers and footers that repeat on every page. Useful for quoting, searching, feeding into another tool, or reading a document without its formatting.',
+    icon: 'file-text',
+    keywords: [
+      'pdf to text',
+      'pdf to txt',
+      'extract text from pdf',
+      'copy text from pdf',
+      'pdf text extractor',
+    ],
+    accepts: ['.pdf'],
+    popular: true,
+    alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'Why is the text out of order on some PDFs?',
+        a: 'Text is read in the order the page positions it, which for a two-column layout means the columns can interleave. Single-column documents extract cleanly.',
+      },
+      {
+        q: 'Can it read a scanned document?',
+        a: 'No. Scans hold images rather than text, and extracting them needs OCR, which is not included in this release.',
+      },
+    ],
+  },
+  {
     id: 'pdf-to-images',
     category: 'pdf',
     slug: 'pdf-to-images',

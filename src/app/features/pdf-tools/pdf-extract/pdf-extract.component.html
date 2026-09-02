@@ -1,0 +1,165 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pdf']"
+      [compact]="hasContent()"
+      [title]="'Drop a PDF to convert to ' + meta().label"
+      hint="Text, headings and lists are recovered. Nothing is uploaded."
+      [icon]="meta().icon"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (isScanned()) {
+      <p class="scanned">
+        <app-icon name="alert-circle" [size]="17" />
+        <span>
+          <strong>This PDF has no text layer.</strong>
+          It is a scan or a set of images, so there is nothing to extract. Reading it would need
+          OCR, which this release does not include.
+        </span>
+      </p>
+    }
+
+    @if (hasContent()) {
+      <div class="panel">
+        <h2 class="panel__title">What to recover</h2>
+        <p class="panel__hint">
+          {{ pageCount() }} {{ pageCount() === 1 ? 'page' : 'pages' }} ·
+          {{ blockCount() }} blocks ·
+          {{ headingCount() }} {{ headingCount() === 1 ? 'heading' : 'headings' }} detected
+        </p>
+
+        <div class="options">
+          <label class="ou-check">
+            <input
+              type="checkbox"
+              [checked]="detectHeadings()"
+              (change)="toggle('detectHeadings', $event)"
+            />
+            <span>
+              <strong>Detect headings</strong>
+              <small>Promotes larger and bold lines to real headings.</small>
+            </span>
+          </label>
+
+          <label class="ou-check">
+            <input
+              type="checkbox"
+              [checked]="detectLists()"
+              (change)="toggle('detectLists', $event)"
+            />
+            <span>
+              <strong>Detect lists</strong>
+              <small>Turns bulleted and numbered lines into list items.</small>
+            </span>
+          </label>
+
+          <label class="ou-check">
+            <input
+              type="checkbox"
+              [checked]="mergeParagraphs()"
+              (change)="toggle('mergeParagraphs', $event)"
+            />
+            <span>
+              <strong>Join wrapped lines</strong>
+              <small>Rebuilds paragraphs instead of one line per line.</small>
+            </span>
+          </label>
+
+          <label class="ou-check">
+            <input
+              type="checkbox"
+              [checked]="dropRepeated()"
+              (change)="toggle('dropRepeated', $event)"
+            />
+            <span>
+              <strong>Remove running headers</strong>
+              <small>Drops page furniture repeated across most pages.</small>
+            </span>
+          </label>
+
+          @if (!isWord()) {
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="pageBreaks()"
+                (change)="toggle('pageBreaks', $event)"
+              />
+              <span>
+                <strong>Mark page breaks</strong>
+                <small>Separates each page in the output.</small>
+              </span>
+            </label>
+          }
+        </div>
+      </div>
+
+      @if (droppedLines().length) {
+        <details class="notes">
+          <summary>
+            {{ droppedLines().length }} repeated
+            {{ droppedLines().length === 1 ? 'line' : 'lines' }} removed
+            <app-icon name="chevron-down" [size]="15" />
+          </summary>
+          <ul>
+            @for (line of droppedLines(); track line) {
+              <li><code>{{ line }}</code></li>
+            }
+          </ul>
+        </details>
+      }
+
+      <div class="split">
+        @if (isWord()) {
+          <section class="split__pane">
+            <header class="split__head">
+              <h2>Document preview</h2>
+            </header>
+            <div class="rendered ou-prose" [innerHTML]="previewHtml()"></div>
+          </section>
+        }
+
+        <section class="split__pane">
+          <header class="split__head">
+            <h2>Extracted text</h2>
+            <app-copy-button [text]="textOutput()" label="Copy" [small]="true" />
+          </header>
+          <pre class="preview"><code>{{ textOutput().slice(0, 30000) }}</code></pre>
+          @if (textOutput().length > 30000) {
+            <p class="hint">Preview truncated — the download contains everything.</p>
+          }
+        </section>
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy()"
+          (click)="download()"
+        >
+          <app-icon [name]="meta().icon" [size]="17" />
+          Download {{ meta().label }}
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+
+      <p class="hint">
+        A PDF stores positioned glyphs, not paragraphs, so structure here is inferred rather than
+        read. Text, headings and lists come across well; multi-column layouts, tables and exact
+        page design do not survive. Check the preview before downloading.
+      </p>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Conversion complete" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

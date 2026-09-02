@@ -1,0 +1,53 @@
+@use 'tool';
+@use 'split';
+@use 'rendered';
+
+/* A scan has no text layer at all, so this is a dead end rather than a warning
+   about quality — it gets more weight than the usual hint. */
+.scanned {
+  display: flex;
+  gap: var(--ou-s-3);
+  align-items: flex-start;
+  margin: var(--ou-s-5) 0 0;
+  padding: var(--ou-s-4);
+  border: 1px solid var(--ou-warning);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-warning-soft);
+  color: var(--ou-text);
+  font-size: var(--ou-fs-sm);
+  line-height: 1.55;
+
+  app-icon {
+    color: var(--ou-warning);
+    flex: none;
+    margin-top: 1px;
+  }
+
+  strong {
+    display: block;
+  }
+}
+
+.panel .ou-check {
+  align-items: flex-start;
+
+  input {
+    margin-top: 3px;
+  }
+
+  span {
+    display: flex;
+    flex-direction: column;
+  }
+
+  small {
+    font-size: var(--ou-fs-xs);
+    color: var(--ou-text-muted);
+  }
+}
+
+.notes code {
+  font-family: var(--ou-font-mono);
+  font-size: var(--ou-fs-xs);
+  color: var(--ou-text-muted);
+}

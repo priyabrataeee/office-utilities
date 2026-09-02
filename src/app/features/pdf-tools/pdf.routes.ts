@@ -15,6 +15,18 @@ export const routes: Routes = [
     data: { categoryId: 'pdf' },
   },
   {
+    path: 'pdf-to-word',
+    loadComponent: () =>
+      import('./pdf-extract/pdf-extract.component').then((m) => m.PdfExtractComponent),
+    data: { toolId: 'pdf-to-word', target: 'docx' },
+  },
+  {
+    path: 'pdf-to-text',
+    loadComponent: () =>
+      import('./pdf-extract/pdf-extract.component').then((m) => m.PdfExtractComponent),
+    data: { toolId: 'pdf-to-text', target: 'text' },
+  },
+  {
     path: 'merge-pdf',
     loadComponent: () => import('./merge-pdf/merge-pdf.component').then((m) => m.MergePdfComponent),
   },
