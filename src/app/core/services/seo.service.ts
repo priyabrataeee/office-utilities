@@ -2,6 +2,7 @@ import { DOCUMENT, Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { SITE } from '../site.config';
 import type { ResolvedTool, ToolCategory } from '../models/tool.model';
+import type { ResolvedGuide } from '../models/guide.model';
 
 export interface PageSeo {
   readonly title: string;
@@ -35,7 +36,7 @@ export class SeoService {
 
     this.title.setTitle(fullTitle);
 
-    this.setName('description', seo.description);
+    this.setName('description', metaDescription(seo.description));
     this.setName('robots', seo.noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large');
     if (seo.keywords?.length) this.setName('keywords', seo.keywords.join(', '));
     else this.meta.removeTag("name='keywords'");
@@ -46,14 +47,15 @@ export class SeoService {
     this.setProperty('og:description', seo.description);
     this.setProperty('og:url', url);
     this.setProperty('og:locale', 'en');
-    this.setProperty('og:image', `${SITE.origin}/og/cover.svg`);
+    this.setName('author', SITE.name);
+    this.setProperty('og:image', `${SITE.origin}/og/cover.jpg`);
     this.setProperty('og:image:alt', `${SITE.name} — ${SITE.tagline}`);
 
     this.setName('twitter:card', 'summary_large_image');
     this.setName('twitter:site', SITE.twitter);
     this.setName('twitter:title', fullTitle);
     this.setName('twitter:description', seo.description);
-    this.setName('twitter:image', `${SITE.origin}/og/cover.svg`);
+    this.setName('twitter:image', `${SITE.origin}/og/cover.jpg`);
 
     this.setCanonical(url);
     this.setStructuredData(seo.structuredData ?? []);
@@ -73,7 +75,9 @@ export class SeoService {
         url: SITE.origin + tool.path,
         isAccessibleForFree: true,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-        featureList: tool.keywords.join(', '),
+        featureList: [...tool.keywords],
+        browserRequirements: 'Requires JavaScript. Works in any modern browser.',
+        inLanguage: SITE.locale,
         publisher: { '@type': 'Organization', name: SITE.name, url: SITE.origin },
       },
       this.breadcrumbs([
@@ -97,10 +101,61 @@ export class SeoService {
 
     return {
       title: tool.title,
-      description: tool.description.slice(0, 300),
+      description: tool.description,
       path: tool.path,
       keywords: [...tool.keywords, tool.title.toLowerCase(), 'online', 'free', 'no upload'],
       structuredData,
+    };
+  }
+
+  guideSeo(guide: ResolvedGuide): PageSeo {
+    return {
+      title: guide.title,
+      description: guide.summary,
+      path: guide.path,
+      keywords: [...guide.keywords],
+      structuredData: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: guide.title,
+          description: guide.summary,
+          url: SITE.origin + guide.path,
+          datePublished: guide.published,
+          dateModified: guide.updated ?? guide.published,
+          inLanguage: SITE.locale,
+          author: { '@type': 'Organization', name: SITE.name, url: SITE.origin },
+          publisher: {
+            '@type': 'Organization',
+            name: SITE.name,
+            url: SITE.origin,
+            logo: {
+              '@type': 'ImageObject',
+              url: `${SITE.origin}/icons/icon-512x512.png`,
+            },
+          },
+          mainEntityOfPage: { '@type': 'WebPage', '@id': SITE.origin + guide.path },
+          image: `${SITE.origin}/og/cover.jpg`,
+        },
+        // The question and its direct answer, so an assistant quoting this
+        // page has the answer marked up rather than inferred from prose.
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: [
+            {
+              '@type': 'Question',
+              name: guide.title,
+              acceptedAnswer: { '@type': 'Answer', text: guide.answer },
+            },
+          ],
+        },
+        this.breadcrumbs([
+          { name: 'Home', path: '/' },
+          { name: 'Guides', path: '/guides' },
+          { name: guide.title, path: guide.path },
+        ]),
+      ],
     };
   }
 
@@ -162,4 +217,28 @@ export class SeoService {
       this.doc.head.appendChild(script);
     }
   }
+}
+
+/**
+ * Fits a description into the roughly 160 characters search engines display.
+ *
+ * Cuts at a sentence end where one is available, because a description ending
+ * mid-clause reads as broken in a result listing; otherwise falls back to the
+ * last word boundary. The full text stays on the page — only the meta tag is
+ * shortened.
+ */
+export function metaDescription(text: string): string {
+  const trimmed = text.trim();
+  if (trimmed.length <= 160) return trimmed;
+
+  const window = trimmed.slice(0, 160);
+  const sentenceEnd = Math.max(
+    window.lastIndexOf('. '),
+    window.lastIndexOf('! '),
+    window.lastIndexOf('? '),
+  );
+  if (sentenceEnd >= 90) return window.slice(0, sentenceEnd + 1);
+
+  const wordEnd = window.lastIndexOf(' ');
+  return `${window.slice(0, wordEnd > 0 ? wordEnd : 157).replace(/[,;:—-]$/, '')}…`;
 }

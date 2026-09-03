@@ -43,6 +43,10 @@ export const routes: Routes = [
       import('./features/privacy/privacy.component').then((m) => m.PrivacyComponent),
   },
   {
+    path: 'guides',
+    loadChildren: () => import('./features/guides/guides.routes').then((m) => m.routes),
+  },
+  {
     path: 'contact',
     loadComponent: () =>
       import('./features/contact/contact.component').then((m) => m.ContactComponent),

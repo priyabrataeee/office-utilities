@@ -83,6 +83,21 @@
         </ul>
       </section>
 
+      @if (guides().length) {
+        <section class="guides ou-no-print">
+          <h2 class="guides__title">Read more about this</h2>
+          @for (guide of guides(); track guide.slug) {
+            <a class="guides__item" [routerLink]="guide.path">
+              <app-icon name="file-text" [size]="18" />
+              <span>
+                <strong>{{ guide.title }}</strong>
+                <small>{{ guide.summary }}</small>
+              </span>
+              <app-icon name="arrow-right" [size]="15" />
+            </a>
+          }
+        </section>
+      }
       <app-ad-slot placement="toolFooter" />
 
       @if (t.faq?.length) {

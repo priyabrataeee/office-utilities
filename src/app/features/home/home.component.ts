@@ -87,6 +87,23 @@ export class HomeComponent {
           name: SITE.name,
           url: SITE.origin,
           slogan: SITE.tagline,
+          description: SITE.description,
+          logo: {
+            '@type': 'ImageObject',
+            url: `${SITE.origin}/icons/icon-512x512.png`,
+            width: 512,
+            height: 512,
+          },
+          // Gives search engines and assistants a real support route, which
+          // is one of the signals that separates a maintained site from an
+          // abandoned one.
+          contactPoint: {
+            '@type': 'ContactPoint',
+            contactType: 'customer support',
+            email: 'support@office-utilities.org',
+            url: `${SITE.origin}/contact`,
+            availableLanguage: 'English',
+          },
         },
       ],
     });

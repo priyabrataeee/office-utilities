@@ -11,7 +11,8 @@
     "build:ssr": "ng build --configuration ssr",
     "analyze": "node scripts/generate-sitemap.mjs",
     "build:zip": "npm run build && node scripts/package-dist.mjs",
-    "package": "node scripts/package-dist.mjs"
+    "package": "node scripts/package-dist.mjs",
+    "icons": "node scripts/generate-icons.mjs"
   },
   "prettier": {
     "printWidth": 100,

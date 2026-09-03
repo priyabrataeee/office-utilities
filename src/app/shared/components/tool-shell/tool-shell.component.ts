@@ -11,6 +11,7 @@ import { RouterLink } from '@angular/router';
 import { IconComponent } from '../icon/icon.component';
 import { ToolCardComponent } from '../tool-card/tool-card.component';
 import { AdSlotComponent } from '../ad-slot/ad-slot.component';
+import { GuideRegistryService } from '../../../core/services/guide-registry.service';
 import { ToolRegistryService } from '../../../core/services/tool-registry.service';
 import { FavoritesService } from '../../../core/services/favorites.service';
 import { RecentService } from '../../../core/services/recent.service';
@@ -37,6 +38,7 @@ export class ToolShellComponent {
   private readonly favorites = inject(FavoritesService);
   private readonly recent = inject(RecentService);
   private readonly seo = inject(SeoService);
+  private readonly guideRegistry = inject(GuideRegistryService);
   private readonly downloads = inject(DownloadService);
   private readonly toast = inject(ToastService);
 
@@ -52,6 +54,14 @@ export class ToolShellComponent {
     const tool = this.tool();
     return tool ? this.registry.related(tool, 6) : [];
   });
+  /**
+   * Guides covering this tool.
+   *
+   * The link matters in both directions: a guide sends readers to the tool,
+   * and this sends the tool's visitors — and any crawler that reaches it — to
+   * the page that explains the subject properly.
+   */
+  protected readonly guides = computed(() => this.guideRegistry.forTool(this.toolId()));
   protected readonly isFavorite = computed(() => {
     this.favorites.ids();
     return this.favorites.isFavorite(this.toolId());

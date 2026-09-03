@@ -52,6 +52,7 @@ import { SITE } from '../../core/site.config';
           <a routerLink="/terms">Terms</a>
           <a routerLink="/disclaimer">Disclaimer</a>
           <a routerLink="/contact">Contact</a>
+          <a routerLink="/guides">Guides</a>
           <a routerLink="/tools">All tools</a>
           <a routerLink="/categories">Categories</a>
           <a

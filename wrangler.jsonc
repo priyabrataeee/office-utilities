@@ -21,7 +21,10 @@
     // instead of a misleading 200.
     "not_found_handling": "404-page",
 
-    // Resolves "/pdf/merge-pdf" to "/pdf/merge-pdf/index.html".
-    "html_handling": "auto-trailing-slash"
+    // Serves "/pdf/merge-pdf" directly from "/pdf/merge-pdf/index.html" and
+    // redirects the trailing-slash form to it. "auto-trailing-slash" did the
+    // opposite, so every canonical tag and every sitemap entry pointed at a
+    // URL that answered 307 — a redirect on all 111 pages, for nothing.
+    "html_handling": "drop-trailing-slash"
   }
 }

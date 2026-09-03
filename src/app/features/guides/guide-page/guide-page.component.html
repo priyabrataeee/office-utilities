@@ -1,0 +1,119 @@
+@if (guide(); as g) {
+  <article class="page ou-container">
+    <header class="page__head">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a routerLink="/">Home</a>
+        <app-icon name="chevron-right" [size]="13" />
+        <a routerLink="/guides">Guides</a>
+        <app-icon name="chevron-right" [size]="13" />
+        <span aria-current="page">{{ g.title }}</span>
+      </nav>
+
+      <h1>{{ g.title }}</h1>
+
+      <p class="meta">
+        <span>{{ g.readingMinutes }} min read</span>
+        <span aria-hidden="true">·</span>
+        <span>Updated {{ g.updated ?? g.published }}</span>
+      </p>
+
+      <!-- The question answered immediately, before any preamble. It is what
+           the reader searched for, and what an assistant will quote. -->
+      <p class="answer">{{ g.answer }}</p>
+    </header>
+
+    <div class="prose ou-prose">
+      @for (block of g.body; track $index) {
+        @switch (block.type) {
+          @case ('h2') {
+            <h2>{{ block.text }}</h2>
+          }
+          @case ('h3') {
+            <h3>{{ block.text }}</h3>
+          }
+          @case ('p') {
+            <p><app-rich-text [text]="block.text" /></p>
+          }
+          @case ('ul') {
+            <ul>
+              @for (item of block.items; track item) {
+                <li><app-rich-text [text]="item" /></li>
+              }
+            </ul>
+          }
+          @case ('ol') {
+            <ol>
+              @for (item of block.items; track item) {
+                <li><app-rich-text [text]="item" /></li>
+              }
+            </ol>
+          }
+          @case ('note') {
+            <aside class="note" [class.note--warn]="block.tone === 'warn'">
+              <app-icon
+                [name]="block.tone === 'warn' ? 'alert-triangle' : 'info'"
+                [size]="17"
+              />
+              <div>
+                @if (block.title) {
+                  <strong>{{ block.title }}</strong>
+                }
+                <p><app-rich-text [text]="block.text" /></p>
+              </div>
+            </aside>
+          }
+          @case ('tool') {
+            @if (toolFor(block.toolId); as tool) {
+              <a class="toolcard" [routerLink]="tool.path">
+                <app-icon [name]="tool.icon" [size]="22" />
+                <span class="toolcard__body">
+                  <strong>{{ tool.title }}</strong>
+                  <small>{{ block.text ?? tool.summary }}</small>
+                </span>
+                <app-icon name="arrow-right" [size]="17" />
+              </a>
+            }
+          }
+        }
+      }
+    </div>
+
+    @if (tools().length) {
+      <section class="usedin">
+        <h2>Tools mentioned in this guide</h2>
+        <div class="usedin__grid">
+          @for (tool of tools(); track tool.id) {
+            <a class="usedin__card" [routerLink]="tool.path">
+              <app-icon [name]="tool.icon" [size]="20" />
+              <span>
+                <strong>{{ tool.title }}</strong>
+                <small>{{ tool.summary }}</small>
+              </span>
+            </a>
+          }
+        </div>
+      </section>
+    }
+
+    @if (related().length) {
+      <section class="more">
+        <h2>Keep reading</h2>
+        <ul class="more__list">
+          @for (item of related(); track item.slug) {
+            <li>
+              <a [routerLink]="item.path">
+                <strong>{{ item.title }}</strong>
+                <small>{{ item.summary }}</small>
+              </a>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  </article>
+} @else {
+  <div class="page ou-container">
+    <p class="ou-muted">That guide could not be found.</p>
+    <a class="ou-btn ou-btn--lg" routerLink="/guides">All guides</a>
+  </div>
+}
