@@ -81,6 +81,10 @@ export const guide: GuideDefinition = {
       ],
     },
     {
+      type: 'p',
+      text: 'One caveat when you try this here: this site shows adverts, so the Network tab lists requests to Google’s ad domains. They are small, they carry no document data, and they are unrelated to the conversion — the disconnect test settles it either way, because with the network off the adverts fail and the conversion still finishes.',
+    },
+    {
       type: 'note',
       title: 'Why the offline test is the strong one',
       text: 'A network trace can be misread, and a privacy policy can be aspirational. A tool that completes a conversion with the network switched off cannot have used a server. It is the only check that proves the architecture rather than the intent.',

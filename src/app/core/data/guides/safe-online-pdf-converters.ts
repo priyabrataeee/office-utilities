@@ -87,6 +87,11 @@ export const guide: GuideDefinition = {
       text: 'Open your browser’s developer tools, switch to the Network tab, then choose your file. If you see a request carrying several megabytes upward, the file was uploaded. If nothing of the sort appears, it was not.',
     },
     {
+      type: 'note',
+      title: 'What you will see on this site',
+      text: 'This site carries advertising, so the Network tab here shows requests to Google’s ad domains — googlesyndication.com and doubleclick.net among them. Those load the adverts; none of them carries your document. What you are looking for is different and unmistakable: a large request going outward, roughly the size of the file you chose. There is no such request here, which is what the second check confirms.',
+    },
+    {
       type: 'h3',
       text: 'Check two: disconnect',
     },

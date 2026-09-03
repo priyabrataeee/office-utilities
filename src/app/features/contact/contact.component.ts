@@ -72,7 +72,7 @@ import { SITE } from '../../core/site.config';
         </p>
         <p>
           There is no account system, so there is no password to reset and no subscription to
-          cancel. Nothing is stored on a server that could be sent to you or deleted on request —
+          cancel. We hold nothing on a server that could be sent to you or deleted on request —
           the <a routerLink="/privacy">privacy page</a> lists the handful of preferences kept in
           your own browser and how to clear them yourself.
         </p>
