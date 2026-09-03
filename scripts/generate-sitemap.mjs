@@ -28,7 +28,16 @@ const categorySlugs = [...catalogSource.matchAll(/slug:\s*'([^']+)'/g)].map((mat
 const [categorySlugList, toolSlugList] = split(categorySlugs, 9);
 
 const toolPaths = extractToolPaths(catalogSource);
-const staticPaths = ['/', '/tools', '/categories', '/about', '/privacy'];
+const staticPaths = [
+  '/',
+  '/tools',
+  '/categories',
+  '/about',
+  '/privacy',
+  '/contact',
+  '/terms',
+  '/disclaimer',
+];
 const categoryPaths = categorySlugList.map((slug) => `/${slug}`);
 const allPaths = [...new Set([...staticPaths, ...categoryPaths, ...toolPaths])];
 

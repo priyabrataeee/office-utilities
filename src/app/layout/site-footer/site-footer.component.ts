@@ -49,6 +49,9 @@ import { SITE } from '../../core/site.config';
         <nav aria-label="Legal">
           <a routerLink="/about">About</a>
           <a routerLink="/privacy">Privacy</a>
+          <a routerLink="/terms">Terms</a>
+          <a routerLink="/disclaimer">Disclaimer</a>
+          <a routerLink="/contact">Contact</a>
           <a routerLink="/tools">All tools</a>
           <a routerLink="/categories">Categories</a>
           <a

@@ -151,6 +151,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     accepts: ['.pdf'],
     popular: true,
     alsoIn: ['pdf'],
+    faq: [
+      {
+        q: 'Can it open password-protected PDFs?',
+        a:
+          'Yes. If a document is encrypted you are prompted for the password, which is used to decrypt it in your browser and is never transmitted or stored.',
+      },
+      {
+        q: 'Why is the text not selectable in my PDF?',
+        a:
+          'Because that PDF has no text layer — it is a scan, a picture of a page. The viewer will display it perfectly but search and selection need real text, which only OCR could add.',
+      },
+      {
+        q: 'Is there a limit on file size?',
+        a:
+          'Only your device\'s memory. Pages are rendered on demand rather than all at once, so documents of several hundred pages open comfortably on a normal laptop.',
+      },
+    ],
   },
   {
     id: 'docx-viewer',
@@ -165,6 +182,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     accepts: ['.docx'],
     popular: true,
     alsoIn: ['word'],
+    faq: [
+      {
+        q: 'Will it look exactly like it does in Word?',
+        a:
+          'Close, but not pixel-identical. Headings, lists, tables and inline images are preserved; Word\'s proprietary layout engine, custom fonts and intricate floating positioning are approximated.',
+      },
+      {
+        q: 'Can it open older .doc files?',
+        a:
+          'No. The viewer reads the OpenXML format introduced with Office 2007. A legacy .doc uses a completely different binary structure — resave it as .docx first.',
+      },
+      {
+        q: 'Are images inside the document shown?',
+        a:
+          'Yes. Pictures embedded in the file are extracted and displayed inline as data URIs, so nothing is fetched from the network to render them.',
+      },
+    ],
   },
   {
     id: 'xlsx-viewer',
@@ -179,6 +213,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     accepts: ['.xlsx', '.xls', '.xlsm', '.ods'],
     popular: true,
     alsoIn: ['excel'],
+    faq: [
+      {
+        q: 'Does it handle very large workbooks?',
+        a:
+          'Yes. The grid is virtualised, meaning only the cells currently on screen are rendered, so sheets with hundreds of thousands of rows scroll without freezing the page.',
+      },
+      {
+        q: 'Can I see the formulas rather than the results?',
+        a:
+          'Yes. Cells store both the formula and its last cached result, and you can inspect either. Formulas are shown as written, not recalculated.',
+      },
+      {
+        q: 'Which spreadsheet formats can it open?',
+        a:
+          'It reads .xlsx, .xls, .xlsm and .ods. Any sheet can be exported to CSV or JSON once open.',
+      },
+    ],
   },
   {
     id: 'csv-viewer',
@@ -192,6 +243,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['csv reader', 'tsv', 'delimited', 'open csv online'],
     accepts: ['.csv', '.tsv', '.txt'],
     alsoIn: ['excel'],
+    faq: [
+      {
+        q: 'Do I have to tell it which delimiter my file uses?',
+        a:
+          'No. The delimiter is detected from the file itself, so commas, tabs, semicolons and pipes all work. Quoted fields and values containing line breaks are parsed correctly.',
+      },
+      {
+        q: 'How many rows can it handle?',
+        a:
+          'Millions. Rows are virtualised so only what is visible is drawn, which is why sorting and searching stay responsive on files that would freeze a spreadsheet application.',
+      },
+      {
+        q: 'Why are my numbers showing as text?',
+        a:
+          'Column types are inferred from the values present. A column containing anything non-numeric — a stray label or a footnote row — is treated as text so nothing is silently altered.',
+      },
+    ],
   },
   {
     id: 'pptx-viewer',
@@ -205,6 +273,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['pptx viewer', 'open powerpoint online', 'slide viewer'],
     accepts: ['.pptx'],
     alsoIn: ['powerpoint'],
+    faq: [
+      {
+        q: 'Are slides rendered exactly as designed?',
+        a:
+          'Text, shapes and images are positioned from the underlying OpenXML, so layout is faithful. Animations, transitions, embedded video and some advanced effects are not reproduced.',
+      },
+      {
+        q: 'Can I read the speaker notes?',
+        a:
+          'Yes. Notes are stored alongside each slide in the file and are shown with it, which is useful when reviewing a deck someone else prepared.',
+      },
+      {
+        q: 'Does it work with .ppt files?',
+        a:
+          'No, only .pptx. The older .ppt is a binary format unrelated to OpenXML; open it in PowerPoint once and save as .pptx.',
+      },
+    ],
   },
   {
     id: 'markdown-viewer',
@@ -218,6 +303,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['md preview', 'readme viewer', 'markdown render'],
     accepts: ['.md', '.markdown', '.mdx'],
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'Which Markdown flavour does it use?',
+        a:
+          'GitHub-flavoured Markdown, so tables, task lists, strikethrough and fenced code blocks with syntax highlighting all render as they would on GitHub.',
+      },
+      {
+        q: 'Is it safe to open a Markdown file from someone else?',
+        a:
+          'Yes. Markdown permits raw HTML, so the rendered output is sanitised before it is displayed — scripts and event handlers are stripped rather than executed.',
+      },
+      {
+        q: 'Does it generate a table of contents?',
+        a:
+          'Yes, built automatically from the heading structure, so you can jump around a long document without scrolling.',
+      },
+    ],
   },
   {
     id: 'json-viewer',
@@ -231,6 +333,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['json formatter', 'json beautifier', 'json validator', 'json tree'],
     accepts: ['.json', '.jsonl', '.geojson'],
     popular: true,
+    faq: [
+      {
+        q: 'What happens if my JSON is invalid?',
+        a:
+          'You get the exact line and column where parsing failed, plus the character that caused it — far more useful than a generic error when hunting a missing comma.',
+      },
+      {
+        q: 'Can I copy just one part of a large document?',
+        a:
+          'Yes. Any node in the tree can be copied on its own, so you can lift a single nested object out of a large API response without editing by hand.',
+      },
+      {
+        q: 'Does it support JSON Lines and GeoJSON?',
+        a:
+          'Yes. .jsonl files are read as one record per line, and .geojson is treated as ordinary JSON with the same tree view.',
+      },
+    ],
   },
   {
     id: 'xml-viewer',
@@ -243,6 +362,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'code',
     keywords: ['xml formatter', 'xml pretty print', 'xml parser'],
     accepts: ['.xml', '.svg', '.rss', '.xsd'],
+    faq: [
+      {
+        q: 'Are namespaces and attributes visible?',
+        a:
+          'Yes. Attributes are shown inline on their element and namespace prefixes are preserved as written, so you can see exactly how the document is structured.',
+      },
+      {
+        q: 'What if the XML is malformed?',
+        a:
+          'The parse error is reported with the precise line and column, which is usually enough to find an unclosed tag or a stray character without opening an editor.',
+      },
+      {
+        q: 'Can I open an SVG with it?',
+        a:
+          'Yes. SVG is XML, so it opens as a tree — a quick way to inspect paths, groups and attributes without rendering the image.',
+      },
+    ],
   },
   {
     id: 'text-viewer',
@@ -255,6 +391,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'file-text',
     keywords: ['txt viewer', 'log viewer', 'large text file'],
     accepts: ['.txt', '.log', '.ini', '.conf', '.env'],
+    faq: [
+      {
+        q: 'Can it open a log file that is hundreds of megabytes?',
+        a:
+          'Yes. The view is virtualised, rendering only the lines on screen, which is why it stays responsive with files far beyond what a normal text area can hold.',
+      },
+      {
+        q: 'Does it handle different text encodings?',
+        a:
+          'Encoding is detected from the file\'s byte order mark and content, so UTF-8 and UTF-16 files display correctly rather than as mojibake.',
+      },
+      {
+        q: 'Can I turn off line wrapping?',
+        a:
+          'Yes. Wrapping is a toggle, which matters for logs and config files where a single long line is easier to read unwrapped.',
+      },
+    ],
   },
   {
     id: 'html-viewer',
@@ -267,6 +420,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'code',
     keywords: ['html preview', 'html formatter', 'render html'],
     accepts: ['.html', '.htm'],
+    faq: [
+      {
+        q: 'Is it safe to open an untrusted HTML file?',
+        a:
+          'Yes. The file renders in a sandboxed frame with scripts disabled and the markup sanitised, so nothing in the file can execute or reach the network.',
+      },
+      {
+        q: 'Can I read the source instead of the rendering?',
+        a:
+          'Yes. Switch to source view for pretty-printed, syntax-highlighted markup — useful for inspecting an email template or a page you have been sent.',
+      },
+      {
+        q: 'Will external images and styles load?',
+        a:
+          'No. Remote resources are not fetched, which keeps the file from calling home. Anything embedded in the file itself still displays.',
+      },
+    ],
   },
 
   /* ----------------------------------------------------------------
@@ -307,6 +477,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['divide pdf', 'separate pdf', 'pdf splitter', 'cut pdf'],
     accepts: ['.pdf'],
     popular: true,
+    faq: [
+      {
+        q: 'Can I split at specific pages rather than evenly?',
+        a:
+          'Yes. Choose your own break points, split into fixed-size chunks, or produce one file per page — whichever suits the document.',
+      },
+      {
+        q: 'Can I check the result before downloading?',
+        a:
+          'Yes. Every resulting document is previewed first, so you can confirm the breaks landed where you intended before saving anything.',
+      },
+      {
+        q: 'How do I get all the pieces at once?',
+        a:
+          'Download them individually, or take the whole set as a single ZIP when a split produces more files than you want to click through.',
+      },
+    ],
   },
   {
     id: 'organize-pdf',
@@ -320,6 +507,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['edit pdf pages', 'page manager', 'arrange pdf'],
     accepts: ['.pdf'],
     popular: true,
+    faq: [
+      {
+        q: 'Can I undo a mistake?',
+        a:
+          'Yes. Reordering, rotating, duplicating and deleting all happen in one editing session with full undo, and nothing is written until you export.',
+      },
+      {
+        q: 'Can I duplicate a page?',
+        a:
+          'Yes. Any page can be copied within the document, which is useful for repeating a cover sheet or a terms page across a compiled pack.',
+      },
+      {
+        q: 'Does rearranging break links or form fields?',
+        a:
+          'Page content, fonts and annotations move with their page. Links that point to a specific page number may need checking after a large reorder.',
+      },
+    ],
   },
   {
     id: 'rotate-pdf',
@@ -332,6 +536,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'rotate',
     keywords: ['turn pdf', 'landscape', 'sideways scan', 'fix orientation'],
     accepts: ['.pdf'],
+    faq: [
+      {
+        q: 'Does the rotation stick when I open the file elsewhere?',
+        a:
+          'Yes. The rotation is written into the PDF itself rather than applied as a view setting, so it looks correct in every reader and when printed.',
+      },
+      {
+        q: 'Can I rotate only some pages?',
+        a:
+          'Yes. Select individual pages — useful for a scan where a few sheets went through the feeder sideways — or rotate the whole document at once.',
+      },
+      {
+        q: 'Does rotating reduce quality?',
+        a:
+          'No. Rotation changes a page attribute rather than re-rendering content, so text stays sharp and selectable and images are untouched.',
+      },
+    ],
   },
   {
     id: 'delete-pdf-pages',
@@ -344,6 +565,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'trash',
     keywords: ['remove pdf pages', 'delete page', 'erase pages'],
     accepts: ['.pdf'],
+    faq: [
+      {
+        q: 'How do I remove a lot of pages quickly?',
+        a:
+          'Type a range such as 2, 5-9, 12 rather than clicking each thumbnail. Both methods can be mixed in one pass.',
+      },
+      {
+        q: 'Is the rest of the document affected?',
+        a:
+          'No. Fonts, links, form fields and annotations on the remaining pages are left exactly as they were — only the selected pages are removed.',
+      },
+      {
+        q: 'Can I get the deleted pages back?',
+        a:
+          'Not from the new file, which is why the original is never modified. Keep it until you have checked the result.',
+      },
+    ],
   },
   {
     id: 'reorder-pdf-pages',
@@ -356,6 +594,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'arrows-updown',
     keywords: ['rearrange pdf', 'sort pdf pages', 'move pages'],
     accepts: ['.pdf'],
+    faq: [
+      {
+        q: 'How do I fix a double-sided scan?',
+        a:
+          'Scanners often produce all fronts then all backs. Drag thumbnails to interleave them, or reverse the whole document in one click if the order is simply backwards.',
+      },
+      {
+        q: 'Is there a faster way than dragging every page?',
+        a:
+          'Reversing the entire document is a single action. For anything more complex, dragging the few pages that are wrong is usually quicker than moving them all.',
+      },
+      {
+        q: 'Does the content change?',
+        a:
+          'No. Pages are re-sequenced intact — the same fonts, images and text, in a different order.',
+      },
+    ],
   },
   {
     id: 'extract-pdf-pages',
@@ -368,6 +623,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'copy',
     keywords: ['pdf page extractor', 'save pages', 'pick pages'],
     accepts: ['.pdf'],
+    faq: [
+      {
+        q: 'Is my original PDF changed?',
+        a:
+          'Never. Extraction builds a brand-new document from the pages you chose and leaves the file you opened untouched.',
+      },
+      {
+        q: 'Can I get each page as its own file?',
+        a:
+          'Yes. Export the selection as one combined document or as a separate PDF per page, depending on what you need.',
+      },
+      {
+        q: 'How is this different from splitting?',
+        a:
+          'Splitting divides the whole document at break points. Extracting keeps only the pages you pick and discards the rest.',
+      },
+    ],
   },
   {
     id: 'compress-pdf',
@@ -401,6 +673,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     accepts: ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp'],
     popular: true,
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'Can I control page size and margins?',
+        a:
+          'Yes. Choose page size, orientation and margins before exporting, so phone photos of documents come out as something sensible to email or print.',
+      },
+      {
+        q: 'Does the order of my images matter?',
+        a:
+          'Yes, and you can reorder them before exporting. Files are not necessarily added in the order your file manager showed them.',
+      },
+      {
+        q: 'Which image formats can I use?',
+        a:
+          'JPEG, PNG, WebP, GIF and BMP. Mixed formats in one batch are fine — they all become pages in a single PDF.',
+      },
+    ],
   },
   {
     id: 'pdf-to-word',
@@ -479,6 +768,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     accepts: ['.pdf'],
     popular: true,
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'What resolution should I choose?',
+        a:
+          'Screen scale is fine for sharing or thumbnails. Choose 300 DPI when the image will be printed or when small text has to stay legible.',
+      },
+      {
+        q: 'Can I convert only certain pages?',
+        a:
+          'Yes. Pick individual pages rather than the whole document, then download them separately or as a ZIP.',
+      },
+      {
+        q: 'Which format is best?',
+        a:
+          'PNG for text and line art, where sharp edges matter. JPEG or WebP for photographic pages, where the file will be much smaller.',
+      },
+    ],
   },
   {
     id: 'watermark-pdf',
@@ -491,6 +797,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'droplet',
     keywords: ['stamp pdf', 'confidential', 'draft overlay', 'brand pdf'],
     accepts: ['.pdf'],
+    faq: [
+      {
+        q: 'Can I see the watermark before applying it?',
+        a:
+          'Yes. Rotation, opacity, size, colour and position update in a live preview, so you can place it without exporting repeatedly to check.',
+      },
+      {
+        q: 'Can I watermark only some pages?',
+        a:
+          'Yes. Choose which pages it applies to — useful for stamping DRAFT on a body of work while leaving the cover clean.',
+      },
+      {
+        q: 'Can I use my logo instead of text?',
+        a:
+          'Yes. An image watermark works the same way, with the same control over size, opacity and placement.',
+      },
+    ],
   },
   {
     id: 'remove-watermark-pdf',
@@ -527,6 +850,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['encrypt pdf', 'password protect', 'secure pdf', 'lock pdf'],
     accepts: ['.pdf'],
     popular: true,
+    faq: [
+      {
+        q: 'What is the difference between the two passwords?',
+        a:
+          'A user password is needed to open the document at all. An owner password leaves it readable but controls whether printing, copying and annotating are permitted.',
+      },
+      {
+        q: 'Does my password get sent anywhere?',
+        a:
+          'No. Encryption is performed in your browser, so the password and the document both stay on your device.',
+      },
+      {
+        q: 'How strong is the protection?',
+        a:
+          'It applies the encryption defined by the PDF specification, which keeps honest readers out. It is only as strong as the password you choose, so pick a real one.',
+      },
+    ],
   },
   {
     id: 'unlock-pdf',
@@ -612,6 +952,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['docx to html', 'word to web', 'export html'],
     accepts: ['.docx'],
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'Will the HTML be clean or full of spans?',
+        a:
+          'Clean. Headings become real h1–h6 tags, lists become ul and ol, and tables become table markup — not a wall of styled spans as Word\'s own Save as HTML produces.',
+      },
+      {
+        q: 'What happens to images in the document?',
+        a:
+          'They are inlined as data URIs, so the HTML is self-contained and displays correctly without a folder of assets alongside it.',
+      },
+      {
+        q: 'Can I paste the result straight into a CMS?',
+        a:
+          'Yes. Copy the markup rather than downloading it when you want to drop the content into a content management system or an email template.',
+      },
+    ],
   },
   {
     id: 'docx-to-markdown',
@@ -625,6 +982,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['docx to md', 'word to markdown', 'documentation migration'],
     accepts: ['.docx'],
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'Which Markdown features are supported?',
+        a:
+          'GitHub-flavoured Markdown: headings, bold and italic, links, ordered and unordered lists, tables and code blocks are all mapped from their Word equivalents.',
+      },
+      {
+        q: 'What happens to Word features Markdown has no equivalent for?',
+        a:
+          'Things like text boxes, columns and precise positioning are flattened to their text content. Markdown has no way to express them, so the words survive and the layout does not.',
+      },
+      {
+        q: 'Is this good for moving documentation to a wiki?',
+        a:
+          'That is exactly what it is for. Legacy Word documentation converts into files a static site generator or wiki can consume directly.',
+      },
+    ],
   },
   {
     id: 'docx-to-txt',
@@ -638,6 +1012,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['docx to txt', 'plain text', 'strip formatting'],
     accepts: ['.docx'],
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'What exactly is kept?',
+        a:
+          'The words and the paragraph breaks. Fonts, colours, tables, images and every other form of styling are discarded, which is the point when you want content without presentation.',
+      },
+      {
+        q: 'Why would I want plain text?',
+        a:
+          'For diffing two versions, feeding a document into a search index or another tool, or pasting somewhere that would otherwise inherit unwanted Word formatting.',
+      },
+      {
+        q: 'Does it include headers and footers?',
+        a:
+          'No — this extracts the main body. Use Extract Text from Word when you also need headers, footers, footnotes and comments.',
+      },
+    ],
   },
   {
     id: 'docx-extract-images',
@@ -650,6 +1041,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'images',
     keywords: ['docx images', 'get pictures from word', 'unzip docx'],
     accepts: ['.docx'],
+    faq: [
+      {
+        q: 'Are images extracted at full quality?',
+        a:
+          'Yes. The original bytes stored inside the document are pulled out untouched, so you get exactly what was embedded rather than a re-encoded copy.',
+      },
+      {
+        q: 'Can I get them all at once?',
+        a:
+          'Yes. Download any single image, or take the whole set as a ZIP when a document contains dozens.',
+      },
+      {
+        q: 'Will it find images I cannot see?',
+        a:
+          'It lists everything stored in the file, which sometimes includes cropped-away regions or images left behind on a deleted page.',
+      },
+    ],
   },
   {
     id: 'docx-extract-text',
@@ -662,6 +1070,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'text-select',
     keywords: ['docx text extraction', 'read docx text', 'copy from word'],
     accepts: ['.docx'],
+    faq: [
+      {
+        q: 'How is this different from copy and paste?',
+        a:
+          'Copying from Word gives you the visible body. This also reaches headers, footers, footnotes, comments and text boxes — content that a manual copy routinely misses.',
+      },
+      {
+        q: 'Can I keep the structure?',
+        a:
+          'Yes. Choose structured output to keep each part labelled and separate, or flat output when you just want one continuous block of text.',
+      },
+      {
+        q: 'Does it include tracked changes?',
+        a:
+          'You get the text as it currently stands in the document. To compare two versions, use Compare Word Documents instead.',
+      },
+    ],
   },
   {
     id: 'docx-metadata',
@@ -675,6 +1100,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['docx properties', 'document info', 'author', 'metadata'],
     accepts: ['.docx'],
     alsoIn: ['file'],
+    faq: [
+      {
+        q: 'What can the metadata tell me?',
+        a:
+          'Author, last modified by, company, revision number, total editing time, the template used, and word and page counts — plus any custom properties the organisation added.',
+      },
+      {
+        q: 'Why does this matter before sharing a document?',
+        a:
+          'Because those fields travel with the file. A document sent to a client can quietly carry the name of whoever drafted it, the internal template and how long it took.',
+      },
+      {
+        q: 'Can I remove the metadata here?',
+        a:
+          'No, this tool reads it. Removing it means editing the properties in Word, or saving a copy through a tool that rewrites the document.',
+      },
+    ],
   },
   {
     id: 'word-count',
@@ -688,6 +1130,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['character count', 'reading time', 'text statistics', 'keyword density'],
     accepts: ['.docx', '.txt', '.md'],
     popular: true,
+    faq: [
+      {
+        q: 'Does the count match Word\'s own?',
+        a:
+          'Very closely for ordinary prose. Small differences can appear around hyphenated words, numbers and text inside tables, where different tools apply slightly different rules.',
+      },
+      {
+        q: 'How is reading time estimated?',
+        a:
+          'From the word count at typical silent reading and speaking rates. It is a planning figure for a talk or an article, not a precise measurement.',
+      },
+      {
+        q: 'What is the keyword density table for?',
+        a:
+          'It shows which words recur most, which is useful for checking whether a piece leans too heavily on one phrase before publishing.',
+      },
+    ],
   },
   {
     id: 'compare-docx',
@@ -701,6 +1160,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['docx diff', 'document comparison', 'track changes', 'redline'],
     accepts: ['.docx'],
     badge: 'new',
+    faq: [
+      {
+        q: 'How does it decide what changed?',
+        a:
+          'It runs a word-level longest-common-subsequence diff, so additions and deletions are identified per word rather than by flagging whole paragraphs as different.',
+      },
+      {
+        q: 'Does it compare formatting too?',
+        a:
+          'No, it compares text. A paragraph restyled but not reworded shows as unchanged, which is usually what you want when reviewing edits.',
+      },
+      {
+        q: 'Can I see the changes side by side?',
+        a:
+          'Yes. Switch between a side-by-side view for reading two versions together and an inline view for seeing edits in context.',
+      },
+    ],
   },
 
   /* ----------------------------------------------------------------
@@ -745,6 +1221,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     accepts: ['.xlsx', '.xls', '.xlsm', '.ods'],
     popular: true,
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'My workbook has several sheets — which one is exported?',
+        a:
+          'Whichever you choose, or all of them at once as separate files. CSV holds a single sheet by definition, so a multi-sheet workbook has to become multiple files.',
+      },
+      {
+        q: 'How are dates handled?',
+        a:
+          'You choose the format before exporting. This matters because a spreadsheet stores a date as a number, and different tools reading the CSV will interpret an ambiguous format differently.',
+      },
+      {
+        q: 'Can I use a semicolon instead of a comma?',
+        a:
+          'Yes. The delimiter is configurable, which is necessary for locales where the comma is the decimal separator.',
+      },
+    ],
   },
   {
     id: 'csv-to-excel',
@@ -759,6 +1252,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     accepts: ['.csv', '.tsv', '.txt'],
     popular: true,
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'Will my numbers arrive as numbers?',
+        a:
+          'Yes. Values are typed as numbers, dates or text as appropriate, rather than everything landing as a string the way a plain CSV import often does.',
+      },
+      {
+        q: 'Does the output look presentable?',
+        a:
+          'The header row is bold and frozen and columns are auto-sized, so the workbook is usable immediately rather than needing manual tidying.',
+      },
+      {
+        q: 'What if my file is tab-separated?',
+        a:
+          'That works too. The delimiter is detected from the file, so .tsv and delimited .txt files convert the same way.',
+      },
+    ],
   },
   {
     id: 'excel-to-json',
@@ -773,6 +1283,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     accepts: ['.xlsx', '.xls', '.csv'],
     popular: true,
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'What shape is the JSON?',
+        a:
+          'Either an array of objects keyed by your header row, or an array of arrays when you want raw rows without keys. Both are offered because APIs and scripts want different things.',
+      },
+      {
+        q: 'Can I control the key names?',
+        a:
+          'Yes. Key casing is configurable, so headers like "First Name" can become firstName rather than a key you have to quote everywhere.',
+      },
+      {
+        q: 'What happens to empty cells?',
+        a:
+          'You choose: omit the key entirely, or include it with a null value. Which you want depends on whether the consumer distinguishes missing from empty.',
+      },
+    ],
   },
   {
     id: 'json-to-excel',
@@ -786,6 +1313,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['json to xlsx', 'json to spreadsheet', 'flatten json'],
     accepts: ['.json'],
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'What happens to nested objects?',
+        a:
+          'They are flattened into dotted column names, so a field like address.city becomes its own column and deeply structured API output turns into a flat sheet.',
+      },
+      {
+        q: 'Do all my records need the same fields?',
+        a:
+          'No. Keys are unioned across every record, so a field present in only some rows still gets a column, left empty where it does not apply.',
+      },
+      {
+        q: 'Can I paste JSON instead of uploading a file?',
+        a:
+          'Yes. Paste it directly, which is usually faster when you have copied a response out of an API client.',
+      },
+    ],
   },
   {
     id: 'spreadsheet-cleaner',
@@ -799,6 +1343,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['clean data', 'trim whitespace', 'normalise', 'tidy spreadsheet'],
     accepts: ['.xlsx', '.xls', '.csv'],
     popular: true,
+    faq: [
+      {
+        q: 'What does it actually clean?',
+        a:
+          'Stray whitespace, repeated spaces, inconsistent line endings and casing, non-printable characters, numbers stored as text, and dates in mixed formats.',
+      },
+      {
+        q: 'Why do exported spreadsheets need cleaning at all?',
+        a:
+          'Because data arrives from systems that pad fields, use different date conventions and leave invisible control characters behind. Those defects break lookups and pivots later.',
+      },
+      {
+        q: 'Can I choose which fixes to apply?',
+        a:
+          'Yes. Each operation is separate, so you can normalise whitespace without touching casing, or convert numeric strings while leaving dates alone.',
+      },
+    ],
   },
   {
     id: 'remove-duplicate-rows',
@@ -811,6 +1372,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'copy-minus',
     keywords: ['dedupe', 'unique rows', 'delete duplicates'],
     accepts: ['.xlsx', '.xls', '.csv'],
+    faq: [
+      {
+        q: 'Can I match on just a few columns?',
+        a:
+          'Yes. Duplicates can be judged across the whole row or on a subset of key columns, which is what you want when only an identifier should be unique.',
+      },
+      {
+        q: 'Will it delete without asking?',
+        a:
+          'No. Each duplicate group is shown for review first, so you can see what would be removed and which copy is being kept.',
+      },
+      {
+        q: 'Does it ignore case and spacing differences?',
+        a:
+          'Optionally. Case-insensitive and whitespace-insensitive matching catch near-duplicates that an exact comparison would miss.',
+      },
+    ],
   },
   {
     id: 'remove-blank-rows',
@@ -823,6 +1401,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'eraser',
     keywords: ['delete empty rows', 'clean sheet', 'compact spreadsheet'],
     accepts: ['.xlsx', '.xls', '.csv'],
+    faq: [
+      {
+        q: 'Does it catch rows that only look empty?',
+        a:
+          'Yes. Rows containing nothing but spaces are removed as well as genuinely empty ones, which is the usual result of a sloppy export.',
+      },
+      {
+        q: 'What is the empty region at the bottom of my sheet?',
+        a:
+          'Spreadsheet exports often leave a large block of used-but-blank cells past the real data, which inflates file size and confuses ranges. That region is stripped too.',
+      },
+      {
+        q: 'Does it remove blank columns as well?',
+        a:
+          'Yes, both. A column with a header but no values can be removed along with fully empty ones.',
+      },
+    ],
   },
   {
     id: 'formula-viewer',
@@ -836,6 +1431,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['audit formulas', 'show formulas', 'inspect workbook'],
     accepts: ['.xlsx', '.xlsm', '.xls'],
     badge: 'new',
+    faq: [
+      {
+        q: 'What is this for?',
+        a:
+          'Auditing. It lists every formula in a workbook with its cell reference, sheet, cached result and the functions used, so you can see how a spreadsheet actually computes.',
+      },
+      {
+        q: 'Can I find everywhere a function is used?',
+        a:
+          'Yes. Search for a function name — VLOOKUP, say — to find every cell that calls it, which is how you assess the impact of changing an approach.',
+      },
+      {
+        q: 'Does it recalculate the formulas?',
+        a:
+          'No. It shows the formula as written and the result last saved by Excel, rather than evaluating anything itself.',
+      },
+    ],
   },
   {
     id: 'column-statistics',
@@ -848,6 +1460,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'bar-chart',
     keywords: ['data profiling', 'summary statistics', 'analyse columns', 'describe'],
     accepts: ['.xlsx', '.xls', '.csv'],
+    faq: [
+      {
+        q: 'What is reported for each column?',
+        a:
+          'Non-empty count, distinct values, minimum, maximum, sum, mean, median and standard deviation for numeric columns, and the most frequent values for text columns.',
+      },
+      {
+        q: 'How does this help before analysis?',
+        a:
+          'It shows the shape of the data at a glance — an unexpected maximum, a column with one distinct value, or far fewer non-empty cells than rows all point at problems worth fixing first.',
+      },
+      {
+        q: 'Are text columns useful here?',
+        a:
+          'Yes. The most frequent values reveal inconsistent categories, such as the same country spelled three different ways.',
+      },
+    ],
   },
   {
     id: 'data-type-detection',
@@ -860,6 +1489,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'scan',
     keywords: ['schema inference', 'validate data', 'column types'],
     accepts: ['.xlsx', '.xls', '.csv'],
+    faq: [
+      {
+        q: 'Which types can it recognise?',
+        a:
+          'Integers, decimals, dates, booleans, emails, URLs and free text, inferred from the values actually present rather than from the header.',
+      },
+      {
+        q: 'How does it help me find bad data?',
+        a:
+          'It lists the rows that do not match the inferred type — the three malformed dates in ten thousand rows, or the email column with two entries missing an @.',
+      },
+      {
+        q: 'What if a column is genuinely mixed?',
+        a:
+          'It is reported as text with the exceptions listed, so you can decide whether the mixture is intentional or a data quality problem.',
+      },
+    ],
   },
 
   /* ----------------------------------------------------------------
@@ -904,6 +1550,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     accepts: ['.pptx'],
     popular: true,
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'Are the slides the right size in the PDF?',
+        a:
+          'Yes. Slides are rendered at their authored size and aspect ratio, so a 16:9 deck stays 16:9 rather than being squeezed onto A4.',
+      },
+      {
+        q: 'Can I include the speaker notes?',
+        a:
+          'Yes. Notes can be appended, which is what you want when sending a deck to someone who was not in the room to hear it presented.',
+      },
+      {
+        q: 'Can I print several slides per page?',
+        a:
+          'Yes. A handout layout puts multiple slides on each page, which saves paper and is easier to annotate by hand.',
+      },
+    ],
   },
   {
     id: 'pptx-to-images',
@@ -917,6 +1580,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['pptx to png', 'slide images', 'export slides'],
     accepts: ['.pptx'],
     alsoIn: ['convert'],
+    faq: [
+      {
+        q: 'What resolution should I pick?',
+        a:
+          'Higher for embedding a slide in a printed document, lower for a thumbnail or a social post. The choice is a trade-off between clarity and file size.',
+      },
+      {
+        q: 'Can I export just one slide?',
+        a:
+          'Yes. Select the slides you want rather than exporting the whole deck, then download them individually or as a ZIP.',
+      },
+      {
+        q: 'Are animations captured?',
+        a:
+          'No. Each slide is rendered in its final state, as it appears once any animation has finished.',
+      },
+    ],
   },
   {
     id: 'pptx-extract-text',
@@ -929,6 +1609,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'text-select',
     keywords: ['pptx text', 'slide transcript', 'presentation text'],
     accepts: ['.pptx'],
+    faq: [
+      {
+        q: 'Which text does it find?',
+        a:
+          'Titles, body placeholders, free-standing text boxes, table cells and speaker notes — grouped by slide number so you can see where each piece came from.',
+      },
+      {
+        q: 'What formats can I export?',
+        a:
+          'Plain text, Markdown or JSON. JSON keeps the slide structure, which is useful if the content is heading somewhere programmatic.',
+      },
+      {
+        q: 'Is text inside images extracted?',
+        a:
+          'No. Text baked into a picture is pixels, not text, and reading it would require OCR.',
+      },
+    ],
   },
   {
     id: 'pptx-extract-images',
@@ -941,6 +1638,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'images',
     keywords: ['pptx images', 'get pictures from slides', 'media extraction'],
     accepts: ['.pptx'],
+    faq: [
+      {
+        q: 'Does it find every image in the deck?',
+        a:
+          'It lists all media stored in the file — photos, logos, charts that were exported as pictures and background images — with the slides each one appears on.',
+      },
+      {
+        q: 'Is quality preserved?',
+        a:
+          'Yes. The stored bytes are extracted as they are, so you get the original file rather than a re-compressed version.',
+      },
+      {
+        q: 'Why does it show images I do not recognise?',
+        a:
+          'Decks often retain media from deleted slides or from the slide master, which is why the list can be longer than what you see when presenting.',
+      },
+    ],
   },
   {
     id: 'slide-selector',
@@ -954,6 +1668,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['delete slides', 'split presentation', 'trim deck', 'pick slides'],
     accepts: ['.pptx'],
     badge: 'new',
+    faq: [
+      {
+        q: 'Does the trimmed deck still work properly?',
+        a:
+          'Yes. The layouts, masters and media that the kept slides depend on are carried across, so the result opens as a normal presentation rather than a broken one.',
+      },
+      {
+        q: 'How do I choose which slides to keep?',
+        a:
+          'Preview the deck as a thumbnail grid and tick the ones worth keeping — quicker and less error-prone than deleting slides one by one in PowerPoint.',
+      },
+      {
+        q: 'Is my original presentation changed?',
+        a:
+          'No. A new .pptx is produced and the file you opened is left alone.',
+      },
+    ],
   },
 
   /* ----------------------------------------------------------------
@@ -972,6 +1703,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     accepts: ['.xlsx', '.xls', '.csv'],
     popular: true,
     alsoIn: ['excel'],
+    faq: [
+      {
+        q: 'What happens to a very wide sheet?',
+        a:
+          'Page fitting scales the table so columns stay readable, and landscape orientation is available. A sheet far wider than a page is always a compromise between size and legibility.',
+      },
+      {
+        q: 'Does the header repeat on every page?',
+        a:
+          'Yes. The header row is repeated across pages, so a long table stays readable without flicking back to the first page to see what a column means.',
+      },
+      {
+        q: 'Are formulas or their results shown?',
+        a:
+          'The results, as stored in the workbook. A PDF is a fixed rendering of what the spreadsheet currently shows.',
+      },
+    ],
   },
   {
     id: 'markdown-to-pdf',
@@ -985,6 +1733,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['md to pdf', 'readme to pdf', 'markdown export'],
     accepts: ['.md', '.markdown', '.txt'],
     popular: true,
+    faq: [
+      {
+        q: 'Which Markdown features survive?',
+        a:
+          'Heading hierarchy, ordered and unordered lists, tables, block quotes, fenced code blocks and images are all typeset properly rather than dumped as plain text.',
+      },
+      {
+        q: 'Can I control how it looks?',
+        a:
+          'Yes. Page size, margins and a serif or sans typeface are all adjustable before exporting.',
+      },
+      {
+        q: 'Will non-Latin characters render?',
+        a:
+          'Generated PDFs use the standard PDF fonts, which cover Latin script only. Characters outside that range are substituted, and the tool reports how many when it happens.',
+      },
+    ],
   },
   {
     id: 'markdown-to-docx',
@@ -997,6 +1762,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'file-word',
     keywords: ['md to docx', 'markdown to word', 'export docx'],
     accepts: ['.md', '.markdown', '.txt'],
+    faq: [
+      {
+        q: 'Will the result stay editable in Word?',
+        a:
+          'Yes, and properly so. It uses genuine Heading 1–6, List Paragraph and Quote styles, so the document picks up your organisation\'s theme rather than arriving as hard-coded formatting.',
+      },
+      {
+        q: 'Why does using real styles matter?',
+        a:
+          'Because styled headings drive the navigation pane, automatic tables of contents and any corporate template. Text merely made large and bold does none of that.',
+      },
+      {
+        q: 'What happens to code blocks?',
+        a:
+          'They are carried across as monospaced blocks, keeping them visually distinct from body text.',
+      },
+    ],
   },
   {
     id: 'markdown-to-html',
@@ -1009,6 +1791,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'code',
     keywords: ['md to html', 'render markdown', 'static html'],
     accepts: ['.md', '.markdown'],
+    faq: [
+      {
+        q: 'Can I get a complete page rather than a fragment?',
+        a:
+          'Yes. Export a bare fragment for pasting into a CMS, or a standalone page with styles inlined so it renders correctly anywhere on its own.',
+      },
+      {
+        q: 'Which Markdown extensions are supported?',
+        a:
+          'GitHub-flavoured Markdown, so tables, task lists, strikethrough and fenced code blocks convert as you would expect.',
+      },
+      {
+        q: 'Is the HTML safe to publish?',
+        a:
+          'The output is sanitised, so raw HTML embedded in the Markdown cannot smuggle scripts into the result.',
+      },
+    ],
   },
   {
     id: 'html-to-markdown',
@@ -1021,6 +1820,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'markdown',
     keywords: ['html to md', 'web to markdown', 'content migration'],
     accepts: ['.html', '.htm'],
+    faq: [
+      {
+        q: 'What happens to all the divs and inline styles?',
+        a:
+          'Presentational wrappers and inline styling are dropped. Headings, links, images, lists, tables and code are mapped to their Markdown equivalents; the rest becomes plain text.',
+      },
+      {
+        q: 'Can I paste markup instead of a file?',
+        a:
+          'Yes. Pasting is often easier when you are lifting a section out of a page rather than converting a whole document.',
+      },
+      {
+        q: 'Are tables converted?',
+        a:
+          'Yes, into Markdown tables — though very complex tables with merged cells have no Markdown equivalent and are simplified.',
+      },
+    ],
   },
   {
     id: 'html-to-pdf',
@@ -1033,6 +1849,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'file-pdf',
     keywords: ['web page to pdf', 'html export', 'print to pdf'],
     accepts: ['.html', '.htm'],
+    faq: [
+      {
+        q: 'Will scripts on the page run?',
+        a:
+          'No. Scripts are never executed and remote resources are not fetched, so converting a page you were sent cannot cause it to call out to anything.',
+      },
+      {
+        q: 'Is the text in the PDF selectable?',
+        a:
+          'Yes. The output has real pagination and selectable text rather than being a screenshot of the page.',
+      },
+      {
+        q: 'Will it look exactly like the browser rendering?',
+        a:
+          'Close for document-like pages. Complex CSS layouts designed for a scrolling screen have to be reflowed into fixed pages, so some difference is unavoidable.',
+      },
+    ],
   },
   {
     id: 'html-to-docx',
@@ -1045,6 +1878,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'file-word',
     keywords: ['html to docx', 'web to word', 'export word'],
     accepts: ['.html', '.htm'],
+    faq: [
+      {
+        q: 'What is this useful for?',
+        a:
+          'Turning content from a CMS, a newsletter or an email template into something a colleague can edit in Word, without copying and pasting and losing the structure.',
+      },
+      {
+        q: 'Do headings become real Word styles?',
+        a:
+          'Yes. Heading tags map to Word heading styles, and lists and tables map to their Word equivalents, so the document behaves properly once opened.',
+      },
+      {
+        q: 'Are images included?',
+        a:
+          'Images embedded in the markup are carried into the document. Images referenced from a remote server are not fetched.',
+      },
+    ],
   },
   {
     id: 'txt-to-pdf',
@@ -1057,6 +1907,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'file-pdf',
     keywords: ['txt to pdf', 'log to pdf', 'code to pdf'],
     accepts: ['.txt', '.log', '.md'],
+    faq: [
+      {
+        q: 'Can I keep code and logs aligned?',
+        a:
+          'Yes. Choose a monospaced face so columns in a log or an indented code listing line up exactly as they do in the source file.',
+      },
+      {
+        q: 'Can I add line numbers?',
+        a:
+          'Yes, optionally — useful when the PDF will be referred to in a review or an audit and people need to cite a specific line.',
+      },
+      {
+        q: 'What happens to very long lines?',
+        a:
+          'They wrap to the page width. Line wrapping is configurable so you can decide between wrapping and letting long lines run to the margin.',
+      },
+    ],
   },
   {
     id: 'csv-to-json',
@@ -1070,6 +1937,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['csv to json converter', 'parse csv', 'delimited to json'],
     accepts: ['.csv', '.tsv', '.txt'],
     alsoIn: ['excel'],
+    faq: [
+      {
+        q: 'Will numbers come through as numbers?',
+        a:
+          'With type coercion enabled, yes — numbers and booleans are converted rather than arriving as strings. Turn it off when you need every value preserved verbatim.',
+      },
+      {
+        q: 'Do I need to specify the delimiter?',
+        a:
+          'No. It is detected from the file, so comma, tab, semicolon and pipe separated files all work without configuration.',
+      },
+      {
+        q: 'What if my file has no header row?',
+        a:
+          'Header handling is configurable. Without one you get arrays of values rather than objects with named keys.',
+      },
+    ],
   },
   {
     id: 'json-to-csv',
@@ -1083,6 +1967,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['json to csv converter', 'flatten json', 'export csv'],
     accepts: ['.json', '.jsonl'],
     alsoIn: ['excel'],
+    faq: [
+      {
+        q: 'What happens to nested objects?',
+        a:
+          'They are flattened into dotted column names, so nested structure becomes a set of ordinary columns a spreadsheet can open.',
+      },
+      {
+        q: 'My records have different fields — is that a problem?',
+        a:
+          'No. Keys are unioned across all records so every field gets a column, left empty for records that lack it.',
+      },
+      {
+        q: 'Does it handle JSON Lines?',
+        a:
+          'Yes. A .jsonl file with one record per line converts the same way as a JSON array.',
+      },
+    ],
   },
   {
     id: 'image-converter',
@@ -1096,6 +1997,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['convert image', 'resize', 'batch image', 'compress image'],
     accepts: ['.png', '.jpg', '.jpeg', '.webp', '.avif', '.bmp', '.gif'],
     popular: true,
+    faq: [
+      {
+        q: 'Which formats can I convert between?',
+        a:
+          'PNG, JPEG, WebP and AVIF, in any combination, with control over quality, maximum dimension and background fill for images that lose transparency.',
+      },
+      {
+        q: 'Can I convert a whole folder at once?',
+        a:
+          'Yes, it is a batch tool. Settings apply to every file in the batch, and each result can be downloaded separately or together.',
+      },
+      {
+        q: 'Is the encoding done by a server?',
+        a:
+          'No. Your browser\'s own image codecs do the work, which is why nothing is uploaded and why speed depends on your device.',
+      },
+    ],
   },
   {
     id: 'svg-to-png',
@@ -1108,6 +2026,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'image',
     keywords: ['svg rasterise', 'vector to png', 'export icon'],
     accepts: ['.svg'],
+    faq: [
+      {
+        q: 'What size will the PNG be?',
+        a:
+          'Whatever you choose — from 1× up to 8× the SVG\'s natural size, or an exact pixel dimension when you need to hit a specific target.',
+      },
+      {
+        q: 'Can I keep the transparent background?',
+        a:
+          'Yes, or fill it with a colour. Transparency matters for logos over varied backgrounds; a fill is better where transparency would render as black.',
+      },
+      {
+        q: 'Why convert a vector to a raster at all?',
+        a:
+          'Because many platforms — app stores, social media, older email clients — will not accept SVG and need a fixed-size PNG.',
+      },
+    ],
   },
   {
     id: 'png-to-webp',
@@ -1120,6 +2055,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'minimize',
     keywords: ['webp converter', 'optimise images', 'web performance'],
     accepts: ['.png', '.jpg', '.jpeg'],
+    faq: [
+      {
+        q: 'How much smaller will the files be?',
+        a:
+          'Typically 25–80% smaller at visually identical quality. The saving is largest on photographic images and smallest on simple graphics that PNG already compresses well.',
+      },
+      {
+        q: 'Should I choose lossless or lossy?',
+        a:
+          'Lossless for screenshots, logos and anything with text or sharp edges. Lossy for photographs, where the size saving is much larger and the difference is not visible.',
+      },
+      {
+        q: 'Can I see what I saved?',
+        a:
+          'Yes. Before and after sizes are shown for every file, so you can confirm the conversion was worth doing.',
+      },
+    ],
   },
   {
     id: 'jpg-to-png',
@@ -1132,6 +2084,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'image',
     keywords: ['jpeg to png', 'lossless', 'photo convert'],
     accepts: ['.jpg', '.jpeg'],
+    faq: [
+      {
+        q: 'Will converting improve the image quality?',
+        a:
+          'No. JPEG compression already discarded detail and PNG cannot restore it. What you gain is a lossless format for further editing without compounding the loss.',
+      },
+      {
+        q: 'Why are my photos rotated correctly?',
+        a:
+          'EXIF orientation is applied during conversion, so portrait photos from a phone stay upright rather than appearing sideways as they do in some viewers.',
+      },
+      {
+        q: 'Will the file get bigger?',
+        a:
+          'Usually yes, often substantially. PNG is lossless, so a photograph stored as PNG is larger than the same photograph as JPEG.',
+      },
+    ],
   },
 
   /* ----------------------------------------------------------------
@@ -1168,6 +2137,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['cv maker', 'curriculum vitae', 'ats resume', 'job application'],
     accepts: [],
     popular: true,
+    faq: [
+      {
+        q: 'Will an applicant tracking system be able to read it?',
+        a:
+          'That is what the single-column layout is for. Multi-column resumes with sidebars and graphics routinely parse badly, scrambling the order of your experience before a human ever sees it.',
+      },
+      {
+        q: 'Can I reorder the sections?',
+        a:
+          'Yes. Move experience above education or lead with projects, depending on whether your strongest evidence is what you have done or what you have studied.',
+      },
+      {
+        q: 'Is my personal information stored anywhere?',
+        a:
+          'No. What you type stays in your browser, and the exported file is produced on your device. Nothing is submitted to a server.',
+      },
+    ],
   },
   {
     id: 'quotation-generator',
@@ -1180,6 +2166,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'receipt',
     keywords: ['estimate', 'price quote', 'proposal pricing', 'quote template'],
     accepts: [],
+    faq: [
+      {
+        q: 'Can I mark some items as optional?',
+        a:
+          'Yes. Optional line items are shown separately and excluded from the headline total, which is how you present upsells without inflating the price the client first sees.',
+      },
+      {
+        q: 'Does it handle taxes?',
+        a:
+          'Yes, applied across the line items with the total computed for you. Check the rate against the rules for your own jurisdiction before sending.',
+      },
+      {
+        q: 'Why include a validity period?',
+        a:
+          'It sets an expiry on your pricing, which protects you if costs change and gives the client a reason to decide rather than sit on it.',
+      },
+    ],
   },
   {
     id: 'certificate-generator',
@@ -1192,6 +2195,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'award',
     keywords: ['award certificate', 'diploma', 'completion certificate', 'bulk certificates'],
     accepts: [],
+    faq: [
+      {
+        q: 'Can I produce certificates for a whole group?',
+        a:
+          'Yes. Generate one at a time, or produce a batch so a class or cohort each gets their own without retyping the layout.',
+      },
+      {
+        q: 'What can I put on it?',
+        a:
+          'A title, recipient name, description, date, decorative border and up to two signature blocks — enough for achievement, participation or completion certificates.',
+      },
+      {
+        q: 'Why is it landscape?',
+        a:
+          'Because certificates are conventionally landscape, and the wide format gives the name room to sit as the visual centre of the page.',
+      },
+    ],
   },
   {
     id: 'meeting-minutes-generator',
@@ -1204,6 +2224,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'clipboard',
     keywords: ['mom', 'minutes of meeting', 'action items', 'meeting notes'],
     accepts: [],
+    faq: [
+      {
+        q: 'What makes minutes actually useful?',
+        a:
+          'Decisions and actions, both of which are captured here with an owner and a due date. Minutes that only narrate the discussion give nobody anything to do.',
+      },
+      {
+        q: 'Can I record who sent apologies?',
+        a:
+          'Yes, separately from attendees — which matters for quorum and for knowing who needs briefing afterwards.',
+      },
+      {
+        q: 'Which format should I send?',
+        a:
+          'PDF when the record should not change. DOCX when someone else needs to amend or extend it before circulation.',
+      },
+    ],
   },
   {
     id: 'business-proposal-generator',
@@ -1216,6 +2253,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'briefcase',
     keywords: ['project proposal', 'sow', 'statement of work', 'client proposal'],
     accepts: [],
+    faq: [
+      {
+        q: 'Do I have to use every section?',
+        a:
+          'No. Executive summary, problem statement, solution, scope, deliverables, timeline, pricing and terms are each optional, so a short proposal stays short.',
+      },
+      {
+        q: 'What should the executive summary say?',
+        a:
+          'The outcome and the price, briefly. It is often the only part a decision-maker reads in full, so leading with method rather than result wastes it.',
+      },
+      {
+        q: 'Can I edit it after exporting?',
+        a:
+          'Export as DOCX when you want to keep editing, or PDF when the document is final and should look the same for every recipient.',
+      },
+    ],
   },
   {
     id: 'salary-slip-generator',
@@ -1228,6 +2282,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'wallet',
     keywords: ['payslip', 'pay stub', 'payroll', 'salary statement'],
     accepts: [],
+    faq: [
+      {
+        q: 'Are the totals calculated for me?',
+        a:
+          'Yes. Earnings, deductions and employer contributions are totalled automatically and the net pay is written out in words as well as figures.',
+      },
+      {
+        q: 'Can I produce slips for the whole team?',
+        a:
+          'Yes. Generate a single slip, or import a CSV to produce a batch in one pass rather than repeating the form for each employee.',
+      },
+      {
+        q: 'Does it comply with payroll law where I am?',
+        a:
+          'It formats what you enter; it does not know your jurisdiction\'s requirements. Have the layout and the components checked against local rules before using it for real payroll.',
+      },
+    ],
   },
   {
     id: 'offer-letter-generator',
@@ -1240,6 +2311,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'mail',
     keywords: ['job offer', 'employment letter', 'hr letter', 'appointment letter'],
     accepts: [],
+    faq: [
+      {
+        q: 'What does the letter cover?',
+        a:
+          'Role, compensation, start date, probation, working hours, notice period and an acceptance block, laid out on your letterhead.',
+      },
+      {
+        q: 'Is this a legally binding contract?',
+        a:
+          'It produces a formal offer letter, not vetted legal drafting. Employment terms vary by jurisdiction, so have it reviewed by someone qualified before it goes out.',
+      },
+      {
+        q: 'Why include an acceptance block?',
+        a:
+          'So the candidate has a clear place to sign and date, which gives you a record of acceptance rather than an email thread.',
+      },
+    ],
   },
   {
     id: 'experience-letter-generator',
@@ -1252,6 +2340,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'mail',
     keywords: ['service certificate', 'relieving letter', 'employment proof'],
     accepts: [],
+    faq: [
+      {
+        q: 'What is the difference between the letter types?',
+        a:
+          'An experience letter confirms role and tenure, a service certificate is a broader record of employment, and a relieving letter confirms the person has been released. The wording adjusts for whichever you pick.',
+      },
+      {
+        q: 'What does it confirm?',
+        a:
+          'Role, tenure and conduct — the facts a future employer will want verified, without commentary that could create a problem later.',
+      },
+      {
+        q: 'Should I have it reviewed?',
+        a:
+          'For anything beyond a straightforward confirmation, yes. What an employer may and may not state about a former employee varies by jurisdiction.',
+      },
+    ],
   },
   {
     id: 'cover-letter-generator',
@@ -1264,6 +2369,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'mail',
     keywords: ['job application letter', 'motivation letter', 'cv letter'],
     accepts: [],
+    faq: [
+      {
+        q: 'What structure does it use?',
+        a:
+          'A proper business heading, salutation, an opening hook, evidence paragraphs mapped to the job\'s requirements, and a closing call to action.',
+      },
+      {
+        q: 'Why map paragraphs to requirements?',
+        a:
+          'Because a reader is checking whether you meet the criteria in the advert. Answering them in order makes that easy; a general narrative makes them hunt.',
+      },
+      {
+        q: 'Can I reuse it for other applications?',
+        a:
+          'Yes, and you should adapt rather than resend. The heading and structure stay; the evidence should change to match each posting.',
+      },
+    ],
   },
 
   /* ----------------------------------------------------------------
@@ -1281,6 +2403,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['visio alternative', 'draw diagram', 'canvas editor', 'shapes'],
     accepts: ['.json'],
     popular: true,
+    faq: [
+      {
+        q: 'Will I lose my work if I close the tab?',
+        a:
+          'No. The canvas auto-saves to your browser\'s local storage as you draw, so reopening restores what you had. Export to JSON for a copy you can keep or move.',
+      },
+      {
+        q: 'Which export format should I use?',
+        a:
+          'SVG for documentation and print, since it stays sharp at any size. PNG for slides and chat. JSON when you want to reopen and keep editing later.',
+      },
+      {
+        q: 'Can I undo a mistake?',
+        a:
+          'Yes, anything on the canvas can be undone — moving, connecting, grouping, aligning and deleting are all part of one undoable history.',
+      },
+    ],
   },
   {
     id: 'text-to-diagram',
@@ -1294,6 +2433,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['mermaid', 'plantuml', 'diagram as code', 'text diagram'],
     accepts: ['.mmd', '.puml', '.txt'],
     popular: true,
+    faq: [
+      {
+        q: 'Which syntaxes can I write in?',
+        a:
+          'Mermaid, a subset of PlantUML, or a simple indented outline when you do not want to learn a syntax at all.',
+      },
+      {
+        q: 'Do I have to press a button to see the result?',
+        a:
+          'No. The diagram redraws as you type, so a syntax mistake shows immediately rather than after a render step.',
+      },
+      {
+        q: 'Can I adjust the layout by hand afterwards?',
+        a:
+          'Yes. Hand the result to Diagram Studio to move things around, which is the usual way to fix an automatic layout that is nearly right.',
+      },
+    ],
   },
   {
     id: 'flowchart-maker',
@@ -1306,6 +2462,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'workflow',
     keywords: ['flow chart', 'process flow', 'decision tree', 'swimlane'],
     accepts: [],
+    faq: [
+      {
+        q: 'How is this different from Diagram Studio?',
+        a:
+          'It is Diagram Studio opened with a flowchart stencil and a starter chart already loaded, so you begin by rewriting something rather than facing an empty canvas.',
+      },
+      {
+        q: 'Which shapes are included?',
+        a:
+          'The conventional flowchart set — terminators, processes, decisions, inputs and connectors — so the diagram reads correctly to anyone who knows the notation.',
+      },
+      {
+        q: 'How do I keep it tidy?',
+        a:
+          'Snap-to-grid keeps boxes aligned as you place them, which does more for legibility than any amount of manual nudging.',
+      },
+    ],
   },
   {
     id: 'uml-diagram',
@@ -1318,6 +2491,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'boxes',
     keywords: ['class diagram', 'sequence diagram', 'use case', 'software design'],
     accepts: [],
+    faq: [
+      {
+        q: 'Can I generate a diagram instead of drawing it?',
+        a:
+          'Yes. Write it as Mermaid or PlantUML text and generate the diagram, then refine it on the canvas — usually faster than placing every class by hand.',
+      },
+      {
+        q: 'Which UML elements are supported?',
+        a:
+          'Class boxes, interfaces, inheritance and association connectors — the parts of UML that get used in practice rather than the whole specification.',
+      },
+      {
+        q: 'Is this full UML?',
+        a:
+          'No, and deliberately so. It covers structural diagrams for documenting a design, not the complete notation with every diagram type.',
+      },
+    ],
   },
   {
     id: 'er-diagram',
@@ -1330,6 +2520,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'database',
     keywords: ['entity relationship', 'database design', 'schema diagram', 'crow foot'],
     accepts: [],
+    faq: [
+      {
+        q: 'Can I show cardinality properly?',
+        a:
+          'Yes. Crow\'s-foot connectors express one-to-many and many-to-many relationships in the notation most database documentation uses.',
+      },
+      {
+        q: 'Can I record column types and keys?',
+        a:
+          'Yes. Entities hold typed attribute rows with primary and foreign keys marked, so the diagram documents the schema rather than just the relationships.',
+      },
+      {
+        q: 'How should I save it?',
+        a:
+          'SVG for documentation that will be read, JSON if you expect to come back and edit the schema as it evolves.',
+      },
+    ],
   },
   {
     id: 'aws-architecture-diagram',
@@ -1342,6 +2549,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'cloud',
     keywords: ['aws diagram', 'azure', 'gcp', 'cloud architecture', 'vpc'],
     accepts: [],
+    faq: [
+      {
+        q: 'Is it tied to one cloud provider?',
+        a:
+          'No. The stencil uses generic building blocks — compute, storage, queues, databases, load balancers, CDN and gateways — which map onto any provider\'s equivalents.',
+      },
+      {
+        q: 'Can I show regions and VPCs?',
+        a:
+          'Yes. Container shapes group what sits inside them, so network and regional boundaries are visible rather than implied.',
+      },
+      {
+        q: 'What should I export for a design document?',
+        a:
+          'SVG, so the diagram stays legible when the document is zoomed or printed rather than turning into a blur.',
+      },
+    ],
   },
   {
     id: 'network-diagram',
@@ -1354,6 +2578,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'network',
     keywords: ['topology', 'lan diagram', 'infrastructure map', 'firewall'],
     accepts: [],
+    faq: [
+      {
+        q: 'Which devices are in the stencil?',
+        a:
+          'Routers, switches, firewalls, servers, clients and wireless access points — enough to document most topologies without hunting for icons.',
+      },
+      {
+        q: 'Can I label the links?',
+        a:
+          'Yes. Connections can carry speed, VLAN or subnet annotations, which is what makes a topology diagram useful during an incident rather than merely decorative.',
+      },
+      {
+        q: 'Can I keep editing it later?',
+        a:
+          'Yes. Export to JSON and reopen it when the network changes, rather than redrawing from scratch.',
+      },
+    ],
   },
   {
     id: 'mind-map',
@@ -1366,6 +2607,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'git-branch',
     keywords: ['brainstorm', 'idea map', 'concept map', 'outline'],
     accepts: [],
+    faq: [
+      {
+        q: 'Do I have to place each node?',
+        a:
+          'No. Press Tab for a child and Enter for a sibling, and the radial layout arranges everything automatically — the point is to capture thoughts at typing speed.',
+      },
+      {
+        q: 'How do I keep branches distinguishable?',
+        a:
+          'Each branch takes its own colour automatically, which is what lets you find your way around a map once it has grown past a dozen nodes.',
+      },
+      {
+        q: 'Can I get the content out as text?',
+        a:
+          'Yes. Export an indented outline alongside SVG and PNG, which is useful when the map was a way of drafting a document.',
+      },
+    ],
   },
   {
     id: 'org-chart',
@@ -1378,6 +2636,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'users',
     keywords: ['organisation chart', 'hierarchy', 'reporting structure', 'team chart'],
     accepts: ['.csv'],
+    faq: [
+      {
+        q: 'Do I have to build the tree by hand?',
+        a:
+          'No. Import a CSV of employee and manager pairs and the whole structure is generated, which is far quicker than placing a card per person.',
+      },
+      {
+        q: 'What appears on each card?',
+        a:
+          'Name, title, department and photo initials — enough to identify people without needing photographs of everyone.',
+      },
+      {
+        q: 'Is the layout automatic?',
+        a:
+          'Yes, arranged as a tree from the reporting relationships, so adding a person does not mean rearranging everyone below them.',
+      },
+    ],
   },
   {
     id: 'process-diagram',
@@ -1390,6 +2665,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'workflow',
     keywords: ['bpmn', 'business process', 'swimlane', 'workflow diagram'],
     accepts: [],
+    faq: [
+      {
+        q: 'Does it support swimlanes?',
+        a:
+          'Yes, one lane per role, which is what turns a flowchart into something that shows who is responsible for each step rather than just what happens.',
+      },
+      {
+        q: 'Is this full BPMN?',
+        a:
+          'No. It offers step boxes, decision gateways and start and end events — BPMN-flavoured without the ceremony of the complete specification.',
+      },
+      {
+        q: 'When should I use this over a flowchart?',
+        a:
+          'When responsibility matters. A flowchart shows sequence; swimlanes show handoffs, which is usually where a process actually breaks down.',
+      },
+    ],
   },
 
   /* ----------------------------------------------------------------
@@ -1407,6 +2699,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['file properties', 'exif', 'document info', 'inspect file'],
     accepts: [],
     popular: true,
+    faq: [
+      {
+        q: 'What can it tell me about a file?',
+        a:
+          'Name, MIME type, exact byte size and last-modified date, plus format-specific properties such as image dimensions and PDF page count.',
+      },
+      {
+        q: 'Does it work on any file type?',
+        a:
+          'Basic properties are read for anything. Format-specific details appear for the types it recognises, such as images and PDFs.',
+      },
+      {
+        q: 'Is the file uploaded to be inspected?',
+        a:
+          'No. Everything is read from the file in your browser, which is why it works with no network connection at all.',
+      },
+    ],
   },
   {
     id: 'file-size-analyzer',
@@ -1420,6 +2729,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['what is making my file big', 'treemap', 'zip contents', 'bloat'],
     accepts: ['.pdf', '.docx', '.xlsx', '.pptx', '.zip'],
     badge: 'new',
+    faq: [
+      {
+        q: 'Why is my PowerPoint so large?',
+        a:
+          'Almost always one or two uncompressed images. This breaks the container into its parts and shows which images, fonts and streams account for the size.',
+      },
+      {
+        q: 'Which formats can it analyse?',
+        a:
+          'PDF, DOCX, XLSX, PPTX and ZIP — all of which are container formats whose internal parts can be listed and measured.',
+      },
+      {
+        q: 'What is the treemap for?',
+        a:
+          'It shows each part sized in proportion to its bytes, so the one item responsible for most of the file is obvious at a glance.',
+      },
+    ],
   },
   {
     id: 'file-hash-generator',
@@ -1433,6 +2759,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     keywords: ['sha256', 'checksum', 'verify download', 'md5 alternative', 'crc32'],
     accepts: [],
     popular: true,
+    faq: [
+      {
+        q: 'Can it handle very large files?',
+        a:
+          'Yes. Hashing streams the file in chunks rather than loading it whole, so multi-gigabyte files work without exhausting memory.',
+      },
+      {
+        q: 'How do I verify a download?',
+        a:
+          'Paste the hash published by whoever provided the file. A match confirms the bytes are identical; a mismatch means the file is corrupt or has been altered.',
+      },
+      {
+        q: 'Is the hashing done in the browser?',
+        a:
+          'Yes, using the browser\'s native Web Crypto implementation, so the file is never sent anywhere to be checksummed.',
+      },
+    ],
   },
   {
     id: 'file-signature-checker',
@@ -1445,6 +2788,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'shield-check',
     keywords: ['magic bytes', 'file type detection', 'mime sniffing', 'security'],
     accepts: [],
+    faq: [
+      {
+        q: 'What does it actually check?',
+        a:
+          'The magic bytes at the start of the file, which identify its true format regardless of what the extension claims.',
+      },
+      {
+        q: 'Why does a mismatch matter?',
+        a:
+          'Because an extension is just part of a filename. A file named .jpg that is really an executable is the oldest trick there is, and this is the quickest way to spot it.',
+      },
+      {
+        q: 'Does a mismatch always mean something malicious?',
+        a:
+          'No. Renamed files and unusual exports produce false alarms too. It tells you what the file actually is, and the interpretation is yours.',
+      },
+    ],
   },
   {
     id: 'duplicate-file-detector',
@@ -1457,6 +2817,23 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'copy-minus',
     keywords: ['find duplicates', 'deduplicate folder', 'reclaim space'],
     accepts: [],
+    faq: [
+      {
+        q: 'Does it match on file names?',
+        a:
+          'No, on content. Every file is hashed, so byte-identical copies are grouped no matter how differently they are named.',
+      },
+      {
+        q: 'Will it delete the duplicates for me?',
+        a:
+          'No, deliberately. It shows the groups and how much space you would reclaim; deciding which copy to keep is a judgement only you can make.',
+      },
+      {
+        q: 'Are my files uploaded to be compared?',
+        a:
+          'No. Hashing happens in your browser, which is why you can safely point it at a folder of personal documents.',
+      },
+    ],
   },
   {
     id: 'batch-rename',
@@ -1469,5 +2846,22 @@ export const TOOLS: readonly ToolDefinition[] = [
     icon: 'pencil',
     keywords: ['bulk rename', 'rename files', 'sequential numbering', 'file organiser'],
     accepts: [],
+    faq: [
+      {
+        q: 'Can I see what will happen first?',
+        a:
+          'Yes. Every old-to-new pair is previewed before anything is produced, so a rule that would collide or produce nonsense is visible in advance.',
+      },
+      {
+        q: 'What rules can I apply?',
+        a:
+          'Find and replace, prefixes, suffixes, sequential numbering, case changes and date stamps — combined in one pass rather than several.',
+      },
+      {
+        q: 'Does it rename files on my disk?',
+        a:
+          'No. A browser cannot rename files in place, so the renamed set is delivered as a ZIP for you to extract where you want it.',
+      },
+    ],
   },
 ];

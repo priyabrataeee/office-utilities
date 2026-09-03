@@ -1,0 +1,25 @@
+@use 'listing';
+
+.updated {
+  font-size: var(--ou-fs-sm);
+  color: var(--ou-text-subtle);
+}
+
+.prose {
+  max-width: 74ch;
+
+  h2 {
+    margin-top: 2em;
+  }
+
+  li {
+    margin-bottom: var(--ou-s-2);
+  }
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-3);
+  margin-top: var(--ou-s-6);
+}

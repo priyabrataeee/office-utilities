@@ -42,6 +42,20 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/privacy/privacy.component').then((m) => m.PrivacyComponent),
   },
+  {
+    path: 'contact',
+    loadComponent: () =>
+      import('./features/contact/contact.component').then((m) => m.ContactComponent),
+  },
+  {
+    path: 'terms',
+    loadComponent: () => import('./features/terms/terms.component').then((m) => m.TermsComponent),
+  },
+  {
+    path: 'disclaimer',
+    loadComponent: () =>
+      import('./features/disclaimer/disclaimer.component').then((m) => m.DisclaimerComponent),
+  },
 
   /* --- tool categories, each a separate chunk --- */
   {
