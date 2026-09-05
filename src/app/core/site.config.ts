@@ -52,7 +52,8 @@ export const MONETIZATION = {
      * <ins> without a valid slot only produces console errors.
      */
     slots: {
-      toolFooter: '',
+      /** First live unit, shown below the tool and its explanation. */
+      toolFooter: '6795054730',
       listing: '',
     } as Record<string, string>,
   },
