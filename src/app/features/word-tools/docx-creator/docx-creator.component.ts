@@ -30,9 +30,9 @@ interface ToolbarButton {
 const DRAFT_KEY = 'docx-creator-draft';
 
 const STARTER = `
-<h1>Title of your document</h1>
+<h2>Title of your document</h2>
 <p>Start typing here. Use the toolbar above to add headings, lists, quotes and links; changes are saved to this browser as you type.</p>
-<h2>What you can do</h2>
+<h3>What you can do</h3>
 <ul>
   <li>Paste rich text from anywhere — it keeps its structure.</li>
   <li>Insert headings, bullet and numbered lists, quotes and code.</li>

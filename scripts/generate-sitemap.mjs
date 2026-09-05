@@ -98,11 +98,13 @@ const AI_AGENTS = [
 const robots = `# ${site} — everything runs in your browser
 User-agent: *
 Allow: /
-Disallow: /favorites
-Disallow: /recent
 
-# Personal views backed by local storage. They render empty for any visitor
-# arriving from search, so indexing them would only produce blank results.
+# /favorites and /recent are personal views backed by local storage and render
+# empty for anyone arriving from search. They carry a noindex tag in their own
+# markup, which is deliberately not paired with a Disallow here: a blocked
+# crawler never fetches the page, so it never sees the noindex and the URL can
+# still surface as a bare link. Letting it crawl and read the tag is what
+# actually keeps them out of the index.
 
 ${AI_AGENTS.map((agent) => `User-agent: ${agent}\nAllow: /`).join('\n\n')}
 

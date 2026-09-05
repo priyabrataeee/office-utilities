@@ -18,6 +18,12 @@ export interface PageSeo {
 const LD_ID = 'ou-structured-data';
 
 /**
+ * Longest title worth emitting. Google truncates around 60 characters and Bing
+ * warns past 70; staying under the tighter of the two keeps both intact.
+ */
+const TITLE_LIMIT = 60;
+
+/**
  * Applies per-route metadata: title, description, canonical, Open Graph,
  * Twitter cards and JSON-LD. Runs on the server during prerendering, so the
  * markup crawlers receive is already complete.
@@ -30,9 +36,16 @@ export class SeoService {
 
   apply(seo: PageSeo): void {
     const url = SITE.origin + (seo.path === '/' ? '' : seo.path);
+    // The site name is a nicety; the page's own words are what a searcher
+    // scans for. Appending it unconditionally pushed the longer guide titles
+    // past what either engine displays, so it is dropped when it would not
+    // fit. Search results show the domain regardless.
+    const suffixed = `${seo.title} — ${SITE.name}`;
     const fullTitle = seo.title.includes(SITE.name)
       ? seo.title
-      : `${seo.title} — ${SITE.name}`;
+      : suffixed.length <= TITLE_LIMIT
+        ? suffixed
+        : seo.title;
 
     this.title.setTitle(fullTitle);
 
