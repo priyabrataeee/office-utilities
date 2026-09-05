@@ -140,4 +140,19 @@ The bundled `Content-Security-Policy` refuses outbound `connect-src` to anything
 
 ## License
 
-[MIT](LICENSE)
+Copyright (C) 2026 Priyabrata Saha
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the [GNU Affero General Public License](LICENSE) for
+more details.
+
+In practice this means you are free to read, modify and share the code — but if
+you run a modified version as a public service, you have to offer that version's
+source under the same terms. The libraries it builds on stay under their own
+licences.

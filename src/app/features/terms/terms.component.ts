@@ -69,10 +69,7 @@ import { SITE } from '../../core/site.config';
             watermark tools exist for your own files, not other people's;
           </li>
           <li>break any applicable law, or infringe anyone's rights;</li>
-          <li>
-            attempt to disrupt the site, or to redistribute it as your own service without
-            permission.
-          </li>
+          <li>attempt to disrupt the site or the service it provides.</li>
         </ul>
         <p>
           Since nothing you do passes through a server, we cannot monitor or police this. It rests
@@ -120,12 +117,16 @@ import { SITE } from '../../core/site.config';
           link to or that an advertisement leads to.
         </p>
 
-        <h2>9. Intellectual property</h2>
+        <h2>9. Intellectual property and licence</h2>
         <p>
-          The name, design, text and code of {{ site.name }} belong to their author. The tools are
-          built on open-source libraries, each of which remains under its own licence. You may use
-          the site freely for its intended purpose; you may not copy it wholesale and present it as
-          your own service.
+          The name, branding and written content of {{ site.name }} belong to their author. The
+          source code is published under the GNU Affero General Public License, version 3 or later.
+        </p>
+        <p>
+          That means you are free to read it, modify it and share it. It also means that if you run
+          a modified version as a service other people can use, you must offer those people the
+          source of your version under the same licence. The tools are built on open-source
+          libraries, each of which remains under its own licence.
         </p>
 
         <h2>10. Governing law</h2>
