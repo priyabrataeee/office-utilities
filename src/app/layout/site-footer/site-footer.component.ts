@@ -18,6 +18,19 @@ import { SITE } from '../../core/site.config';
             <span>Office<span class="brand__soft">Utilities</span></span>
           </a>
           <p class="footer__tagline">{{ site.tagline }}</p>
+          <a
+            class="footer__support"
+            [href]="money.donationUrl"
+            target="_blank"
+            rel="noopener"
+          >
+            <app-icon name="heart" [size]="16" />
+            <span>
+              <strong>Buy me a coffee</strong>
+              <small>Keeps the tools free and ad-light</small>
+            </span>
+          </a>
+
           <p class="footer__privacy">
             <app-icon name="shield-check" [size]="14" />
             Every tool runs in your browser. No uploads and no accounts.
@@ -55,13 +68,6 @@ import { SITE } from '../../core/site.config';
           <a routerLink="/guides">Guides</a>
           <a routerLink="/tools">All tools</a>
           <a routerLink="/categories">Categories</a>
-          <a
-            class="footer__support"
-            [href]="money.donationUrl"
-            target="_blank"
-            rel="noopener"
-            >Buy me a coffee</a
-          >
         </nav>
       </div>
     </footer>

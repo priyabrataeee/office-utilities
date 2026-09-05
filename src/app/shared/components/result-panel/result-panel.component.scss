@@ -93,3 +93,76 @@
     flex-basis: 100%;
   }
 }
+
+/* The support ask, shown once the file is ready. Deliberately quieter than the
+   download buttons above it — it must never compete with the thing the person
+   came to do. */
+.support {
+  display: flex;
+  gap: var(--ou-s-3);
+  align-items: center;
+  margin-top: var(--ou-s-4);
+  padding: var(--ou-s-4);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-surface-2);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color var(--ou-dur) var(--ou-ease),
+    background var(--ou-dur) var(--ou-ease);
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--ou-accent-border);
+    background: var(--ou-accent-soft);
+  }
+}
+
+.support__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--ou-r-full);
+  background: var(--ou-accent-soft);
+  color: var(--ou-accent);
+}
+
+.support__text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+
+  small {
+    color: var(--ou-text-muted);
+    font-size: var(--ou-fs-sm);
+  }
+}
+
+.support__cta {
+  display: inline-flex;
+  gap: var(--ou-s-1);
+  align-items: center;
+  flex: none;
+  padding: var(--ou-s-2) var(--ou-s-3);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-accent);
+  color: var(--ou-text-inverse);
+  font-size: var(--ou-fs-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (max-width: 34rem) {
+  .support {
+    flex-wrap: wrap;
+  }
+
+  .support__cta {
+    width: 100%;
+    justify-content: center;
+  }
+}

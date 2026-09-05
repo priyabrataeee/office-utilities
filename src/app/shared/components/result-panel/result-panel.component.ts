@@ -3,6 +3,7 @@ import { IconComponent } from '../icon/icon.component';
 import { FileSizePipe } from '../../pipes/file-size.pipe';
 import { DownloadService } from '../../../core/services/download.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { MonetizationService } from '../../../core/services/monetization.service';
 import type { OutputFile } from '../../../core/models/file.model';
 
 /**
@@ -91,6 +92,29 @@ import type { OutputFile } from '../../../core/models/file.model';
             </li>
           }
         </ul>
+
+        <!--
+          Placed after the download list on purpose: the ask comes once the
+          person has what they came for, not while they are still working.
+          Every producing tool renders this panel, so this is the one spot
+          that reaches everyone who actually got value out of the site.
+        -->
+        <a
+          class="support"
+          [href]="money.donationUrl"
+          target="_blank"
+          rel="noopener"
+        >
+          <span class="support__icon"><app-icon name="heart" [size]="18" /></span>
+          <span class="support__text">
+            <strong>Free, no account, nothing uploaded.</strong>
+            <small>If this saved you a few minutes, you can buy me a coffee.</small>
+          </span>
+          <span class="support__cta">
+            Buy me a coffee
+            <app-icon name="arrow-up-right" [size]="15" />
+          </span>
+        </a>
       </section>
     }
   `,
@@ -99,6 +123,7 @@ import type { OutputFile } from '../../../core/models/file.model';
 export class ResultPanelComponent {
   private readonly downloads = inject(DownloadService);
   private readonly toast = inject(ToastService);
+  protected readonly money = inject(MonetizationService);
 
   readonly outputs = input<readonly OutputFile[]>([]);
   readonly title = input('Ready to download');

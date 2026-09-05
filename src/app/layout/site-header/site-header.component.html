@@ -60,6 +60,17 @@
     </button>
 
     <div class="header__actions">
+      <a
+        class="ou-btn ou-btn--sm support-btn"
+        [href]="money.donationUrl"
+        target="_blank"
+        rel="noopener"
+        title="Support Office Utilities"
+      >
+        <app-icon name="heart" [size]="15" />
+        <span class="support-btn__label">Buy me a coffee</span>
+      </a>
+
       <button
         type="button"
         class="ou-btn ou-btn--ghost ou-btn--icon search__mobile"
@@ -93,6 +104,16 @@
 
   @if (menuOpen()) {
     <div class="drawer">
+      <a
+        class="drawer__support"
+        [href]="money.donationUrl"
+        target="_blank"
+        rel="noopener"
+        (click)="closeMenu()"
+      >
+        <app-icon name="heart" [size]="16" />
+        Buy me a coffee
+      </a>
       <a routerLink="/tools" (click)="closeMenu()">All tools</a>
       <a routerLink="/categories" (click)="closeMenu()">Categories</a>
       <a routerLink="/favorites" (click)="closeMenu()">Favourites</a>

@@ -264,3 +264,36 @@
     margin-left: auto;
   }
 }
+
+/* Warm accent so it reads as an invitation rather than another grey control,
+   but small enough that it never competes with search or navigation. */
+.support-btn {
+  gap: var(--ou-s-2);
+  border-color: var(--ou-accent-border);
+  background: var(--ou-accent-soft);
+  color: var(--ou-accent);
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--ou-accent);
+    color: var(--ou-text-inverse);
+  }
+}
+
+/* Below the navigation breakpoint the label goes and the heart carries it,
+   because header space is already tight on a phone. */
+@media (max-width: 60rem) {
+  .support-btn__label {
+    display: none;
+  }
+}
+
+.drawer__support {
+  display: flex;
+  gap: var(--ou-s-2);
+  align-items: center;
+  color: var(--ou-accent) !important;
+  font-weight: 600;
+}

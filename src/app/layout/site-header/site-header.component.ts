@@ -6,6 +6,7 @@ import { ShortcutService } from '../../core/services/shortcut.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { FavoritesService } from '../../core/services/favorites.service';
 import { ToolRegistryService } from '../../core/services/tool-registry.service';
+import { MonetizationService } from '../../core/services/monetization.service';
 
 @Component({
   selector: 'app-site-header',
@@ -20,6 +21,7 @@ export class SiteHeaderComponent {
   protected readonly theme = inject(ThemeService);
   protected readonly favorites = inject(FavoritesService);
   protected readonly registry = inject(ToolRegistryService);
+  protected readonly money = inject(MonetizationService);
   private readonly shortcuts = inject(ShortcutService);
 
   protected readonly menuOpen = signal(false);
