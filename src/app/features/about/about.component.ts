@@ -103,6 +103,10 @@ import { SITE } from '../../core/site.config';
           <app-icon name="shield-check" [size]="16" />
           Privacy model
         </a>
+        <a class="ou-btn ou-btn--lg" [href]="site.repoUrl" target="_blank" rel="noopener">
+          <app-icon name="github" [size]="16" />
+          Read the source
+        </a>
       </div>
     </div>
   `,

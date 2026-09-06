@@ -15,6 +15,14 @@ import { guide as powerpointTooBig } from './guides/powerpoint-too-big-to-email'
 import { guide as splitByChapter } from './guides/split-pdf-by-chapter';
 import { guide as passwordProtect } from './guides/password-protect-a-pdf';
 import { guide as fixSidewaysScan } from './guides/fix-sideways-scanned-pdf';
+import { guide as atsResume } from './guides/resume-an-ats-can-read';
+import { guide as invoiceNoSignup } from './guides/invoice-without-signing-up';
+import { guide as compareWordDocs } from './guides/compare-two-word-documents';
+import { guide as messySpreadsheet } from './guides/clean-up-a-messy-spreadsheet';
+import { guide as imageFormats } from './guides/convert-images-png-jpg-webp';
+import { guide as watermarkPdf } from './guides/watermark-a-pdf';
+import { guide as markdownExport } from './guides/markdown-to-word-pdf-html';
+import { guide as duplicateFiles } from './guides/find-duplicate-files';
 
 /**
  * The written guides, in the order they are listed.
@@ -40,4 +48,12 @@ export const GUIDES: readonly GuideDefinition[] = [
   powerpointTooBig,
   excelCsvDates,
   removeMetadata,
+  atsResume,
+  invoiceNoSignup,
+  compareWordDocs,
+  messySpreadsheet,
+  imageFormats,
+  watermarkPdf,
+  markdownExport,
+  duplicateFiles,
 ];

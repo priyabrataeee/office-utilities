@@ -99,6 +99,14 @@ export const guide: GuideDefinition = {
       type: 'p',
       text: 'Load the page, turn off your Wi-Fi, then try the conversion. A tool that works entirely in your browser will finish normally. A tool that needs a server will stall or fail. This is the more convincing test, because it cannot be faked by a reassuring privacy policy.',
     },
+    {
+      type: 'h3',
+      text: 'Check three: read the code',
+    },
+    {
+      type: 'p',
+      text: 'The strongest check of all, and one most converters cannot offer — their processing happens on a server you will never see. This site can: its source is published in full, so anyone can read exactly what happens to a file rather than trusting a description of it. There is a link on the [about page](/about).',
+    },
 
     { type: 'h2', text: 'The alternative: tools that never upload at all' },
     {

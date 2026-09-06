@@ -68,6 +68,7 @@ import { SITE } from '../../core/site.config';
           <a routerLink="/guides">Guides</a>
           <a routerLink="/tools">All tools</a>
           <a routerLink="/categories">Categories</a>
+          <a [href]="site.repoUrl" target="_blank" rel="noopener">Source code</a>
         </nav>
       </div>
     </footer>

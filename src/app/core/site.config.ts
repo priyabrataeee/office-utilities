@@ -30,6 +30,11 @@ export const SITE = {
   twitter: '@officeutilities',
   themeColor: '#5b5bd6',
   version: '1.0.0',
+  /**
+   * Public source. Linked wherever the site claims files are not uploaded,
+   * because that claim is only checkable if the reader can find the code.
+   */
+  repoUrl: 'https://github.com/priyabrataeee/office-utilities',
 } as const;
 
 /**
@@ -54,6 +59,15 @@ export const MONETIZATION = {
     slots: {
       /** First live unit, shown below the tool and its explanation. */
       toolFooter: '6795054730',
+      /**
+       * Guide placements. Both point at the responsive unit above until
+       * dedicated units exist in the dashboard — the same unit may appear
+       * more than once on a page, and an id that is merely reused still
+       * serves, whereas an empty one renders nothing at all. Give them their
+       * own ids when per-placement reporting becomes worth having.
+       */
+      guideInline: '6795054730',
+      guideFooter: '6795054730',
       listing: '',
     } as Record<string, string>,
   },

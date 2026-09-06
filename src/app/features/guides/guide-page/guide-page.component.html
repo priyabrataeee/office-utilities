@@ -75,6 +75,10 @@
             }
           }
         }
+
+        @if ($index === inlineAdAfter()) {
+          <app-ad-slot placement="guideInline" />
+        }
       }
     </div>
 
@@ -110,6 +114,8 @@
         </ul>
       </section>
     }
+
+    <app-ad-slot placement="guideFooter" />
   </article>
 } @else {
   <div class="page ou-container">

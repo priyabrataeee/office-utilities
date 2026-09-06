@@ -20,6 +20,13 @@ import { MonetizationService } from '../../../core/services/monetization.service
  * Renders absolutely nothing unless a provider is enabled *and* the placement
  * has been configured, so an unconfigured page stays clean instead of showing
  * an empty grey box.
+ *
+ * `data-full-width-responsive` is off deliberately. With it on, AdSense sets a
+ * negative margin and a viewport-width on the unit so the ad bleeds to both
+ * screen edges — which on a narrow screen leaves it hanging outside the bordered
+ * card that labels it as an advertisement. Slightly wider mobile ads are not
+ * worth an ad that appears to have escaped its own frame on a site whose pitch
+ * is that it is not one of the untrustworthy ones.
  */
 @Component({
   selector: 'app-ad-slot',
@@ -37,7 +44,7 @@ import { MonetizationService } from '../../../core/services/monetization.service
             [attr.data-ad-client]="money.adClient"
             [attr.data-ad-slot]="slot()"
             data-ad-format="auto"
-            data-full-width-responsive="true"
+            data-full-width-responsive="false"
           ></ins>
         } @else {
           <div
