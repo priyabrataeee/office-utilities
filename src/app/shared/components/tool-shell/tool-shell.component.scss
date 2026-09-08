@@ -90,6 +90,7 @@
 }
 
 .about,
+.detail,
 .faq,
 .related {
   padding-top: var(--ou-s-8);
@@ -97,15 +98,56 @@
 }
 
 .about__title,
+.detail__title,
 .faq__title,
 .related__title {
   font-size: var(--ou-fs-lg);
   margin-bottom: var(--ou-s-3);
 }
 
-.about__text {
+.about__text,
+.detail__text {
   color: var(--ou-text-muted);
   max-width: 68ch;
+}
+
+/* Body copy runs to several paragraphs on the tools that carry it, so the
+   paragraphs need space between them that a single lead paragraph did not. */
+.about__text + .about__text,
+.detail__text + .detail__text {
+  margin-top: var(--ou-s-4);
+}
+
+/* The second heading inside the section is a sibling of body copy rather than
+   the start of a new block, so it needs its own top spacing. */
+.detail__title + .detail__text {
+  margin-top: 0;
+}
+
+.detail__text + .detail__title {
+  margin-top: var(--ou-s-6);
+}
+
+.detail__uses {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--ou-s-3);
+  max-width: 68ch;
+
+  li {
+    display: flex;
+    gap: var(--ou-s-3);
+    align-items: flex-start;
+    color: var(--ou-text-muted);
+  }
+
+  app-icon {
+    flex: none;
+    margin-top: 3px;
+    color: var(--ou-accent);
+  }
 }
 
 .assurances {
@@ -234,4 +276,10 @@
     color: var(--ou-text-muted);
     font-size: var(--ou-fs-sm);
   }
+}
+
+/* On the immersive tools this section is the first prose on the page rather
+   than a continuation of the About block, so it supplies its own separation. */
+.detail--lead {
+  margin-top: var(--ou-s-8);
 }

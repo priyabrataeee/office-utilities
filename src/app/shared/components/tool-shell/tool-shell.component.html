@@ -58,6 +58,12 @@
         <h2 class="about__title">About {{ t.title }}</h2>
         <p class="about__text">{{ t.description }}</p>
 
+        @if (content(); as c) {
+          @for (para of c.about; track $index) {
+            <p class="about__text">{{ para }}</p>
+          }
+        }
+
         <ul class="assurances">
           <li>
             <app-icon name="shield-check" [size]="16" />
@@ -82,6 +88,39 @@
           </li>
         </ul>
       </section>
+    }
+
+    <!-- Rendered even for the immersive tools. `minimal` exists to keep the
+         canvas uncluttered, and this sits below it where it does not compete —
+         but a page with nothing on it but a canvas gives a crawler nothing to
+         index, which is how those pages ended up the thinnest on the site. -->
+    @if (content(); as c) {
+      <section class="detail" [class.detail--lead]="minimal()">
+        @if (minimal()) {
+          <h2 class="detail__title">About {{ t.title }}</h2>
+          @for (para of c.about; track $index) {
+            <p class="detail__text">{{ para }}</p>
+          }
+        }
+
+        <h2 class="detail__title">How {{ t.title }} works in your browser</h2>
+        @for (para of c.howItWorks; track $index) {
+          <p class="detail__text">{{ para }}</p>
+        }
+
+        <h2 class="detail__title">When to use it</h2>
+        <ul class="detail__uses">
+          @for (item of c.useCases; track $index) {
+            <li>
+              <app-icon name="check" [size]="16" />
+              <span>{{ item }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (!minimal()) {
 
       @if (guides().length) {
         <section class="guides ou-no-print">

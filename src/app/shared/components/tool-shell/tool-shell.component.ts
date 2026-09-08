@@ -19,6 +19,7 @@ import { SeoService } from '../../../core/services/seo.service';
 import { DownloadService } from '../../../core/services/download.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { SITE } from '../../../core/site.config';
+import { TOOL_CONTENT } from '../../../core/data/tool-content';
 
 /**
  * Chrome shared by every tool page: breadcrumbs, header, privacy assurance,
@@ -62,6 +63,15 @@ export class ToolShellComponent {
    * the page that explains the subject properly.
    */
   protected readonly guides = computed(() => this.guideRegistry.forTool(this.toolId()));
+  /**
+   * Extended copy, where this tool has any.
+   *
+   * Only the pages competing for real search volume carry it. Returning
+   * undefined for the rest is the intended state, not a gap to be filled: a
+   * page is better with three honest sections than with five where two were
+   * written to satisfy a template.
+   */
+  protected readonly content = computed(() => TOOL_CONTENT[this.toolId()]);
   protected readonly isFavorite = computed(() => {
     this.favorites.ids();
     return this.favorites.isFavorite(this.toolId());

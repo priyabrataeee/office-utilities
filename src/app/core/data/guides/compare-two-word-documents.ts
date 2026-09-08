@@ -85,7 +85,7 @@ export const guide: GuideDefinition = {
     { type: 'h3', text: 'Images' },
     {
       type: 'p',
-      text: 'A replaced image contains no text to compare. If a diagram or a signature graphic matters, check it directly — [opening both files in a viewer](/viewer/word-viewer) side by side takes a few seconds.',
+      text: 'A replaced image contains no text to compare. If a diagram or a signature graphic matters, check it directly — [opening both files in a viewer](/view/word-viewer) side by side takes a few seconds.',
     },
 
     { type: 'h2', text: 'Reading the result well' },

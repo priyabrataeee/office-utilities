@@ -121,7 +121,7 @@ export const guide: GuideDefinition = {
     },
     {
       type: 'p',
-      text: 'Opening the file in a [Markdown viewer](/viewer/markdown-viewer) first shows you the structure the parser sees. If it is wrong there, no converter is going to improve it.',
+      text: 'Opening the file in a [Markdown viewer](/view/markdown-viewer) first shows you the structure the parser sees. If it is wrong there, no converter is going to improve it.',
     },
 
     { type: 'h2', text: 'Where the conversion happens' },
