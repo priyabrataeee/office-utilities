@@ -32,14 +32,6 @@ export class MonetizationService {
     return this.isBrowser && MONETIZATION.adsense.enabled;
   }
 
-  get ethicalAdsEnabled(): boolean {
-    return (
-      this.isBrowser &&
-      MONETIZATION.ethicalAds.enabled &&
-      !!MONETIZATION.ethicalAds.publisher
-    );
-  }
-
   readonly adClient = MONETIZATION.adsense.client;
 
   /**

@@ -71,11 +71,4 @@ export const MONETIZATION = {
       listing: '',
     } as Record<string, string>,
   },
-
-  /** Awaiting a publisher id; wired up and ready to enable. */
-  ethicalAds: {
-    enabled: false,
-    publisher: '',
-    type: 'text',
-  },
 } as const;
