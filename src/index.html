@@ -15,9 +15,15 @@
     <meta name="theme-color" content="#5b5bd6" />
     <meta name="color-scheme" content="light dark" />
 
+    <!-- fenced-frame-src is `https:` rather than a host list on purpose. AdSense
+         renders some ads in <fencedframe> elements, whose URL is an opaque
+         urn:uuid — so only `https:` or `*` can ever match one, and a host list
+         blocks every such ad (Chrome reports it as "Framing ''"). Fenced frames
+         are sandboxed from this page and cannot read or message it, which is why
+         loosening this one directive does not loosen frame-src. -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.googletagservices.com https://adservice.google.com https://fundingchoicesmessages.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; font-src 'self' data:; connect-src 'self' blob: https://cloudflareinsights.com https://*.cloudflareinsights.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.google.com https://fundingchoicesmessages.google.com; worker-src 'self' blob:; frame-src 'self' blob: https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.google.com https://fundingchoicesmessages.google.com; object-src 'none'; base-uri 'self'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.googletagservices.com https://adservice.google.com https://fundingchoicesmessages.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; font-src 'self' data:; connect-src 'self' blob: https://cloudflareinsights.com https://*.cloudflareinsights.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.google.com https://fundingchoicesmessages.google.com; worker-src 'self' blob:; frame-src 'self' blob: https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.google.com https://fundingchoicesmessages.google.com; fenced-frame-src https:; object-src 'none'; base-uri 'self'; form-action 'none'"
     />
 
     <meta property="og:type" content="website" />
