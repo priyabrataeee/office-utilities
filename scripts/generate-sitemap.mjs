@@ -24,10 +24,15 @@ const catalogSource = readFileSync(
   resolve(rootDir, 'src/app/core/data/tool-catalog.ts'),
   'utf8',
 );
-const categorySlugs = [...catalogSource.matchAll(/slug:\s*'([^']+)'/g)].map((match) => match[1]);
-const [categorySlugList, toolSlugList] = split(categorySlugs, 9);
+// Keep categories and tools separate before extracting slugs. The previous
+// version split one combined list at a hard-coded index of nine, which would
+// silently omit a tenth category from the sitemap and AI index.
+const categoryCatalog = catalogSource.slice(0, catalogSource.indexOf('export const TOOLS'));
+const categorySlugList = [...categoryCatalog.matchAll(/slug:\s*'([^']+)'/g)].map(
+  (match) => match[1],
+);
 
-const toolPaths = extractToolPaths(catalogSource);
+const toolPaths = extractToolPaths(catalogSource, categoryCatalog);
 
 // Guide file names come from the catalog's own imports, so a new guide
 // enrols itself in the sitemap and llms.txt with no second list to maintain.
@@ -60,11 +65,8 @@ const staticPaths = [
 const categoryPaths = categorySlugList.map((slug) => `/${slug}`);
 const allPaths = [...new Set([...staticPaths, ...categoryPaths, ...toolPaths])];
 
-const today = new Date().toISOString().slice(0, 10);
-
 const sitemapUrls = allPaths.map((path) => `  <url>
     <loc>${site}${path === '/' ? '' : path}</loc>
-    <lastmod>${today}</lastmod>
     <changefreq>${path === '/' ? 'weekly' : 'monthly'}</changefreq>
     <priority>${path === '/' ? '1.0' : path.split('/').length === 2 ? '0.8' : '0.7'}</priority>
   </url>`);
@@ -135,22 +137,16 @@ function extract(source, pattern) {
   return match ? match[1] : null;
 }
 
-/** Splits the first `count` slugs (categories) from the rest (tools). */
-function split(list, count) {
-  return [list.slice(0, count), list.slice(count)];
-}
-
 /**
  * The tool catalog stores category and tool slugs separately, so a full URL
  * needs both. We rebuild the mapping by walking the source in order.
  */
-function extractToolPaths(source) {
+function extractToolPaths(source, categoriesSource) {
   const categoryBySlug = new Map();
   const categoryRe = /id:\s*'([a-z]+)',\s*slug:\s*'([^']+)'/g;
   let match;
-  while ((match = categoryRe.exec(source)) !== null) {
+  while ((match = categoryRe.exec(categoriesSource)) !== null) {
     categoryBySlug.set(match[1], match[2]);
-    if (categoryBySlug.size >= 9) break;
   }
 
   const tools = [];
@@ -179,9 +175,8 @@ function buildLlmsTxt() {
   const categoryRe =
     /id:\s*'([a-z]+)',\s*\n\s*slug:\s*'([^']+)',\s*\n\s*title:\s*'([^']+)'/g;
   let match;
-  while ((match = categoryRe.exec(catalogSource)) !== null) {
+  while ((match = categoryRe.exec(categoryCatalog)) !== null) {
     categories.push({ id: match[1], slug: match[2], title: match[3] });
-    if (categories.length >= 9) break;
   }
 
   const bySlug = new Map(categories.map((c) => [c.id, c]));
