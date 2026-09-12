@@ -42,9 +42,16 @@ import { SITE } from '../../core/site.config';
         <p>
           The app is a static site: HTML, CSS, JavaScript and WebAssembly, served from a CDN and
           cached by a service worker. When you choose a file, it is read with the
-          <code>File</code> API into memory in your tab. Parsing and rendering happen there, mostly
-          inside Web Workers so the interface never freezes, and the result is handed back to you as
+          <code>File</code> API into memory in your tab, processed there, and handed back to you as
           a Blob that your browser saves to disk.
+        </p>
+        <p>
+          Two of the heaviest jobs run off the main thread in Web Workers: PDF.js does all its
+          parsing and rendering in its own worker, and file hashing runs in another. The rest —
+          spreadsheets, Word, PowerPoint, images and PDF writing — is done on the main thread, so a
+          very large file can make the tab unresponsive while it works. It is doing the work rather
+          than waiting on a server, but the honest version is that the interface can stall, not that
+          it never does.
         </p>
         <p>
           At no point is there a network request carrying your data — you can verify this yourself
@@ -59,7 +66,10 @@ import { SITE } from '../../core/site.config';
           <li><strong>SheetJS</strong> for spreadsheets, <strong>Mammoth</strong> and <strong>docx</strong> for Word</li>
           <li><strong>JSZip</strong> to read the OpenXML containers behind DOCX, XLSX and PPTX</li>
           <li><strong>Mermaid</strong> for text-driven diagrams, plus a custom SVG canvas for the studio</li>
-          <li><strong>Web Workers</strong> and the <strong>Web Crypto API</strong> for hashing and heavy parsing</li>
+          <li>
+            the <strong>Web Crypto API</strong> for hashing, in a <strong>Web Worker</strong> so a
+            large file does not lock the page
+          </li>
         </ul>
 
         <h2>Honest limitations</h2>
