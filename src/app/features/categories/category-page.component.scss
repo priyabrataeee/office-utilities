@@ -45,3 +45,74 @@
     text-decoration: none;
   }
 }
+
+/* Intro paragraphs sit under the one-line description and carry the same
+   muted treatment, so the header still reads as a header. */
+.lede {
+  max-width: 68ch;
+  color: var(--ou-text-muted);
+}
+
+.guide {
+  margin-top: var(--ou-s-10);
+  padding-top: var(--ou-s-8);
+  border-top: 1px solid var(--ou-border);
+
+  h2 {
+    font-size: var(--ou-fs-lg);
+    margin-bottom: var(--ou-s-4);
+  }
+
+  h2 + h2 {
+    margin-top: var(--ou-s-8);
+  }
+}
+
+.guide__list {
+  display: grid;
+  gap: var(--ou-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ou-s-2) var(--ou-s-4);
+    align-items: baseline;
+    justify-content: space-between;
+    padding: var(--ou-s-3) var(--ou-s-4);
+    border: 1px solid var(--ou-border);
+    border-radius: var(--ou-r-md);
+    background: var(--ou-surface);
+  }
+}
+
+.guide__need {
+  color: var(--ou-text);
+  min-width: 0;
+}
+
+.guide__tool {
+  display: inline-flex;
+  gap: var(--ou-s-2);
+  align-items: center;
+  flex: none;
+  color: var(--ou-accent);
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+  }
+
+  app-icon {
+    flex: none;
+  }
+}
+
+.guide__note {
+  max-width: 68ch;
+  color: var(--ou-text-muted);
+}

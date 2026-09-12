@@ -138,22 +138,29 @@
         </section>
       }
       <app-ad-slot placement="toolFooter" />
+    }
 
-      @if (t.faq?.length) {
-        <section class="faq">
-          <h2 class="faq__title">Frequently asked questions</h2>
-          @for (item of t.faq; track item.q) {
-            <details class="faq__item">
-              <summary>
-                {{ item.q }}
-                <app-icon name="chevron-down" [size]="16" />
-              </summary>
-              <p>{{ item.a }}</p>
-            </details>
-          }
-        </section>
-      }
+    <!-- The FAQ renders even on the immersive tools. Its questions and answers
+         are emitted as FAQPage structured data regardless, and marking up
+         content a reader cannot see is against Google's structured data rules —
+         so hiding this section was not a cosmetic choice, it made the schema
+         a lie. -->
+    @if (t.faq?.length) {
+      <section class="faq">
+        <h2 class="faq__title">Frequently asked questions</h2>
+        @for (item of t.faq; track item.q) {
+          <details class="faq__item">
+            <summary>
+              {{ item.q }}
+              <app-icon name="chevron-down" [size]="16" />
+            </summary>
+            <p>{{ item.a }}</p>
+          </details>
+        }
+      </section>
+    }
 
+    @if (!minimal()) {
       @if (related().length) {
         <section class="related ou-no-print">
           <h2 class="related__title">Related tools</h2>
