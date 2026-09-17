@@ -37,7 +37,7 @@
 
   @if (!compact()) {
     <span class="dz__meta">
-      <span class="ou-badge">{{ acceptLabel() }}</span>
+      <span class="ou-badge" [attr.title]="acceptLabel()">{{ acceptBadge() }}</span>
       <span class="ou-badge ou-badge--success">
         <app-icon name="shield-check" [size]="12" />
         Stays on your device

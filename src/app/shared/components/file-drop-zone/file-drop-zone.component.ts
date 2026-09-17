@@ -66,6 +66,21 @@ export class FileDropZoneComponent {
     if (!list.length) return 'Any file';
     return list.map((e) => e.replace('.', '').toUpperCase()).join(', ');
   });
+  /**
+   * The badge under the drop zone. The universal viewer accepts dozens of
+   * extensions, and listing them all made one unbreakable line over 1,000px
+   * wide — wider than a phone, so the whole page zoomed out. The full list still
+   * appears in the rejection message, where it is actually needed.
+   */
+  protected readonly acceptBadge = computed(() => {
+    const list = this.accepts();
+    if (!list.length) return 'Any file';
+    const names = list.map((e) => e.replace('.', '').toUpperCase());
+    const shown = 6;
+    return names.length <= shown
+      ? names.join(', ')
+      : `${names.slice(0, shown).join(', ')} +${names.length - shown} more`;
+  });
   protected readonly totalSize = computed(() =>
     this.files().reduce((sum, f) => sum + f.size, 0),
   );

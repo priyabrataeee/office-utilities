@@ -40,6 +40,7 @@
 # up immediately. Adding Cache-Control here would merge into the rules above
 # and produce a contradictory header.
 /*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin

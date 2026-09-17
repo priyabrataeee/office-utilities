@@ -156,7 +156,7 @@
   margin-top: var(--ou-s-5);
   display: grid;
   gap: var(--ou-s-4);
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
 
   li {
     display: flex;

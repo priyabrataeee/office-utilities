@@ -104,6 +104,14 @@
   margin-top: var(--ou-s-1);
 }
 
+/* Badges are nowrap globally. Inside the drop zone they may wrap instead, so a
+   long label can never push the page wider than the screen. */
+.dz__meta .ou-badge {
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
 .picked {
   list-style: none;
   margin: var(--ou-s-3) 0 0;

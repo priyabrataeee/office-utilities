@@ -297,3 +297,15 @@
   color: var(--ou-accent) !important;
   font-weight: 600;
 }
+
+/* The narrowest phones (320–360px). Brand plus four controls at normal spacing
+   ran 5px wider than the screen, which zooms the whole page out. Tighter gaps
+   buy that back without hiding any control. */
+@media (max-width: 22.5rem) {
+  .header__inner {
+    gap: var(--ou-s-2);
+  }
+  .header__actions {
+    gap: 0;
+  }
+}

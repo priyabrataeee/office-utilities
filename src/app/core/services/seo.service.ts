@@ -51,8 +51,9 @@ export class SeoService {
 
     this.setName('description', metaDescription(seo.description));
     this.setName('robots', seo.noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large');
-    if (seo.keywords?.length) this.setName('keywords', seo.keywords.join(', '));
-    else this.meta.removeTag("name='keywords'");
+    // No <meta name="keywords">: Google ignores it and Bing treats stuffing it
+    // as a weak spam signal. Keywords still feed on-site search.
+    this.meta.removeTag("name='keywords'");
 
     this.setProperty('og:type', 'website');
     this.setProperty('og:site_name', SITE.name);
@@ -113,7 +114,7 @@ export class SeoService {
     }
 
     return {
-      title: tool.title,
+      title: `${tool.title} — Free, Nothing Uploaded`,
       description: tool.description,
       path: tool.path,
       keywords: [...tool.keywords, tool.title.toLowerCase(), 'online', 'free', 'no upload'],

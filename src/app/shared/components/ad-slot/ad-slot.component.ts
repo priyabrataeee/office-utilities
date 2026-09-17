@@ -1,11 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   afterNextRender,
   computed,
   inject,
   input,
+  signal,
   viewChild,
 } from '@angular/core';
 import { MonetizationService } from '../../../core/services/monetization.service';
@@ -31,7 +33,7 @@ import { MonetizationService } from '../../../core/services/monetization.service
 @Component({
   selector: 'app-ad-slot',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { ngSkipHydration: 'true', class: 'ou-no-print' },
+  host: { ngSkipHydration: 'true', class: 'ou-no-print', '[class.is-collapsed]': 'collapsed()' },
   template: `
     @if (visible()) {
       <aside class="ad" [attr.aria-label]="'Advertisement'">
@@ -63,11 +65,42 @@ export class AdSlotComponent {
     () => this.money.adsEnabled && !!this.slot(),
   );
 
+  /**
+   * True when the slot will never show an ad. A labelled, bordered, empty box is
+   * worse than nothing: it reads as broken, and an unfilled frame on a thin page
+   * is exactly what an AdSense reviewer notices.
+   */
+  protected readonly collapsed = signal(false);
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor() {
     // Must run after the <ins> exists — AdSense fills the last one it finds in
     // the DOM, so pushing before render would target the wrong element.
     afterNextRender(() => {
-      if (this.unit()) this.money.fillSlot();
+      const ins = this.unit()?.nativeElement;
+      if (!ins) return;
+      this.money.fillSlot();
+
+      // AdSense marks a slot it could not fill with data-ad-status="unfilled".
+      const observer = new MutationObserver(() => {
+        if (ins.getAttribute('data-ad-status') === 'unfilled') {
+          this.collapsed.set(true);
+          observer.disconnect();
+        }
+      });
+      observer.observe(ins, { attributes: true, attributeFilter: ['data-ad-status'] });
+
+      // A blocked or failed loader never processes the slot at all, so it never
+      // gets data-adsbygoogle-status. The wait is generous on purpose: collapsing
+      // a slot that was merely slow would stop it being filled.
+      const timer = setTimeout(() => {
+        if (!ins.hasAttribute('data-adsbygoogle-status')) this.collapsed.set(true);
+      }, 8000);
+
+      this.destroyRef.onDestroy(() => {
+        observer.disconnect();
+        clearTimeout(timer);
+      });
     });
   }
 }

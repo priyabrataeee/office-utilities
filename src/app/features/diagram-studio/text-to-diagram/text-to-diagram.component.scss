@@ -4,6 +4,7 @@
 
 .tabs {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--ou-s-2);
   padding: var(--ou-s-2);

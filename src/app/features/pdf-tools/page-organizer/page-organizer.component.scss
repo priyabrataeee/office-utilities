@@ -11,7 +11,7 @@
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
   gap: var(--ou-s-4);
 }
 
@@ -109,7 +109,7 @@
 
 @media (max-width: 560px) {
   .grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(120px, 100%), 1fr));
     gap: var(--ou-s-3);
   }
 }

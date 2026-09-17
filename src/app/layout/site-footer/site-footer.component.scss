@@ -72,7 +72,7 @@
 
 .footer__cols {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
   gap: var(--ou-s-6);
 }
 
@@ -124,9 +124,13 @@
   font-size: var(--ou-fs-xs);
   color: var(--ou-text-subtle);
 
+  /* Must wrap. Without it the row is as wide as its nine links combined, and on
+     a phone that pushes the whole layout wider than the screen — so the browser
+     zooms the entire page out to fit and it looks shrunken. */
   nav {
     display: flex;
-    gap: var(--ou-s-4);
+    flex-wrap: wrap;
+    gap: var(--ou-s-2) var(--ou-s-4);
   }
 
   a {

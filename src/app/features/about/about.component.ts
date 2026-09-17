@@ -95,10 +95,12 @@ import { SITE } from '../../core/site.config';
           </li>
         </ul>
 
-        <h2>Cost</h2>
+        <h2>Cost, and how it is paid for</h2>
         <p>
-          The tools are free and there is nothing to sign up for. Your documents are processed on
-          your own device, so their contents are never sent anywhere. See
+          The tools are free and there is nothing to sign up for. The site is paid for by
+          advertising from Google AdSense and by donations. Ads are served by Google and it sets
+          its own cookies to do so; it never receives your documents, because your documents are
+          processed on your own device and their contents are never sent anywhere. See
           <a routerLink="/privacy">the privacy page</a> for exactly what is stored on your device
           and how to clear it.
         </p>

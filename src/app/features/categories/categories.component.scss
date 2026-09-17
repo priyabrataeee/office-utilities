@@ -3,7 +3,7 @@
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
   gap: var(--ou-s-4);
 }
 
@@ -60,7 +60,7 @@
   margin-top: auto;
   border-top: 1px solid var(--ou-border);
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr));
   gap: var(--ou-s-1) var(--ou-s-3);
 
   a {
