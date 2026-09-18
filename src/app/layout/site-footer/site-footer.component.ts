@@ -40,7 +40,7 @@ import { SITE } from '../../core/site.config';
         <nav class="footer__cols" aria-label="Footer">
           @for (category of registry.categories; track category.id) {
             <div class="footer__col">
-              <h3>{{ category.title }}</h3>
+              <p class="footer__col-title">{{ category.title }}</p>
               <ul>
                 <!-- @for (tool of topOf(category.id); track tool.id) {
                   <li><a [routerLink]="tool.path">{{ tool.title }}</a></li>

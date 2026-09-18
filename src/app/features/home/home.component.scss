@@ -401,3 +401,43 @@
     padding: var(--ou-s-6);
   }
 }
+
+/* Mirrors the tool-page FAQ so the two read as one site. */
+.faq__list {
+  max-width: 68ch;
+}
+
+.faq__item {
+  border-bottom: 1px solid var(--ou-border);
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ou-s-3);
+    padding: var(--ou-s-4) 0;
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    app-icon {
+      flex: none;
+      color: var(--ou-text-subtle);
+      transition: transform var(--ou-dur) var(--ou-ease);
+    }
+  }
+
+  &[open] summary app-icon {
+    transform: rotate(180deg);
+  }
+
+  p {
+    margin: 0;
+    padding-bottom: var(--ou-s-4);
+    color: var(--ou-text-muted);
+  }
+}

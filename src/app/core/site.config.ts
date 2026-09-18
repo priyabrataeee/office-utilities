@@ -35,6 +35,16 @@ export const SITE = {
    * because that claim is only checkable if the reader can find the code.
    */
   repoUrl: 'https://github.com/priyabrataeee/office-utilities',
+  /**
+   * Who is behind this. Search and AI systems both weight a named,
+   * reachable human over an anonymous brand, and a site asking people to
+   * trust it with documents should say who is asking.
+   */
+  author: {
+    name: 'Priyabrata Saha',
+    url: 'https://github.com/priyabrataeee',
+    role: 'Built and maintains Office Utilities',
+  },
 } as const;
 
 /**

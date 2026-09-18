@@ -213,3 +213,22 @@
     </ul>
   </div>
 </section>
+
+<section class="section faq">
+  <header class="section__head">
+    <h2>Common questions</h2>
+    <p>The things worth knowing before you hand a document to any website.</p>
+  </header>
+
+  <div class="faq__list">
+    @for (item of faq; track item.q) {
+      <details class="faq__item">
+        <summary>
+          {{ item.q }}
+          <app-icon name="chevron-down" [size]="16" />
+        </summary>
+        <p>{{ item.a }}</p>
+      </details>
+    }
+  </div>
+</section>

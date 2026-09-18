@@ -131,8 +131,8 @@ export class CategoryPageComponent {
   constructor() {
     effect(() => {
       const category = this.current();
-      const count = this.tools().length;
-      if (category) untracked(() => this.seo.apply(this.seo.categorySeo(category, count)));
+      const tools = this.tools();
+      if (category) untracked(() => this.seo.apply(this.seo.categorySeo(category, tools)));
     });
   }
 }

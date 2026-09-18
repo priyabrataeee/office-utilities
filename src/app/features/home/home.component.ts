@@ -7,6 +7,7 @@ import { ToolRegistryService } from '../../core/services/tool-registry.service';
 import { HandoffService } from '../../core/services/handoff.service';
 import { SeoService } from '../../core/services/seo.service';
 import { SITE } from '../../core/site.config';
+import { HOME_FAQ } from '../../core/data/home-faq';
 import { extensionOf, formatBytes } from '../../core/utils/file.util';
 import type { ResolvedTool } from '../../core/models/tool.model';
 
@@ -18,6 +19,7 @@ import type { ResolvedTool } from '../../core/models/tool.model';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
+  protected readonly faq = HOME_FAQ;
   protected readonly registry = inject(ToolRegistryService);
   private readonly handoff = inject(HandoffService);
   private readonly router = inject(Router);
@@ -58,7 +60,7 @@ export class HomeComponent {
 
   constructor() {
     this.seo.apply({
-      title: `${SITE.name} — ${SITE.tagline}`,
+      title: 'Free PDF, Word & Excel Tools — No Uploads',
       description: SITE.description,
       path: '/',
       keywords: [
@@ -69,6 +71,15 @@ export class HomeComponent {
         'offline document tools',
       ],
       structuredData: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: HOME_FAQ.map((item) => ({
+            '@type': 'Question',
+            name: item.q,
+            acceptedAnswer: { '@type': 'Answer', text: item.a },
+          })),
+        },
         {
           '@context': 'https://schema.org',
           '@type': 'WebSite',

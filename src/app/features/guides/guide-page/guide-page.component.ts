@@ -14,6 +14,7 @@ import { AdSlotComponent } from '../../../shared/components/ad-slot/ad-slot.comp
 import { GuideRegistryService } from '../../../core/services/guide-registry.service';
 import { ToolRegistryService } from '../../../core/services/tool-registry.service';
 import { SeoService } from '../../../core/services/seo.service';
+import { SITE } from '../../../core/site.config';
 
 /** Fraction of the way through an article the in-article ad aims for. */
 const AD_POSITION = 0.4;
@@ -36,6 +37,7 @@ export class GuidePageComponent {
   private readonly seo = inject(SeoService);
   protected readonly toolRegistry = inject(ToolRegistryService);
 
+  protected readonly author = SITE.author;
   protected readonly guide = computed(() => this.guides.find(this.slug()));
   protected readonly tools = computed(() => {
     const guide = this.guide();

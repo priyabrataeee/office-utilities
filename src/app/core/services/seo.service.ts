@@ -138,7 +138,12 @@ export class SeoService {
           datePublished: guide.published,
           dateModified: guide.updated ?? guide.published,
           inLanguage: SITE.locale,
-          author: { '@type': 'Organization', name: SITE.name, url: SITE.origin },
+          author: {
+            '@type': 'Person',
+            name: SITE.author.name,
+            url: SITE.author.url,
+            sameAs: [SITE.author.url],
+          },
           publisher: {
             '@type': 'Organization',
             name: SITE.name,
@@ -173,13 +178,33 @@ export class SeoService {
     };
   }
 
-  categorySeo(category: ToolCategory, toolCount: number): PageSeo {
+  categorySeo(category: ToolCategory, tools: readonly ResolvedTool[]): PageSeo {
     return {
-      title: `${category.title} — ${toolCount} browser-based tools`,
+      title: `${category.title} — ${tools.length} browser-based tools`,
       description: category.description,
       path: `/${category.slug}`,
       keywords: [category.title.toLowerCase(), category.tagline.toLowerCase()],
       structuredData: [
+        // A category is a curated collection, and breadcrumbs alone do not say
+        // so. ItemList names the members in order, which is what lets a search
+        // or AI system answer "what PDF tools does this site have" from the hub
+        // page instead of having to crawl every tool.
+        {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          name: category.title,
+          description: category.description,
+          url: `${SITE.origin}/${category.slug}`,
+          numberOfItems: tools.length,
+          itemListOrder: 'https://schema.org/ItemListUnordered',
+          itemListElement: tools.map((tool, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: tool.title,
+            description: tool.summary,
+            url: SITE.origin + tool.path,
+          })),
+        },
         this.breadcrumbs([
           { name: 'Home', path: '/' },
           { name: category.title, path: `/${category.slug}` },

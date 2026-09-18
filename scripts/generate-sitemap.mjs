@@ -5,6 +5,7 @@
  * automatically enrols it in SEO — nothing extra to remember.
  */
 
+import { execSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -65,11 +66,81 @@ const staticPaths = [
 const categoryPaths = categorySlugList.map((slug) => `/${slug}`);
 const allPaths = [...new Set([...staticPaths, ...categoryPaths, ...toolPaths])];
 
-const sitemapUrls = allPaths.map((path) => `  <url>
-    <loc>${site}${path === '/' ? '' : path}</loc>
-    <changefreq>${path === '/' ? 'weekly' : 'monthly'}</changefreq>
-    <priority>${path === '/' ? '1.0' : path.split('/').length === 2 ? '0.8' : '0.7'}</priority>
-  </url>`);
+/**
+ * Last-modified dates.
+ *
+ * `changefreq` and `priority` are gone: Google ignores both and says so. It
+ * does read `lastmod`, but only while it stays truthful — stamping every page
+ * with today's build date is the fastest way to have it ignored here too.
+ *
+ * So each URL is dated from the last commit that touched the source actually
+ * behind it: a guide from its own file, a tool page from the catalog and the
+ * copy layer, a static page from its component. Pages inherit a real editing
+ * history rather than a deployment timestamp.
+ */
+const gitDateCache = new Map();
+function lastCommitDate(files) {
+  let newest = '';
+  for (const file of files) {
+    if (!gitDateCache.has(file)) {
+      let iso = '';
+      try {
+        iso = execSync(`git log -1 --format=%cI -- "${file}"`, {
+          cwd: rootDir,
+          encoding: 'utf8',
+          stdio: ['ignore', 'pipe', 'ignore'],
+        }).trim();
+      } catch {
+        iso = '';
+      }
+      gitDateCache.set(file, iso);
+    }
+    const iso = gitDateCache.get(file);
+    if (iso && iso > newest) newest = iso;
+  }
+  // No git history (a shallow CI checkout, say) means no honest date to give,
+  // and an omitted lastmod is better than an invented one.
+  return newest ? newest.slice(0, 10) : '';
+}
+
+const CATALOG = 'src/app/core/data/tool-catalog.ts';
+const TOOL_COPY = 'src/app/core/data/tool-content.ts';
+const CATEGORY_COPY = 'src/app/core/data/category-content.ts';
+
+const guideFileBySlug = new Map();
+guideFiles.forEach((file, index) => {
+  const slug = guideSlugs[index];
+  if (slug) guideFileBySlug.set(`/guides/${slug}`, `src/app/core/data/guides/${file}.ts`);
+});
+
+const staticSources = {
+  '/': 'src/app/features/home',
+  '/tools': 'src/app/features/all-tools',
+  '/categories': 'src/app/features/categories',
+  '/about': 'src/app/features/about',
+  '/privacy': 'src/app/features/privacy',
+  '/contact': 'src/app/features/contact',
+  '/terms': 'src/app/features/terms',
+  '/disclaimer': 'src/app/features/disclaimer',
+  '/guides': 'src/app/features/guides',
+};
+
+function sourcesFor(path) {
+  if (guideFileBySlug.has(path)) return [guideFileBySlug.get(path)];
+  if (staticSources[path]) return [staticSources[path]];
+  // A category hub reflects its own copy and the catalog it lists.
+  if (path.split('/').length === 2) return [CATEGORY_COPY, CATALOG];
+  // A tool page reflects the catalog entry and its extended copy.
+  return [CATALOG, TOOL_COPY];
+}
+
+const sitemapUrls = allPaths.map((path) => {
+  const lastmod = lastCommitDate(sourcesFor(path));
+  return `  <url>
+    <loc>${site}${path === '/' ? '' : path}</loc>${lastmod ? `
+    <lastmod>${lastmod}</lastmod>` : ''}
+  </url>`;
+});
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

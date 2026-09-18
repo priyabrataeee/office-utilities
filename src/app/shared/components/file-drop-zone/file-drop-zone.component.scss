@@ -165,3 +165,10 @@
   font-size: var(--ou-fs-xs);
   color: var(--ou-text-muted);
 }
+
+/* Shown under the tool's own hint so there is always a worded way in, not just
+   a large clickable rectangle. */
+.dz__action {
+  display: block;
+  margin-top: var(--ou-s-1);
+}
