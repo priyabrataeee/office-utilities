@@ -79,6 +79,16 @@
       function gtag() {
         dataLayer.push(arguments);
       }
+      // Baseline first, then the regional override. This order matters: a
+      // consent type already fixed by an earlier default call is not reopened
+      // by a later one, so declaring the regional denial first left every
+      // visitor denied regardless of country.
+      gtag('consent', 'default', {
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        analytics_storage: 'granted',
+      });
       gtag('consent', 'default', {
         ad_storage: 'denied',
         ad_user_data: 'denied',
@@ -86,12 +96,6 @@
         analytics_storage: 'denied',
         region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'],
         wait_for_update: 500,
-      });
-      gtag('consent', 'default', {
-        ad_storage: 'granted',
-        ad_user_data: 'granted',
-        ad_personalization: 'granted',
-        analytics_storage: 'granted',
       });
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-42L42CSCG1"></script>

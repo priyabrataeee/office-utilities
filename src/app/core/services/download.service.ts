@@ -2,6 +2,7 @@ import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import type { OutputFile } from '../models/file.model';
 import { safeFileName } from '../utils/file.util';
+import { AnalyticsService } from './analytics.service';
 
 /**
  * Everything that leaves the app does so through here: a Blob, an object URL
@@ -10,6 +11,7 @@ import { safeFileName } from '../utils/file.util';
 @Injectable({ providedIn: 'root' })
 export class DownloadService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly analytics = inject(AnalyticsService);
 
   async save(blob: Blob, fileName: string): Promise<void> {
     if (!this.isBrowser) return;
@@ -19,6 +21,10 @@ export class DownloadService {
     // — and everything routed through save() — throws.
     const saveAs = (await import('file-saver')).default;
     saveAs(blob, safeFileName(fileName));
+    // Every save in the app routes through here, so this is the single point
+    // where "the tool worked" is true. The file name is deliberately not
+    // passed on — see AnalyticsService.
+    this.analytics.toolCompleted();
   }
 
   saveText(text: string, fileName: string, mime = 'text/plain;charset=utf-8'): Promise<void> {

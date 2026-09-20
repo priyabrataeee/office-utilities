@@ -38,7 +38,7 @@ interface Command {
 })
 export class CommandPaletteComponent {
   private readonly service = inject(CommandPaletteService);
-  private readonly registry = inject(ToolRegistryService);
+  protected readonly registry = inject(ToolRegistryService);
   private readonly router = inject(Router);
   private readonly theme = inject(ThemeService);
   private readonly shortcuts = inject(ShortcutService);

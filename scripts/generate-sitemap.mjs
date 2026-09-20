@@ -43,13 +43,22 @@ const guideFiles = [
   ),
 ].map(([, name]) => name);
 
+/**
+ * A guide's own `updated`/`published` date, which is what the page and its
+ * Article schema display. The sitemap must agree with them rather than report
+ * whenever the file was last touched in git.
+ */
+const guideDateBySlug = new Map();
+
 const guideSlugs = guideFiles
-  .map((file) =>
-    extract(
-      readFileSync(resolve(rootDir, "src/app/core/data/guides/" + file + ".ts"), 'utf8'),
-      /slug:\s*'([^']+)'/,
-    ),
-  )
+  .map((file) => {
+    const source = readFileSync(resolve(rootDir, 'src/app/core/data/guides/' + file + '.ts'), 'utf8');
+    const slug = extract(source, /slug:\s*'([^']+)'/);
+    const updated = extract(source, /updated:\s*'(\d{4}-\d{2}-\d{2})'/);
+    const published = extract(source, /published:\s*'(\d{4}-\d{2}-\d{2})'/);
+    if (slug && (updated || published)) guideDateBySlug.set('/guides/' + slug, updated || published);
+    return slug;
+  })
   .filter(Boolean);
 const staticPaths = [
   '/',
@@ -136,6 +145,9 @@ function gitDate(file) {
 }
 
 function lastCommitDate(path, files) {
+  // A declared content date always wins: it is what the page itself shows.
+  const declared = guideDateBySlug.get(path);
+  if (declared) return declared;
   if (!fullHistory) {
     // Trust the committed snapshot, or say nothing. An omitted lastmod is
     // better than a date every page shares.

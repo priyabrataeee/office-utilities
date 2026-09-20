@@ -14,7 +14,7 @@
           #searchInput
           type="text"
           class="palette__input"
-          placeholder="Search 89 tools, or jump to a page…"
+          [placeholder]="'Search ' + registry.tools.length + ' tools…'"
           autocomplete="off"
           spellcheck="false"
           [value]="query()"
