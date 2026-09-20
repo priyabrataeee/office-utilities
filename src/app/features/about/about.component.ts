@@ -95,6 +95,24 @@ import { SITE } from '../../core/site.config';
           </li>
         </ul>
 
+        <h2>Who makes this</h2>
+        <p>
+          {{ site.name }} is built and maintained by
+          <a [href]="author.url" target="_blank" rel="noopener me">{{ author.name }}</a>, a software
+          engineer. It started as a personal objection to uploading a signed contract to a stranger's
+          server in order to rotate one page of it, and it is still a one-person project rather than
+          a company.
+        </p>
+        <p>
+          That means there is a person accountable for what these tools do and what they claim.
+          The code is
+          <a [href]="site.repoUrl" target="_blank" rel="noopener">public under AGPL-3.0</a>, so the
+          privacy claim on this site is something you can check rather than something you have to
+          believe. Corrections and bug reports are welcome at
+          <a [href]="'mailto:' + author.email">{{ author.email }}</a>, and writing about the work
+          lives on <a [href]="author.sameAs[1]" target="_blank" rel="noopener me">Medium</a>.
+        </p>
+
         <h2>Cost, and how it is paid for</h2>
         <p>
           The tools are free and there is nothing to sign up for. The site is paid for by
@@ -128,6 +146,7 @@ export class AboutComponent {
   protected readonly registry = inject(ToolRegistryService);
   private readonly seo = inject(SeoService);
   protected readonly site = SITE;
+  protected readonly author = SITE.author;
   protected readonly angularVersion = 20;
 
   constructor() {

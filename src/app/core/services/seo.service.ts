@@ -142,7 +142,8 @@ export class SeoService {
             '@type': 'Person',
             name: SITE.author.name,
             url: SITE.author.url,
-            sameAs: [SITE.author.url],
+            email: SITE.author.email,
+            sameAs: [...SITE.author.sameAs],
           },
           publisher: {
             '@type': 'Organization',

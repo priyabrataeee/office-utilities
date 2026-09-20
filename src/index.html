@@ -23,7 +23,7 @@
          loosening this one directive does not loosen frame-src. -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.googletagservices.com https://adservice.google.com https://fundingchoicesmessages.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; font-src 'self' data:; connect-src 'self' blob: https://cloudflareinsights.com https://*.cloudflareinsights.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.google.com https://fundingchoicesmessages.google.com; worker-src 'self' blob:; frame-src 'self' blob: https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.google.com https://fundingchoicesmessages.google.com; fenced-frame-src https:; object-src 'none'; base-uri 'self'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com https://www.googletagmanager.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.googletagservices.com https://adservice.google.com https://fundingchoicesmessages.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; font-src 'self' data:; connect-src 'self' blob: https://cloudflareinsights.com https://*.cloudflareinsights.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.google.com https://fundingchoicesmessages.google.com; worker-src 'self' blob:; frame-src 'self' blob: https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.google.com https://fundingchoicesmessages.google.com; fenced-frame-src https:; object-src 'none'; base-uri 'self'; form-action 'none'"
     />
 
     <meta property="og:type" content="website" />
@@ -59,14 +59,46 @@
       crossorigin="anonymous"
     ></script>
 
-    <!-- Cloudflare Web Analytics. Cookieless, so it needs no consent banner —
-         which is why it is here rather than Google Analytics. The token is a
-         site identifier, not a secret; it is meant to be public in the page. -->
+    <!-- Cloudflare Web Analytics. Cookieless, so it reports visits from people
+         who decline consent below and from anyone blocking Google. The token is
+         a site identifier, not a secret; it is meant to be public in the page. -->
     <script
       type="module"
       src="https://static.cloudflareinsights.com/beacon.min.js"
       data-cf-beacon='{"token": "0aeae091c83c4b9586fdb63543089d0c"}'
     ></script>
+
+    <!-- Google Analytics 4.
+         Unlike the Cloudflare beacon above, GA4 sets cookies, so it is gated
+         behind Consent Mode v2: storage defaults to denied across the EEA, the
+         UK and Switzerland, and stays denied there until the Google consent
+         message grants it. Everywhere else it defaults to granted. Nothing
+         about a document is ever sent — only the page address. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'],
+        wait_for_update: 500,
+      });
+      gtag('consent', 'default', {
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        analytics_storage: 'granted',
+      });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-42L42CSCG1"></script>
+    <script>
+      gtag('js', new Date());
+      gtag('config', 'G-42L42CSCG1');
+    </script>
 
     <style>
       /* Paints a background matching the theme before the app boots, so the

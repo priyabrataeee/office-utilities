@@ -172,12 +172,26 @@
       Visitor numbers are counted by Cloudflare Web Analytics. It records the page address, the
       site that referred you, your country, and your browser and device type — enough to know
       which pages people read. It sets no cookies, does not fingerprint your device and cannot
-      follow you to other sites, which is why this site has no cookie banner for it.
+      follow you to other sites.
     </p>
     <p>
-      Those two are the only external services. Every library the app uses is bundled and served
-      from this domain, and no fonts are fetched from anywhere else. Neither service receives
-      anything about the documents you open — those are never part of a request.
+      Google Analytics is also used, to see which pages people arrive on and which tools get
+      used. It records the page address, the referring site, an approximate location derived from
+      your IP address, and your browser and device type. Unlike the Cloudflare counter it does set
+      cookies — <code>_ga</code> and <code>_ga_G-42L42CSCG1</code> — which last up to two years and
+      exist to tell a returning visitor from a new one.
+    </p>
+    <p>
+      In the EEA, the UK and Switzerland those cookies are not set until you agree to them: consent
+      defaults to denied there and is only granted if you choose it in the consent message. File
+      download and form tracking are switched off, so the names of files you save are never
+      recorded.
+    </p>
+    <p>
+      Those three — Google's advertising, Google Analytics and the Cloudflare counter — are the only
+      external services. Every library the app uses is bundled and served from this domain, and no
+      fonts are fetched from anywhere else. None of them receives anything about the documents you
+      open, because those are never part of a request.
     </p>
 
     <h3>Sharing features</h3>

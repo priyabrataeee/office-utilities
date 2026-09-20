@@ -78,28 +78,74 @@ const allPaths = [...new Set([...staticPaths, ...categoryPaths, ...toolPaths])];
  * copy layer, a static page from its component. Pages inherit a real editing
  * history rather than a deployment timestamp.
  */
+/*
+ * Where the dates come from.
+ *
+ * `git log` gives a truthful per-file date, but only where the full history
+ * exists. Cloudflare builds from a depth-1 clone, so every file reports the
+ * deploy commit and all 135 URLs end up stamped with the same day — which is
+ * exactly the "lastmod everywhere is identical" signal Google learns to ignore.
+ *
+ * So the dates are resolved here when history is available and written to
+ * `${SNAPSHOT_NAME}`, which is committed. A shallow build reads that snapshot
+ * instead of asking git a question it cannot answer.
+ */
+const SNAPSHOT_NAME = 'content-dates.json';
+const snapshotPath = resolve(here, SNAPSHOT_NAME);
+
+function hasFullHistory() {
+  try {
+    const shallow = execSync('git rev-parse --is-shallow-repository', {
+      cwd: rootDir,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    return shallow === 'false';
+  } catch {
+    return false;
+  }
+}
+
+function readSnapshot() {
+  try {
+    return JSON.parse(readFileSync(snapshotPath, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+const fullHistory = hasFullHistory();
+const snapshot = readSnapshot();
+
 const gitDateCache = new Map();
-function lastCommitDate(files) {
+function gitDate(file) {
+  if (!gitDateCache.has(file)) {
+    let iso = '';
+    try {
+      iso = execSync(`git log -1 --format=%cI -- "${file}"`, {
+        cwd: rootDir,
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }).trim();
+    } catch {
+      iso = '';
+    }
+    gitDateCache.set(file, iso);
+  }
+  return gitDateCache.get(file);
+}
+
+function lastCommitDate(path, files) {
+  if (!fullHistory) {
+    // Trust the committed snapshot, or say nothing. An omitted lastmod is
+    // better than a date every page shares.
+    return snapshot[path] ?? '';
+  }
   let newest = '';
   for (const file of files) {
-    if (!gitDateCache.has(file)) {
-      let iso = '';
-      try {
-        iso = execSync(`git log -1 --format=%cI -- "${file}"`, {
-          cwd: rootDir,
-          encoding: 'utf8',
-          stdio: ['ignore', 'pipe', 'ignore'],
-        }).trim();
-      } catch {
-        iso = '';
-      }
-      gitDateCache.set(file, iso);
-    }
-    const iso = gitDateCache.get(file);
+    const iso = gitDate(file);
     if (iso && iso > newest) newest = iso;
   }
-  // No git history (a shallow CI checkout, say) means no honest date to give,
-  // and an omitted lastmod is better than an invented one.
   return newest ? newest.slice(0, 10) : '';
 }
 
@@ -134,13 +180,23 @@ function sourcesFor(path) {
   return [CATALOG, TOOL_COPY];
 }
 
+const resolvedDates = {};
 const sitemapUrls = allPaths.map((path) => {
-  const lastmod = lastCommitDate(sourcesFor(path));
+  const lastmod = lastCommitDate(path, sourcesFor(path));
+  if (lastmod) resolvedDates[path] = lastmod;
   return `  <url>
     <loc>${site}${path === '/' ? '' : path}</loc>${lastmod ? `
     <lastmod>${lastmod}</lastmod>` : ''}
   </url>`;
 });
+
+// Refresh the committed snapshot whenever a build had real history to read,
+// so the next shallow CI build inherits today's answers rather than last
+// month's. Sorted so the diff is reviewable.
+if (fullHistory) {
+  const sorted = Object.fromEntries(Object.entries(resolvedDates).sort(([a], [b]) => a.localeCompare(b)));
+  writeFileSync(snapshotPath, JSON.stringify(sorted, null, 2) + '\n');
+}
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

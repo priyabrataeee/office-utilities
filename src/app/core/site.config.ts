@@ -44,6 +44,17 @@ export const SITE = {
     name: 'Priyabrata Saha',
     url: 'https://github.com/priyabrataeee',
     role: 'Built and maintains Office Utilities',
+    email: 'priyabrata.saha@office-utilities.org',
+    /**
+     * Profiles that resolve to the same person. `sameAs` is how a search or
+     * AI system reconciles a name on this site with an identity it already
+     * knows about, so a single link is worth much less than two that
+     * corroborate each other.
+     */
+    sameAs: [
+      'https://github.com/priyabrataeee',
+      'https://medium.com/@stream2085',
+    ],
   },
 } as const;
 
