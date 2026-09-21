@@ -8,6 +8,7 @@ import { RecentService } from '../../core/services/recent.service';
 import { FavoritesService } from '../../core/services/favorites.service';
 import { ToastService } from '../../core/services/toast.service';
 import { SeoService } from '../../core/services/seo.service';
+import { PrivacyChoicesService } from '../../core/services/privacy-choices.service';
 import { SITE } from '../../core/site.config';
 
 @Component({
@@ -24,8 +25,18 @@ export class PrivacyComponent {
   private readonly favorites = inject(FavoritesService);
   private readonly toast = inject(ToastService);
   private readonly seo = inject(SeoService);
+  protected readonly choices = inject(PrivacyChoicesService);
 
   protected readonly site = SITE;
+
+  protected onAdsOptOut(event: Event): void {
+    this.choices.setAdsOptOut((event.target as HTMLInputElement).checked);
+    this.toast.success(
+      (event.target as HTMLInputElement).checked
+        ? 'Personalised advertising is off for this device.'
+        : 'Personalised advertising is on again.',
+    );
+  }
   protected readonly localBytes = signal(0);
   protected readonly cacheBytes = signal<number | null>(null);
   protected readonly keys = signal<string[]>([]);

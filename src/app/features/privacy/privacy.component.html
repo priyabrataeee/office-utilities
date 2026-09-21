@@ -219,6 +219,75 @@
     </p>
   </section>
 
+  <section class="ou-prose choices" id="your-privacy-choices">
+    <h2>Your privacy choices</h2>
+    <p>
+      Advertising on this site can be personalised using cookies Google sets in your browser.
+      Several US state privacy laws treat that as a "sale" or "sharing" of personal information
+      and give you the right to refuse it. You can do that here, and the choice is remembered on
+      this device.
+    </p>
+
+    @if (choices.gpcDetected()) {
+      <p class="choices__gpc">
+        <app-icon name="shield-check" [size]="17" />
+        <span>
+          Your browser is sending a <strong>Global Privacy Control</strong> signal, so personalised
+          advertising is already switched off and cannot be re-enabled from this page. To change
+          it, turn the signal off in your browser or extension.
+        </span>
+      </p>
+    } @else {
+      <label class="choices__row">
+        <input
+          type="checkbox"
+          [checked]="choices.adsOptedOut()"
+          (change)="onAdsOptOut($event)"
+        />
+        <span>
+          <strong>Do not use my information for personalised advertising</strong>
+          <small>
+            Ads will still appear — they fund the site — but they will be chosen from the page you
+            are on rather than from a profile of you.
+          </small>
+        </span>
+      </label>
+    }
+
+    <p>
+      This setting does not affect the page-view counting described above, which does not identify
+      you and is not shared for advertising. To object to that as well, block
+      <code>googletagmanager.com</code> in your browser, or use the
+      <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener"
+        >Google Analytics opt-out add-on</a
+      >.
+    </p>
+
+    <h3>If you are in the EEA, the UK or Switzerland</h3>
+    <p>
+      Nothing is stored for advertising or analytics until you agree to it. A consent message from
+      Google appears on your first visit, and your answer is applied before any personalised ad or
+      analytics cookie is loaded. You can change it at any time through that message. Under the
+      GDPR you also have the right to ask what data is held about you, to have it corrected or
+      deleted, and to object to its processing — for Google's share of it, use
+      <a href="https://myaccount.google.com/privacy" target="_blank" rel="noopener"
+        >your Google account privacy controls</a
+      >; for anything this site holds, which is only what is listed above as stored on your own
+      device, you can erase it yourself with the button in that section.
+    </p>
+
+    <h3>If you are in the United States</h3>
+    <p>
+      Depending on your state you may have the right to know what personal information is
+      collected, to have it deleted, and to opt out of its sale or sharing for targeted
+      advertising. This site does not sell personal information for money, does not collect
+      sensitive categories of it, and never receives your documents at all. The advertising
+      opt-out above is the mechanism for the sharing right, and Global Privacy Control signals are
+      honoured automatically. To exercise any other right, write to
+      <a [href]="'mailto:' + site.author.email">{{ site.author.email }}</a>.
+    </p>
+  </section>
+
   <p class="back">
     <a routerLink="/about">Read how it works technically</a>
     ·

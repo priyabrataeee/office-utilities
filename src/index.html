@@ -97,6 +97,35 @@
         region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'],
         wait_for_update: 500,
       });
+
+      // --- United States: opt-out signals ---------------------------------
+      // Several state privacy laws (California's CPRA among them) require a
+      // site to honour an opt-out of "sale" or "sharing" for cross-context
+      // advertising, and California requires that the Global Privacy Control
+      // browser signal be treated as exactly that. Both are applied here,
+      // before the tag loads, so no personalised-ad request is ever made for
+      // someone who has opted out.
+      //
+      // Analytics is deliberately left alone: measuring which pages are read
+      // is not a sale or a share. Opting out of that as well is offered
+      // separately on the privacy page.
+      try {
+        var gpc = navigator.globalPrivacyControl === true;
+        var stored = localStorage.getItem('ou:ads-optout') === 'true';
+        if (gpc || stored) {
+          gtag('consent', 'update', {
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+          });
+          // Google's own flag for the same idea: it keeps serving ads but
+          // stops using the data for personalisation or audience building.
+          gtag('set', 'restricted_data_processing', true);
+          window.__ouAdsOptOut = true;
+        }
+      } catch (e) {
+        // A blocked localStorage must never stop the page rendering.
+      }
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PJCQ3KKJ0X"></script>
     <script>

@@ -125,3 +125,52 @@
   font-size: var(--ou-fs-sm);
   color: var(--ou-text-subtle);
 }
+
+/* The advertising opt-out. Given its own card because a right you cannot find
+   is not much of a right. */
+.choices {
+  margin-top: var(--ou-s-10);
+  padding: var(--ou-s-6);
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-lg);
+  background: var(--ou-surface);
+  scroll-margin-top: calc(var(--ou-header-h) + var(--ou-s-4));
+}
+
+.choices__row {
+  display: flex;
+  gap: var(--ou-s-3);
+  align-items: flex-start;
+  padding: var(--ou-s-4);
+  border: 1px solid var(--ou-accent-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-accent-soft);
+  cursor: pointer;
+
+  input {
+    margin-top: 3px;
+    flex: none;
+  }
+
+  span {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ou-s-1);
+  }
+
+  small {
+    color: var(--ou-text-muted);
+  }
+}
+
+.choices__gpc {
+  display: flex;
+  gap: var(--ou-s-3);
+  align-items: flex-start;
+
+  app-icon {
+    flex: none;
+    margin-top: 2px;
+    color: var(--ou-success);
+  }
+}
