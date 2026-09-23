@@ -1,0 +1,131 @@
+<app-tool-shell toolId="pdf-to-powerpoint">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pdf']"
+      [compact]="hasFile()"
+      title="Drop the PDF you need to present"
+      hint="Every page becomes a slide. Nothing is uploaded."
+      icon="file-ppt"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (pageCount()) {
+      <div class="layout">
+        <div class="panel">
+          <h2 class="panel__title">Slides</h2>
+          <p class="panel__hint">
+            {{ pageCount() }} {{ pageCount() === 1 ? 'page' : 'pages' }} ·
+            {{ selectedPages().length }} will become
+            {{ selectedPages().length === 1 ? 'a slide' : 'slides' }}.
+          </p>
+
+          <div class="options">
+            <label class="ou-field">
+              <span class="ou-label">Slide shape</span>
+              <select class="ou-select" [value]="shape()" (change)="setShape($event)">
+                <option value="match">Match the PDF page — nothing cropped</option>
+                <option value="wide">Widescreen 16:9</option>
+                <option value="classic">Standard 4:3</option>
+              </select>
+            </label>
+
+            <label class="ou-field">
+              <span class="ou-label">Image quality</span>
+              <select class="ou-select" [value]="quality()" (change)="setQuality($event)">
+                <option value="standard">Standard — smallest file</option>
+                <option value="high">High — good on a projector</option>
+                <option value="maximum">Maximum — readable when zoomed in</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="checks">
+            <label class="ou-check">
+              <input type="checkbox" [checked]="allPages()" (change)="toggleAllPages($event)" />
+              Use every page
+            </label>
+            <label class="ou-check">
+              <input
+                type="checkbox"
+                [checked]="speakerNotes()"
+                [disabled]="!hasTextLayer()"
+                (change)="toggleNotes($event)"
+              />
+              Copy each page's text into the speaker notes
+            </label>
+          </div>
+
+          @if (!allPages()) {
+            <label class="ou-field range">
+              <span class="ou-label">Pages</span>
+              <input
+                type="text"
+                class="ou-input"
+                placeholder="e.g. 1-4, 8, 11-13"
+                [value]="pageRange()"
+                (input)="setRange($event)"
+              />
+            </label>
+          }
+
+          @if (!hasTextLayer()) {
+            <p class="warn">
+              <app-icon name="info" [size]="16" />
+              <span>
+                This PDF has no text layer, so there is nothing to put in the speaker notes. The
+                slides themselves are unaffected — they are page images either way.
+              </span>
+            </p>
+          }
+
+          @if (heavy()) {
+            <p class="warn">
+              <app-icon name="alert-triangle" [size]="16" />
+              <span>
+                That is a lot of pages at this quality. The presentation will be large and will
+                take a while to build — dropping to Standard quality is usually indistinguishable
+                on a projector.
+              </span>
+            </p>
+          }
+
+          <p class="hint">
+            Each page is rendered as an image, so the slide looks exactly like the page. The text
+            on it will not be editable in PowerPoint.
+          </p>
+        </div>
+
+        @if (preview(); as thumb) {
+          <figure class="preview">
+            <img [src]="thumb" alt="First page of the PDF" />
+            <figcaption class="ou-subtle">Page 1</figcaption>
+          </figure>
+        }
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy() || !ready()"
+          (click)="convert()"
+        >
+          <app-icon name="file-ppt" [size]="17" />
+          Build the presentation
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Presentation ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

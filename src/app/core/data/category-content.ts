@@ -61,6 +61,9 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategoryId, CategoryContent>> 
       { need: 'Scanned sideways', toolId: 'rotate-pdf' },
       { need: 'It contains something confidential', toolId: 'protect-pdf' },
       { need: 'Photographs that have to become a PDF', toolId: 'images-to-pdf' },
+      { need: 'I have to sign it and have no printer', toolId: 'sign-pdf' },
+      { need: 'The table in it should be a spreadsheet', toolId: 'pdf-to-excel' },
+      { need: 'I have to present it as slides', toolId: 'pdf-to-powerpoint' },
     ],
     notes: [
       'Two limits are worth knowing before you start. There is no OCR, so a scanned page is a picture of text and yields nothing to extract or convert. And PDF-to-Word is structural inference rather than true conversion — a PDF records where glyphs sit, not where paragraphs begin, so complex layouts will need work afterwards.',
@@ -96,6 +99,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategoryId, CategoryContent>> 
       { need: 'A system I am importing into wants CSV', toolId: 'excel-to-csv' },
       { need: 'A CSV that a spreadsheet keeps mangling', toolId: 'csv-to-excel' },
       { need: 'Feed it to an application or a script', toolId: 'excel-to-json' },
+      { need: 'The figures belong in a written report', toolId: 'excel-to-word' },
       { need: 'It is messy and I do not know where to start', toolId: 'spreadsheet-cleaner' },
       { need: 'The same rows appear more than once', toolId: 'remove-duplicate-rows' },
       { need: 'A column will not add up', toolId: 'data-type-detection' },
@@ -119,6 +123,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategoryId, CategoryContent>> 
       { need: 'Turn the deck into written notes', toolId: 'pptx-extract-text' },
       { need: 'Recover a chart or photograph from it', toolId: 'pptx-extract-images' },
       { need: 'Build a deck without PowerPoint', toolId: 'pptx-creator' },
+      { need: 'All I have is the PDF export', toolId: 'pdf-to-powerpoint' },
     ],
     notes: [
       'Charts, SmartArt, 3-D effects, transitions and animations are not reproduced by any of these tools. Those are behaviours of PowerPoint’s own renderer rather than content stored in the file, and a converter claiming to reproduce them is generally rasterising a screenshot. Ordinary slides of text, shapes, tables and images convert faithfully.',
@@ -138,6 +143,11 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategoryId, CategoryContent>> 
       { need: 'A spreadsheet to send as a fixed document', toolId: 'excel-to-pdf' },
       { need: 'Data moving between CSV and JSON', toolId: 'csv-to-json' },
       { need: 'An image in the wrong format', toolId: 'image-converter' },
+      { need: 'A .webp nothing will open', toolId: 'webp-to-jpg' },
+      { need: 'iPhone photos on a Windows machine', toolId: 'heic-to-jpg' },
+      { need: 'An image that has to be an exact size', toolId: 'resize-image' },
+      { need: 'A square picture out of one that is not', toolId: 'crop-image' },
+      { need: 'Text that came back in the wrong case', toolId: 'case-converter' },
       { need: 'A log or text file to attach as a PDF', toolId: 'txt-to-pdf' },
     ],
     notes: [
@@ -159,6 +169,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategoryId, CategoryContent>> 
       { need: 'Issue a payslip', toolId: 'salary-slip-generator' },
       { need: 'Record what a meeting decided', toolId: 'meeting-minutes-generator' },
       { need: 'Pitch a piece of work formally', toolId: 'business-proposal-generator' },
+      { need: 'Put a link on something printed', toolId: 'qr-code-generator' },
     ],
     notes: [
       'Because nothing is stored between visits, the record-keeping is yours. Save each PDF into a folder you control and name it so it sorts correctly, and keep invoice and quotation numbers in the same place you keep the documents — most tax authorities expect several years of records, and a sequence with gaps in it is a question you will eventually be asked.',

@@ -1,0 +1,154 @@
+<app-tool-shell [toolId]="toolIdInput()" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pdf']"
+      [compact]="!!result()"
+      title="Drop a PDF with tables in it"
+      hint="The page layout is measured in this tab — the file is not uploaded."
+      icon="table"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (isScan()) {
+      <p class="notice">
+        <app-icon name="alert-triangle" [size]="18" />
+        <span>
+          <strong>This PDF has no text in it.</strong>
+          Every page is an image — a scan or a photograph — so there is nothing to read positions
+          from. Recovering the table would need OCR, which this site does not do. The
+          <a routerLink="/view/pdf-viewer">PDF viewer</a> will still open it.
+        </span>
+      </p>
+    }
+
+    @if (result() && !isScan()) {
+      <div class="panel">
+        <h2 class="panel__title">How it should be read</h2>
+        <p class="panel__hint">
+          {{ usablePages().length }} of {{ result()!.pageCount }}
+          {{ result()!.pageCount === 1 ? 'page' : 'pages' }} produced rows ·
+          {{ result()!.totalRows.toLocaleString() }} rows in total.
+        </p>
+
+        <div class="checks">
+          <label class="ou-check">
+            <input type="checkbox" [checked]="firstRowIsHeader()" (change)="toggleHeader($event)" />
+            The first row holds the column names
+          </label>
+          <label class="ou-check">
+            <input type="checkbox" [checked]="coerceNumbers()" (change)="toggleNumbers($event)" />
+            Convert figures to real numbers, so they can be totalled
+          </label>
+          <label class="ou-check">
+            <input type="checkbox" [checked]="dropEmptyRows()" (change)="toggleEmptyRows($event)" />
+            Skip blank rows
+          </label>
+          <label class="ou-check">
+            <input type="checkbox" [checked]="combinePages()" (change)="toggleCombine($event)" />
+            {{
+              toCsv()
+                ? 'Put every page into one CSV'
+                : 'Put every page into one sheet, rather than one sheet per page'
+            }}
+          </label>
+        </div>
+
+        @if (toCsv()) {
+          <div class="options">
+            <label class="ou-field">
+              <span class="ou-label">Delimiter</span>
+              <select class="ou-select" [value]="delimiter()" (change)="setDelimiter($event)">
+                <option value=",">Comma  ,</option>
+                <option value=";">Semicolon  ;  — for Excel in a European locale</option>
+                <option value="&#9;">Tab</option>
+                <option value="|">Pipe  |</option>
+              </select>
+            </label>
+          </div>
+        }
+
+        @if (proseCount() > 0) {
+          <p class="warn">
+            <app-icon name="alert-triangle" [size]="16" />
+            <span>
+              {{ proseCount() }}
+              {{ proseCount() === 1 ? 'page has' : 'pages have' }}
+              no column structure — the text on
+              {{ proseCount() === 1 ? 'it' : 'them' }} runs as prose rather than a table, so
+              {{ proseCount() === 1 ? 'it is' : 'they are' }}
+              exported as a single column of lines.
+            </span>
+          </p>
+        }
+      </div>
+    }
+
+    @if (usablePages().length) {
+      <section class="preview">
+        <header class="preview__head">
+          <h2>What will be written</h2>
+          @if (usablePages().length > 1) {
+            <div class="pager">
+              @for (page of usablePages(); track page.page) {
+                <button
+                  type="button"
+                  class="ou-btn ou-btn--sm"
+                  [class.ou-btn--primary]="previewPage() === $index"
+                  (click)="setPreviewPage($index)"
+                >
+                  Page {{ page.page }}
+                </button>
+              }
+            </div>
+          }
+        </header>
+
+        @if (current(); as page) {
+          <p class="ou-subtle">
+            {{ page.rows.length.toLocaleString() }}
+            {{ page.rows.length === 1 ? 'row' : 'rows' }} ×
+            {{ page.columnCount }}
+            {{ page.columnCount === 1 ? 'column' : 'columns' }}
+            @if (page.singleColumn) {
+              · no table structure found on this page
+            }
+          </p>
+          <app-spreadsheet-grid
+            [headers]="previewHeaders()"
+            [rows]="previewRows()"
+            maxHeight="46vh"
+          />
+        }
+      </section>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy()"
+          (click)="download()"
+        >
+          <app-icon [name]="toCsv() ? 'file-text' : 'table'" [size]="17" />
+          Download {{ toCsv() ? 'CSV' : 'Excel workbook' }}
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel
+      [outputs]="outputs()"
+      [title]="toCsv() ? 'CSV ready' : 'Workbook ready'"
+      zipName="extracted-tables.zip"
+      (reset)="startOver()"
+    />
+  </div>
+</app-tool-shell>

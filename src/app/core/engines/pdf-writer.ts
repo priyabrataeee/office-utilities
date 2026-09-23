@@ -783,13 +783,13 @@ async function embedImages(
   for (const dataUrl of urls) {
     try {
       const isJpeg = /^data:image\/jpe?g/i.test(dataUrl);
+      const { convertDataUrl, dataUrlToBytes } = await import('./image.engine');
       let usable = dataUrl;
       if (!isJpeg && !/^data:image\/png/i.test(dataUrl)) {
         // pdf-lib only embeds PNG and JPEG; re-encode anything else locally.
-        const { convertDataUrl } = await import('./image.engine');
         usable = await convertDataUrl(dataUrl, 'image/png');
       }
-      const bytes = new Uint8Array(await (await fetch(usable)).arrayBuffer());
+      const bytes = dataUrlToBytes(usable);
       const image = /^data:image\/jpe?g/i.test(usable)
         ? await pdf.embedJpg(bytes)
         : await pdf.embedPng(bytes);

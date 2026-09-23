@@ -887,6 +887,138 @@ export const TOOLS: readonly ToolDefinition[] = [
     ],
   },
 
+  {
+    id: 'pdf-to-excel',
+    category: 'pdf',
+    slug: 'pdf-to-excel',
+    title: 'PDF to Excel',
+    summary: 'Recover tables from a PDF into a real spreadsheet.',
+    description:
+      'Turn the tables in a PDF back into rows and columns you can sort, total and edit, exported as a genuine .xlsx workbook with one sheet per page. Columns are found from where the text actually sits on the page, and nothing is uploaded to do it.',
+    icon: 'table',
+    keywords: [
+      'pdf to excel',
+      'pdf to xlsx',
+      'extract table from pdf',
+      'pdf table to spreadsheet',
+      'convert pdf to excel without uploading',
+    ],
+    accepts: ['.pdf'],
+    popular: true,
+    alsoIn: ['excel', 'convert'],
+    faq: [
+      {
+        q: 'How does it know where the columns are?',
+        a: 'From geometry. A PDF stores no table structure at all, so the left edge of every cell on the page is measured and the positions that recur down the page are taken as the columns. A position that appears on one row only is treated as an indent rather than a column.',
+      },
+      {
+        q: 'Will it work on a scanned document?',
+        a: 'No. A scan is a photograph of a table, with no text to position, and there is no OCR here. The tool will tell you the page has no text layer rather than hand back an empty sheet.',
+      },
+      {
+        q: 'What does it get wrong?',
+        a: 'Merged cells arrive in the first column they start in, and a cell whose text wrapped onto a second line arrives as a second row. Check the preview before you download — it shows exactly what the workbook will contain.',
+      },
+    ],
+  },
+  {
+    id: 'pdf-to-csv',
+    category: 'pdf',
+    slug: 'pdf-to-csv',
+    title: 'PDF to CSV',
+    summary: 'Export PDF tables as plain CSV for import anywhere.',
+    description:
+      'Extract the tabular content of a PDF as CSV — the format every database, spreadsheet and script will accept. Choose the delimiter, take one page or all of them, and get a file you can pipe straight into whatever needs it.',
+    icon: 'file-text',
+    keywords: [
+      'pdf to csv',
+      'pdf table to csv',
+      'export pdf data',
+      'convert pdf to csv offline',
+    ],
+    accepts: ['.pdf'],
+    alsoIn: ['excel', 'convert'],
+    faq: [
+      {
+        q: 'Why choose CSV over Excel?',
+        a: 'Because almost everything reads it. If the data is going into a database import, a script or another application rather than to a person, CSV skips a layer of format and cannot carry anything you did not intend.',
+      },
+      {
+        q: 'Can I change the delimiter?',
+        a: 'Yes — comma, semicolon, tab or pipe. Semicolon matters if the file is going into Excel on a machine with a European locale, where comma is the decimal separator.',
+      },
+      {
+        q: 'Does it produce one file per page?',
+        a: 'Your choice. Pages can be concatenated into a single CSV, which suits a table that ran over several pages, or downloaded separately when the pages hold unrelated data.',
+      },
+    ],
+  },
+  {
+    id: 'pdf-to-powerpoint',
+    category: 'pdf',
+    slug: 'pdf-to-powerpoint',
+    title: 'PDF to PowerPoint',
+    summary: 'Turn each PDF page into a slide you can present.',
+    description:
+      'Convert a PDF into a .pptx where every page becomes a full-bleed slide, with the page text optionally carried across as speaker notes. Made for the deck that came back as a PDF and now has to be presented.',
+    icon: 'file-ppt',
+    keywords: [
+      'pdf to powerpoint',
+      'pdf to pptx',
+      'pdf to slides',
+      'convert pdf to ppt free',
+    ],
+    accepts: ['.pdf'],
+    alsoIn: ['powerpoint', 'convert'],
+    faq: [
+      {
+        q: 'Will the text on the slides be editable?',
+        a: 'No, and it is worth being clear about why. Each page is rendered as an image and placed on a slide, so the slide looks exactly like the page. Rebuilding editable text boxes from a PDF would mean guessing at every position, and the result would look wrong in a way an image never does.',
+      },
+      {
+        q: 'What are the speaker notes for?',
+        a: 'The page\'s text layer is copied into the notes of its slide, so the words are still searchable and still copyable even though the slide itself is an image. Turn it off if the deck is going to be shared.',
+      },
+      {
+        q: 'What size are the slides?',
+        a: 'Either matched to the PDF\'s own page shape, so nothing is cropped or letterboxed, or forced to 16:9 or 4:3 when the deck has to match a template.',
+      },
+    ],
+  },
+  {
+    id: 'sign-pdf',
+    category: 'pdf',
+    slug: 'sign-pdf',
+    title: 'Sign PDF',
+    summary: 'Draw, type or upload a signature and place it on the page.',
+    description:
+      'Add a signature to a PDF without printing it. Draw one with a mouse, trackpad or finger, type one, or bring an image of your own, then place it on any page and download the signed file. The document never leaves your device — which is the whole point when the thing being signed is a contract.',
+    icon: 'pencil',
+    keywords: [
+      'sign pdf',
+      'esign pdf',
+      'add signature to pdf',
+      'sign document online free',
+      'sign pdf without uploading',
+    ],
+    accepts: ['.pdf'],
+    popular: true,
+    faq: [
+      {
+        q: 'Is this a legally binding electronic signature?',
+        a: 'It is an image of a signature placed on a page, which is what most people mean by signing a PDF and what most everyday agreements accept. It is not a cryptographic digital signature backed by a certificate, so it does not prove who applied it or detect later changes. Where that matters — deeds, some regulated filings — use a qualified provider.',
+      },
+      {
+        q: 'Where does my signature go?',
+        a: 'Onto the page, and nowhere else. It is drawn in this tab, stamped into the PDF in this tab, and discarded when you close it. Nothing is stored and nothing is sent.',
+      },
+      {
+        q: 'Can I add the date as well?',
+        a: 'Yes. A dated line can be placed under the signature, and you can set the date rather than being given today\'s automatically.',
+      },
+    ],
+  },
+
   /* ----------------------------------------------------------------
      Word tools
      ---------------------------------------------------------------- */
@@ -1508,6 +1640,40 @@ export const TOOLS: readonly ToolDefinition[] = [
     ],
   },
 
+  {
+    id: 'excel-to-word',
+    category: 'excel',
+    slug: 'excel-to-word',
+    title: 'Excel to Word',
+    summary: 'Turn spreadsheet sheets into formatted Word tables.',
+    description:
+      'Convert an .xlsx or .csv into a .docx where each sheet becomes a real Word table with a heading above it — editable, styleable and ready to paste into a report, rather than a screenshot of a spreadsheet.',
+    icon: 'file-word',
+    keywords: [
+      'excel to word',
+      'xlsx to docx',
+      'spreadsheet to word table',
+      'csv to word',
+      'convert excel to word document',
+    ],
+    accepts: ['.xlsx', '.xls', '.xlsm', '.csv'],
+    alsoIn: ['word', 'convert'],
+    faq: [
+      {
+        q: 'Will it keep my cell colours and fonts?',
+        a: 'No. What crosses over is the data and the table structure, using Word\'s own table styling so the result matches the document it is going into. Carrying spreadsheet formatting across usually produces a table that looks foreign in a report.',
+      },
+      {
+        q: 'What happens to a very wide sheet?',
+        a: 'It is flagged before export, and you can switch the page to landscape or drop columns you do not need. A forty-column sheet cannot be made to fit a portrait page and pretending otherwise would just produce unreadable output.',
+      },
+      {
+        q: 'Are formulas converted?',
+        a: 'Their results are. Word has no formula engine for table cells, so a cell containing =SUM(B2:B9) arrives as the number it evaluated to — which is almost always what a report needs.',
+      },
+    ],
+  },
+
   /* ----------------------------------------------------------------
      PowerPoint tools
      ---------------------------------------------------------------- */
@@ -2103,6 +2269,201 @@ export const TOOLS: readonly ToolDefinition[] = [
     ],
   },
 
+  {
+    id: 'webp-to-jpg',
+    category: 'convert',
+    slug: 'webp-to-jpg',
+    title: 'WebP to JPG',
+    summary: 'Convert WebP images into JPEGs anything will open.',
+    description:
+      'Save a WebP as a JPEG so it can be attached, printed, uploaded to a form or opened by software that still does not read WebP. Transparency is flattened onto a background colour you choose, and quality is yours to set.',
+    icon: 'image',
+    keywords: [
+      'webp to jpg',
+      'webp to jpeg',
+      'convert webp',
+      'open webp file',
+      'webp converter free',
+    ],
+    accepts: ['.webp'],
+    popular: true,
+    faq: [
+      {
+        q: 'Why will nothing open my WebP?',
+        a: 'Because it is a web format. Every browser reads it, which is why images saved from the web arrive as WebP, but plenty of desktop software, older phones and upload forms still do not — so the file that displayed perfectly in a tab is rejected everywhere else.',
+      },
+      {
+        q: 'What happens to transparency?',
+        a: 'JPEG cannot store it, so transparent areas are filled with a background colour — white by default, changeable here. Without a fill those areas would come out black, which is what most converters silently do.',
+      },
+      {
+        q: 'Does converting lose quality?',
+        a: 'A little, unavoidably: both formats are lossy, so re-encoding discards a further slice of detail. At the default quality it is not visible. Choose PNG instead if the image will be edited again afterwards.',
+      },
+    ],
+  },
+  {
+    id: 'webp-to-png',
+    category: 'convert',
+    slug: 'webp-to-png',
+    title: 'WebP to PNG',
+    summary: 'Convert WebP to PNG and keep the transparency.',
+    description:
+      'Turn a WebP into a lossless PNG with its transparent background intact — the right conversion for logos, icons, screenshots and anything that will be edited or placed over a coloured background.',
+    icon: 'image',
+    keywords: [
+      'webp to png',
+      'convert webp to png',
+      'webp transparent background',
+      'save webp as png',
+    ],
+    accepts: ['.webp'],
+    faq: [
+      {
+        q: 'PNG or JPG — which should I pick?',
+        a: 'PNG if the image has transparency, text, sharp edges or will be edited again. JPG if it is a photograph and file size matters. A logo saved as JPG picks up visible fringing around its edges.',
+      },
+      {
+        q: 'Will the file get bigger?',
+        a: 'Usually, yes. PNG is lossless, so it stores everything the WebP was compressing away. That is the trade you are making for an editable, transparent image.',
+      },
+      {
+        q: 'Can I convert a batch at once?',
+        a: 'Yes. Drop in as many as you like; each is converted by your own browser and can be downloaded individually or as a zip.',
+      },
+    ],
+  },
+  {
+    id: 'heic-to-jpg',
+    category: 'convert',
+    slug: 'heic-to-jpg',
+    title: 'HEIC to JPG',
+    summary: 'Convert iPhone photos to JPEG, on your own device.',
+    description:
+      'Convert the .heic photos an iPhone produces into ordinary JPEGs that Windows, older software and upload forms will accept. The HEIC decoder runs as WebAssembly inside this tab, so your camera roll is never sent anywhere.',
+    icon: 'image',
+    keywords: [
+      'heic to jpg',
+      'heic to jpeg',
+      'convert iphone photos',
+      'open heic on windows',
+      'heic converter no upload',
+    ],
+    accepts: ['.heic', '.heif'],
+    popular: true,
+    faq: [
+      {
+        q: 'Why can nothing on my PC open a HEIC?',
+        a: 'Because no browser and little desktop software ships a HEIC decoder — the format is patent-encumbered. An iPhone and a Mac decode it outside the browser, which is why the same file opens on one machine and not another.',
+      },
+      {
+        q: 'Why is this tool slower than the others?',
+        a: 'Because it has to download a decoder first — about three megabytes of WebAssembly, once per visit. There is no smaller honest option: the alternative is uploading your photographs to somebody\'s server, which is the thing this site exists not to do.',
+      },
+      {
+        q: 'Is the photo\'s date and location kept?',
+        a: 'No. Re-encoding through the browser\'s canvas drops the EXIF block, so the JPEG carries no timestamp, camera or GPS coordinates. For sharing that is usually an improvement; if you need the metadata, keep the original.',
+      },
+    ],
+  },
+  {
+    id: 'resize-image',
+    category: 'convert',
+    slug: 'resize-image',
+    title: 'Resize Image',
+    summary: 'Resize to exact pixels, a percentage or a size limit.',
+    description:
+      'Resize one image or a hundred to an exact width and height, a percentage of the original, or whatever fits under a maximum dimension — with the aspect ratio locked by default so nothing comes out stretched.',
+    icon: 'maximize',
+    keywords: [
+      'resize image',
+      'image resizer',
+      'resize photo online',
+      'change image dimensions',
+      'bulk resize images',
+    ],
+    accepts: ['.png', '.jpg', '.jpeg', '.webp', '.avif', '.bmp', '.gif', '.heic'],
+    popular: true,
+    faq: [
+      {
+        q: 'Can I resize a batch to the same size?',
+        a: 'Yes — the settings apply to every file you drop in, which is the usual reason for needing this at all: a folder of photographs that must all fit the same box.',
+      },
+      {
+        q: 'Will enlarging an image improve it?',
+        a: 'No. Enlarging invents pixels from the ones already there; the result is bigger and softer, never more detailed. Resizing down is lossless in the ways that matter.',
+      },
+      {
+        q: 'What stops images coming out stretched?',
+        a: 'The aspect ratio is locked by default, so setting a width computes the matching height. Unlock it only when a format genuinely demands exact dimensions and you accept the distortion.',
+      },
+    ],
+  },
+  {
+    id: 'crop-image',
+    category: 'convert',
+    slug: 'crop-image',
+    title: 'Crop Image',
+    summary: 'Crop to a shape, a ratio or exact pixel bounds.',
+    description:
+      'Drag a crop box over the image, snap it to a common aspect ratio, or type exact pixel bounds — then export the result as PNG, JPEG or WebP. Made for profile pictures, banner images and getting something unwanted out of the frame.',
+    icon: 'scissors',
+    keywords: [
+      'crop image',
+      'crop photo online',
+      'square crop',
+      'crop picture to size',
+      'image cropper free',
+    ],
+    accepts: ['.png', '.jpg', '.jpeg', '.webp', '.avif', '.bmp', '.gif', '.heic'],
+    faq: [
+      {
+        q: 'What ratios are built in?',
+        a: 'Square for avatars, 4:3 and 3:2 for photographs, 16:9 for banners and video thumbnails, and free-form for everything else. The box snaps to the ratio while you drag it.',
+      },
+      {
+        q: 'Is the crop applied to the real image or the preview?',
+        a: 'The real one. The preview is scaled to fit your screen, and the box coordinates are scaled back up to the original pixels before the crop runs, so you never lose resolution to the size of your monitor.',
+      },
+      {
+        q: 'Can I crop to an exact pixel size?',
+        a: 'Yes. Type the bounds directly when a platform has told you precisely what it wants — and the box on the preview moves to match.',
+      },
+    ],
+  },
+  {
+    id: 'case-converter',
+    category: 'convert',
+    slug: 'case-converter',
+    title: 'Case Converter',
+    summary: 'Change text between twelve capitalisation styles.',
+    description:
+      'Convert text to UPPER CASE, lower case, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case and more, as you type. Useful for headings pasted in the wrong case and for turning a label into an identifier.',
+    icon: 'type',
+    keywords: [
+      'case converter',
+      'uppercase to lowercase',
+      'title case converter',
+      'text case changer',
+      'camelcase converter',
+    ],
+    accepts: ['.txt', '.md', '.csv'],
+    faq: [
+      {
+        q: 'Is Title Case just capitalising every word?',
+        a: 'Not here. Short articles, conjunctions and prepositions — a, of, the, and, in — are left lowercase unless they open or close the title, which is what style guides actually ask for. Capitalising every word is what a naive converter does.',
+      },
+      {
+        q: 'Does Sentence case understand abbreviations?',
+        a: 'Partly. It capitalises after a full stop, question mark or exclamation mark, and it leaves the standalone pronoun "I" alone. It will lowercase an acronym in the middle of a sentence, so check anything technical.',
+      },
+      {
+        q: 'Why are camelCase and snake_case here?',
+        a: 'Because the everyday version of this job is turning "Customer Order Ref" into an identifier. All the programming conventions split on the same word boundaries, so one input can produce any of them.',
+      },
+    ],
+  },
+
   /* ----------------------------------------------------------------
      Generators
      ---------------------------------------------------------------- */
@@ -2384,6 +2745,40 @@ export const TOOLS: readonly ToolDefinition[] = [
         q: 'Can I reuse it for other applications?',
         a:
           'Yes, and you should adapt rather than resend. The heading and structure stay; the evidence should change to match each posting.',
+      },
+    ],
+  },
+
+  {
+    id: 'qr-code-generator',
+    category: 'generate',
+    slug: 'qr-code-generator',
+    title: 'QR Code Generator',
+    summary: 'Make a QR code for a link, Wi-Fi network or contact card.',
+    description:
+      'Generate a QR code for a URL, plain text, a Wi-Fi network, an email or a contact card, and download it as a PNG or a scalable SVG. It is encoded by your own browser, so the code is not registered anywhere, cannot be tracked, and will never expire.',
+    icon: 'grid',
+    keywords: [
+      'qr code generator',
+      'create qr code',
+      'qr code for wifi',
+      'free qr code no expiry',
+      'qr code without tracking',
+    ],
+    accepts: [],
+    popular: true,
+    faq: [
+      {
+        q: 'Will this QR code stop working later?',
+        a: 'No. Many free generators produce a code pointing at their own redirect, so it dies when the account lapses and counts every scan in the meantime. The codes here encode your destination directly — there is nothing in the middle to fail or to watch.',
+      },
+      {
+        q: 'What is error correction, and which level should I use?',
+        a: 'Redundancy that lets a damaged or partly obscured code still scan. Low keeps the pattern simplest; High survives roughly thirty per cent damage and is what to use for anything printed, put on a sticker or given a logo in the middle.',
+      },
+      {
+        q: 'PNG or SVG?',
+        a: 'SVG for anything going to print or into a design — it is vector, so it stays sharp at any size. PNG for a screen, a slide or a system that will not accept SVG.',
       },
     ],
   },

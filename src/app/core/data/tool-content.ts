@@ -1747,4 +1747,228 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Recording a fingerprint of a document as evidence it has not been altered since.',
     ],
   },
+  /* ------------------------------------------- PDF to data and to slides */
+
+  'pdf-to-excel': {
+    about: [
+      'The table you need is right there on the page, and selecting it gives you a wall of run-together text. That is not a failure of the copy command — it is what a PDF is. The file records which glyph sits at which coordinate; the rows and columns were a property of whatever produced it, and were discarded on the way out.',
+      'So the grid has to be worked out again from the only evidence left, which is where the text sits. That is inference rather than conversion, and it is why this tool shows you the result before it offers you a file.',
+    ],
+    howItWorks: [
+      'PDF.js reports every run of text on a page with its position, size and width. Runs sharing a baseline are assembled into a row, and a horizontal gap wider than a word space splits that row into cells.',
+      'Columns are then found across the whole page rather than row by row, because a single row cannot tell you anything: two figures with a space between them could be two columns or one sentence. Every cell’s left edge is treated as a vote, edges within a few points of each other are counted as the same position, and a position only becomes a column once enough separate rows agree on it. An indent that occurs once is an indent; one that recurs forty times down the page is a column.',
+      'Figures are turned into real numbers where that is unambiguous — thousands separators removed, a leading currency symbol stripped, accounting parentheses read as a negative. A percentage keeps its sign rather than quietly becoming a bare number, and anything that does not parse cleanly is left as text. Guessing wrong about a figure corrupts it silently, which is worse than leaving a column for you to format.',
+      'Three things it cannot do, all for the same reason. Merged cells have one position, so a merged value lands in the first column it starts in. A cell whose text wrapped arrives as a second row, because visually that is what it is. And a scanned page has no text at all, so there is nothing to measure — the tool says so rather than producing an empty sheet.',
+    ],
+    useCases: [
+      'Getting a bank or credit-card statement into a spreadsheet so the year can be totalled, when the bank only offers PDF.',
+      'Recovering the figures from a report whose source workbook nobody kept.',
+      'Pulling a price list out of a supplier’s catalogue rather than retyping two hundred rows.',
+      'Extracting a results table from a published paper to check the arithmetic.',
+    ],
+  },
+
+  'pdf-to-csv': {
+    about: [
+      'CSV is the format that survives everything. No application owns it, no version of it went obsolete, and every database, statistics package and scripting language on earth will read it without being asked twice.',
+      'This is the same table recovery as the Excel export, ending in a plain text file instead of a workbook — which is what you want when the destination is a program rather than a person.',
+    ],
+    howItWorks: [
+      'The text positions on each page are measured and clustered into a grid, then written out with the separator you pick. Papa Parse handles the quoting, so a cell containing a comma, a quotation mark or a line break is escaped correctly instead of silently breaking the row count.',
+      'The delimiter choice is not cosmetic. In locales where the comma is the decimal separator, Excel expects semicolons and will pile a comma-separated file into a single column. Tab-separated output is the safest thing to paste directly into a spreadsheet.',
+      'Pages can be written as one file or as one file each. A table that ran across three pages is one table and belongs in one file; three unrelated tables do not, and stacking them would produce a CSV whose column count changes partway down — valid to a parser, meaningless to a reader.',
+    ],
+    useCases: [
+      'Feeding figures from a PDF report into a database import or a data-loading script.',
+      'Getting numbers into R, pandas or a statistics package that reads CSV and nothing else.',
+      'Producing a diff-able text version of a table so two revisions of a document can be compared.',
+      'Moving a table into a system whose import step accepts CSV only.',
+    ],
+  },
+
+  'pdf-to-powerpoint': {
+    about: [
+      'A deck goes out as a PDF because that is what travels safely, and then somebody has to stand up and present it. The original file is with the person who made it, or on a machine nobody has access to any more, or was never shared at all.',
+      'This rebuilds a presentation around the pages you have: each page becomes a slide that looks exactly like the page, in a real .pptx that PowerPoint, Keynote and Google Slides all open.',
+    ],
+    howItWorks: [
+      'Every page is rendered by PDF.js onto a canvas at the resolution you choose, encoded as a JPEG, and placed onto a slide by pptxgenjs. The canvas is released between pages, so a long document does not accumulate every image it has drawn in memory.',
+      'The slide can take the PDF page’s own proportions, which means nothing is cropped and nothing is letterboxed — a custom slide size is defined for exactly that purpose. Force 16:9 or 4:3 instead when the deck has to sit inside a template, and the page is fitted within the slide rather than stretched to it.',
+      'The text is not rebuilt as editable text boxes, and that is a decision rather than a shortcoming. A PDF holds positioned glyphs, not paragraphs; reassembling them into boxes means guessing at every line break, every font substitution and every alignment, and a deck that is subtly wrong in a hundred places is worse than one that is faithfully an image. What the text layer is good for is the speaker notes, where it goes instead — so the words stay searchable and copyable even though the slide is a picture.',
+    ],
+    useCases: [
+      'Presenting a deck that only ever came back as a PDF export.',
+      'Turning a printed report into slides for a review meeting without rebuilding it.',
+      'Putting a set of scanned pages into a deck so they can be walked through page by page.',
+      'Getting a PDF into a format a conference organiser will accept when they insist on PowerPoint.',
+    ],
+  },
+
+  'sign-pdf': {
+    about: [
+      'Signing a document still usually means printing it, signing it, scanning it and hoping the scan is legible — a round trip through two machines to add one mark to one page.',
+      'Draw the signature with a trackpad or a finger, type it, or use an image you already have, put it where it belongs, and download the signed file. The contract stays on your machine throughout, which matters rather more for a contract than for a holiday photograph.',
+    ],
+    howItWorks: [
+      'A drawn signature is captured on a canvas at your display’s real pixel density, then cropped to its own ink before it is used — otherwise the blank space around the mark travels with it and the box on screen would sit nowhere near the visible signature. The trimmed mark is embedded as a transparent PNG and stamped onto the page with pdf-lib.',
+      'Placement is worked out in the page as you see it and converted back into PDF coordinates on the way out. Those are not the same thing: PDF measures from the bottom-left corner upwards, and a page can additionally carry a rotation entry that turns it a quarter or a half turn when it is displayed. Each of those cases is handled explicitly, and the signature is counter-rotated to stand upright, so a sideways scanned page is signed the way it looks rather than the way it is stored.',
+      'What this produces is an image of a signature on a page. That is what most agreements mean by a signed PDF and what most counterparties accept. It is not a cryptographic digital signature: there is no certificate, so the file does not carry proof of who applied the mark and will not report later modification. Where that matters — a deed, certain regulated filings — a qualified trust-service provider is the right tool and this is not.',
+    ],
+    useCases: [
+      'Returning a signed rental agreement, NDA or employment contract without owning a printer.',
+      'Signing a document containing salary or bank details, where an upload to a converter site is precisely the wrong move.',
+      'Adding initials to several pages of an agreement in one sitting.',
+      'Putting a countersignature on a form that arrived already signed by the other side.',
+    ],
+  },
+
+  'excel-to-word': {
+    about: [
+      'A spreadsheet is for working in; a report is for reading. The figures usually have to make that journey, and the shortcut — screenshotting the sheet and pasting the picture — produces a table nobody can search, copy from, or read on a phone.',
+      'This writes the data into a real Word table: proper rows and cells, editable afterwards, styled by Word rather than by the spreadsheet it came from.',
+    ],
+    howItWorks: [
+      'SheetJS reads the workbook, including .xls and .xlsm, and each selected sheet becomes a table block in the shared document model that also feeds the PDF and HTML writers. The docx library then renders it using Word’s own table styling and a repeating header row, so the column names reappear at the top of every page the table runs over.',
+      'Formulas arrive as their computed results. Word has no formula engine for table cells, so there is nothing for =SUM(B2:B9) to be other than the number it evaluated to — which is what a report wants anyway. Dates are written the way your locale writes dates rather than as an ISO timestamp, and numbers keep their grouping.',
+      'Cell fill colours, fonts and conditional formatting are deliberately dropped. Spreadsheet formatting is a working aid — highlighted outliers, colour-coded statuses — and carrying it into a report produces a table that looks imported. What is worth knowing before you start is the column count: past eight or so, no amount of styling makes a table fit a portrait page, and the tool says so and offers landscape rather than silently producing something unreadable.',
+    ],
+    useCases: [
+      'Dropping a results table into a report, a proposal or a dissertation.',
+      'Turning a project tracker into a status document for people who do not open spreadsheets.',
+      'Producing a printable price list from a working sheet.',
+      'Getting figures into a Word template a client or regulator insists on.',
+    ],
+  },
+
+  /* ----------------------------------------------------- Image utilities */
+
+  'webp-to-jpg': {
+    about: [
+      'WebP exists because the web needed smaller images, and it succeeded — which is why the picture you saved from a page is a .webp and why nothing on your computer will open it. The format won the argument in browsers and lost it everywhere else.',
+      'Converting to JPEG trades a little file size for a file that every phone, every printer, every upload form and every piece of desktop software from the last thirty years will accept.',
+    ],
+    howItWorks: [
+      'The image is decoded by the browser’s own WebP decoder and re-encoded as JPEG through a canvas, at a quality you control. No third-party codec is involved, which is why it works offline and why nothing is uploaded.',
+      'JPEG has no alpha channel, so transparency has to become something. Left alone, browsers composite it onto black, which is why images converted elsewhere often come back with an unexpected dark background. Here it is filled with a colour you pick, white by default.',
+      'Both formats are lossy, so re-encoding discards a further slice of detail — unavoidable, and at the default quality not visible. If the image is going to be edited afterwards, convert to PNG instead: the file is larger but nothing further is lost, and repeated JPEG saves do compound.',
+    ],
+    useCases: [
+      'Attaching an image to an email client that refuses to preview WebP.',
+      'Uploading to a form, a marketplace listing or a government portal that accepts JPEG only.',
+      'Getting an image into an older photo editor or a print workflow.',
+      'Sending a picture to somebody whose phone displays a grey box instead.',
+    ],
+  },
+
+  'webp-to-png': {
+    about: [
+      'The other direction out of WebP, and the right one when the image is not a photograph. A logo, an icon, a screenshot, a diagram — anything with flat colour, sharp edges or text — belongs in a lossless format.',
+      'PNG also keeps the transparent background, which JPEG cannot, so a logo stays placeable over any colour instead of arriving in a white box.',
+    ],
+    howItWorks: [
+      'The browser decodes the WebP and re-encodes it as PNG with its alpha channel intact. PNG compression is lossless, so every pixel that survived the original WebP encoding survives this step exactly.',
+      'Expect the file to get larger, often considerably. WebP was throwing information away to be small; PNG stores what is left in full. That is the trade you are making, and it is the right one when the image will be edited, printed at size, or placed on a coloured background.',
+      'Batches are converted one at a time by your own machine, which is why speed depends on your device and why there is no queue. Results can be taken individually or as a zip.',
+    ],
+    useCases: [
+      'Getting a logo out of a website in a form a design tool will accept.',
+      'Preparing a screenshot for documentation, where JPEG artefacts around text are obvious.',
+      'Keeping a transparent background that would otherwise be flattened.',
+      'Producing a lossless master before any further editing.',
+    ],
+  },
+
+  'heic-to-jpg': {
+    about: [
+      'An iPhone photographs in HEIC because it is roughly half the size of the equivalent JPEG. Then the file reaches a Windows machine, a web form or a colleague, and nothing will open it — the format is patent-encumbered, so no browser ships a decoder and most software still does not.',
+      'This decodes it here, on your own device, and hands back an ordinary JPEG. Which is the point: your camera roll is the last thing that should be going to somebody’s server for a format conversion.',
+    ],
+    howItWorks: [
+      'HEIC is decoded by libheif compiled to WebAssembly, loaded only when a HEIC file actually appears. It is around three megabytes, fetched once per visit, and there is no smaller honest option — a browser genuinely cannot do this by itself, and the alternative on offer elsewhere is an upload.',
+      'Detection is by the file’s own bytes rather than its name. HEIC and HEIF are ISO base-media containers, identifiable by the brand recorded just after the file type marker, so a photograph that arrived renamed to .jpg is still recognised and a genuine JPEG named .heic is not mangled.',
+      'One consequence worth knowing: re-encoding through a canvas drops the EXIF block, so the JPEG carries no timestamp, camera model or GPS position. For anything you are about to share that is an improvement rather than a loss — but it is a real change, and if you need the metadata, keep the original alongside.',
+      'Safari can display HEIC without any of this, because macOS and iOS decode it outside the browser. Everywhere else, the decoder is the only way, which is why this one tool is slower than every other on the site.',
+    ],
+    useCases: [
+      'Getting iPhone photographs onto a Windows PC in a form Explorer and Paint will open.',
+      'Uploading a photo to a job application, an insurance claim or a passport form that rejects HEIC.',
+      'Sending holiday pictures to relatives whose devices show nothing at all.',
+      'Preparing phone photographs for a print service or a photo book.',
+    ],
+  },
+
+  'resize-image': {
+    about: [
+      'Almost every platform has a size it wants and will not say so until you have already tried. A profile picture that must be square and under a megabyte, a header that must be exactly 1500 pixels wide, a document upload that rejects anything over 2000.',
+      'Set the dimensions once and every image in the batch comes out at them — by exact pixels, by percentage, or by capping the longest edge so mixed portrait and landscape shots all fit the same box.',
+    ],
+    howItWorks: [
+      'Resizing goes through a canvas with high-quality smoothing enabled, which is the browser’s own bicubic-class resampler rather than a naive pixel drop. The format is left alone by default, because changing it was not what you asked for — but it can be changed in the same pass when a platform wants something specific.',
+      'The aspect ratio is locked unless you unlock it, so setting a width computes the height. Unlocked, you get exactly the pixels you typed and the image is distorted to fit them, which is occasionally what a specification demands and never what looks right.',
+      'Reducing an image is close to free in quality terms; enlarging is not. There is no detail in the file that was not captured, so scaling up interpolates between the pixels that exist and produces something larger and softer. Nothing here can change that, and a tool claiming otherwise is either guessing or running a model somewhere else.',
+    ],
+    useCases: [
+      'Bringing a folder of photographs under an email or upload size limit in one pass.',
+      'Producing the exact pixel dimensions a marketplace, job board or CMS insists on.',
+      'Shrinking phone photographs before putting them into a document, where full resolution only bloats the file.',
+      'Standardising a mixed set of images so they sit consistently in a gallery or a grid.',
+    ],
+  },
+
+  'crop-image': {
+    about: [
+      'Cropping is the one edit almost every image needs and the one that is hardest to do casually — the operating system’s viewer wants to save over the original, and a full editor is a long way to go to remove a parked car from the corner of a photograph.',
+      'Drag a box, snap it to a ratio if a platform demands one, and take the result. The original is never touched, because it never leaves your disk.',
+    ],
+    howItWorks: [
+      'The crop box is tracked in the source image’s own pixel coordinates rather than in the size the preview happens to be drawn at, so the cut is made against the full-resolution image and the result does not depend on the size of your screen. The same coordinates appear in the numeric fields, which is how an exact pixel crop is possible at all.',
+      'Ratio presets constrain the box as it is dragged, resizing from whichever corner is opposite the handle you grabbed — square for avatars, 4:3 and 3:2 for photographs, 16:9 for banners and thumbnails, portrait variants for phone-first layouts. Free-form leaves it alone.',
+      'Output can be PNG, JPEG or WebP. Choosing JPEG flattens transparency onto a colour you pick rather than onto black, which is the default behaviour that surprises people.',
+    ],
+    useCases: [
+      'Making a square profile picture from a photograph that is not square.',
+      'Cutting a banner to the exact ratio a site specifies.',
+      'Removing something from the edge of a screenshot before sharing it.',
+      'Straightening up a photographed document by trimming the desk out of the frame.',
+    ],
+  },
+
+  /* --------------------------------------------------------- Text and QR */
+
+  'case-converter': {
+    about: [
+      'Text arrives in the wrong case constantly — a heading pasted in from a spreadsheet that shouts, a column exported in block capitals, a label that has to become a variable name.',
+      'Twelve styles, applied as you type, on text that stays in your browser. The output can be pushed back into the input, so conversions can be chained when one pass is not enough.',
+    ],
+    howItWorks: [
+      'Title Case follows the convention publishers actually use rather than capitalising indiscriminately: short articles, conjunctions and prepositions stay lowercase unless they open or close the line or follow a colon. "The Cost of a Good Name" is a title; "The Cost Of A Good Name" is the thing a naive converter produces.',
+      'Sentence case capitalises after a full stop, a question mark, an exclamation mark or a line break, and restores the standalone pronoun "I", which is the one omission a reader spots immediately. It will lowercase an acronym mid-sentence — distinguishing "US" from "us" needs to understand the sentence, and pretending otherwise would corrupt text silently.',
+      'The programming styles all split on the same boundaries: existing separators, plus the lowercase-to-uppercase transition inside an identifier that is already camelCase. That is what lets "customerOrderRef", "Customer Order Ref" and "customer-order-ref" all convert cleanly into each other. Line structure is preserved throughout, so a list stays a list.',
+    ],
+    useCases: [
+      'Fixing a heading or a name field that came back in block capitals.',
+      'Turning a column of labels into database or API identifiers.',
+      'Applying a house style to titles across a document.',
+      'Normalising inconsistently capitalised data before importing it.',
+    ],
+  },
+
+  'qr-code-generator': {
+    about: [
+      'A QR code is a link you can point a camera at, and generating one should be a five-second job. It usually is not: the free generator wants an account, or hands back a code that runs through its own redirect so it can count the scans and switch the code off when the trial ends.',
+      'These codes contain your destination and nothing else. Nothing is registered, nothing counts the scans, and there is nothing in the middle that can stop working.',
+    ],
+    howItWorks: [
+      'Encoding runs locally and produces both a PNG at whatever size you ask for and an SVG, which is vector and therefore sharp at any size — the one to use for anything going to print. Colours, the size and the quiet border are all adjustable, and the exact payload being encoded is shown on the page, because a code you cannot read is a thing you are trusting blindly.',
+      'Error correction adds redundancy: at the highest level roughly thirty per cent of the pattern can be damaged, obscured or covered by a logo and the code still reads. It costs pattern density, so use Low for a clean screen and High for a sticker, a poster, or anything that will be handled.',
+      'Beyond a plain link, the standard payload formats are here: a Wi-Fi network a phone can join by pointing at the code, a mailto with the subject and body prefilled, a dialling or text-message link, and a vCard contact. The Wi-Fi one deserves a warning that most generators leave out — the password is written into the code in the clear, because that is how the format works, so anyone who can photograph the code can read it.',
+      'The trade for having no redirect in the middle is that a printed code cannot be repointed later. If the destination might move, encode a URL you control and redirect from there — the same result, without handing the code itself to a third party.',
+    ],
+    useCases: [
+      'Putting a menu, a price list or a booking page on a printed card or a table tent.',
+      'Letting guests onto the Wi-Fi without reading a twenty-character password aloud.',
+      'Adding contact details to a business card, a conference badge or a slide.',
+      'Linking a physical notice — a poster, a parcel, a piece of equipment — to a page about it.',
+    ],
+  },
 };

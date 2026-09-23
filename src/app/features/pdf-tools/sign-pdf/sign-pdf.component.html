@@ -1,0 +1,231 @@
+<app-tool-shell toolId="sign-pdf" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.pdf']"
+      [compact]="pageCount() > 0"
+      title="Drop the PDF you need to sign"
+      hint="It is opened here and signed here. Nothing is uploaded."
+      icon="pencil"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (pageCount()) {
+      <div class="layout">
+        <!-- ---------------------------------------------------- signature -->
+        <div class="panel">
+          <h2 class="panel__title">Your signature</h2>
+
+          <div class="tabs" role="tablist">
+            <button
+              type="button"
+              class="ou-btn ou-btn--sm"
+              [class.ou-btn--primary]="mode() === 'draw'"
+              (click)="setMode('draw')"
+            >
+              <app-icon name="pencil" [size]="14" />
+              Draw
+            </button>
+            <button
+              type="button"
+              class="ou-btn ou-btn--sm"
+              [class.ou-btn--primary]="mode() === 'type'"
+              (click)="setMode('type')"
+            >
+              <app-icon name="type" [size]="14" />
+              Type
+            </button>
+            <button
+              type="button"
+              class="ou-btn ou-btn--sm"
+              [class.ou-btn--primary]="mode() === 'upload'"
+              (click)="setMode('upload')"
+            >
+              <app-icon name="upload" [size]="14" />
+              Upload
+            </button>
+          </div>
+
+          @if (mode() === 'draw') {
+            <canvas
+              #pad
+              class="pad"
+              (pointerdown)="startStroke($event)"
+              (pointermove)="continueStroke($event)"
+              (pointerup)="endStroke()"
+              (pointercancel)="endStroke()"
+            ></canvas>
+            <div class="pad__row">
+              <span class="ou-subtle">
+                {{ hasInk() ? 'Looks good — place it on the page.' : 'Sign with a mouse, trackpad or finger.' }}
+              </span>
+              <button type="button" class="ou-btn ou-btn--sm" (click)="clearPad()">
+                <app-icon name="eraser" [size]="14" />
+                Clear
+              </button>
+            </div>
+          } @else if (mode() === 'type') {
+            <label class="ou-field">
+              <span class="ou-label">Your name</span>
+              <input
+                type="text"
+                class="ou-input"
+                autocomplete="off"
+                placeholder="e.g. Alex Whitfield"
+                [value]="typedName()"
+                (input)="setTypedName($event)"
+              />
+            </label>
+            @if (signature(); as mark) {
+              <div class="typed">
+                <img [src]="mark" alt="Typed signature" />
+              </div>
+            }
+          } @else {
+            <app-file-drop-zone
+              [accepts]="['.png', '.jpg', '.jpeg', '.webp', '.heic']"
+              [compact]="true"
+              title="Drop an image of your signature"
+              hint="A PNG with a transparent background gives the cleanest result."
+              icon="image"
+              (filesChange)="onSignatureImage($event)"
+            />
+          }
+
+          @if (mode() !== 'upload') {
+            <label class="ou-field ink">
+              <span class="ou-label">Ink colour</span>
+              <input
+                type="color"
+                class="ou-input color"
+                [value]="inkColor()"
+                (input)="setInk($event)"
+              />
+            </label>
+          }
+
+          <hr class="rule" />
+
+          <h2 class="panel__title">Placement</h2>
+          <label class="ou-field">
+            <span class="ou-label">Size — {{ (placement().width * 100).toFixed(0) }}% of the page width</span>
+            <input
+              type="range"
+              class="ou-range"
+              min="6"
+              max="60"
+              step="1"
+              [value]="placement().width * 100"
+              (input)="setWidth($event)"
+            />
+          </label>
+
+          <label class="ou-check">
+            <input type="checkbox" [checked]="includeDate()" (change)="toggleDate($event)" />
+            Add a dated line above the signature
+          </label>
+
+          @if (includeDate()) {
+            <label class="ou-field">
+              <span class="ou-label">Date</span>
+              <input
+                type="text"
+                class="ou-input"
+                [value]="dateText()"
+                (input)="setDate($event)"
+              />
+            </label>
+          }
+
+          <p class="hint">
+            This places a picture of your signature on the page — which is what most agreements
+            accept. It is not a certificate-backed digital signature, so it does not prove who
+            applied it.
+          </p>
+        </div>
+
+        <!-- --------------------------------------------------------- page -->
+        <div class="page">
+          <div class="page__bar">
+            <button
+              type="button"
+              class="ou-btn ou-btn--sm"
+              [disabled]="pageIndex() <= 1"
+              (click)="goToPage(-1)"
+            >
+              <app-icon name="chevron-left" [size]="14" />
+              Previous
+            </button>
+            <span class="ou-subtle">Page {{ pageIndex() }} of {{ pageCount() }}</span>
+            <button
+              type="button"
+              class="ou-btn ou-btn--sm"
+              [disabled]="pageIndex() >= pageCount()"
+              (click)="goToPage(1)"
+            >
+              Next
+              <app-icon name="chevron-right" [size]="14" />
+            </button>
+          </div>
+
+          <div
+            #stage
+            class="stage"
+            [style.aspect-ratio]="pageAspect()"
+            (pointerdown)="placeAt($event)"
+          >
+            @if (pageImage(); as image) {
+              <img class="stage__page" [src]="image" [alt]="'Page ' + pageIndex()" />
+            }
+
+            @if (signature(); as mark) {
+              <div
+                class="stage__box"
+                [style.left]="boxStyle().left"
+                [style.top]="boxStyle().top"
+                [style.width]="boxStyle().width"
+                (pointerdown)="startDrag($event)"
+                (pointermove)="onDrag($event)"
+                (pointerup)="endDrag()"
+                (pointercancel)="endDrag()"
+              >
+                <img [src]="mark" alt="Signature" />
+              </div>
+            }
+          </div>
+
+          <p class="ou-subtle stage__help">
+            @if (signature()) {
+              Click anywhere on the page to move the signature, or drag it.
+            } @else {
+              Draw, type or upload a signature and it will appear here.
+            }
+          </p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy() || !ready()"
+          (click)="apply()"
+        >
+          <app-icon name="pencil" [size]="17" />
+          Sign and download
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Signed document" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

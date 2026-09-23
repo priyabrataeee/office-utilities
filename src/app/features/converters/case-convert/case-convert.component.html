@@ -1,0 +1,77 @@
+<app-tool-shell toolId="case-converter" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.txt', '.md', '.csv']"
+      [compact]="true"
+      title="Paste below, or drop a text file"
+      hint="Converted as you type. Nothing is uploaded."
+      icon="type"
+      (filesChange)="onFiles($event)"
+    />
+
+    <div class="panel">
+      <h2 class="panel__title">Style</h2>
+      <ul class="styles">
+        @for (option of styles; track option.value) {
+          <li>
+            <button
+              type="button"
+              class="style"
+              [class.style--on]="style() === option.value"
+              (click)="choose(option.value)"
+            >
+              <span class="style__label">{{ option.label }}</span>
+              <span class="style__example">{{ option.example }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="split">
+      <section class="split__pane">
+        <header class="split__head">
+          <h2>Your text</h2>
+          <span class="ou-subtle">
+            {{ stats().words.toLocaleString() }} words ·
+            {{ stats().characters.toLocaleString() }} characters
+          </span>
+        </header>
+        <textarea
+          class="ou-textarea editor"
+          rows="14"
+          spellcheck="false"
+          [value]="source()"
+          (input)="onInput($event)"
+          placeholder="Paste the text that came back in the wrong case."
+        ></textarea>
+      </section>
+
+      <section class="split__pane">
+        <header class="split__head">
+          <h2>Converted</h2>
+          @if (result()) {
+            <app-copy-button [text]="result()" label="Copy" [small]="true" />
+          }
+        </header>
+        <pre class="output"><code>{{ result().slice(0, 60000) }}</code></pre>
+      </section>
+    </div>
+
+    @if (source()) {
+      <div class="actions">
+        <button type="button" class="ou-btn ou-btn--primary ou-btn--lg" (click)="download()">
+          <app-icon name="download" [size]="17" />
+          Download as .txt
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="applyInPlace()">
+          <app-icon name="arrow-left" [size]="16" />
+          Replace the input with this
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Clear</button>
+      </div>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Ready to download" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

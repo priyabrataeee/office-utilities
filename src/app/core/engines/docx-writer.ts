@@ -418,13 +418,12 @@ async function loadImages(
   const out = new Map<string, { bytes: Uint8Array; width: number; height: number; type: string }>();
   for (const dataUrl of urls) {
     try {
+      const { convertDataUrl, dataUrlToBytes } = await import('./image.engine');
       let usable = dataUrl;
       if (!/^data:image\/(png|jpe?g)/i.test(dataUrl)) {
-        const { convertDataUrl } = await import('./image.engine');
         usable = await convertDataUrl(dataUrl, 'image/png');
       }
-      const response = await fetch(usable);
-      const bytes = new Uint8Array(await response.arrayBuffer());
+      const bytes = dataUrlToBytes(usable);
       const size = await measure(usable);
       out.set(dataUrl, {
         bytes,

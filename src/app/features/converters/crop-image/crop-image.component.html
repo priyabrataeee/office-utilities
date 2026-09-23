@@ -1,0 +1,171 @@
+<app-tool-shell toolId="crop-image" [wide]="true">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.png', '.jpg', '.jpeg', '.webp', '.avif', '.bmp', '.gif', '.heic']"
+      [compact]="!!imageUrl()"
+      title="Drop an image to crop"
+      hint="Cropped by your browser — the file is not uploaded."
+      icon="scissors"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (imageUrl(); as url) {
+      <div class="layout">
+        <div
+          #stage
+          class="stage"
+          (pointermove)="onMove($event)"
+          (pointerup)="endDrag()"
+          (pointercancel)="endDrag()"
+        >
+          <img class="stage__image" [src]="url" alt="Image being cropped" />
+
+          @if (natural()) {
+            <div
+              class="box"
+              [style.left]="boxStyle().left"
+              [style.top]="boxStyle().top"
+              [style.width]="boxStyle().width"
+              [style.height]="boxStyle().height"
+              (pointerdown)="startMove($event)"
+            >
+              <span class="handle handle--nw" (pointerdown)="startResize('nw', $event)"></span>
+              <span class="handle handle--ne" (pointerdown)="startResize('ne', $event)"></span>
+              <span class="handle handle--sw" (pointerdown)="startResize('sw', $event)"></span>
+              <span class="handle handle--se" (pointerdown)="startResize('se', $event)"></span>
+            </div>
+          }
+        </div>
+
+        <div class="panel side">
+          <h2 class="panel__title">Shape</h2>
+          <ul class="ratios">
+            @for (option of ratios; track option.label) {
+              <li>
+                <button
+                  type="button"
+                  class="ou-btn ou-btn--sm"
+                  [class.ou-btn--primary]="ratio() === option.value"
+                  (click)="setRatio(option.value)"
+                >
+                  {{ option.label }}
+                </button>
+              </li>
+            }
+          </ul>
+
+          @if (natural(); as size) {
+            <h2 class="panel__title spaced">Exact bounds</h2>
+            <p class="panel__hint">
+              Source is {{ size.width }} × {{ size.height }} px ·
+              {{ totalInputSize() | fileSize }}
+            </p>
+            <div class="bounds">
+              <label class="ou-field">
+                <span class="ou-label">X</span>
+                <input
+                  type="number"
+                  class="ou-input"
+                  min="0"
+                  [value]="crop().x"
+                  (change)="setBound('x', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Y</span>
+                <input
+                  type="number"
+                  class="ou-input"
+                  min="0"
+                  [value]="crop().y"
+                  (change)="setBound('y', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Width</span>
+                <input
+                  type="number"
+                  class="ou-input"
+                  min="16"
+                  [value]="crop().width"
+                  (change)="setBound('width', $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Height</span>
+                <input
+                  type="number"
+                  class="ou-input"
+                  min="16"
+                  [value]="crop().height"
+                  (change)="setBound('height', $event)"
+                />
+              </label>
+            </div>
+          }
+
+          <h2 class="panel__title spaced">Output</h2>
+          <label class="ou-field">
+            <span class="ou-label">Format</span>
+            <select class="ou-select" [value]="format()" (change)="setFormat($event)">
+              @for (option of formats; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </label>
+
+          @if (isLossy()) {
+            <label class="ou-field">
+              <span class="ou-label">Quality — {{ (quality() * 100).toFixed(0) }}%</span>
+              <input
+                type="range"
+                class="ou-range"
+                min="0.3"
+                max="1"
+                step="0.02"
+                [value]="quality()"
+                (input)="setQuality($event)"
+              />
+            </label>
+          }
+
+          @if (format() === 'image/jpeg') {
+            <label class="ou-field">
+              <span class="ou-label">Background behind transparency</span>
+              <input
+                type="color"
+                class="ou-input color"
+                [value]="background()"
+                (input)="setBackground($event)"
+              />
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy() || !ready()"
+          (click)="cropNow()"
+        >
+          <app-icon name="scissors" [size]="17" />
+          Crop to {{ crop().width }} × {{ crop().height }}
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Cropped image" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

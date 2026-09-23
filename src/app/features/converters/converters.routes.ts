@@ -94,4 +94,35 @@ export const routes: Routes = [
     loadComponent: imageConvert,
     data: { toolId: 'jpg-to-png', preset: 'jpg-to-png' },
   },
+  {
+    path: 'webp-to-jpg',
+    loadComponent: imageConvert,
+    data: { toolId: 'webp-to-jpg', preset: 'webp-to-jpg' },
+  },
+  {
+    path: 'webp-to-png',
+    loadComponent: imageConvert,
+    data: { toolId: 'webp-to-png', preset: 'webp-to-png' },
+  },
+  {
+    path: 'heic-to-jpg',
+    loadComponent: imageConvert,
+    data: { toolId: 'heic-to-jpg', preset: 'heic-to-jpg' },
+  },
+  {
+    path: 'resize-image',
+    loadComponent: imageConvert,
+    data: { toolId: 'resize-image', preset: 'resize' },
+  },
+
+  {
+    path: 'crop-image',
+    loadComponent: () =>
+      import('./crop-image/crop-image.component').then((m) => m.CropImageComponent),
+  },
+  {
+    path: 'case-converter',
+    loadComponent: () =>
+      import('./case-convert/case-convert.component').then((m) => m.CaseConvertComponent),
+  },
 ];

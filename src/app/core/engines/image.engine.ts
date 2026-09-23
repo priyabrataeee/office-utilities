@@ -45,8 +45,63 @@ export async function inspectImage(file: Blob): Promise<ImageInfo> {
   return info;
 }
 
+/* ------------------------------------------------------------------
+   HEIC / HEIF
+   ------------------------------------------------------------------ */
+
+/**
+ * Detects HEIC and HEIF by container signature rather than by file name.
+ *
+ * These are ISO base-media files: bytes 4–8 are `ftyp`, and the brand that
+ * follows says which flavour. A phone will happily hand over a `.jpg` that is
+ * really HEIC and a `.heic` that is really JPEG, so the bytes are the only
+ * thing worth trusting.
+ */
+export async function isHeicBlob(source: Blob): Promise<boolean> {
+  if (source.size < 12) return false;
+  try {
+    const header = new Uint8Array(await source.slice(0, 16).arrayBuffer());
+    const tag = String.fromCharCode(...header.subarray(4, 8));
+    if (tag !== 'ftyp') return false;
+    const brand = String.fromCharCode(...header.subarray(8, 12)).toLowerCase();
+    return ['heic', 'heix', 'heim', 'heis', 'hevc', 'hevx', 'mif1', 'msf1'].includes(brand);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Makes a blob something a canvas can draw.
+ *
+ * No browser ships a HEIC decoder — Safari can display the format because
+ * macOS and iOS decode it outside the browser, and Chrome and Firefox cannot
+ * at all. So HEIC is decoded here, by libheif compiled to WebAssembly, which
+ * is imported only when a HEIC file actually turns up. It is a three-megabyte
+ * download and there is no honest way to make it smaller; the alternative is
+ * sending someone's camera roll to a server, which is the thing this site
+ * exists not to do.
+ *
+ * The `/csp` build is deliberate: the default one evaluates strings as code,
+ * which this site's Content-Security-Policy forbids.
+ */
+export async function prepareForCanvas(source: Blob): Promise<Blob> {
+  if (!(await isHeicBlob(source))) return source;
+  const { heicTo } = await import('heic-to/csp');
+  try {
+    return await heicTo({ blob: source, type: 'image/png' });
+  } catch (error) {
+    // libheif reports its failures as bare strings, which would otherwise
+    // surface to the visitor as "Error: HEIF image not found".
+    throw new Error(
+      'That HEIC file could not be decoded — it may be truncated, or it may be a video frame rather than a photograph.',
+      { cause: error },
+    );
+  }
+}
+
 /** Decodes a blob into something a canvas can draw. */
-async function decode(source: Blob): Promise<ImageBitmap | HTMLImageElement> {
+async function decode(original: Blob): Promise<ImageBitmap | HTMLImageElement> {
+  const source = await prepareForCanvas(original);
   // SVG needs the <img> path: createImageBitmap rejects SVG in some browsers.
   const isSvg = source.type === 'image/svg+xml';
   if (!isSvg && typeof createImageBitmap === 'function') {
@@ -197,15 +252,47 @@ export async function blobToDataUrl(blob: Blob): Promise<string> {
   });
 }
 
-export async function dataUrlToBlob(dataUrl: string): Promise<Blob> {
-  const response = await fetch(dataUrl);
-  return response.blob();
+/**
+ * Decodes a data URL into bytes.
+ *
+ * The obvious implementation is `fetch(dataUrl)`, and it does not work here:
+ * a `data:` URL counts as a connection, so the site's Content-Security-Policy
+ * refuses it unless `data:` is added to connect-src — which would loosen the
+ * policy to avoid decoding base64, a poor trade. Doing it directly is also one
+ * fewer trip through the network stack for something that never left the page.
+ */
+export function dataUrlToBytes(dataUrl: string): Uint8Array {
+  const comma = dataUrl.indexOf(',');
+  if (!dataUrl.startsWith('data:') || comma < 0) {
+    throw new Error('That is not a data URL.');
+  }
+  const header = dataUrl.slice(5, comma);
+  const payload = dataUrl.slice(comma + 1);
+
+  if (!/;base64$/i.test(header)) {
+    return new TextEncoder().encode(decodeURIComponent(payload));
+  }
+
+  const binary = atob(payload);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
+  return bytes;
+}
+
+export function dataUrlMime(dataUrl: string): string {
+  const header = dataUrl.slice(5, Math.max(5, dataUrl.indexOf(',')));
+  return header.replace(/;base64$/i, '').split(';')[0] || 'application/octet-stream';
+}
+
+export function dataUrlToBlob(dataUrl: string): Blob {
+  return new Blob([dataUrlToBytes(dataUrl) as unknown as BlobPart], {
+    type: dataUrlMime(dataUrl),
+  });
 }
 
 /** Converts any data URL into another image format, staying local. */
 export async function convertDataUrl(dataUrl: string, mime: ImageMime): Promise<string> {
-  const blob = await dataUrlToBlob(dataUrl);
-  const converted = await encodeImage(blob, { mime, quality: 0.92 });
+  const converted = await encodeImage(dataUrlToBlob(dataUrl), { mime, quality: 0.92 });
   return blobToDataUrl(converted);
 }
 

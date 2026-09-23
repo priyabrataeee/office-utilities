@@ -1,0 +1,301 @@
+<app-tool-shell toolId="qr-code-generator" [wide]="true">
+  <div class="tool">
+    <div class="panel">
+      <h2 class="panel__title">What should it point at?</h2>
+      <ul class="kinds">
+        @for (option of kinds; track option.value) {
+          <li>
+            <button
+              type="button"
+              class="ou-btn ou-btn--sm"
+              [class.ou-btn--primary]="kind() === option.value"
+              (click)="setKind(option.value)"
+            >
+              {{ option.label }}
+            </button>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="layout">
+      <div class="panel">
+        @switch (kind()) {
+          @case ('wifi') {
+            <label class="ou-field">
+              <span class="ou-label">Network name (SSID)</span>
+              <input
+                type="text"
+                class="ou-input"
+                autocomplete="off"
+                [value]="ssid()"
+                (input)="set(ssid, $event)"
+              />
+            </label>
+            <label class="ou-field">
+              <span class="ou-label">Security</span>
+              <select class="ou-select" [value]="encryption()" (change)="setEncryption($event)">
+                <option value="WPA">WPA / WPA2 / WPA3</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">Open — no password</option>
+              </select>
+            </label>
+            @if (encryption() !== 'nopass') {
+              <label class="ou-field">
+                <span class="ou-label">Password</span>
+                <input
+                  type="text"
+                  class="ou-input"
+                  autocomplete="off"
+                  spellcheck="false"
+                  [value]="password()"
+                  (input)="set(password, $event)"
+                />
+              </label>
+            }
+            <label class="ou-check">
+              <input type="checkbox" [checked]="hidden()" (change)="toggleHidden($event)" />
+              The network does not broadcast its name
+            </label>
+            <p class="hint">
+              The password is encoded into the code itself, in the clear — that is how Wi-Fi QR
+              codes work. Anyone who can photograph the code can read it, so put it where you
+              would be happy to write the password down.
+            </p>
+          }
+
+          @case ('email') {
+            <label class="ou-field">
+              <span class="ou-label">Send to</span>
+              <input
+                type="email"
+                class="ou-input"
+                autocomplete="off"
+                [value]="email()"
+                (input)="set(email, $event)"
+              />
+            </label>
+            <label class="ou-field">
+              <span class="ou-label">Subject</span>
+              <input type="text" class="ou-input" [value]="subject()" (input)="set(subject, $event)" />
+            </label>
+            <label class="ou-field">
+              <span class="ou-label">Message</span>
+              <textarea
+                class="ou-textarea"
+                rows="4"
+                [value]="body()"
+                (input)="set(body, $event)"
+              ></textarea>
+            </label>
+          }
+
+          @case ('phone') {
+            <label class="ou-field">
+              <span class="ou-label">Number</span>
+              <input
+                type="tel"
+                class="ou-input"
+                placeholder="+44 20 7946 0958"
+                [value]="phone()"
+                (input)="set(phone, $event)"
+              />
+            </label>
+            <label class="ou-field">
+              <span class="ou-label">Text message — leave empty for a plain call link</span>
+              <textarea
+                class="ou-textarea"
+                rows="3"
+                [value]="smsBody()"
+                (input)="set(smsBody, $event)"
+              ></textarea>
+            </label>
+          }
+
+          @case ('contact') {
+            <label class="ou-field">
+              <span class="ou-label">Full name</span>
+              <input
+                type="text"
+                class="ou-input"
+                [value]="contactName()"
+                (input)="set(contactName, $event)"
+              />
+            </label>
+            <div class="pair">
+              <label class="ou-field">
+                <span class="ou-label">Organisation</span>
+                <input
+                  type="text"
+                  class="ou-input"
+                  [value]="contactOrg()"
+                  (input)="set(contactOrg, $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Job title</span>
+                <input
+                  type="text"
+                  class="ou-input"
+                  [value]="contactTitle()"
+                  (input)="set(contactTitle, $event)"
+                />
+              </label>
+            </div>
+            <div class="pair">
+              <label class="ou-field">
+                <span class="ou-label">Phone</span>
+                <input
+                  type="tel"
+                  class="ou-input"
+                  [value]="contactPhone()"
+                  (input)="set(contactPhone, $event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Email</span>
+                <input
+                  type="email"
+                  class="ou-input"
+                  [value]="contactEmail()"
+                  (input)="set(contactEmail, $event)"
+                />
+              </label>
+            </div>
+            <label class="ou-field">
+              <span class="ou-label">Website</span>
+              <input
+                type="url"
+                class="ou-input"
+                [value]="contactUrl()"
+                (input)="set(contactUrl, $event)"
+              />
+            </label>
+          }
+
+          @default {
+            <label class="ou-field">
+              <span class="ou-label">Link or text</span>
+              <textarea
+                class="ou-textarea"
+                rows="4"
+                spellcheck="false"
+                placeholder="https://example.com"
+                [value]="text()"
+                (input)="set(text, $event)"
+              ></textarea>
+            </label>
+          }
+        }
+
+        <h2 class="panel__title spaced">Appearance</h2>
+        <div class="options">
+          <label class="ou-field">
+            <span class="ou-label">Error correction</span>
+            <select class="ou-select" [value]="level()" (change)="setLevel($event)">
+              @for (option of levels; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Size — {{ size() }} px</span>
+            <input
+              type="range"
+              class="ou-range"
+              min="128"
+              max="2048"
+              step="64"
+              [value]="size()"
+              (input)="setSize($event)"
+            />
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Quiet border — {{ margin() }} modules</span>
+            <input
+              type="range"
+              class="ou-range"
+              min="0"
+              max="8"
+              step="1"
+              [value]="margin()"
+              (input)="setMargin($event)"
+            />
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Code colour</span>
+            <input type="color" class="ou-input color" [value]="dark()" (input)="setDark($event)" />
+          </label>
+
+          <label class="ou-field">
+            <span class="ou-label">Background</span>
+            <input
+              type="color"
+              class="ou-input color"
+              [value]="light()"
+              (input)="setLight($event)"
+            />
+          </label>
+        </div>
+
+        <p class="hint">
+          Keep a good contrast between the two colours and leave the border at two modules or
+          more — a scanner needs the quiet zone to find the code at all.
+        </p>
+      </div>
+
+      <div class="output">
+        <div class="code">
+          @if (preview(); as image) {
+            <img [src]="image" alt="The generated QR code" />
+          } @else {
+            <div class="code__empty">
+              <app-icon name="grid" [size]="34" />
+              <span>Fill in the form and the code appears here.</span>
+            </div>
+          }
+        </div>
+
+        @if (encodeError()) {
+          <p class="error">
+            <app-icon name="alert-circle" [size]="16" />
+            {{ encodeError() }}
+          </p>
+        }
+
+        @if (canEncode()) {
+          <details class="payload">
+            <summary>What is actually encoded</summary>
+            <pre><code>{{ payload() }}</code></pre>
+          </details>
+        }
+
+        <div class="actions">
+          <button
+            type="button"
+            class="ou-btn ou-btn--primary"
+            [disabled]="busy() || !preview()"
+            (click)="downloadPng()"
+          >
+            <app-icon name="download" [size]="16" />
+            PNG
+          </button>
+          <button
+            type="button"
+            class="ou-btn"
+            [disabled]="busy() || !canEncode()"
+            (click)="downloadSvg()"
+          >
+            <app-icon name="download" [size]="16" />
+            SVG
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <app-result-panel [outputs]="outputs()" title="QR code ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>

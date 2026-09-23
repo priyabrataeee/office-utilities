@@ -22,6 +22,9 @@
           <label class="ou-field">
             <span class="ou-label">Format</span>
             <select class="ou-select" [value]="target()" (change)="setTarget($event)">
+              @if (isResize()) {
+                <option value="auto">Keep the original format</option>
+              }
               @for (format of formats; track format.value) {
                 <option [value]="format.value">{{ format.label }}</option>
               }
@@ -56,6 +59,70 @@
                 (input)="setScale($event)"
               />
             </label>
+          } @else if (isResize()) {
+            <label class="ou-field">
+              <span class="ou-label">Resize by</span>
+              <select class="ou-select" [value]="resizeMode()" (change)="setResizeMode($event)">
+                <option value="exact">Exact dimensions</option>
+                <option value="percent">Percentage of the original</option>
+                <option value="longest">Longest edge</option>
+                <option value="none">Do not resize — only re-encode</option>
+              </select>
+            </label>
+
+            @if (resizeMode() === 'exact') {
+              <label class="ou-field">
+                <span class="ou-label">Width (px)</span>
+                <input
+                  type="number"
+                  class="ou-input"
+                  min="1"
+                  max="20000"
+                  [value]="outWidth()"
+                  (change)="setOutWidth($event)"
+                />
+              </label>
+              <label class="ou-field">
+                <span class="ou-label">Height (px)</span>
+                <input
+                  type="number"
+                  class="ou-input"
+                  min="1"
+                  max="20000"
+                  [value]="outHeight()"
+                  [disabled]="lockAspect()"
+                  (change)="setOutHeight($event)"
+                />
+              </label>
+            } @else if (resizeMode() === 'percent') {
+              <label class="ou-field">
+                <span class="ou-label">Scale — {{ scalePercent() }}%</span>
+                <input
+                  type="range"
+                  class="ou-range"
+                  min="5"
+                  max="200"
+                  step="5"
+                  [value]="scalePercent()"
+                  (input)="setPercent($event)"
+                />
+              </label>
+            } @else if (resizeMode() === 'longest') {
+              <label class="ou-field">
+                <span class="ou-label">
+                  Longest edge — {{ maxDimension() ? maxDimension() + 'px' : 'original' }}
+                </span>
+                <input
+                  type="range"
+                  class="ou-range"
+                  min="0"
+                  max="4000"
+                  step="100"
+                  [value]="maxDimension()"
+                  (input)="setMaxDimension($event)"
+                />
+              </label>
+            }
           } @else {
             <label class="ou-field">
               <span class="ou-label">
@@ -86,7 +153,14 @@
           }
         </div>
 
-        @if (target() !== 'image/jpeg') {
+        @if (isResize() && resizeMode() === 'exact') {
+          <label class="ou-check keep">
+            <input type="checkbox" [checked]="lockAspect()" (change)="toggleLockAspect($event)" />
+            Lock the aspect ratio — height follows width, so nothing is stretched
+          </label>
+        }
+
+        @if (target() !== 'image/jpeg' && !keepsFormat()) {
           <label class="ou-check keep">
             <input
               type="checkbox"
@@ -95,6 +169,17 @@
             />
             Keep transparency
           </label>
+        }
+
+        @if (isHeic()) {
+          <p class="warn">
+            <app-icon name="info" [size]="16" />
+            <span>
+              No browser can decode HEIC on its own, so a WebAssembly decoder — about three
+              megabytes — is fetched the first time you convert. It runs in this tab; your
+              photographs are not sent anywhere.
+            </span>
+          </p>
         }
 
         @if (unsupported().length) {
@@ -162,8 +247,10 @@
           [disabled]="busy()"
           (click)="convert()"
         >
-          <app-icon name="shuffle" [size]="17" />
-          Convert {{ entries().length }} images
+          <app-icon [name]="isResize() ? 'maximize' : 'shuffle'" [size]="17" />
+          {{ isResize() ? 'Resize' : 'Convert' }}
+          {{ entries().length }}
+          {{ entries().length === 1 ? 'image' : 'images' }}
         </button>
         <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Clear</button>
       </div>

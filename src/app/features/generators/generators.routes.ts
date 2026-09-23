@@ -42,4 +42,9 @@ export const routes: Routes = [
     data: { toolId: 'experience-letter-generator' },
   },
   { path: 'cover-letter-generator', loadComponent: page, data: { toolId: 'cover-letter-generator' } },
+  {
+    path: 'qr-code-generator',
+    loadComponent: () =>
+      import('./qr-code/qr-code.component').then((m) => m.QrCodeComponent),
+  },
 ];

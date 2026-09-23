@@ -1,0 +1,105 @@
+@use 'tool';
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(min(320px, 100%), 1fr) minmax(min(280px, 100%), 320px);
+  gap: var(--ou-s-5);
+  align-items: start;
+
+  @media (max-width: 880px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stage {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--ou-border);
+  border-radius: var(--ou-r-md);
+  background: var(--ou-surface-2);
+  touch-action: none;
+  user-select: none;
+}
+
+.stage__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 64vh;
+  object-fit: contain;
+  -webkit-user-drag: none;
+}
+
+/* The outer shadow is what dims everything outside the crop — cheaper and
+   better supported than a clip-path cut-out, and it moves with the box. */
+.box {
+  position: absolute;
+  cursor: grab;
+  outline: 1px solid rgb(255 255 255 / 90%);
+  box-shadow: 0 0 0 9999px rgb(0 0 0 / 45%);
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: var(--ou-accent);
+  border: 2px solid #fff;
+  border-radius: var(--ou-r-full);
+  touch-action: none;
+}
+
+.handle--nw {
+  top: -8px;
+  left: -8px;
+  cursor: nwse-resize;
+}
+.handle--ne {
+  top: -8px;
+  right: -8px;
+  cursor: nesw-resize;
+}
+.handle--sw {
+  bottom: -8px;
+  left: -8px;
+  cursor: nesw-resize;
+}
+.handle--se {
+  bottom: -8px;
+  right: -8px;
+  cursor: nwse-resize;
+}
+
+.side {
+  min-width: 0;
+}
+
+.spaced {
+  margin-top: var(--ou-s-6);
+}
+
+.ratios {
+  list-style: none;
+  margin: var(--ou-s-3) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-2);
+}
+
+.bounds {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(110px, 100%), 1fr));
+  gap: var(--ou-s-3);
+  margin-top: var(--ou-s-3);
+}
+
+.color {
+  padding: 2px;
+  cursor: pointer;
+}

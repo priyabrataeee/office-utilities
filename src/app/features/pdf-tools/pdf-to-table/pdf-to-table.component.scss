@@ -1,0 +1,40 @@
+@use 'tool';
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-4);
+  margin-top: var(--ou-s-3);
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ou-s-3);
+  min-width: 0;
+}
+
+.preview__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ou-s-3);
+
+  h2 {
+    margin: 0;
+    font-size: var(--ou-fs-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ou-text-subtle);
+  }
+}
+
+/* A document with forty pages of tables should not push the grid off screen. */
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ou-s-2);
+  max-height: 84px;
+  overflow-y: auto;
+}

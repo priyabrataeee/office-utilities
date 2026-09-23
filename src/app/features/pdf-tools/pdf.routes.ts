@@ -101,4 +101,27 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./unlock-pdf/unlock-pdf.component').then((m) => m.UnlockPdfComponent),
   },
+  {
+    path: 'pdf-to-excel',
+    loadComponent: () =>
+      import('./pdf-to-table/pdf-to-table.component').then((m) => m.PdfToTableComponent),
+    data: { toolId: 'pdf-to-excel', target: 'xlsx' },
+  },
+  {
+    path: 'pdf-to-csv',
+    loadComponent: () =>
+      import('./pdf-to-table/pdf-to-table.component').then((m) => m.PdfToTableComponent),
+    data: { toolId: 'pdf-to-csv', target: 'csv' },
+  },
+  {
+    path: 'pdf-to-powerpoint',
+    loadComponent: () =>
+      import('./pdf-to-powerpoint/pdf-to-powerpoint.component').then(
+        (m) => m.PdfToPowerpointComponent,
+      ),
+  },
+  {
+    path: 'sign-pdf',
+    loadComponent: () => import('./sign-pdf/sign-pdf.component').then((m) => m.SignPdfComponent),
+  },
 ];

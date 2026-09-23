@@ -77,4 +77,9 @@ export const routes: Routes = [
       import('./column-profile/column-profile.component').then((m) => m.ColumnProfileComponent),
     data: { toolId: 'data-type-detection', mode: 'types' },
   },
+  {
+    path: 'excel-to-word',
+    loadComponent: () =>
+      import('./sheet-to-word/sheet-to-word.component').then((m) => m.SheetToWordComponent),
+  },
 ];

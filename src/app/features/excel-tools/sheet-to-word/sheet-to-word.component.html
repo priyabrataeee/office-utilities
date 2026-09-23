@@ -1,0 +1,123 @@
+<app-tool-shell toolId="excel-to-word">
+  <div class="tool">
+    <app-file-drop-zone
+      [accepts]="['.xlsx', '.xls', '.xlsm', '.csv']"
+      [compact]="sheets().length > 0"
+      title="Drop a spreadsheet"
+      hint="Read and converted in this tab — nothing is uploaded."
+      icon="file-word"
+      (filesChange)="onFiles($event)"
+    />
+
+    @if (sheets().length) {
+      <div class="panel">
+        <h2 class="panel__title">Sheets to include</h2>
+        <p class="panel__hint">
+          {{ selected().length }} of {{ sheets().length }} selected ·
+          {{ totalRows().toLocaleString() }} {{ totalRows() === 1 ? 'row' : 'rows' }}.
+        </p>
+
+        <ul class="sheets">
+          @for (sheet of sheets(); track sheet.name) {
+            <li>
+              <label class="ou-check">
+                <input
+                  type="checkbox"
+                  [checked]="chosen().has(sheet.name)"
+                  (change)="toggleSheet(sheet.name)"
+                />
+                <span class="sheets__name">{{ sheet.name }}</span>
+                <span class="ou-subtle">
+                  {{ sheet.rows.length.toLocaleString() }} ×
+                  {{ sheet.columnCount }}
+                  @if (sheet.hidden) {
+                    · hidden
+                  }
+                </span>
+              </label>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title">Document</h2>
+
+        <div class="checks">
+          <label class="ou-check">
+            <input type="checkbox" [checked]="firstRowIsHeader()" (change)="toggleHeader($event)" />
+            First row is a header — bold, and repeated across pages
+          </label>
+          <label class="ou-check">
+            <input type="checkbox" [checked]="sheetHeadings()" (change)="toggleHeadings($event)" />
+            Put each sheet's name above its table
+          </label>
+          <label class="ou-check">
+            <input type="checkbox" [checked]="pageBreaks()" (change)="toggleBreaks($event)" />
+            Start each sheet on a new page
+          </label>
+          <label class="ou-check">
+            <input type="checkbox" [checked]="landscape()" (change)="toggleLandscape($event)" />
+            Landscape pages
+          </label>
+          <label class="ou-check">
+            <input type="checkbox" [checked]="compact()" (change)="toggleCompact($event)" />
+            Compact rows and smaller type
+          </label>
+        </div>
+
+        <label class="ou-field limit">
+          <span class="ou-label">Row limit per sheet — 0 for all</span>
+          <input
+            type="number"
+            class="ou-input"
+            min="0"
+            step="10"
+            [value]="maxRows()"
+            (change)="setMaxRows($event)"
+          />
+        </label>
+
+        @if (tooWide()) {
+          <p class="warn">
+            <app-icon name="alert-triangle" [size]="16" />
+            <span>
+              The widest sheet has {{ widest() }} columns, which will not read well on a portrait
+              page. Switch to landscape, or drop the columns you do not need before converting.
+            </span>
+          </p>
+        }
+
+        <p class="hint">
+          Cell colours and fonts are not carried over. The table uses Word's own styling so it
+          matches whatever document it ends up in, and formulas arrive as the values they
+          evaluated to.
+        </p>
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="ou-btn ou-btn--primary ou-btn--lg"
+          [disabled]="busy() || !ready()"
+          (click)="convert()"
+        >
+          <app-icon name="file-word" [size]="17" />
+          Create the Word document
+        </button>
+        <button type="button" class="ou-btn ou-btn--lg" (click)="startOver()">Start over</button>
+      </div>
+    }
+
+    <app-busy-overlay [active]="busy()" [percent]="percent()" [label]="progressLabel()" />
+
+    @if (errorMessage()) {
+      <p class="error">
+        <app-icon name="alert-circle" [size]="16" />
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <app-result-panel [outputs]="outputs()" title="Document ready" (reset)="startOver()" />
+  </div>
+</app-tool-shell>
