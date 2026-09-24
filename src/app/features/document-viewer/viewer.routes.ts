@@ -1,11 +1,5 @@
 import { Routes } from '@angular/router';
 
-/**
- * Viewer routes.
- *
- * Every format gets its own URL for SEO, and all of them resolve to the same
- * host component — which then defers in only the sub-viewer that format needs.
- */
 const viewer = () =>
   import('./viewer-page/viewer-page.component').then((m) => m.ViewerPageComponent);
 

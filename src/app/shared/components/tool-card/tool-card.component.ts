@@ -4,7 +4,6 @@ import { IconComponent } from '../icon/icon.component';
 import { FavoritesService } from '../../../core/services/favorites.service';
 import type { ResolvedTool } from '../../../core/models/tool.model';
 
-/** Link card used in every listing: home, category pages, search, favourites. */
 @Component({
   selector: 'app-tool-card',
   changeDetection: ChangeDetectionStrategy.OnPush,

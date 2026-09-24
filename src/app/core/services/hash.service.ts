@@ -8,10 +8,6 @@ export interface HashResult {
   readonly milliseconds: number;
 }
 
-/**
- * Runs file hashing in a Web Worker so multi-gigabyte files never block the
- * interface. Falls back to the main thread if workers are unavailable.
- */
 @Injectable({ providedIn: 'root' })
 export class HashService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -67,7 +63,6 @@ export class HashService {
     });
   }
 
-  /** Last resort: correct, but it will make a large file feel sluggish. */
   private async hashOnMainThread(
     file: File,
     algorithms: readonly HashAlgorithm[],

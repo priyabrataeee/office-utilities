@@ -19,7 +19,6 @@ import {
 import { readAsText, withExtension } from '../../../core/utils/file.util';
 import type { DocBlock } from '../../../core/engines/doc-model';
 
-/** Markdown reader with a live outline, rendered and source views. */
 @Component({
   selector: 'app-markdown-view',
   changeDetection: ChangeDetectionStrategy.OnPush,

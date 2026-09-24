@@ -5,15 +5,6 @@ const DB_NAME = 'office-utilities';
 const DB_VERSION = 1;
 const STORE = 'files';
 
-/**
- * Opt-in IndexedDB cache for file bytes, backing the "keep a local copy"
- * switch on the Recent Files page.
- *
- * This is still entirely on-device storage: it exists so a user can reopen
- * yesterday's spreadsheet without hunting for it again, not so that anything
- * is transmitted. Every method degrades to a no-op when IndexedDB is
- * unavailable (SSR, private browsing, storage disabled).
- */
 @Injectable({ providedIn: 'root' })
 export class FileCacheService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -75,7 +66,6 @@ export class FileCacheService {
     await this.tx('readwrite', (s) => s.clear() as unknown as IDBRequest<undefined>);
   }
 
-  /** Bytes used across the whole origin, when the browser will tell us. */
   async usage(): Promise<{ usage: number; quota: number } | null> {
     if (!this.isBrowser || !navigator.storage?.estimate) return null;
     try {

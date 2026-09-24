@@ -18,17 +18,6 @@ import { baseNameOf, withExtension } from '../../../core/utils/file.util';
 
 export type TableTarget = 'xlsx' | 'csv';
 
-/**
- * PDF to spreadsheet.
- *
- * Backs both the Excel and the CSV route. The extraction is identical; only
- * the writer at the end differs, and the copy that explains what happened.
- *
- * The preview is not decoration. Recovering a table from a PDF is inference,
- * and inference is sometimes wrong — so the grid on screen is built from the
- * exact values that will be written to the file, and the visitor gets to see
- * the result before deciding it is worth downloading.
- */
 @Component({
   selector: 'app-pdf-to-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,7 +44,6 @@ export class PdfToTableComponent extends ToolBase {
   protected readonly result = signal<TableExtractResult | null>(null);
   protected readonly previewPage = signal(0);
 
-  /* --- options --- */
   protected readonly firstRowIsHeader = signal(true);
   protected readonly coerceNumbers = signal(true);
   protected readonly dropEmptyRows = signal(true);
@@ -72,13 +60,11 @@ export class PdfToTableComponent extends ToolBase {
     () => this.usablePages()[this.previewPage()] ?? null,
   );
 
-  /** True when the document had no text at all — almost always a scan. */
   protected readonly isScan = computed(() => {
     const result = this.result();
     return !!result && !result.hasTextLayer;
   });
 
-  /** Pages where no column structure was found, worth warning about. */
   protected readonly proseCount = computed(
     () => this.usablePages().filter((page) => page.singleColumn).length,
   );
@@ -161,10 +147,6 @@ export class PdfToTableComponent extends ToolBase {
     this.delimiter.set((event.target as HTMLSelectElement).value);
   }
 
-  /* ------------------------------------------------------------------
-     Export
-     ------------------------------------------------------------------ */
-
   protected async download(): Promise<void> {
     const file = this.primaryFile();
     const pages = this.usablePages();
@@ -178,10 +160,6 @@ export class PdfToTableComponent extends ToolBase {
   }
 
   private async buildWorkbook(file: File, pages: readonly ExtractedPage[]) {
-    // One sheet per page keeps a page's own column layout intact. Combining
-    // is offered because a table that ran over three pages is one table, but
-    // it is not the default: pages with different shapes would be stacked into
-    // a grid that matches neither.
     const sheets = this.combinePages()
       ? [
           {
@@ -228,7 +206,6 @@ export class PdfToTableComponent extends ToolBase {
     return outputs;
   }
 
-  /** Peels the header row off when the visitor said the first row is one. */
   private splitHeader(rows: CellValue[][]): { headers?: string[]; rows: CellValue[][] } {
     if (!this.firstRowIsHeader() || !rows.length) return { rows };
     const [first, ...rest] = rows;

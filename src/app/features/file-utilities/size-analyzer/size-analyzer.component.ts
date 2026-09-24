@@ -20,7 +20,6 @@ const PALETTE = [
   '--ou-cat-view',
 ];
 
-/** Shows which parts of a container file account for its size. */
 @Component({
   selector: 'app-size-analyzer',
   changeDetection: ChangeDetectionStrategy.OnPush,

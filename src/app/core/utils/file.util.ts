@@ -1,5 +1,3 @@
-/** Small, dependency-free helpers shared by every tool. */
-
 export function extensionOf(name: string): string {
   const dot = name.lastIndexOf('.');
   return dot > 0 ? name.slice(dot).toLowerCase() : '';
@@ -10,21 +8,17 @@ export function baseNameOf(name: string): string {
   return dot > 0 ? name.slice(0, dot) : name;
 }
 
-/** Replaces the extension, e.g. `report.docx` + `.pdf` → `report.pdf`. */
 export function withExtension(name: string, extension: string): string {
   const ext = extension.startsWith('.') ? extension : `.${extension}`;
   return baseNameOf(name) + ext;
 }
 
-/** Adds a suffix before the extension, e.g. `a.pdf` + `-merged` → `a-merged.pdf`. */
 export function withSuffix(name: string, suffix: string): string {
   return `${baseNameOf(name)}${suffix}${extensionOf(name)}`;
 }
 
-/** Characters that Windows, macOS and Linux all reject in a file name. */
 const ILLEGAL_FILENAME_CHARS = /[<>:"|?*\/]/g;
 
-/** Strips characters that browsers and operating systems dislike. */
 export function safeFileName(name: string, fallback = 'document'): string {
   const cleaned = name
     .replace(ILLEGAL_FILENAME_CHARS, '')
@@ -70,11 +64,6 @@ export function readAsDataUrl(file: Blob): Promise<string> {
   });
 }
 
-/**
- * Parses a page-range expression such as `1, 3-5, 9-` into zero-based indices.
- * Out-of-range and reversed values are clamped rather than rejected, so the
- * field stays forgiving while the user types.
- */
 export function parsePageRanges(input: string, pageCount: number): number[] {
   const out = new Set<number>();
   for (const chunk of input.split(/[,;\s]+/)) {
@@ -93,7 +82,6 @@ export function parsePageRanges(input: string, pageCount: number): number[] {
   return [...out].sort((a, b) => a - b);
 }
 
-/** Renders zero-based indices back into a compact `1, 3-5` string. */
 export function formatPageRanges(indices: readonly number[]): string {
   const pages = [...indices].map((i) => i + 1).sort((a, b) => a - b);
   const parts: string[] = [];
@@ -116,7 +104,6 @@ export function formatPageRanges(indices: readonly number[]): string {
   return parts.join(', ');
 }
 
-/** Yields to the event loop so long loops do not block painting. */
 export function yieldToBrowser(): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
@@ -129,7 +116,6 @@ export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
-/** Human-friendly relative time, e.g. "3 minutes ago". */
 export function timeAgo(epochMs: number, now = Date.now()): string {
   const seconds = Math.round((now - epochMs) / 1000);
   if (seconds < 45) return 'just now';

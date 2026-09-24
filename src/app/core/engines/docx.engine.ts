@@ -1,15 +1,6 @@
 import type { DocBlock } from './doc-model';
 import { htmlToDocument } from './html.engine';
 
-/**
- * Word (.docx) reading.
- *
- * Two complementary paths: Mammoth reconstructs the visible document as
- * semantic HTML, and a direct read of the OOXML container gets at everything
- * Mammoth deliberately ignores — metadata, headers and footers, comments,
- * footnotes and the raw media.
- */
-
 export interface DocxImage {
   readonly name: string;
   readonly mime: string;
@@ -32,17 +23,6 @@ export interface DocxContent {
   readonly text: string;
 }
 
-/* ------------------------------------------------------------------
-   Visible content, via Mammoth
-   ------------------------------------------------------------------ */
-
-/**
- * Mammoth is CommonJS, so a dynamic import hands back a namespace object whose
- * only member is `default`. Reading `mammoth.images` or `mammoth.convertToHtml`
- * straight off that namespace yields undefined, and the failure surfaces as a
- * confusing "cannot read properties of undefined" at the first property access
- * rather than at the import itself. Unwrapping here keeps both callers honest.
- */
 async function loadMammoth() {
   return (await import('mammoth')).default;
 }
@@ -65,7 +45,6 @@ export async function readDocx(file: Blob): Promise<DocxContent> {
         'u => u',
         'strike => s',
       ],
-      // Images are inlined as data URIs so nothing is ever fetched later.
       convertImage: mammoth.images.imgElement(async (image) => {
         const buffer = await image.read('base64');
         return { src: `data:${image.contentType};base64,${buffer}` };
@@ -106,16 +85,11 @@ function blockToText(block: DocBlock): string {
   }
 }
 
-/** Plain text only, which is much faster than a full HTML conversion. */
 export async function extractDocxText(file: Blob): Promise<string> {
   const mammoth = await loadMammoth();
   const result = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
   return result.value;
 }
-
-/* ------------------------------------------------------------------
-   Container-level access, via JSZip
-   ------------------------------------------------------------------ */
 
 async function openContainer(file: Blob): Promise<import('jszip')> {
   const JSZip = (await import('jszip')).default;
@@ -142,7 +116,6 @@ export async function extractDocxImages(file: Blob): Promise<DocxImage[]> {
     images.push({
       name: entry.name.replace(/^word\/media\//i, ''),
       mime,
-      // base64 inflates by 4/3, and pads with up to two '=' characters.
       bytes: Math.round((base64.length * 3) / 4) - (base64.match(/=+$/)?.[0].length ?? 0),
       dataUrl,
       ...size,
@@ -285,10 +258,6 @@ function formatValue(label: string, value: string): string {
   return value;
 }
 
-/**
- * Pulls text that Mammoth's body conversion leaves out: headers, footers,
- * footnotes, endnotes, comments and text boxes.
- */
 export interface DocxExtraText {
   readonly headers: string[];
   readonly footers: string[];
@@ -324,7 +293,6 @@ export async function extractDocxExtras(file: Blob): Promise<DocxExtraText> {
   };
 }
 
-/** Joins `w:t` runs, treating paragraph and break elements as line breaks. */
 function xmlToText(xml: string): string {
   const doc = parseXml(xml);
   if (!doc) return '';
@@ -356,10 +324,6 @@ function extractTextBoxes(xml: string): string[] {
   return out;
 }
 
-/* ------------------------------------------------------------------
-   Word counting
-   ------------------------------------------------------------------ */
-
 export interface TextStatistics {
   readonly words: number;
   readonly characters: number;
@@ -377,7 +341,6 @@ export interface TextStatistics {
   readonly keywords: readonly { word: string; count: number; density: number }[];
 }
 
-/** Words that carry no topical signal, so they never head the density table. */
 const STOP_WORDS = new Set(
   ('a about above after again against all am an and any are as at be because been before being ' +
     'below between both but by can cannot could did do does doing down during each few for from ' +
@@ -399,8 +362,6 @@ export function analyseText(text: string): TextStatistics {
   const characters = normalised.length;
   const charactersNoSpaces = normalised.replace(/\s/g, '').length;
 
-  // Abbreviations make naive sentence splitting over-count; requiring a
-  // following space plus capital letter is a reasonable compromise.
   const sentences = trimmed
     ? (trimmed.match(/[.!?]+(?=\s+[A-ZÀ-ɏ"'(]|\s*$)/g) ?? []).length || (words ? 1 : 0)
     : 0;
@@ -439,7 +400,6 @@ export function analyseText(text: string): TextStatistics {
     uniqueWords: new Set(wordMatches.map((word) => word.toLowerCase())).size,
     averageWordLength: words ? totalLength / words : 0,
     averageSentenceLength: sentences ? words / sentences : 0,
-    // 238 wpm silent reading, 140 wpm aloud — both widely cited averages.
     readingMinutes: words / 238,
     speakingMinutes: words / 140,
     estimatedPages: words / 500,
@@ -447,10 +407,6 @@ export function analyseText(text: string): TextStatistics {
     keywords,
   };
 }
-
-/* ------------------------------------------------------------------
-   Comparison
-   ------------------------------------------------------------------ */
 
 export type DiffOp = 'equal' | 'insert' | 'delete';
 
@@ -474,13 +430,6 @@ export interface DiffSummary {
   readonly similarity: number;
 }
 
-/**
- * Paragraph-level diff with a word-level refinement inside changed pairs.
- *
- * Uses a standard LCS table. Inputs are capped because the table is O(n·m) —
- * beyond a few thousand paragraphs the memory cost stops being reasonable in
- * a browser tab.
- */
 export function diffTexts(left: string, right: string): DiffSummary {
   const a = splitParagraphs(left);
   const b = splitParagraphs(right);
@@ -534,7 +483,6 @@ function lcsDiff(a: readonly string[], b: readonly string[]): RawDiff[] {
   const rows = a.length;
   const columns = b.length;
 
-  // table[i][j] = length of the LCS of a[i:] and b[j:]
   const table: number[][] = Array.from({ length: rows + 1 }, () =>
     new Array<number>(columns + 1).fill(0),
   );
@@ -556,8 +504,6 @@ function lcsDiff(a: readonly string[], b: readonly string[]): RawDiff[] {
       i++;
       j++;
     } else if (table[i + 1][j] >= table[i][j + 1]) {
-      // A deletion immediately followed by an insertion reads better as an
-      // edit of one paragraph than as two unrelated changes.
       if (j < columns && table[i + 1][j + 1] >= table[i + 1][j] && similarEnough(a[i], b[j])) {
         out.push({ op: 'replace', left: a[i], right: b[j] });
         i++;
@@ -578,7 +524,6 @@ function lcsDiff(a: readonly string[], b: readonly string[]): RawDiff[] {
   return out;
 }
 
-/** Cheap similarity test used to pair up edited paragraphs. */
 function similarEnough(a: string, b: string): boolean {
   if (!a || !b) return false;
   const shorter = a.length < b.length ? a : b;

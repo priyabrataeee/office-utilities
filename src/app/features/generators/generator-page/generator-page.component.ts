@@ -24,14 +24,6 @@ import type { FieldDef, FormData, FormValue, SectionDef } from '../generator.mod
 
 const DRAFT_KEY = 'generator-drafts';
 
-/**
- * One component behind all ten generators.
- *
- * The chosen template supplies the form schema and a pure render function; this
- * component owns the form state, the live preview, drafts and the exports.
- * Drafts are kept in this browser only — invoices and payslips are exactly the
- * documents that should never be posted anywhere.
- */
 @Component({
   selector: 'app-generator-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,7 +56,6 @@ export class GeneratorPageComponent extends ToolBase {
     try {
       return definition.render(this.data());
     } catch {
-      // A half-typed form should never blank the preview.
       return [];
     }
   });
@@ -72,7 +63,6 @@ export class GeneratorPageComponent extends ToolBase {
   constructor() {
     super();
 
-    // Load the saved draft (or the sample) as soon as the route resolves.
     effect(() => {
       const definition = this.definition();
       if (!definition) return;
@@ -82,7 +72,6 @@ export class GeneratorPageComponent extends ToolBase {
       });
     });
 
-    // Re-render the preview whenever the form changes.
     effect(() => {
       const blocks = this.blocks();
       untracked(() => void this.renderPreview(blocks));
@@ -97,8 +86,6 @@ export class GeneratorPageComponent extends ToolBase {
     const html = documentToHtml(blocks);
     this.preview.set(this.sanitizer.bypassSecurityTrustHtml(await sanitizeHtml(html)));
   }
-
-  /* ---------------- form plumbing ---------------- */
 
   protected value(key: string): FormValue {
     return this.data()[key] ?? '';
@@ -118,7 +105,6 @@ export class GeneratorPageComponent extends ToolBase {
     return Array.isArray(value) ? value.map(String) : [];
   }
 
-  /** Reads one cell of a repeating row, tolerating missing keys. */
   protected cell(row: FormData, key: string): string {
     const value = row[key];
     return value === undefined || value === null ? '' : String(value);
@@ -253,8 +239,6 @@ export class GeneratorPageComponent extends ToolBase {
     this.savedAt.set(null);
     this.toast.success('Draft discarded');
   }
-
-  /* ---------------- export ---------------- */
 
   protected async exportPdf(): Promise<void> {
     const definition = this.definition();

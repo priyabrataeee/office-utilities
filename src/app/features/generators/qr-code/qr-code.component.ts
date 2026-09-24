@@ -38,15 +38,6 @@ const CORRECTION_LEVELS: readonly { value: Correction; label: string }[] = [
   { value: 'H', label: 'High — survives damage, allows a logo' },
 ];
 
-/**
- * QR codes, encoded locally.
- *
- * The thing that makes this worth building is what it does not do. A free
- * generator normally hands back a code pointing at its own short link, so the
- * owner can count the scans and switch off the code when the trial ends. These
- * codes contain the destination and nothing else — which also means they
- * cannot be edited afterwards, and that trade is stated on the page.
- */
 @Component({
   selector: 'app-qr-code',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,7 +55,6 @@ export class QrCodeComponent extends ToolBase {
 
   protected readonly kind = signal<QrKind>('text');
 
-  /* --- per-kind fields --- */
   protected readonly text = signal('https://office-utilities.org');
   protected readonly ssid = signal('');
   protected readonly password = signal('');
@@ -82,7 +72,6 @@ export class QrCodeComponent extends ToolBase {
   protected readonly contactEmail = signal('');
   protected readonly contactUrl = signal('');
 
-  /* --- appearance --- */
   protected readonly level = signal<Correction>('M');
   protected readonly size = signal(512);
   protected readonly margin = signal(2);
@@ -92,14 +81,12 @@ export class QrCodeComponent extends ToolBase {
   protected readonly preview = signal<string | null>(null);
   protected readonly encodeError = signal('');
 
-  /** Exactly what gets encoded, shown to the visitor so nothing is hidden. */
   protected readonly payload = computed(() => this.buildPayload());
   protected readonly canEncode = computed(() => this.payload().trim().length > 0);
 
   constructor() {
     super();
     effect(() => {
-      // Re-reading these keeps the preview in step with every control.
       const payload = this.payload();
       const settings = [this.level(), this.size(), this.margin(), this.dark(), this.light()];
       void settings;
@@ -137,7 +124,6 @@ export class QrCodeComponent extends ToolBase {
       case 'contact': {
         const name = this.contactName().trim();
         if (!name) return '';
-        // vCard 3.0 is the version every phone camera understands.
         const lines = ['BEGIN:VCARD', 'VERSION:3.0', `FN:${escapeVCard(name)}`];
         const [given, ...rest] = name.split(/\s+/);
         lines.push(`N:${escapeVCard(rest.join(' '))};${escapeVCard(given)};;;`);
@@ -159,7 +145,6 @@ export class QrCodeComponent extends ToolBase {
 
   private async load() {
     const mod = await import('qrcode');
-    // The package ships both shapes depending on the bundler's interop.
     return (mod as unknown as { default?: typeof mod }).default ?? mod;
   }
 
@@ -184,8 +169,6 @@ export class QrCodeComponent extends ToolBase {
       this.encodeError.set('');
     } catch (error) {
       this.preview.set(null);
-      // Almost always "too much data" — a QR code tops out around 2,950 bytes
-      // at the lowest correction level, and far less at the highest.
       this.encodeError.set(
         error instanceof Error && /too big|data/i.test(error.message)
           ? 'That is more data than a QR code can hold. Shorten it, or drop the error correction to Low.'
@@ -194,7 +177,6 @@ export class QrCodeComponent extends ToolBase {
     }
   }
 
-  /* --- field setters --- */
   protected setKind(value: QrKind): void {
     this.kind.set(value);
   }
@@ -222,8 +204,6 @@ export class QrCodeComponent extends ToolBase {
   protected setLight(event: Event): void {
     this.light.set((event.target as HTMLInputElement).value);
   }
-
-  /* --- download --- */
 
   protected downloadPng(): void {
     const dataUrl = this.preview();
@@ -253,7 +233,6 @@ export class QrCodeComponent extends ToolBase {
   }
 }
 
-/** `\`, `;`, `,` and `:` carry meaning inside a WIFI: payload. */
 function escapeWifi(value: string): string {
   return value.replace(/([\\;,:"])/g, '\\$1');
 }

@@ -17,8 +17,6 @@ import {
   type GeneratorDef,
 } from '../generator.model';
 
-/* Resume ----------------------------------------------------------- */
-
 export const RESUME: GeneratorDef = {
   toolId: 'resume-builder',
   page: { size: 'A4', margin: 44, font: 'sans' },
@@ -322,8 +320,6 @@ function normaliseUrl(value: string): string {
   return /^https?:\/\//i.test(value) ? value : `https://${value}`;
 }
 
-/* Cover letter ------------------------------------------------------ */
-
 export const COVER_LETTER: GeneratorDef = {
   toolId: 'cover-letter-generator',
   page: { size: 'A4', margin: 60, font: 'serif' },
@@ -451,8 +447,6 @@ export const COVER_LETTER: GeneratorDef = {
     ];
   },
 };
-
-/* Meeting minutes --------------------------------------------------- */
 
 export const MEETING_MINUTES: GeneratorDef = {
   toolId: 'meeting-minutes-generator',

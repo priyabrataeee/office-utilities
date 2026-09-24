@@ -1,11 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-/**
- * Inline progress indicator shown while a tool is working.
- *
- * Determinate whenever the operation can report progress (per page, per file),
- * indeterminate otherwise — never a spinner with no context.
- */
 @Component({
   selector: 'app-busy-overlay',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -114,7 +108,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 })
 export class BusyOverlayComponent {
   readonly active = input(false);
-  /** 0–100, or null for indeterminate work. */
   readonly percent = input<number | null>(null);
   readonly label = input('');
   readonly note = input('');

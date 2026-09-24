@@ -15,12 +15,6 @@
     <meta name="theme-color" content="#5b5bd6" />
     <meta name="color-scheme" content="light dark" />
 
-    <!-- fenced-frame-src is `https:` rather than a host list on purpose. AdSense
-         renders some ads in <fencedframe> elements, whose URL is an opaque
-         urn:uuid — so only `https:` or `*` can ever match one, and a host list
-         blocks every such ad (Chrome reports it as "Framing ''"). Fenced frames
-         are sandboxed from this page and cannot read or message it, which is why
-         loosening this one directive does not loosen frame-src. -->
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com https://www.googletagmanager.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.googletagservices.com https://adservice.google.com https://fundingchoicesmessages.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; font-src 'self' data:; connect-src 'self' blob: https://cloudflareinsights.com https://*.cloudflareinsights.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.google.com https://fundingchoicesmessages.google.com; worker-src 'self' blob:; frame-src 'self' blob: https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.google.com https://fundingchoicesmessages.google.com; fenced-frame-src https:; object-src 'none'; base-uri 'self'; form-action 'none'"
@@ -51,38 +45,23 @@
     <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
     <link rel="manifest" href="manifest.webmanifest" />
 
-    <!-- Google AdSense. Placed in <head> so the crawler finds it on every
-         prerendered page during site verification. -->
     <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4291402082894202"
       crossorigin="anonymous"
     ></script>
 
-    <!-- Cloudflare Web Analytics. Cookieless, so it reports visits from people
-         who decline consent below and from anyone blocking Google. The token is
-         a site identifier, not a secret; it is meant to be public in the page. -->
     <script
       type="module"
       src="https://static.cloudflareinsights.com/beacon.min.js"
       data-cf-beacon='{"token": "0aeae091c83c4b9586fdb63543089d0c"}'
     ></script>
 
-    <!-- Google Analytics 4.
-         Unlike the Cloudflare beacon above, GA4 sets cookies, so it is gated
-         behind Consent Mode v2: storage defaults to denied across the EEA, the
-         UK and Switzerland, and stays denied there until the Google consent
-         message grants it. Everywhere else it defaults to granted. Nothing
-         about a document is ever sent — only the page address. -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
-      // Baseline first, then the regional override. This order matters: a
-      // consent type already fixed by an earlier default call is not reopened
-      // by a later one, so declaring the regional denial first left every
-      // visitor denied regardless of country.
       gtag('consent', 'default', {
         ad_storage: 'granted',
         ad_user_data: 'granted',
@@ -98,17 +77,6 @@
         wait_for_update: 500,
       });
 
-      // --- United States: opt-out signals ---------------------------------
-      // Several state privacy laws (California's CPRA among them) require a
-      // site to honour an opt-out of "sale" or "sharing" for cross-context
-      // advertising, and California requires that the Global Privacy Control
-      // browser signal be treated as exactly that. Both are applied here,
-      // before the tag loads, so no personalised-ad request is ever made for
-      // someone who has opted out.
-      //
-      // Analytics is deliberately left alone: measuring which pages are read
-      // is not a sale or a share. Opting out of that as well is offered
-      // separately on the privacy page.
       try {
         var gpc = navigator.globalPrivacyControl === true;
         var stored = localStorage.getItem('ou:ads-optout') === 'true';
@@ -118,14 +86,10 @@
             ad_user_data: 'denied',
             ad_personalization: 'denied',
           });
-          // Google's own flag for the same idea: it keeps serving ads but
-          // stops using the data for personalisation or audience building.
           gtag('set', 'restricted_data_processing', true);
           window.__ouAdsOptOut = true;
         }
-      } catch (e) {
-        // A blocked localStorage must never stop the page rendering.
-      }
+      } catch (e) {}
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PJCQ3KKJ0X"></script>
     <script>
@@ -134,8 +98,6 @@
     </script>
 
     <style>
-      /* Paints a background matching the theme before the app boots, so the
-         first paint is not a white flash on dark-mode systems. */
       :root {
         color-scheme: light dark;
         --_bg: #fbfbfd;

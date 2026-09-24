@@ -11,7 +11,6 @@ import { heading, pageBreak, run, type DocBlock } from '../../../core/engines/do
 import type { CellValue } from '../../../shared/components/spreadsheet-grid/spreadsheet-grid.component';
 import { withExtension } from '../../../core/utils/file.util';
 
-/** Past this many columns a portrait page cannot hold a readable table. */
 const WIDE_COLUMN_LIMIT = 8;
 
 @Component({
@@ -52,7 +51,6 @@ export class SheetToWordComponent extends ToolBase {
     this.selected().reduce((most, sheet) => Math.max(most, sheet.columnCount), 0),
   );
 
-  /** A table this wide will not fit a portrait page whatever we do to it. */
   protected readonly tooWide = computed(
     () => this.widest() > WIDE_COLUMN_LIMIT && !this.landscape(),
   );
@@ -169,14 +167,6 @@ export class SheetToWordComponent extends ToolBase {
   }
 }
 
-/**
- * Renders a cell for Word.
- *
- * A date is written the way the reader's locale writes dates rather than as an
- * ISO timestamp, and a number keeps its grouping. Everything else is its own
- * text — including anything that looked like a number but was not one, which
- * the reader is better placed to interpret than we are.
- */
 function format(value: CellValue): string {
   if (value === null || value === undefined) return '';
   if (value instanceof Date) return value.toLocaleDateString();

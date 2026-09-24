@@ -14,11 +14,6 @@ import {
 import { FavoritesService } from './favorites.service';
 import { RecentService } from './recent.service';
 
-/**
- * Read model over the tool catalog, enriched with the user's own signals
- * (favourites and usage history). Everything here is derived state — the
- * catalog itself is immutable.
- */
 @Injectable({ providedIn: 'root' })
 export class ToolRegistryService {
   private readonly favorites = inject(FavoritesService);
@@ -43,7 +38,6 @@ export class ToolRegistryService {
       .filter((t): t is ResolvedTool => !!t),
   );
 
-  /** Live query bound by the header search box and the command palette. */
   readonly query = signal('');
   readonly results = computed(() => searchTools(this.query()).map((h) => h.tool));
 

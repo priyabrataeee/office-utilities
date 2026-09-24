@@ -17,7 +17,6 @@ import {
   type Slide,
 } from '../../../core/engines/pptx.engine';
 
-/** Slide reader: thumbnail rail, notes, keyboard navigation and presenting. */
 @Component({
   selector: 'app-pptx-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,7 +50,6 @@ export class PptxViewComponent {
     return deck ? `${deck.width} / ${deck.height}` : '16 / 9';
   });
 
-  /** Rendered SVG for the slide on screen. Regenerated only when it changes. */
   protected readonly currentSvg = computed<SafeHtml | null>(() => {
     const deck = this.deck();
     const slide = this.activeSlide();

@@ -31,8 +31,6 @@
   -webkit-user-drag: none;
 }
 
-/* The outer shadow is what dims everything outside the crop — cheaper and
-   better supported than a clip-path cut-out, and it moves with the box. */
 .box {
   position: absolute;
   cursor: grab;

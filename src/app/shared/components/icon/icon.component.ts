@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { ICONS } from './icon.data';
 
-/**
- * Renders one icon from the registry.
- *
- * Unknown names render nothing rather than throwing — a missing glyph should
- * never take a tool page down.
- */
 @Component({
   selector: 'app-icon',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +35,6 @@ export class IconComponent {
   readonly name = input.required<string>();
   readonly size = input<number>(18);
   readonly strokeWidth = input<number>(1.7);
-  /** Supply when the icon is the only label, e.g. on an icon-only button. */
   readonly label = input<string>('');
 
   protected readonly paths = computed(() => ICONS[this.name()] ?? []);

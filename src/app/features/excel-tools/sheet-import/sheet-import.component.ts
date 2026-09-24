@@ -16,7 +16,6 @@ import { baseNameOf, readAsText, withExtension } from '../../../core/utils/file.
 
 type Source = 'csv' | 'json';
 
-/** Turns delimited text or JSON into a formatted .xlsx workbook. */
 @Component({
   selector: 'app-sheet-import',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -149,7 +148,6 @@ export class SheetImportComponent extends ToolBase {
   }
 }
 
-/** Accepts standard JSON, and JSON Lines, which tools export surprisingly often. */
 function parseJsonLoosely(text: string): unknown {
   const trimmed = text.trim();
   try {
@@ -159,9 +157,7 @@ function parseJsonLoosely(text: string): unknown {
     if (lines.length > 1) {
       try {
         return lines.map((line) => JSON.parse(line));
-      } catch {
-        /* fall through to the original error */
-      }
+      } catch {}
     }
     throw new Error(
       error instanceof Error ? `Invalid JSON — ${error.message}` : 'Invalid JSON',

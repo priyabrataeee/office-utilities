@@ -42,9 +42,6 @@ import { SITE } from '../../core/site.config';
             <div class="footer__col">
               <p class="footer__col-title">{{ category.title }}</p>
               <ul>
-                <!-- @for (tool of topOf(category.id); track tool.id) {
-                  <li><a [routerLink]="tool.path">{{ tool.title }}</a></li>
-                } -->
                 <li>
                   <a class="footer__more" [routerLink]="['/', category.slug]">
                     {{ registry.countInCategory(category.id) }} tools

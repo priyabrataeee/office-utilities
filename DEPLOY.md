@@ -51,16 +51,16 @@ If the domain's nameservers are already on Cloudflare, DNS records are created a
 
 ### 4. Point the alternates at the primary
 
-All the domains now serve the same content, which search engines treat as duplicates. Fix it by editing `public/_redirects` and uncommenting the canonical block:
+All the domains now serve the same content, which search engines treat as duplicates. Fix it by adding these lines to `public/_redirects` (the file is intentionally empty until you do), with your primary domain on the right:
 
 ```
 https://your-alternate-domain.com/*       https://your-primary-domain.com/:splat   301!
 https://www.your-primary-domain.com/*     https://your-primary-domain.com/:splat   301!
-
-/*    /index.html    200
 ```
 
-The `!` forces the redirect even when a matching file exists. Keep the SPA fallback last — rules match top to bottom. Commit and push; Cloudflare redeploys automatically.
+The `!` forces the redirect even when a matching file exists. Commit and push; Cloudflare redeploys automatically.
+
+**Do not add an SPA fallback rule** such as `/*  /index.html  200`. On Workers Static Assets it is invalid: `html_handling` already strips `/index` and `.html`, so the rule rewrites `/index.html` back to `/`, matches itself again, and Cloudflare rejects the deploy with "Infinite loop detected". The fallback is already handled by `not_found_handling` in `wrangler.jsonc`, which serves `404.html` (a copy of the app shell) with a correct 404 status.
 
 ### 5. Verify
 

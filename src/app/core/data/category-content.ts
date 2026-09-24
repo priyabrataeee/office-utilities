@@ -1,30 +1,13 @@
 import type { ToolCategoryId } from '../models/tool.model';
 
-/**
- * Editorial copy for the category landing pages.
- *
- * A grid of tool cards tells a visitor what exists; it does not help somebody
- * who knows their problem but not which tool solves it. That is what `choosing`
- * is for — the question people actually arrive with, answered with a link.
- *
- * Kept out of the catalog because it is prose about a family of tools rather
- * than metadata about any one of them, and because the catalog is already long
- * enough to be awkward to review.
- */
-
 export interface CategoryChoice {
-  /** The problem, in the visitor's words rather than the product's. */
   readonly need: string;
-  /** Catalog id of the tool that solves it. */
   readonly toolId: string;
 }
 
 export interface CategoryContent {
-  /** What this family of tools is for, and why it works without a server. */
   readonly intro: readonly string[];
-  /** Problem-to-tool routing, in rough order of how often it comes up. */
   readonly choosing: readonly CategoryChoice[];
-  /** What is worth knowing about these formats before you start. */
   readonly notes: readonly string[];
 }
 

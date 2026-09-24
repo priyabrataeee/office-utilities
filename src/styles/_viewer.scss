@@ -1,7 +1,5 @@
 @use 'mixins' as *;
 
-/** Chrome shared by every document sub-viewer. */
-
 .viewer {
   display: flex;
   flex-direction: column;

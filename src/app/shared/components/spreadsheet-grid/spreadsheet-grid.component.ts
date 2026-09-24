@@ -7,17 +7,8 @@ import {
   signal,
 } from '@angular/core';
 
-/** Everything a spreadsheet cell can hold once parsed. Dates stay as Date
- * objects so formatting decisions belong to the view, not the parser. */
 export type CellValue = string | number | boolean | Date | null | undefined;
 
-/**
- * Windowed data grid.
- *
- * Only the rows inside the viewport (plus a small overscan) are in the DOM, so
- * a sheet with half a million rows scrolls as smoothly as one with ten. Column
- * widths are estimated once from a sample rather than measured per cell.
- */
 @Component({
   selector: 'app-spreadsheet-grid',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -119,7 +110,6 @@ export class SpreadsheetGridComponent {
 
   protected readonly offsetY = computed(() => this.startIndex() * this.rowHeight());
 
-  /** One pass over a sample of rows gives widths that look measured. */
   protected readonly columnWidths = computed(() => {
     const headers = this.headers();
     const sample = this.rows().slice(0, 200);
@@ -172,7 +162,7 @@ function compareCells(a: CellValue, b: CellValue): number {
   const aEmpty = a === null || a === undefined || a === '';
   const bEmpty = b === null || b === undefined || b === '';
   if (aEmpty && bEmpty) return 0;
-  if (aEmpty) return 1; // blanks always sink
+  if (aEmpty) return 1;
   if (bEmpty) return -1;
   if (typeof a === 'number' && typeof b === 'number') return a - b;
   if (a instanceof Date && b instanceof Date) return a.getTime() - b.getTime();

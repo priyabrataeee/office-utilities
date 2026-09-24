@@ -14,7 +14,6 @@ interface QueuedPdf {
   readonly id: string;
   readonly file: File;
   pageCount: number | null;
-  /** Empty means "all pages". */
   range: string;
   password: string;
   needsPassword: boolean;
@@ -84,7 +83,6 @@ export class MergePdfComponent extends ToolBase {
     for (const item of additions) void this.inspect(item.id);
   }
 
-  /** Reads the page count so the UI can show what will be merged. */
   private async inspect(id: string): Promise<void> {
     const item = this.queue().find((entry) => entry.id === id);
     if (!item) return;

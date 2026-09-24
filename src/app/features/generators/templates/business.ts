@@ -19,8 +19,6 @@ import {
   type GeneratorDef,
 } from '../generator.model';
 
-/* Shared pieces --------------------------------------------------- */
-
 const CURRENCIES = [
   { value: '$', label: 'USD  $' },
   { value: '€', label: 'EUR  €' },
@@ -59,7 +57,6 @@ function computeTotals(data: FormData): Totals {
   return { subtotal, discount, taxable, tax, total: taxable + tax };
 }
 
-/** Company on the left, document meta on the right. */
 function letterhead(data: FormData, title: string, metaRows: [string, string][]): DocBlock {
   return {
     type: 'columns',
@@ -253,8 +250,6 @@ const TOTALS_SECTION = {
   ],
 };
 
-/* Invoice --------------------------------------------------------- */
-
 export const INVOICE: GeneratorDef = {
   toolId: 'invoice-generator',
   page: { size: 'A4', margin: 48, font: 'sans' },
@@ -370,8 +365,6 @@ export const INVOICE: GeneratorDef = {
     ];
   },
 };
-
-/* Quotation ------------------------------------------------------- */
 
 export const QUOTATION: GeneratorDef = {
   toolId: 'quotation-generator',
@@ -501,8 +494,6 @@ function sectionIf(title: string, body: string): DocBlock[] {
       : para([run(lines[0] ?? '', { size: 9.5, color: '#5b6274' })]),
   ];
 }
-
-/* Business proposal ----------------------------------------------- */
 
 export const PROPOSAL: GeneratorDef = {
   toolId: 'business-proposal-generator',

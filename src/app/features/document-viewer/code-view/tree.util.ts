@@ -1,11 +1,3 @@
-/**
- * Flattens JSON and XML into a list of rows.
- *
- * A flat list with an explicit depth renders and virtualises far better than a
- * recursive component tree, and collapsing becomes a filter rather than a
- * re-render of the whole subtree.
- */
-
 export type TreeValueKind =
   | 'object'
   | 'array'
@@ -22,12 +14,9 @@ export interface TreeRow {
   readonly depth: number;
   readonly key: string;
   readonly kind: TreeValueKind;
-  /** Rendered scalar value, empty for containers. */
   readonly value: string;
-  /** Number of direct children, for the "3 items" hint. */
   readonly childCount: number;
   readonly hasChildren: boolean;
-  /** Path used as the collapse key and for "copy path". */
   readonly path: string;
 }
 
@@ -129,12 +118,6 @@ export function flattenXml(doc: Document): TreeRow[] {
   return rows;
 }
 
-/**
- * Hides rows whose ancestor is collapsed.
- *
- * A row is hidden when any collapsed path is a strict prefix of its own — one
- * pass, no tree walking.
- */
 export function visibleRows(rows: readonly TreeRow[], collapsed: ReadonlySet<string>): TreeRow[] {
   if (!collapsed.size) return [...rows];
 
@@ -157,7 +140,6 @@ function isDescendant(path: string, ancestor: string): boolean {
   return path.length > ancestor.length && path.startsWith(ancestor);
 }
 
-/** Pretty-prints XML with indentation. */
 export function formatXml(xml: string, indent = '  '): string {
   const withBreaks = xml
     .replace(/\r?\n\s*/g, '')
@@ -171,7 +153,6 @@ export function formatXml(xml: string, indent = '  '): string {
       if (!trimmed) return '';
       if (/^<\/.+>$/.test(trimmed)) depth = Math.max(0, depth - 1);
       const result = indent.repeat(depth) + trimmed;
-      // Opening tags that are not self-closing or immediately closed nest.
       if (/^<[^!?/][^>]*[^/]>$/.test(trimmed) && !/^<.+<\/.+>$/.test(trimmed)) depth++;
       return result;
     })

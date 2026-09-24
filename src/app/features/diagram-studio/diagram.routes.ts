@@ -1,11 +1,5 @@
 import { Routes } from '@angular/router';
 
-/**
- * Diagram Studio routes.
- *
- * The plain studio route opens a fresh canvas (or restores the autosave), and
- * the type-specific routes hand the same component a starter template.
- */
 const studio = () =>
   import('./studio/studio.component').then((m) => m.StudioComponent);
 

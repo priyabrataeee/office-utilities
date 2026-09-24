@@ -19,7 +19,6 @@ type Quality = 'standard' | 'high' | 'maximum';
 
 const SCALES: Record<Quality, number> = { standard: 1.5, high: 2.2, maximum: 3 };
 
-/** pptxgenjs measures everything in inches. */
 const LONGEST_EDGE_INCHES = 10;
 
 @Component({
@@ -58,11 +57,6 @@ export class PdfToPowerpointComponent extends ToolBase {
 
   protected readonly ready = computed(() => this.hasFile() && this.selectedPages().length > 0);
 
-  /**
-   * A rough warning rather than a precise figure. Page images dominate the
-   * file, and their size depends on what is on them — but "50 pages at maximum
-   * quality" is worth flagging before somebody waits three minutes for it.
-   */
   protected readonly heavy = computed(
     () => this.selectedPages().length * SCALES[this.quality()] > 90,
   );
@@ -94,9 +88,6 @@ export class PdfToPowerpointComponent extends ToolBase {
       }
     });
 
-    // The thumbnail is a nicety, and it is the slowest thing on the page. It
-    // is deliberately outside the run above so that a page which will not
-    // rasterise leaves the tool usable rather than stuck behind a spinner.
     void this.renderPreview(file);
   }
 
@@ -130,7 +121,6 @@ export class PdfToPowerpointComponent extends ToolBase {
     this.pageRange.set((event.target as HTMLInputElement).value);
   }
 
-  /** Slide dimensions in inches, from the shape the visitor asked for. */
   private slideSize(): { width: number; height: number; layout: string | null } {
     switch (this.shape()) {
       case 'wide':
@@ -159,8 +149,6 @@ export class PdfToPowerpointComponent extends ToolBase {
       if (layout) {
         pres.layout = layout;
       } else {
-        // A custom layout is the only way to get a slide that matches the
-        // page, which is what stops a portrait PDF arriving letterboxed.
         pres.defineLayout({ name: 'PDF', width, height });
         pres.layout = 'PDF';
       }
@@ -178,8 +166,6 @@ export class PdfToPowerpointComponent extends ToolBase {
             maxDimension: 4400,
           });
           const data = canvas.toDataURL('image/jpeg', 0.88);
-          // Release the backing store before the next page is rendered; a
-          // long document otherwise holds every canvas it has drawn.
           canvas.width = 0;
           canvas.height = 0;
 
@@ -191,8 +177,6 @@ export class PdfToPowerpointComponent extends ToolBase {
             y: 0,
             w: width,
             h: height,
-            // `contain` matters only when the slide shape was forced; with a
-            // matched layout the image already fills it exactly.
             sizing: { type: 'contain', w: width, h: height },
           });
 
@@ -202,8 +186,6 @@ export class PdfToPowerpointComponent extends ToolBase {
           }
 
           this.onProgress(index + 1, pages.length);
-          // Rendering is synchronous inside the worker; this gives the
-          // progress bar a chance to paint between pages.
           await yieldToBrowser();
         }
       } finally {

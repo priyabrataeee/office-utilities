@@ -2,22 +2,15 @@ import { DOCUMENT, Injectable, PLATFORM_ID, inject, signal } from '@angular/core
 import { isPlatformBrowser } from '@angular/common';
 
 export interface Shortcut {
-  /** Normalised combo, e.g. `mod+k`, `shift+?`, or a chord like `g h`. */
   readonly keys: string;
   readonly label: string;
   readonly group: string;
   readonly run: () => void;
-  /** Allow the shortcut to fire while a text field has focus. */
   readonly allowInInput?: boolean;
 }
 
 const CHORD_TIMEOUT_MS = 900;
 
-/**
- * Application-wide keyboard shortcuts, including Linear-style two-key chords
- * (`g` then `h`). Editable elements are respected: single-letter shortcuts
- * never steal a keystroke from a text field.
- */
 @Injectable({ providedIn: 'root' })
 export class ShortcutService {
   private readonly doc = inject(DOCUMENT);
@@ -29,14 +22,12 @@ export class ShortcutService {
 
   readonly registered = signal<Shortcut[]>([]);
   readonly isMac = signal(false);
-  /** Whether the "keyboard shortcuts" dialog is showing. */
   readonly helpOpen = signal(false);
 
   toggleHelp(): void {
     this.helpOpen.update((open) => !open);
   }
 
-  /** Registers shortcuts and returns a disposer. */
   register(...shortcuts: Shortcut[]): () => void {
     for (const shortcut of shortcuts) this.shortcuts.set(shortcut.keys, shortcut);
     this.registered.set([...this.shortcuts.values()]);
@@ -47,7 +38,6 @@ export class ShortcutService {
     };
   }
 
-  /** Renders a combo for display, e.g. `mod+k` → `⌘ K` or `Ctrl K`. */
   display(keys: string): string[] {
     const mod = this.isMac() ? '⌘' : 'Ctrl';
     if (keys.includes(' ')) return keys.split(' ').map((k) => k.toUpperCase());
@@ -110,7 +100,6 @@ export class ShortcutService {
 
     if (inEditable) return;
 
-    // Chord continuation, e.g. `g` then `h`.
     if (this.pendingChord) {
       const combo = `${this.pendingChord} ${key}`;
       this.clearChord();
@@ -122,7 +111,6 @@ export class ShortcutService {
       }
     }
 
-    // Chord start: any registered shortcut of the form `<key> <something>`.
     if ([...this.shortcuts.keys()].some((k) => k.startsWith(`${key} `))) {
       event.preventDefault();
       this.pendingChord = key;

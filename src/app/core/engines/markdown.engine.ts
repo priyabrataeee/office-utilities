@@ -1,20 +1,11 @@
 import type { DocBlock, InlineRun, ListItem, TableCell } from './doc-model';
 
-/**
- * Markdown support.
- *
- * `markdownToDocument` walks Marked's token stream directly rather than going
- * via HTML, which preserves table alignment, task lists and nesting that a
- * round-trip through the DOM would blur.
- */
-
 export async function markdownToHtml(markdown: string): Promise<string> {
   const { marked } = await import('marked');
   const raw = await marked.parse(markdown, { gfm: true, breaks: false, async: true });
   return sanitizeHtml(raw);
 }
 
-/** Sanitises untrusted HTML before it is ever inserted into the page. */
 export async function sanitizeHtml(html: string): Promise<string> {
   const DOMPurify = (await import('dompurify')).default;
   if (typeof window === 'undefined') return stripTags(html);
@@ -26,7 +17,6 @@ export async function sanitizeHtml(html: string): Promise<string> {
   });
 }
 
-/** Server-side fallback: no DOM, so drop markup rather than trusting it. */
 function stripTags(html: string): string {
   return html.replace(/<[^>]*>/g, '');
 }
@@ -37,7 +27,6 @@ export async function markdownToDocument(markdown: string): Promise<DocBlock[]> 
   return tokensToBlocks(tokens as MarkedToken[]);
 }
 
-/* Marked's token types are loosely modelled; this is the shape we rely on. */
 interface MarkedToken {
   type: string;
   text?: string;
@@ -108,7 +97,6 @@ function tokensToBlocks(tokens: readonly MarkedToken[], level = 0): DocBlock[] {
             level,
           });
 
-          // Nested lists become deeper items in the same block.
           for (const nested of itemTokens) {
             if (nested.type === 'list') {
               const child = tokensToBlocks([nested], level + 1)[0];
@@ -158,7 +146,6 @@ function tokensToBlocks(tokens: readonly MarkedToken[], level = 0): DocBlock[] {
   return blocks;
 }
 
-/** Pulls the inline tokens out of paragraph-ish wrappers. */
 function flattenInline(tokens: readonly MarkedToken[]): MarkedToken[] {
   const out: MarkedToken[] = [];
   for (const token of tokens) {
@@ -231,7 +218,6 @@ function decodeEntities(text: string): string {
   return text.replace(/&(amp|lt|gt|quot|#39|nbsp);/g, (match) => ENTITIES[match] ?? match);
 }
 
-/** Extracts an outline for the markdown viewer's table of contents. */
 export interface OutlineEntry {
   readonly level: number;
   readonly text: string;

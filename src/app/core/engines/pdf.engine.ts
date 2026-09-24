@@ -1,15 +1,6 @@
 import type { PDFDocument, PDFPage } from '@cantoo/pdf-lib';
 import { PAGE_SIZES, type PageSizeName } from './doc-model';
 
-/**
- * PDF *writing* operations, built on pdf-lib.
- *
- * Reading and rendering live in `pdfjs.engine.ts`; this module is everything
- * that produces a new PDF. Pages are copied rather than re-encoded, so text
- * stays selectable and images are untouched unless a tool explicitly asks for
- * re-encoding (which only `compressPdf` does).
- */
-
 export type PdfLib = typeof import('@cantoo/pdf-lib');
 
 let libPromise: Promise<PdfLib> | null = null;
@@ -21,7 +12,6 @@ export function loadPdfLib(): Promise<PdfLib> {
 
 export interface LoadOptions {
   readonly password?: string;
-  /** Open an encrypted document without supplying the password. */
   readonly ignoreEncryption?: boolean;
 }
 
@@ -46,14 +36,9 @@ async function bytesOf(file: Blob): Promise<Uint8Array> {
   return new Uint8Array(await file.arrayBuffer());
 }
 
-/* ------------------------------------------------------------------
-   Merge / split / page operations
-   ------------------------------------------------------------------ */
-
 export interface MergeSource {
   readonly file: Blob;
   readonly name: string;
-  /** Zero-based page indices to take. Omit for the whole document. */
   readonly pages?: readonly number[];
   readonly password?: string;
 }
@@ -81,7 +66,6 @@ export async function mergePdfs(
   return toBlob(merged);
 }
 
-/** Builds a new PDF from a subset of pages, in the order supplied. */
 export async function extractPages(
   file: Blob,
   indices: readonly number[],
@@ -101,7 +85,6 @@ export interface SplitPart {
   readonly indices: readonly number[];
 }
 
-/** Splits one PDF into several, according to the supplied groupings. */
 export async function splitPdf(
   file: Blob,
   parts: readonly SplitPart[],
@@ -124,7 +107,6 @@ export async function splitPdf(
   return out;
 }
 
-/** Groups page indices into split parts of a fixed size. */
 export function chunkPages(pageCount: number, chunkSize: number): number[][] {
   const chunks: number[][] = [];
   for (let start = 0; start < pageCount; start += chunkSize) {
@@ -135,7 +117,6 @@ export function chunkPages(pageCount: number, chunkSize: number): number[][] {
   return chunks;
 }
 
-/** Splits at the given zero-based page indices (each starts a new part). */
 export function splitAt(pageCount: number, breakpoints: readonly number[]): number[][] {
   const sorted = [...new Set(breakpoints)].filter((p) => p > 0 && p < pageCount).sort((a, b) => a - b);
   const parts: number[][] = [];
@@ -148,16 +129,10 @@ export function splitAt(pageCount: number, breakpoints: readonly number[]): numb
 }
 
 export interface PageEdit {
-  /** Index in the *source* document. */
   readonly sourceIndex: number;
-  /** Extra rotation in degrees, added to whatever the page already has. */
   readonly rotate?: number;
 }
 
-/**
- * Applies a full page plan — order, rotation, deletion and duplication — in a
- * single rebuild. The page organiser sends its whole state through here.
- */
 export async function applyPagePlan(
   file: Blob,
   plan: readonly PageEdit[],
@@ -188,10 +163,6 @@ function normaliseAngle(angle: number): number {
   return ((Math.round(angle / 90) * 90) % 360 + 360) % 360;
 }
 
-/* ------------------------------------------------------------------
-   Images to PDF
-   ------------------------------------------------------------------ */
-
 export interface ImagesToPdfOptions {
   readonly pageSize: PageSizeName | 'fit';
   readonly orientation: 'portrait' | 'landscape' | 'auto';
@@ -209,7 +180,6 @@ export async function imagesToPdf(
   const pdf = await PDFDocument.create();
 
   for (const [index, source] of images.entries()) {
-    // pdf-lib embeds PNG and JPEG only; anything else is re-encoded locally.
     const isJpeg = /jpe?g/i.test(source.type);
     const isPng = /png/i.test(source.type);
     const usable = isJpeg || isPng ? source : await encodeImage(source, { mime: 'image/png' });
@@ -273,10 +243,6 @@ function hexToRgb(rgb: PdfLib['rgb'], hex: string) {
   if (Number.isNaN(int)) return rgb(1, 1, 1);
   return rgb(((int >> 16) & 255) / 255, ((int >> 8) & 255) / 255, (int & 255) / 255);
 }
-
-/* ------------------------------------------------------------------
-   Watermarks
-   ------------------------------------------------------------------ */
 
 export interface TextWatermarkOptions {
   readonly kind: 'text';
@@ -428,26 +394,13 @@ function anchor(
   }
 }
 
-/* ------------------------------------------------------------------
-   Watermark removal
-   ------------------------------------------------------------------ */
-
 export interface WatermarkFinding {
   readonly kind: 'annotation' | 'xobject';
   readonly label: string;
-  /** Pages the candidate appears on (zero-based). */
   readonly pages: readonly number[];
   readonly id: string;
 }
 
-/**
- * Looks for the two ways a watermark is usually added: stamp/watermark
- * annotations, and a form XObject drawn onto every page.
- *
- * A watermark burned into a page image is deliberately *not* reported — there
- * is no lossless way to remove it, and pretending otherwise would be worse
- * than saying so.
- */
 export async function findWatermarks(file: Blob, password?: string): Promise<WatermarkFinding[]> {
   const lib = await loadPdfLib();
   const { PDFName, PDFDict, PDFArray } = lib;
@@ -487,8 +440,6 @@ export async function findWatermarks(file: Blob, password?: string): Promise<Wat
     findings.push({ kind: 'annotation', label: `${label} annotation`, pages: list, id: `a:${label}` });
   }
   for (const [label, list] of xobjects) {
-    // Something drawn on nearly every page is far more likely to be a
-    // watermark than a one-off illustration.
     if (list.length >= Math.max(2, pages.length * 0.6)) {
       findings.push({ kind: 'xobject', label: `Repeated object "${label}"`, pages: list, id: `x:${label}` });
     }
@@ -535,10 +486,6 @@ export async function removeWatermarks(
   return toBlob(pdf);
 }
 
-/**
- * Fallback for flattened watermarks: paints an opaque rectangle over the
- * region on every page. Honest about what it is — a cover, not a removal.
- */
 export async function coverRegion(
   file: Blob,
   region: { x: number; y: number; width: number; height: number },
@@ -561,10 +508,6 @@ export async function coverRegion(
 
   return toBlob(pdf);
 }
-
-/* ------------------------------------------------------------------
-   Encryption
-   ------------------------------------------------------------------ */
 
 export interface ProtectOptions {
   readonly userPassword?: string;
@@ -600,13 +543,10 @@ export async function protectPdf(file: Blob, options: ProtectOptions): Promise<B
   return toBlob(pdf);
 }
 
-/** Removes protection from a document whose password the user supplied. */
 export async function unlockPdf(file: Blob, password: string): Promise<Blob> {
   const { PDFDocument } = await loadPdfLib();
   const source = await loadPdf(await bytesOf(file), { password });
 
-  // Copying every page into a fresh document is what actually drops the
-  // security handler — saving in place would keep it.
   const output = await PDFDocument.create();
   const copied = await output.copyPages(source, source.getPageIndices());
   for (const page of copied) output.addPage(page);
@@ -620,12 +560,7 @@ export async function unlockPdf(file: Blob, password: string): Promise<Blob> {
   return toBlob(output);
 }
 
-/* ------------------------------------------------------------------
-   Compression
-   ------------------------------------------------------------------ */
-
 export interface CompressOptions {
-  /** Longest edge for embedded images, in pixels. */
   readonly maxImageDimension: number;
   readonly imageQuality: number;
   readonly stripMetadata: boolean;
@@ -638,14 +573,6 @@ export interface CompressResult {
   readonly imagesProcessed: number;
 }
 
-/**
- * Rebuilds a PDF with its raster pages re-encoded at a lower quality.
- *
- * pdf-lib cannot rewrite an image stream in place, so pages that are mostly
- * scanned artwork are rasterised through PDF.js and re-embedded. Pages that
- * are predominantly vector text are copied untouched, because rasterising
- * those would make the file both larger and worse.
- */
 export async function compressPdf(
   file: Blob,
   options: CompressOptions,
@@ -670,7 +597,6 @@ export async function compressPdf(
     page.cleanup();
 
     if (hasText) {
-      // Keep vector/text pages exactly as they are.
       const [copied] = await output.copyPages(source, [index]);
       output.addPage(copied);
     } else {

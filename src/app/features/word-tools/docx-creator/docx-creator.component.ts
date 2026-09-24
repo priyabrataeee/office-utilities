@@ -41,15 +41,6 @@ const STARTER = `
 <blockquote>Nothing you type here leaves your computer.</blockquote>
 `.trim();
 
-/**
- * A rich text editor that produces real .docx and .pdf files.
- *
- * The editor is a `contenteditable` region — cheapest way to get inline
- * styling, drag-and-drop and rich-text paste that actually works. Its HTML is
- * then parsed by the same html engine every conversion tool uses, so headings,
- * lists and tables end up as proper Word styles rather than boxes of ad-hoc
- * formatting.
- */
 @Component({
   selector: 'app-docx-creator',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,7 +92,6 @@ export class DocxCreatorComponent extends ToolBase {
   constructor() {
     super();
 
-    // Restore the saved draft (or the starter markup) once the editor exists.
     effect(() => {
       const element = this.editor()?.nativeElement;
       if (!element) return;
@@ -117,8 +107,6 @@ export class DocxCreatorComponent extends ToolBase {
   protected exec(button: ToolbarButton): void {
     const element = this.editor()?.nativeElement;
     element?.focus();
-    // `execCommand` is deprecated but is still the only way to get rich-text
-    // editing without a full editor library. It is supported everywhere.
     this.doc.execCommand(button.command, false, button.value);
     this.persist();
   }
@@ -158,8 +146,6 @@ export class DocxCreatorComponent extends ToolBase {
   }
 
   protected onPaste(event: ClipboardEvent): void {
-    // Prefer HTML from the clipboard, but fall back to plain text so pasting
-    // from a terminal or a plain-text editor does not insert nothing.
     const clipboard = event.clipboardData;
     if (!clipboard) return;
     const html = clipboard.getData('text/html');
@@ -252,11 +238,6 @@ export class DocxCreatorComponent extends ToolBase {
   }
 }
 
-/**
- * A cheap sanitiser for pasted markup: strips scripts, styles and event
- * attributes. The exporter will re-sanitise structurally when it converts to
- * the document model, so this only needs to defend the live DOM.
- */
 function sanitiseForPaste(html: string): string {
   return html
     .replace(/<\s*(script|style|iframe|object|embed)[^]*?<\/\s*\1\s*>/gi, '')

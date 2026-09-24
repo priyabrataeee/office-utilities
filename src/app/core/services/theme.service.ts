@@ -7,17 +7,8 @@ export type ResolvedTheme = 'light' | 'medium' | 'dark';
 
 const KEY = 'theme';
 
-/** Order the header cycle button walks through. */
 const CYCLE: readonly ThemePreference[] = ['light', 'medium', 'dark', 'system'];
 
-/**
- * Owns the light / medium / dark / system preference.
- *
- * Medium is a warm mid-tone palette that sits between the two extremes — an
- * explicit choice, so we never guess it from `prefers-color-scheme` (the OS
- * only has "light" and "dark" preferences). `system` follows the OS and picks
- * light or dark accordingly.
- */
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly doc = inject(DOCUMENT);
@@ -44,8 +35,6 @@ export class ThemeService {
       effect(() => {
         const pref = this.preference();
         const root = this.doc.documentElement;
-        // `system` clears the attribute so the OS media query controls the
-        // palette; any explicit choice stamps it and wins over the media query.
         if (pref === 'system') root.removeAttribute('data-theme');
         else root.setAttribute('data-theme', pref);
 
@@ -61,13 +50,11 @@ export class ThemeService {
     this.storage.write(KEY, pref);
   }
 
-  /** Cycles light → medium → dark → system. */
   cycle(): void {
     const next = CYCLE[(CYCLE.indexOf(this.preference()) + 1) % CYCLE.length];
     this.set(next);
   }
 
-  /** Migrates legacy stored values so a change of enum never strands people. */
   private readSavedPreference(): ThemePreference {
     const value = this.storage.read<string>(KEY, 'system');
     return (CYCLE as readonly string[]).includes(value)

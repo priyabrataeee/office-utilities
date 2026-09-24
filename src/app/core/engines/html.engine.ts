@@ -1,13 +1,5 @@
 import type { BlockAlign, DocBlock, InlineRun, ListItem, TableCell } from './doc-model';
 
-/**
- * HTML in, HTML out.
- *
- * Parsing uses the browser's own DOM parser inside an inert document, so no
- * script runs, no image or stylesheet is fetched, and untrusted markup is safe
- * to inspect. Serialising escapes every value it writes.
- */
-
 const BLOCK_TAGS = new Set([
   'P',
   'DIV',
@@ -25,13 +17,8 @@ const BLOCK_TAGS = new Set([
 
 const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'IFRAME', 'OBJECT', 'EMBED', 'SVG', 'HEAD', 'META', 'LINK', 'TEMPLATE']);
 
-/* ------------------------------------------------------------------
-   HTML -> document model
-   ------------------------------------------------------------------ */
-
 export function htmlToDocument(html: string): DocBlock[] {
   if (typeof DOMParser === 'undefined') return [];
-  // `text/html` parses into an inert document: no scripts, no fetches.
   const doc = new DOMParser().parseFromString(html, 'text/html');
   const root = doc.body ?? doc.documentElement;
   const blocks: DocBlock[] = [];
@@ -103,7 +90,6 @@ function walk(node: Node, out: DocBlock[]): void {
 
       case 'IMG': {
         const src = element.getAttribute('src') ?? '';
-        // Only inline data URIs are kept — remote images are never fetched.
         if (src.startsWith('data:image/')) {
           out.push({
             type: 'image',
@@ -121,8 +107,6 @@ function walk(node: Node, out: DocBlock[]): void {
 
       default: {
         if (BLOCK_TAGS.has(tag)) {
-          // A wrapper that only contains other blocks should not become a
-          // paragraph of its own.
           if (hasBlockChildren(element)) {
             walk(element, out);
           } else {
@@ -130,7 +114,6 @@ function walk(node: Node, out: DocBlock[]): void {
             if (runs.length) {
               out.push({ type: 'paragraph', content: runs, align: alignOf(element) });
             }
-            // Pick up any images nested inside the wrapper.
             for (const image of Array.from(element.querySelectorAll('img'))) {
               const src = image.getAttribute('src') ?? '';
               if (src.startsWith('data:image/')) {
@@ -139,7 +122,6 @@ function walk(node: Node, out: DocBlock[]): void {
             }
           }
         } else {
-          // Inline-level element at block position, e.g. a bare <span>.
           const runs = inlineRuns(element);
           if (runs.length) out.push({ type: 'paragraph', content: runs });
         }
@@ -173,7 +155,6 @@ function listFrom(element: HTMLElement, ordered: boolean, level: number): DocBlo
     if (li.tagName !== 'LI') continue;
     items.push({ content: inlineRuns(li as HTMLElement, true), level });
 
-    // Flatten nested lists into the same block with a deeper level.
     for (const nested of Array.from(li.children)) {
       if (nested.tagName === 'UL' || nested.tagName === 'OL') {
         const child = listFrom(nested as HTMLElement, nested.tagName === 'OL', level + 1);
@@ -200,12 +181,10 @@ function tableFrom(element: HTMLElement): DocBlock {
   return { type: 'table', header, rows: body, repeatHeader: true };
 }
 
-/** Mutable view of a run's styling while it is being accumulated. */
 type RunStyle = {
   -readonly [K in keyof Omit<InlineRun, 'text'>]?: InlineRun[K];
 };
 
-/** Collects inline runs, carrying style down through nested elements. */
 function inlineRuns(element: HTMLElement | Element, skipNestedLists = false): InlineRun[] {
   const runs: InlineRun[] = [];
 
@@ -306,12 +285,7 @@ function cssColorToHex(value: string): string | null {
   return /^#[0-9a-f]{3,6}$/i.test(value.trim()) ? value.trim() : null;
 }
 
-/* ------------------------------------------------------------------
-   Document model -> HTML
-   ------------------------------------------------------------------ */
-
 export interface HtmlWriteOptions {
-  /** Wrap in a full document with a stylesheet instead of a fragment. */
   readonly standalone?: boolean;
   readonly title?: string;
 }
@@ -444,10 +418,6 @@ export function escapeHtml(value: string): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
-
-/* ------------------------------------------------------------------
-   Document model -> Markdown
-   ------------------------------------------------------------------ */
 
 export function documentToMarkdown(blocks: readonly DocBlock[]): string {
   const parts: string[] = [];

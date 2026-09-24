@@ -21,7 +21,6 @@ interface Slide {
   readonly id: string;
   layout: SlideLayout;
   title: string;
-  /** Newline-separated bullets or paragraphs; each layout treats them a bit differently. */
   body: string;
   bodyRight: string;
   notes: string;
@@ -80,14 +79,6 @@ const STARTER: Slide[] = [
   },
 ];
 
-/**
- * A minimal but real PowerPoint editor.
- *
- * Slides are plain data; the layout picks how the exporter arranges them.
- * Export uses pptxgenjs, which produces a valid .pptx you can open in
- * PowerPoint or Google Slides. Media-heavy layouts are deliberately out of
- * scope for v1 — this is a text-first authoring tool.
- */
 @Component({
   selector: 'app-pptx-creator',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -145,8 +136,6 @@ export class PptxCreatorComponent extends ToolBase {
       });
     });
   }
-
-  /* ---------------- slide management ---------------- */
 
   protected select(id: string): void {
     this.currentId.set(id);
@@ -207,8 +196,6 @@ export class PptxCreatorComponent extends ToolBase {
     this.slides.set(next);
   }
 
-  /* ---------------- editing ---------------- */
-
   protected setTitle(event: Event): void {
     this.title.set((event.target as HTMLInputElement).value);
   }
@@ -254,8 +241,6 @@ export class PptxCreatorComponent extends ToolBase {
     this.savedAt.set(null);
   }
 
-  /* ---------------- preview helpers ---------------- */
-
   protected bodyLines(text: string): string[] {
     return text.split(/\n/).map((line) => line.trim()).filter(Boolean);
   }
@@ -264,7 +249,6 @@ export class PptxCreatorComponent extends ToolBase {
     return LAYOUT_OPTIONS.find((option) => option.value === layout)?.label ?? layout;
   }
 
-  /** Chooses a readable text colour for the current slide's background. */
   protected textColourFor(background: string): string {
     return isDark(background) ? '#f5f6fb' : '#16181f';
   }
@@ -273,13 +257,10 @@ export class PptxCreatorComponent extends ToolBase {
     return isDark(background) ? '#c7cbe0' : '#5b6274';
   }
 
-  /* ---------------- export ---------------- */
-
   protected async downloadPptx(): Promise<void> {
     if (!this.slides().length) return;
 
     const blob = await this.run('Building presentation…', async () => {
-      // pptxgenjs is a CJS-friendly ESM module; import it as default.
       const PptxGenJS = (await import('pptxgenjs')).default;
       const pres = new PptxGenJS();
       pres.layout = this.widescreen() ? 'LAYOUT_WIDE' : 'LAYOUT_4x3';
@@ -289,8 +270,6 @@ export class PptxCreatorComponent extends ToolBase {
 
       const width = this.widescreen() ? 13.333 : 10;
       const height = this.widescreen() ? 7.5 : 7.5;
-      // 4:3 is 10 x 7.5 inches; widescreen is 13.333 x 7.5. We author within
-      // those coordinates so text sits where the preview showed it.
 
       for (const slide of this.slides()) {
         const s = pres.addSlide();
@@ -420,7 +399,6 @@ export class PptxCreatorComponent extends ToolBase {
         }
       }
 
-      // pptxgenjs writes to a Blob in the browser when we ask for 'blob'.
       const output = (await pres.write({ outputType: 'blob' })) as Blob;
       return output;
     });
@@ -436,7 +414,6 @@ export class PptxCreatorComponent extends ToolBase {
   }
 }
 
-/** Adds the header strip and title band shared by content layouts. */
 function addSlideChrome(
   slide: import('pptxgenjs').default.Slide,
   data: Slide,

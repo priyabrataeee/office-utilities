@@ -12,15 +12,6 @@ import {
 } from './doc-model';
 import { SITE } from '../site.config';
 
-/**
- * Renders the document model onto real PDF pages.
- *
- * This is a genuine (if compact) layout engine: it wraps mixed bold/italic
- * runs, paginates lists and tables, repeats table headers across page breaks,
- * draws link annotations, and adds page numbers in a second pass once the
- * total page count is known.
- */
-
 export interface PdfWriteOptions extends Partial<PageOptions> {
   readonly meta?: DocMeta;
 }
@@ -42,7 +33,6 @@ interface Ctx {
   options: PageOptions;
   pageWidth: number;
   pageHeight: number;
-  /** Cursor measured from the bottom of the page, as PDF space is. */
   y: number;
   images: Map<string, { image: PDFImage; width: number; height: number }>;
   lib: typeof import('@cantoo/pdf-lib');
@@ -52,41 +42,36 @@ interface Ctx {
 const HEADING_SIZES: Record<number, number> = { 1: 22, 2: 17, 3: 14.5, 4: 12.5, 5: 11.5, 6: 11 };
 const HEADING_SPACE_BEFORE: Record<number, number> = { 1: 16, 2: 14, 3: 12, 4: 10, 5: 8, 6: 8 };
 
-/** Characters WinAnsi can represent above U+00FF. */
 const WIN_ANSI_HIGH = new Set([
   0x20ac, 0x201a, 0x0192, 0x201e, 0x2026, 0x2020, 0x2021, 0x02c6, 0x2030, 0x0160, 0x2039, 0x0152,
   0x017d, 0x2018, 0x2019, 0x201c, 0x201d, 0x2022, 0x2013, 0x2014, 0x02dc, 0x2122, 0x0161, 0x203a,
   0x0153, 0x017e, 0x0178,
 ]);
 
-/**
- * Sensible ASCII stand-ins for characters the standard PDF fonts cannot draw.
- * Written as escapes so the source stays plain ASCII.
- */
 const FALLBACK_PAIRS: readonly (readonly [number, string])[] = [
-  [0x00a0, ' '], // no-break space
-  [0x2009, ' '], // thin space
-  [0x200a, ' '], // hair space
-  [0x202f, ' '], // narrow no-break space
-  [0x200b, ''], // zero-width space
-  [0xfeff, ''], // byte-order mark
-  [0x2212, '-'], // minus sign
+  [0x00a0, ' '],
+  [0x2009, ' '],
+  [0x200a, ' '],
+  [0x202f, ' '],
+  [0x200b, ''],
+  [0xfeff, ''],
+  [0x2212, '-'],
   [0x2010, '-'],
   [0x2011, '-'],
-  [0x2044, '/'], // fraction slash
+  [0x2044, '/'],
   [0x2192, '->'],
   [0x2190, '<-'],
   [0x21d2, '=>'],
   [0x2264, '<='],
   [0x2265, '>='],
   [0x2260, '!='],
-  [0x2713, 'v'], // check mark
+  [0x2713, 'v'],
   [0x2714, 'v'],
   [0x2717, 'x'],
-  [0x25cf, '•'], // black circle -> bullet
+  [0x25cf, '•'],
   [0x25aa, '•'],
   [0x25a0, '•'],
-  [0x2500, '-'], // box drawing
+  [0x2500, '-'],
   [0x2502, '|'],
 ];
 
@@ -96,12 +81,6 @@ const FALLBACKS = new Map<string, string>(
 
 let droppedCharacters = 0;
 
-/**
- * The 14 standard PDF fonts use WinAnsi encoding, so scripts outside it — CJK,
- * Devanagari, emoji — cannot be drawn without embedding a font file. Rather
- * than throwing mid-document we substitute and count, so callers can warn the
- * user honestly instead of silently mangling their text.
- */
 export function toWinAnsi(text: string): string {
   let out = '';
   for (const char of text) {
@@ -121,13 +100,8 @@ export function toWinAnsi(text: string): string {
   return out;
 }
 
-/* ------------------------------------------------------------------
-   Entry point
-   ------------------------------------------------------------------ */
-
 export interface PdfRenderResult {
   readonly blob: Blob;
-  /** Characters that had to be substituted because of font encoding. */
   readonly droppedCharacters: number;
   readonly pageCount: number;
 }
@@ -144,8 +118,6 @@ export async function renderDocumentToPdf(
   const [pageWidth, pageHeight] = pageDimensions(resolved);
   const fonts = await loadFonts(pdf, lib, resolved.font);
 
-  // Images must be embedded before layout, because embedding is async and the
-  // layout pass is deliberately synchronous.
   const images = await embedImages(pdf, blocks);
 
   const ctx: Ctx = {
@@ -177,10 +149,6 @@ export async function renderDocumentToPdf(
     pageCount: ctx.pages.length,
   };
 }
-
-/* ------------------------------------------------------------------
-   Fonts, pages, metadata
-   ------------------------------------------------------------------ */
 
 async function loadFonts(
   pdf: PDFDocument,
@@ -292,14 +260,8 @@ function applyMeta(pdf: PDFDocument, meta: DocMeta | undefined): void {
     if (meta?.keywords?.length) pdf.setKeywords([...meta.keywords]);
     pdf.setCreationDate(new Date());
     pdf.setModificationDate(new Date());
-  } catch {
-    /* metadata is cosmetic; never fail an export over it */
-  }
+  } catch {}
 }
-
-/* ------------------------------------------------------------------
-   Inline layout
-   ------------------------------------------------------------------ */
 
 interface Token {
   text: string;
@@ -321,7 +283,6 @@ function tokenise(ctx: Ctx, runs: readonly InlineRun[], size: number): Token[] {
   for (const style of runs) {
     const font = fontFor(ctx.fonts, style);
     const runSize = style.size ?? size;
-    // Spaces become their own tokens so line breaking can drop them cleanly.
     for (const piece of toWinAnsi(style.text).split(/(\s+)/)) {
       if (!piece) continue;
       const isSpace = /^\s+$/.test(piece);
@@ -378,7 +339,6 @@ interface TextOptions {
   indent?: number;
 }
 
-/** Draws wrapped runs at the cursor, advancing it. Returns the height used. */
 function drawRuns(
   ctx: Ctx,
   runs: readonly InlineRun[],
@@ -472,14 +432,8 @@ function addLink(ctx: Ctx, x: number, y: number, width: number, height: number, 
       annots.push(context.register(annotation));
       ctx.page.node.set(PDFName.of('Annots'), annots);
     }
-  } catch {
-    /* a missing link annotation must never fail the whole export */
-  }
+  } catch {}
 }
-
-/* ------------------------------------------------------------------
-   Block layout
-   ------------------------------------------------------------------ */
 
 function drawBlock(ctx: Ctx, block: DocBlock, x: number, width: number): void {
   const base = ctx.options.fontSize;
@@ -545,7 +499,6 @@ function drawBlock(ctx: Ctx, block: DocBlock, x: number, width: number): void {
         lineHeight,
         color: '#4a4f5e',
       });
-      // Only draw the rule when the quote stayed on one page.
       if (used > 0 && ctx.y < top) {
         ctx.page.drawRectangle({
           x,
@@ -631,7 +584,6 @@ function drawBlock(ctx: Ctx, block: DocBlock, x: number, width: number): void {
       const leftEnd = ctx.y;
 
       if (ctx.pages.length === startPage) {
-        // Both columns started level, so rewind and lay the right one out too.
         ctx.y = startY;
         for (const child of block.right) drawBlock(ctx, child, x + leftWidth + gap, rightWidth);
         ctx.y = Math.min(leftEnd, ctx.y);
@@ -651,10 +603,6 @@ function wrapMonospace(ctx: Ctx, text: string, size: number, maxWidth: number): 
   for (let i = 0; i < text.length; i += perLine) out.push(text.slice(i, i + perLine));
   return out;
 }
-
-/* ------------------------------------------------------------------
-   Tables
-   ------------------------------------------------------------------ */
 
 function drawTable(ctx: Ctx, block: TableBlock, x: number, width: number): void {
   const base = ctx.options.fontSize * (block.compact ? 0.86 : 0.94);
@@ -726,7 +674,6 @@ function drawTable(ctx: Ctx, block: TableBlock, x: number, width: number): void 
     const pagesBefore = ctx.pages.length;
     drawRow(row, false);
     if (block.repeatHeader && block.header && ctx.pages.length > pagesBefore) {
-      // The row spilled onto a new page — repeat the header above it.
       const rowTop = ctx.y;
       ctx.y = ctx.pageHeight - ctx.options.margin;
       drawRow(block.header, true);
@@ -759,10 +706,6 @@ function measureCell(ctx: Ctx, cell: TableCell, maxWidth: number, size: number):
   return Math.max(lines.length, 1) * size * 1.32;
 }
 
-/* ------------------------------------------------------------------
-   Images
-   ------------------------------------------------------------------ */
-
 async function embedImages(
   pdf: PDFDocument,
   blocks: readonly DocBlock[],
@@ -786,7 +729,6 @@ async function embedImages(
       const { convertDataUrl, dataUrlToBytes } = await import('./image.engine');
       let usable = dataUrl;
       if (!isJpeg && !/^data:image\/png/i.test(dataUrl)) {
-        // pdf-lib only embeds PNG and JPEG; re-encode anything else locally.
         usable = await convertDataUrl(dataUrl, 'image/png');
       }
       const bytes = dataUrlToBytes(usable);
@@ -794,9 +736,7 @@ async function embedImages(
         ? await pdf.embedJpg(bytes)
         : await pdf.embedPng(bytes);
       out.set(dataUrl, { image, width: image.width, height: image.height });
-    } catch {
-      /* an unreadable image is skipped rather than aborting the export */
-    }
+    } catch {}
   }
   return out;
 }

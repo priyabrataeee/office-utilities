@@ -17,7 +17,6 @@ interface Rename {
   readonly collision: boolean;
 }
 
-/** Batch rename with a live preview and a ZIP of the renamed set. */
 @Component({
   selector: 'app-batch-rename',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,7 +58,6 @@ export class BatchRenameComponent extends ToolBase {
       let stem = baseNameOf(file.name);
       const originalExtension = extensionOf(file.name);
 
-      // find & replace
       const needle = this.find();
       if (needle) {
         try {
@@ -68,9 +66,7 @@ export class BatchRenameComponent extends ToolBase {
           } else {
             stem = stem.split(needle).join(this.replace());
           }
-        } catch {
-          /* an invalid pattern is reported separately, not applied */
-        }
+        } catch {}
       }
 
       switch (this.caseMode()) {

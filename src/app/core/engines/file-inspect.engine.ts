@@ -1,25 +1,15 @@
-/**
- * File inspection: real format detection, metadata and container analysis.
- *
- * Extensions lie. Everything here works from the bytes themselves, which is
- * what makes the signature checker useful and the size analyser accurate.
- */
-
 export interface FileSignature {
   readonly format: string;
   readonly mime: string;
   readonly extensions: readonly string[];
-  /** Byte values; `null` matches any byte at that offset. */
   readonly magic: readonly (number | null)[];
   readonly offset?: number;
   readonly category: 'document' | 'image' | 'archive' | 'audio' | 'video' | 'executable' | 'other';
-  /** Extra check for containers that share a magic number, e.g. ZIP-based. */
   readonly refine?: (bytes: Uint8Array) => string | null;
 }
 
 const ZIP_MAGIC = [0x50, 0x4b, 0x03, 0x04];
 
-/** Signature table, most specific first. */
 export const SIGNATURES: readonly FileSignature[] = [
   {
     format: 'PDF document',
@@ -34,7 +24,6 @@ export const SIGNATURES: readonly FileSignature[] = [
     extensions: ['.zip'],
     magic: ZIP_MAGIC,
     category: 'archive',
-    // OOXML and ODF are ZIPs; the first entry name tells them apart.
     refine: (bytes) => {
       const head = ascii(bytes, 0, Math.min(bytes.length, 4096));
       if (head.includes('word/')) return 'Word document (.docx)';
@@ -220,11 +209,9 @@ export interface DetectionResult {
   readonly mime: string;
   readonly category: FileSignature['category'];
   readonly expectedExtensions: readonly string[];
-  /** True when the extension does not match what the bytes say. */
   readonly mismatch: boolean;
   readonly declaredExtension: string;
   readonly declaredMime: string;
-  /** First bytes, rendered as hex for display. */
   readonly hex: string;
   readonly ascii: string;
   readonly confidence: 'high' | 'medium' | 'none';
@@ -279,7 +266,6 @@ function matches(bytes: Uint8Array, signature: FileSignature): boolean {
   );
 }
 
-/** Heuristic: mostly printable, no NULs in the first block. */
 function looksTextual(bytes: Uint8Array): boolean {
   if (!bytes.length) return false;
   let printable = 0;
@@ -318,16 +304,11 @@ function extensionOf(name: string): string {
   return dot > 0 ? name.slice(dot).toLowerCase() : '';
 }
 
-/* ------------------------------------------------------------------
-   Format-specific metadata
-   ------------------------------------------------------------------ */
-
 export interface MetadataGroup {
   readonly title: string;
   readonly entries: readonly { key: string; value: string }[];
 }
 
-/** Reads whatever properties the file's own format exposes. */
 export async function readFileMetadata(file: File): Promise<MetadataGroup[]> {
   const detection = await detectFormat(file);
   const groups: MetadataGroup[] = [
@@ -446,10 +427,6 @@ function gcd(a: number, b: number): number {
   return b === 0 ? a : gcd(b, a % b);
 }
 
-/* ------------------------------------------------------------------
-   Container breakdown (what is taking up the space)
-   ------------------------------------------------------------------ */
-
 export interface ContainerPart {
   readonly name: string;
   readonly bytes: number;
@@ -465,7 +442,6 @@ export interface ContainerReport {
   readonly kind: 'zip' | 'pdf' | 'unsupported';
 }
 
-/** Breaks an OOXML/ZIP container, or a PDF, into its constituent parts. */
 export async function analyseContainer(file: File): Promise<ContainerReport> {
   const detection = await detectFormat(file);
 
@@ -486,7 +462,6 @@ export async function analyseContainer(file: File): Promise<ContainerReport> {
   const parts: ContainerPart[] = [];
   for (const entry of Object.values(zip.files)) {
     if (entry.dir) continue;
-    // JSZip exposes the sizes on an internal field; fall back to decompressing.
     const meta = (entry as unknown as {
       _data?: { uncompressedSize?: number; compressedSize?: number };
     })._data;
@@ -513,8 +488,6 @@ async function analysePdf(file: File): Promise<ContainerReport> {
   try {
     const parts: ContainerPart[] = [];
     const pageCount = doc.numPages;
-    // PDF has no part table, so approximate by measuring each page's operators
-    // and image resources — enough to show which pages carry the weight.
     for (let index = 1; index <= Math.min(pageCount, 200); index++) {
       const page = await doc.getPage(index);
       const operators = await page.getOperatorList();
@@ -524,7 +497,6 @@ async function analysePdf(file: File): Promise<ContainerReport> {
 
       parts.push({
         name: `Page ${index}`,
-        // A weighting, not a byte count — labelled as such in the UI.
         bytes: images * 40_000 + text * 40 + operators.fnArray.length * 8,
         compressed: 0,
         group: images > 0 ? 'Pages with images' : 'Text-only pages',

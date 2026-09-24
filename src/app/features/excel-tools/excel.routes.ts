@@ -1,11 +1,5 @@
 import { Routes } from '@angular/router';
 
-/**
- * Excel & CSV routes.
- *
- * Ten catalog entries, five components: the conversion, cleaning and profiling
- * tools each differ only by a mode supplied in route data.
- */
 export const routes: Routes = [
   {
     path: '',

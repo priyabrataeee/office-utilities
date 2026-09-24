@@ -18,8 +18,6 @@
   margin-bottom: var(--ou-s-4);
 }
 
-/* The drawing pad. `touch-action: none` is what stops a finger scrolling the
-   page instead of leaving a line on it. */
 .pad {
   display: block;
   width: 100%;

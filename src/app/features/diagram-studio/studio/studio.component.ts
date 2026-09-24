@@ -46,14 +46,6 @@ type Interaction =
   | { kind: 'resize'; id: string; startX: number; startY: number; width: number; height: number }
   | { kind: 'pan'; startX: number; startY: number; originX: number; originY: number };
 
-/**
- * The diagram editor.
- *
- * Everything is one immutable `Diagram` value in a signal: the canvas renders
- * it, undo/redo snapshots it, autosave serialises it, and the exporters read
- * it. Interaction mutates a working copy and commits a snapshot on release, so
- * a drag is one undo step rather than sixty.
- */
 @Component({
   selector: 'app-diagram-studio',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,7 +62,6 @@ export class StudioComponent {
   private readonly storage = inject(StorageService);
   private readonly recent = inject(RecentService);
 
-  /** Supplied by route data; picks the stencil and starter diagram. */
   readonly toolIdInput = input.required<string>({ alias: 'toolId' });
 
   private readonly surface = viewChild<ElementRef<SVGSVGElement>>('surface');
@@ -107,7 +98,6 @@ export class StudioComponent {
     return id ? (this.diagram().edges.find((edge) => edge.id === id) ?? null) : null;
   });
 
-  /** Containers must paint behind everything else. */
   protected readonly orderedNodes = computed(() =>
     [...this.diagram().nodes].sort((a, b) => (a.z ?? 1) - (b.z ?? 1)),
   );
@@ -131,7 +121,6 @@ export class StudioComponent {
       untracked(() => this.initialise(toolId));
     });
 
-    // Autosave whenever the diagram settles.
     effect(() => {
       const diagram = this.diagram();
       untracked(() => {
@@ -152,12 +141,9 @@ export class StudioComponent {
       return;
     }
 
-    // The plain studio route restores whatever was last being worked on.
     const saved = this.storage.read<Diagram | null>(AUTOSAVE_KEY, null);
     this.diagram.set(saved && saved.nodes ? saved : emptyDiagram('My diagram'));
   }
-
-  /* ---------------- history ---------------- */
 
   private snapshot(): void {
     this.history = [...this.history.slice(-MAX_HISTORY), structuredCloneSafe(this.diagram())];
@@ -173,7 +159,6 @@ export class StudioComponent {
     this.diagram.set(draft);
   }
 
-  /** Applies a change without an undo entry — used during a live drag. */
   private mutateSilently(change: (draft: Diagram) => void): void {
     const draft = structuredCloneSafe(this.diagram());
     change(draft);
@@ -199,12 +184,8 @@ export class StudioComponent {
     this.futureDepth.set(this.future.length);
   }
 
-  /* ---------------- adding ---------------- */
-
   protected addShape(item: StencilItem): void {
     const diagram = this.diagram();
-    // Drop new shapes near the middle of the visible area, then nudge so
-    // repeated clicks do not stack perfectly on top of each other.
     const offset = diagram.nodes.length % 6;
     const node: DiagramNode = {
       id: uid('n'),
@@ -230,8 +211,6 @@ export class StudioComponent {
   protected setStencil(id: string): void {
     this.activeStencil.set(id);
   }
-
-  /* ---------------- selection & interaction ---------------- */
 
   protected selectNode(id: string, event: PointerEvent): void {
     event.stopPropagation();
@@ -311,7 +290,6 @@ export class StudioComponent {
 
     if (interaction.kind === 'move') {
       if (!interaction.moved) {
-        // The first movement is what earns an undo entry.
         this.snapshot();
         this.interaction = { ...interaction, moved: true };
       }
@@ -338,8 +316,6 @@ export class StudioComponent {
     if (this.interaction.kind === 'resize') this.snapshot();
     this.interaction = { kind: 'none' };
   }
-
-  /* ---------------- connections ---------------- */
 
   protected startConnection(id: string, event: Event): void {
     event.stopPropagation();
@@ -372,8 +348,6 @@ export class StudioComponent {
   protected cancelConnection(): void {
     this.connectFrom.set(null);
   }
-
-  /* ---------------- editing ---------------- */
 
   protected updateNode(field: keyof DiagramNode, event: Event): void {
     const id = this.selectedNodeId();
@@ -426,7 +400,6 @@ export class StudioComponent {
     if (nodeId) {
       this.mutate((draft) => {
         draft.nodes = draft.nodes.filter((node) => node.id !== nodeId);
-        // An edge with a missing end would render as a dangling line.
         draft.edges = draft.edges.filter((edge) => edge.from !== nodeId && edge.to !== nodeId);
       });
       this.selectedNodeId.set(null);
@@ -464,8 +437,6 @@ export class StudioComponent {
     });
   }
 
-  /* ---------------- canvas settings ---------------- */
-
   protected setTitle(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.mutateSilently((draft) => {
@@ -499,8 +470,6 @@ export class StudioComponent {
     this.selectedNodeId.set(null);
     this.selectedEdgeId.set(null);
   }
-
-  /* ---------------- geometry helpers for the template ---------------- */
 
   protected pathFor(edge: DiagramEdge): string {
     const from = this.nodeById().get(edge.from);
@@ -552,14 +521,11 @@ export class StudioComponent {
     if (!svg) return { x: 0, y: 0 };
     const rect = svg.getBoundingClientRect();
     const diagram = this.diagram();
-    // The SVG scales to its box, so map client pixels through that ratio.
     return {
       x: ((event.clientX - rect.left) / rect.width) * diagram.width,
       y: ((event.clientY - rect.top) / rect.height) * diagram.height,
     };
   }
-
-  /* ---------------- keyboard ---------------- */
 
   protected onKeyDown(event: KeyboardEvent): void {
     const target = event.target as HTMLElement | null;
@@ -591,7 +557,6 @@ export class StudioComponent {
       return;
     }
 
-    // Arrow keys nudge the selection.
     const nudge: Record<string, [number, number]> = {
       ArrowUp: [0, -1],
       ArrowDown: [0, 1],
@@ -611,8 +576,6 @@ export class StudioComponent {
       });
     }
   }
-
-  /* ---------------- import & export ---------------- */
 
   protected exportSvg(): void {
     const svg = diagramToSvg(this.diagram());

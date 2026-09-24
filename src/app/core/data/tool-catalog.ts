@@ -1,10 +1,5 @@
 import type { ToolCategory, ToolDefinition } from '../models/tool.model';
 
-/**
- * The catalog. Plain data, no Angular imports — it is also consumed by
- * `scripts/generate-sitemap.mjs` at build time via Node type stripping.
- */
-
 export const TOOL_CATEGORIES: readonly ToolCategory[] = [
   {
     id: 'viewer',
@@ -99,9 +94,6 @@ export const TOOL_CATEGORIES: readonly ToolCategory[] = [
 ];
 
 export const TOOLS: readonly ToolDefinition[] = [
-  /* ----------------------------------------------------------------
-     Viewers
-     ---------------------------------------------------------------- */
   {
     id: 'universal-viewer',
     category: 'viewer',
@@ -439,9 +431,6 @@ export const TOOLS: readonly ToolDefinition[] = [
     ],
   },
 
-  /* ----------------------------------------------------------------
-     PDF tools
-     ---------------------------------------------------------------- */
   {
     id: 'merge-pdf',
     category: 'pdf',
@@ -1019,9 +1008,6 @@ export const TOOLS: readonly ToolDefinition[] = [
     ],
   },
 
-  /* ----------------------------------------------------------------
-     Word tools
-     ---------------------------------------------------------------- */
   {
     id: 'docx-creator',
     category: 'word',
@@ -1311,9 +1297,6 @@ export const TOOLS: readonly ToolDefinition[] = [
     ],
   },
 
-  /* ----------------------------------------------------------------
-     Excel tools
-     ---------------------------------------------------------------- */
   {
     id: 'xlsx-creator',
     category: 'excel',
@@ -1674,9 +1657,6 @@ export const TOOLS: readonly ToolDefinition[] = [
     ],
   },
 
-  /* ----------------------------------------------------------------
-     PowerPoint tools
-     ---------------------------------------------------------------- */
   {
     id: 'pptx-creator',
     category: 'powerpoint',
@@ -1853,9 +1833,6 @@ export const TOOLS: readonly ToolDefinition[] = [
     ],
   },
 
-  /* ----------------------------------------------------------------
-     Converters
-     ---------------------------------------------------------------- */
   {
     id: 'excel-to-pdf',
     category: 'convert',
@@ -2464,9 +2441,6 @@ export const TOOLS: readonly ToolDefinition[] = [
     ],
   },
 
-  /* ----------------------------------------------------------------
-     Generators
-     ---------------------------------------------------------------- */
   {
     id: 'invoice-generator',
     category: 'generate',
@@ -2783,9 +2757,6 @@ export const TOOLS: readonly ToolDefinition[] = [
     ],
   },
 
-  /* ----------------------------------------------------------------
-     Diagram studio
-     ---------------------------------------------------------------- */
   {
     id: 'diagram-studio',
     category: 'diagram',
@@ -3079,9 +3050,6 @@ export const TOOLS: readonly ToolDefinition[] = [
     ],
   },
 
-  /* ----------------------------------------------------------------
-     File utilities
-     ---------------------------------------------------------------- */
   {
     id: 'file-metadata',
     category: 'file',

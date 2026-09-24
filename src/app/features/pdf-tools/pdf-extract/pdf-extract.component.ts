@@ -34,14 +34,6 @@ const TARGET_META: Record<
   text: { extension: '.txt', label: 'text', icon: 'file-text' },
 };
 
-/**
- * PDF to Word and PDF to text.
- *
- * Both read the same extraction; only the writer differs. The options are
- * exposed rather than hidden because structure recovery is inference — when a
- * document defeats the heuristics, the person looking at the result is far
- * better placed to correct it than the code is.
- */
 @Component({
   selector: 'app-pdf-extract',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,7 +77,6 @@ export class PdfExtractComponent extends ToolBase {
   protected readonly droppedLines = computed(() => this.result()?.droppedLines ?? []);
   protected readonly textOutput = computed(() => this.result()?.text ?? '');
 
-  /** A PDF with no text layer is a scan; nothing here can read it. */
   protected readonly isScanned = computed(() => {
     const result = this.result();
     return !!result && !result.hasTextLayer;
@@ -125,7 +116,6 @@ export class PdfExtractComponent extends ToolBase {
     }
   }
 
-  /** Any option change re-runs the extraction, so the preview always matches. */
   protected async toggle(
     option: 'detectHeadings' | 'detectLists' | 'mergeParagraphs' | 'dropRepeated' | 'pageBreaks',
     event: Event,

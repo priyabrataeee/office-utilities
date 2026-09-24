@@ -11,14 +11,6 @@ import type {
 import { DEFAULT_PAGE_OPTIONS, PAGE_SIZES } from './doc-model';
 import type { FileChild, ParagraphChild } from 'docx';
 
-/**
- * Writes the document model out as a real .docx.
- *
- * The output uses Word's built-in Heading, Quote and List Paragraph styles
- * rather than hard-coded formatting, so the result stays editable and picks up
- * whatever theme the recipient's Word is configured with.
- */
-
 export interface DocxWriteOptions extends Partial<PageOptions> {
   readonly meta?: DocMeta;
 }
@@ -48,13 +40,12 @@ export async function renderDocumentToDocx(
         document: {
           run: {
             font: fontName(resolved.font),
-            size: resolved.fontSize * 2, // half-points
+            size: resolved.fontSize * 2,
           },
           paragraph: { spacing: { line: Math.round(resolved.lineHeight * 240) } },
         },
       },
     },
-    // Ordered lists reference this definition so Word renumbers them natively.
     numbering: {
       config: [
         {
@@ -308,8 +299,6 @@ function convertBlock(
       ];
 
     case 'columns': {
-      // Word has no lightweight two-column primitive that survives editing, so
-      // a borderless table keeps the visual structure and stays editable.
       const ratio = block.ratio ?? 0.5;
       return [
         new docx.Table({
@@ -430,9 +419,7 @@ async function loadImages(
         ...size,
         type: /^data:image\/jpe?g/i.test(usable) ? 'image/jpeg' : 'image/png',
       });
-    } catch {
-      /* skip images that cannot be decoded */
-    }
+    } catch {}
   }
   return out;
 }

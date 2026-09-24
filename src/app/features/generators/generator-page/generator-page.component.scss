@@ -78,7 +78,6 @@
   cursor: pointer;
 }
 
-/* ---- repeating rows ---- */
 .repeat {
   gap: var(--ou-s-3);
 }
@@ -140,7 +139,6 @@
   }
 }
 
-/* ---- preview ---- */
 .preview-column {
   position: sticky;
   top: calc(var(--ou-header-h) + var(--ou-s-4));

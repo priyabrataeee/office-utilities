@@ -36,13 +36,6 @@ interface RenderedPage {
   height: number;
 }
 
-/**
- * Full PDF reader: continuous scroll, thumbnails, full-text search, zoom,
- * rotation, fullscreen, printing and download.
- *
- * Pages render lazily as they approach the viewport, so a 900-page document
- * opens as quickly as a one-page one.
- */
 @Component({
   selector: 'app-pdf-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -129,7 +122,6 @@ export class PdfViewComponent {
     this.thumbnails.set(new Array(doc.numPages).fill(null));
     this.loading.set(false);
 
-    // First few pages eagerly, the rest on demand.
     for (let page = 1; page <= Math.min(3, doc.numPages); page++) {
       await this.renderPageAt(page);
     }
@@ -166,9 +158,7 @@ export class PdfViewComponent {
             : item,
         ),
       );
-    } catch {
-      /* a page that fails to render keeps its placeholder */
-    } finally {
+    } catch {} finally {
       this.renderQueue.delete(pageNumber);
     }
   }
@@ -183,14 +173,11 @@ export class PdfViewComponent {
           next[index - 1] = thumbnail;
           return next;
         });
-      } catch {
-        /* skip */
-      }
+      } catch {}
       if (index % 5 === 0) await new Promise((resolve) => setTimeout(resolve, 0));
     }
   }
 
-  /** Renders a page when its placeholder scrolls close to the viewport. */
   protected onPageVisible(pageNumber: number): void {
     this.currentPage.set(pageNumber);
     void this.renderPageAt(pageNumber);
@@ -212,7 +199,6 @@ export class PdfViewComponent {
 
   protected rotate(): void {
     this.rotation.update((current) => (current + 90) % 360);
-    // Rotation invalidates every rendered bitmap.
     this.pages.update((list) => list.map((page) => ({ ...page, canvasUrl: null })));
     void this.renderPageAt(this.currentPage());
   }
@@ -263,7 +249,6 @@ export class PdfViewComponent {
 
     if (!this.textCache) {
       this.searching.set(true);
-      // One extraction pass, reused for every subsequent query.
       this.textCache = await extractAllText(doc);
       this.searching.set(false);
     }

@@ -21,8 +21,6 @@ import {
   type GeneratorDef,
 } from '../generator.model';
 
-/* Shared letterhead for HR correspondence ------------------------- */
-
 function companyHeader(data: FormData): DocBlock[] {
   const lines = str(data, 'companyAddress')
     .split('\n')
@@ -71,8 +69,6 @@ const COMPANY_SECTION = {
     { key: 'signatoryTitle', label: 'Signatory title', type: 'text' as const },
   ],
 };
-
-/* Salary slip ----------------------------------------------------- */
 
 export const SALARY_SLIP: GeneratorDef = {
   toolId: 'salary-slip-generator',
@@ -190,7 +186,6 @@ export const SALARY_SLIP: GeneratorDef = {
     const totalDeductions = deductions.reduce((sum, item) => sum + num(item, 'amount'), 0);
     const netPay = grossPay - totalDeductions;
 
-    // Both columns are padded to the same length so the table reads evenly.
     const maxRows = Math.max(earnings.length, deductions.length);
     const tableRows: TableCell[][] = [];
     for (let index = 0; index < maxRows; index++) {
@@ -299,8 +294,6 @@ export const SALARY_SLIP: GeneratorDef = {
     ];
   },
 };
-
-/* Offer letter ---------------------------------------------------- */
 
 export const OFFER_LETTER: GeneratorDef = {
   toolId: 'offer-letter-generator',
@@ -474,8 +467,6 @@ export const OFFER_LETTER: GeneratorDef = {
   },
 };
 
-/* Experience / relieving letter ------------------------------------ */
-
 export const EXPERIENCE_LETTER: GeneratorDef = {
   toolId: 'experience-letter-generator',
   page: { size: 'A4', margin: 60, font: 'serif' },
@@ -636,8 +627,6 @@ export const EXPERIENCE_LETTER: GeneratorDef = {
     ];
   },
 };
-
-/* Certificate ------------------------------------------------------ */
 
 export const CERTIFICATE: GeneratorDef = {
   toolId: 'certificate-generator',

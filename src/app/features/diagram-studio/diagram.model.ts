@@ -1,12 +1,3 @@
-/**
- * Diagram model.
- *
- * Deliberately plain data: the canvas renders it, the exporters serialise it,
- * and the text-to-diagram tool produces it. Nothing in the model knows about
- * the DOM, which is what makes SVG, PNG and JSON export the same operation
- * three ways.
- */
-
 export type ShapeKind =
   | 'rect'
   | 'rounded'
@@ -35,9 +26,7 @@ export interface DiagramNode {
   textColor: string;
   fontSize: number;
   bold?: boolean;
-  /** Extra lines for class boxes and ER entities. */
   rows?: string[];
-  /** Draw order; containers sit behind everything else. */
   z?: number;
 }
 
@@ -86,10 +75,6 @@ export function uid(prefix: string): string {
   return `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
 }
 
-/* ------------------------------------------------------------------
-   Geometry
-   ------------------------------------------------------------------ */
-
 export interface Point {
   readonly x: number;
   readonly y: number;
@@ -99,12 +84,6 @@ export function centreOf(node: DiagramNode): Point {
   return { x: node.x + node.width / 2, y: node.y + node.height / 2 };
 }
 
-/**
- * Where an edge should meet a node's outline.
- *
- * Rays are clipped to the bounding box rather than the exact silhouette —
- * accurate enough for every shape here, and far cheaper than per-shape maths.
- */
 export function anchorPoint(node: DiagramNode, towards: Point): Point {
   const centre = centreOf(node);
   const dx = towards.x - centre.x;
@@ -122,7 +101,6 @@ export function anchorPoint(node: DiagramNode, towards: Point): Point {
   return { x: centre.x + dx * scale, y: centre.y + dy * scale };
 }
 
-/** Orthogonal route: out horizontally, across, then in. */
 export function orthogonalPath(from: Point, to: Point): string {
   const midX = (from.x + to.x) / 2;
   return `M ${from.x} ${from.y} L ${midX} ${from.y} L ${midX} ${to.y} L ${to.x} ${to.y}`;
@@ -157,7 +135,6 @@ export function edgeMidpoint(from: DiagramNode, to: DiagramNode): Point {
   return { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 };
 }
 
-/** SVG path for one shape, in the node's own coordinate space. */
 export function shapePath(node: DiagramNode): string {
   const { width: w, height: h } = node;
 
@@ -180,10 +157,6 @@ export function shapePath(node: DiagramNode): string {
       return '';
   }
 }
-
-/* ------------------------------------------------------------------
-   Stencils
-   ------------------------------------------------------------------ */
 
 export interface StencilItem {
   readonly label: string;

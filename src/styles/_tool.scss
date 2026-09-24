@@ -1,10 +1,5 @@
 @use 'mixins' as *;
 
-/**
- * Chrome shared by tool pages. Included per component, so the rules stay
- * style-scoped while the vocabulary stays consistent across 89 tools.
- */
-
 :host {
   display: block;
 }

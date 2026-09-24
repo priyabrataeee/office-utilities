@@ -1,33 +1,10 @@
-/**
- * Extended per-tool copy for the pages that carry the most search traffic.
- *
- * Every tool in the catalog has a `description` and a set of FAQs, which is
- * enough for a long-tail page. The tools below compete for terms people search
- * in volume, so they get three more sections: body copy that goes past the
- * one-line summary, a technically specific account of what runs in the browser,
- * and concrete situations the tool is for.
- *
- * This lives apart from the catalog deliberately. It is optional, it is only
- * populated where there is something real to say, and keeping it separate means
- * a page never ends up carrying a section of padding written to fill a template.
- *
- * The `howItWorks` copy names the actual libraries and states the actual limits.
- * That is the point of it: a vague reassurance is worth nothing on a site whose
- * whole claim is that you can check what it does.
- */
-
 export interface ToolContent {
-  /** Body paragraphs. Expands on `description` rather than restating it. */
   readonly about: readonly string[];
-  /** What executes on the visitor's device — named libraries, real limits. */
   readonly howItWorks: readonly string[];
-  /** Concrete situations, not a rephrasing of the description. */
   readonly useCases: readonly string[];
 }
 
 export const TOOL_CONTENT: Record<string, ToolContent> = {
-  /* ---------------------------------------------------------------- PDF */
-
   'merge-pdf': {
     about: [
       'Combining PDFs is the most common thing anyone needs to do to a PDF, and the usual route is to hand a stack of documents to a website that keeps them for an hour. That is a poor trade for something a browser can do on its own.',
@@ -190,8 +167,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
   },
 
-  /* --------------------------------------------------------------- Word */
-
   'docx-to-pdf': {
     about: [
       'Sending a Word document means trusting the recipient’s software to render it the way you saw it. Sending a PDF means it renders identically everywhere, which is why almost every formal submission asks for one.',
@@ -264,8 +239,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
   },
 
-  /* -------------------------------------------------------------- Excel */
-
   'excel-to-csv': {
     about: [
       'CSV is what almost every system will accept, and converting to it is the usual last step before an import. It is also where spreadsheet data quietly goes wrong.',
@@ -320,8 +293,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
   },
 
-  /* --------------------------------------------------------- PowerPoint */
-
   'pptx-to-pdf': {
     about: [
       'A deck sent as .pptx opens differently on every machine, and it invites editing. A PDF is what you send when the slides are finished.',
@@ -340,8 +311,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
   },
 
-  /* ----------------------------------------------------------- Converts */
-
   'image-converter': {
     about: [
       'Format conversion is simple work that most sites make you upload a photograph for. Browsers have contained a complete set of image codecs for years, because displaying images is what they do.',
@@ -359,8 +328,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Converting photographs of people, documents or private places, where the picture and its embedded location data should not be handed to a website.',
     ],
   },
-
-  /* --------------------------------------------------------- Generators */
 
   'invoice-generator': {
     about: [
@@ -397,8 +364,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Keeping your address, phone number and employment history off a résumé site’s servers while you are job hunting.',
     ],
   },
-
-  /* ------------------------------------------------ PDF page operations */
 
   'organize-pdf': {
     about: [
@@ -525,8 +490,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Making a protected document searchable by tools on your own machine.',
     ],
   },
-
-  /* --------------------------------------------------------- Word tools */
 
   'docx-creator': {
     about: [
@@ -671,8 +634,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Comparing two confidential drafts, where uploading either one is the thing you are trying to avoid.',
     ],
   },
-
-  /* ------------------------------------------------------- Excel & data */
 
   'xlsx-creator': {
     about: [
@@ -836,8 +797,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
   },
 
-  /* --------------------------------------------------------- PowerPoint */
-
   'pptx-creator': {
     about: [
       'Building a deck usually means opening PowerPoint, and a lot of decks are simple enough that opening PowerPoint is the slowest part.',
@@ -927,8 +886,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Making a short version of a confidential deck without uploading the full one.',
     ],
   },
-
-  /* ------------------------------------------------------------ Viewers */
 
   'universal-viewer': {
     about: [
@@ -1091,8 +1048,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Checking what a marketing email would load before opening it in a mail client.',
     ],
   },
-
-  /* --------------------------------------------------------- Converters */
 
   'markdown-to-pdf': {
     about: [
@@ -1310,8 +1265,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
   },
 
-  /* --------------------------------------------------------- Generators */
-
   'quotation-generator': {
     about: [
       'A quotation is an offer, and an invoice is a demand for payment. They look similar and are treated very differently, so sending the wrong one is more than a labelling mistake.',
@@ -1455,8 +1408,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Producing an application while employed, where discretion matters.',
     ],
   },
-
-  /* ----------------------------------------------------------- Diagrams */
 
   'diagram-studio': {
     about: [
@@ -1638,8 +1589,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
   },
 
-  /* ------------------------------------------------------ File utilities */
-
   'file-size-analyzer': {
     about: [
       'A file that is too large is rarely uniformly large. Almost always one component accounts for most of it, and finding that component is the whole job.',
@@ -1747,7 +1696,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Recording a fingerprint of a document as evidence it has not been altered since.',
     ],
   },
-  /* ------------------------------------------- PDF to data and to slides */
 
   'pdf-to-excel': {
     about: [
@@ -1840,8 +1788,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
   },
 
-  /* ----------------------------------------------------- Image utilities */
-
   'webp-to-jpg': {
     about: [
       'WebP exists because the web needed smaller images, and it succeeded — which is why the picture you saved from a page is a .webp and why nothing on your computer will open it. The format won the argument in browsers and lost it everywhere else.',
@@ -1932,8 +1878,6 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Straightening up a photographed document by trimming the desk out of the frame.',
     ],
   },
-
-  /* --------------------------------------------------------- Text and QR */
 
   'case-converter': {
     about: [

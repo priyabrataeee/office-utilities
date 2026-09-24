@@ -15,7 +15,6 @@ import { ToastService } from '../../../core/services/toast.service';
 import { parseCsv, readWorkbook, sheetToCsv, type SheetData } from '../../../core/engines/xlsx.engine';
 import { extensionOf, readAsText, withExtension } from '../../../core/utils/file.util';
 
-/** Workbook and CSV reader: sheet tabs, search, formula mode and export. */
 @Component({
   selector: 'app-sheet-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,7 +119,6 @@ export class SheetViewComponent {
     return list.find((sheet) => sheet.name === this.activeName()) ?? list[0];
   });
 
-  /** Rows filtered by the find box, with formula mode applied when on. */
   protected readonly filteredRows = computed<CellValue[][]>(() => {
     const sheet = this.active();
     if (!sheet) return [];
@@ -128,8 +126,6 @@ export class SheetViewComponent {
     let rows = sheet.rows;
 
     if (this.showFormulas() && sheet.formulas.length) {
-      // Overlay formulas onto their cells so the sheet reads like Word's
-      // "show formulas" mode rather than a separate list.
       const byCell = new Map(
         sheet.formulas.map((cell) => [cell.address, cell.formula] as const),
       );

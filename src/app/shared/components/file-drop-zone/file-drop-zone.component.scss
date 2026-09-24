@@ -104,8 +104,6 @@
   margin-top: var(--ou-s-1);
 }
 
-/* Badges are nowrap globally. Inside the drop zone they may wrap instead, so a
-   long label can never push the page wider than the screen. */
 .dz__meta .ou-badge {
   max-width: 100%;
   white-space: normal;
@@ -166,8 +164,6 @@
   color: var(--ou-text-muted);
 }
 
-/* Shown under the tool's own hint so there is always a worded way in, not just
-   a large clickable rectangle. */
 .dz__action {
   display: block;
   margin-top: var(--ou-s-1);

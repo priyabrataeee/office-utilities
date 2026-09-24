@@ -33,7 +33,6 @@ const TARGET_META: Record<
   text: { extension: '.txt', mime: 'text/plain;charset=utf-8', label: 'plain text', icon: 'file-text' },
 };
 
-/** Word to PDF, HTML, Markdown or plain text — one pipeline, four writers. */
 @Component({
   selector: 'app-docx-convert',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,14 +64,12 @@ export class DocxConvertComponent extends ToolBase {
   protected readonly conversionNotes = signal<string[]>([]);
   protected readonly droppedCharacters = signal(0);
 
-  /* PDF options */
   protected readonly pageSize = signal<PageSizeName>('A4');
   protected readonly fontFamily = signal<'sans' | 'serif'>('serif');
   protected readonly fontSize = signal(11);
   protected readonly margin = signal(56);
   protected readonly pageNumbers = signal(true);
 
-  /* HTML options */
   protected readonly standalone = signal(true);
 
   protected readonly meta = computed(() => TARGET_META[this.target()]);
@@ -97,7 +94,6 @@ export class DocxConvertComponent extends ToolBase {
       this.blocks.set(content.blocks);
       this.rawHtml.set(content.html);
       this.conversionNotes.set([...new Set(content.messages)].slice(0, 6));
-      // The preview is sanitised before it is ever bound into the page.
       this.safePreview.set(
         this.sanitizer.bypassSecurityTrustHtml(await sanitizeHtml(content.html)),
       );

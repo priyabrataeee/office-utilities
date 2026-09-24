@@ -60,7 +60,6 @@ export class HashGeneratorComponent extends ToolBase {
     () => this.selected().has('SHA-384') || this.selected().has('SHA-512'),
   );
 
-  /** Compares the pasted checksum against every hash produced. */
   protected readonly verification = computed(() => {
     const needle = this.expected().trim().toLowerCase().replace(/\s+/g, '');
     if (!needle) return null;
@@ -119,7 +118,6 @@ export class HashGeneratorComponent extends ToolBase {
       for (const [index, file] of files.entries()) {
         this.progressLabel.set(`Hashing ${file.name} (${index + 1} of ${files.length})`);
         const result = await this.hasher.hash(file, algorithms, (loaded, total) => {
-          // Progress spans all files, not just the current one.
           const fraction = (index + (total ? loaded / total : 0)) / files.length;
           this.setProgress(fraction);
         });

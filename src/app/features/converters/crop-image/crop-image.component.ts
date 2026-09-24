@@ -22,7 +22,6 @@ import {
 } from '../../../core/engines/image.engine';
 import { baseNameOf } from '../../../core/utils/file.util';
 
-/** The crop, in the source image's own pixels. */
 interface Rect {
   x: number;
   y: number;
@@ -34,7 +33,6 @@ type Corner = 'nw' | 'ne' | 'sw' | 'se';
 
 interface RatioOption {
   readonly label: string;
-  /** Width ÷ height, or 0 for free-form. */
   readonly value: number;
 }
 
@@ -79,7 +77,6 @@ export class CropImageComponent extends ToolBase {
   protected readonly quality = signal(0.9);
   protected readonly background = signal('#ffffff');
 
-  /** The canvas-ready source, which is a decoded PNG when a HEIC was dropped. */
   private source: Blob | null = null;
   private drag:
     | { kind: 'move'; startX: number; startY: number; origin: Rect }
@@ -94,7 +91,6 @@ export class CropImageComponent extends ToolBase {
     () => !!this.natural() && this.crop().width >= MIN_SIZE && this.crop().height >= MIN_SIZE,
   );
 
-  /** Percentages, so the overlay tracks the preview at whatever size it is. */
   protected readonly boxStyle = computed(() => {
     const size = this.natural();
     const rect = this.crop();
@@ -140,7 +136,6 @@ export class CropImageComponent extends ToolBase {
     });
   }
 
-  /** Starts with a generous centred box rather than the whole image. */
   private resetCrop(size: { width: number; height: number }): void {
     const side = Math.round(Math.min(size.width, size.height) * 0.8);
     const target = this.ratio();
@@ -158,7 +153,6 @@ export class CropImageComponent extends ToolBase {
     this.ratio.set(value);
     const size = this.natural();
     if (!size || !value) return;
-    // Keep the centre, adapt the shape.
     const rect = this.crop();
     const centreX = rect.x + rect.width / 2;
     const centreY = rect.y + rect.height / 2;
@@ -208,16 +202,8 @@ export class CropImageComponent extends ToolBase {
 
     const applied = this.contain(next, size);
     this.crop.set(applied);
-    // What you typed may not be what fits — a position is constrained by the
-    // box's own size, and a size by the image. Put the number that was
-    // actually applied back in the field rather than leaving it showing a
-    // value the crop does not have.
     (event.target as HTMLInputElement).value = String(applied[key]);
   }
-
-  /* ------------------------------------------------------------------
-     Dragging
-     ------------------------------------------------------------------ */
 
   protected startMove(event: PointerEvent): void {
     event.stopPropagation();
@@ -253,8 +239,6 @@ export class CropImageComponent extends ToolBase {
       return;
     }
 
-    // Resizing works from the corner opposite the one being dragged, which
-    // stays put — the behaviour everybody expects from a crop handle.
     const origin = drag.origin;
     const anchorX = drag.corner === 'nw' || drag.corner === 'sw' ? origin.x + origin.width : origin.x;
     const anchorY = drag.corner === 'nw' || drag.corner === 'ne' ? origin.y + origin.height : origin.y;
@@ -264,8 +248,6 @@ export class CropImageComponent extends ToolBase {
 
     const target = this.ratio();
     if (target) {
-      // Follow whichever axis the pointer moved further along, so the box
-      // does not fight the cursor.
       if (width / target >= height) height = width / target;
       else width = height * target;
     }
@@ -283,7 +265,6 @@ export class CropImageComponent extends ToolBase {
     this.drag = null;
   }
 
-  /** Pointer position in the source image's own pixels. */
   private toImage(event: PointerEvent): { x: number; y: number } | null {
     const host = this.stage()?.nativeElement;
     const size = this.natural();
@@ -296,13 +277,6 @@ export class CropImageComponent extends ToolBase {
     };
   }
 
-  /**
-   * Keeps the crop inside the image.
-   *
-   * With a ratio locked, the box is scaled down as a whole rather than having
-   * each side clipped separately — clipping one side is what makes a 16:9 box
-   * quietly stop being 16:9 the moment it touches an edge.
-   */
   private contain(rect: Rect, size: { width: number; height: number }): Rect {
     let width = Math.max(MIN_SIZE, rect.width);
     let height = Math.max(MIN_SIZE, rect.height);
@@ -325,10 +299,6 @@ export class CropImageComponent extends ToolBase {
     };
   }
 
-  /* ------------------------------------------------------------------
-     Export
-     ------------------------------------------------------------------ */
-
   protected async cropNow(): Promise<void> {
     const file = this.primaryFile();
     const url = this.imageUrl();
@@ -346,8 +316,6 @@ export class CropImageComponent extends ToolBase {
         context.fillRect(0, 0, rect.width, rect.height);
       }
 
-      // The box was tracked in source pixels all along, so the crop comes
-      // from the original image rather than from the scaled preview.
       context.drawImage(
         image,
         rect.x,

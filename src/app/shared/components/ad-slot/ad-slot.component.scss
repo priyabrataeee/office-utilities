@@ -13,8 +13,6 @@
   background: var(--ou-surface-2);
 }
 
-/* Labelled explicitly. Ads that pretend to be content are what make tool sites
-   feel untrustworthy, and this one is trading on not being that. */
 .ad__label {
   font-size: var(--ou-fs-xs);
   letter-spacing: 0.06em;
@@ -25,7 +23,6 @@
 .ad__unit {
   display: block;
   width: 100%;
-  /* Reserves height so filling the slot does not shove content downwards. */
   min-height: 90px;
 }
 

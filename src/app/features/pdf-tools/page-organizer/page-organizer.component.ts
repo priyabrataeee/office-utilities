@@ -20,7 +20,6 @@ export type OrganizerMode = 'organize' | 'rotate' | 'delete' | 'reorder' | 'extr
 
 interface PageCard {
   readonly key: string;
-  /** Index in the original document. */
   readonly sourceIndex: number;
   rotation: number;
   selected: boolean;
@@ -56,13 +55,6 @@ const MODE_COPY: Record<OrganizerMode, { verb: string; hint: string; icon: strin
   },
 };
 
-/**
- * One visual page organiser behind five catalog entries.
- *
- * Rotate, delete, reorder and extract are the same interaction with a
- * different default action, so they share this component and differ only by
- * the `mode` supplied in route data.
- */
 @Component({
   selector: 'app-page-organizer',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,7 +71,6 @@ const MODE_COPY: Record<OrganizerMode, { verb: string; hint: string; icon: strin
 export class PageOrganizerComponent extends ToolBase {
   private readonly registry = inject(ToolRegistryService);
 
-  /** Both supplied by route data. */
   readonly toolIdInput = input.required<string>({ alias: 'toolId' });
   readonly mode = input.required<OrganizerMode>();
 
@@ -162,14 +153,13 @@ export class PageOrganizerComponent extends ToolBase {
     });
   }
 
-  /** Renders previews one at a time so a 500-page file stays responsive. */
   private async renderThumbnails(): Promise<void> {
     const doc = this.doc;
     if (!doc) return;
     this.loadingThumbs.set(true);
 
     for (let index = 1; index <= doc.numPages; index++) {
-      if (this.doc !== doc) return; // a different file was loaded meanwhile
+      if (this.doc !== doc) return;
       try {
         const thumbnail = await renderThumbnail(doc, index, 200);
         this.pages.update((list) =>
@@ -177,9 +167,7 @@ export class PageOrganizerComponent extends ToolBase {
             page.sourceIndex === index - 1 && !page.thumbnail ? { ...page, thumbnail } : page,
           ),
         );
-      } catch {
-        /* a page that will not render still gets a placeholder card */
-      }
+      } catch {}
       if (index % 4 === 0) await new Promise((resolve) => setTimeout(resolve, 0));
     }
 
@@ -194,8 +182,6 @@ export class PageOrganizerComponent extends ToolBase {
     const file = this.primaryFile();
     if (file) void this.load(file);
   }
-
-  /* ---------------- history ---------------- */
 
   private commit(next: PageCard[]): void {
     this.history = [...this.history.slice(-24), this.pages().map((page) => ({ ...page }))];
@@ -217,8 +203,6 @@ export class PageOrganizerComponent extends ToolBase {
     this.future = rest;
     this.pages.set(next);
   }
-
-  /* ---------------- selection ---------------- */
 
   protected toggle(key: string): void {
     this.pages.update((list) =>
@@ -264,8 +248,6 @@ export class PageOrganizerComponent extends ToolBase {
       ),
     );
   }
-
-  /* ---------------- editing ---------------- */
 
   private targets(): Set<string> {
     const selected = this.selected();
@@ -353,8 +335,6 @@ export class PageOrganizerComponent extends ToolBase {
   protected toggleSplitEach(event: Event): void {
     this.splitEach.set((event.target as HTMLInputElement).checked);
   }
-
-  /* ---------------- output ---------------- */
 
   protected async apply(): Promise<void> {
     const file = this.primaryFile();

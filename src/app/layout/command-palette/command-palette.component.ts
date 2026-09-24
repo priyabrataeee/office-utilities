@@ -25,10 +25,6 @@ interface Command {
   readonly run: () => void;
 }
 
-/**
- * ⌘K palette. Searches the whole catalog and mixes in navigation and
- * preference commands, so it doubles as the app's keyboard-first surface.
- */
 @Component({
   selector: 'app-command-palette',
   changeDetection: ChangeDetectionStrategy.OnPush,

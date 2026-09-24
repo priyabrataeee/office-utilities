@@ -1,17 +1,3 @@
-/**
- * Renders the app icon to every raster size the site needs.
- *
- * The project ships `public/favicon.svg`, but a browser asking for
- * `/favicon.ico` — which Google's favicon crawler does — gets whatever ICO sits
- * at the web root. That file was still the one `ng new` generated, so search
- * results and shared links showed the Angular logo.
- *
- * No raster library is available, and adding one purely to draw a rounded
- * rectangle and nine line segments is not worth the dependency, so the mark is
- * rasterised here and encoded by hand. Geometry is kept identical to
- * favicon.svg so the vector and raster icons cannot drift apart.
- */
-
 import { deflateSync } from 'node:zlib';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -20,10 +6,6 @@ import { fileURLToPath } from 'node:url';
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const publicDir = join(rootDir, 'public');
 
-/* ------------------------------------------------------------------
-   The mark, in the same 32-unit space as favicon.svg
-   ------------------------------------------------------------------ */
-
 const VIEW = 32;
 const CORNER = 7;
 const STROKE = 2;
@@ -31,7 +13,6 @@ const STROKE = 2;
 const GRADIENT_FROM = [0x5b, 0x5b, 0xd6];
 const GRADIENT_TO = [0x12, 0xb5, 0xc9];
 
-/** The cube outline plus its three spokes, as flat segments. */
 const SEGMENTS = [
   [6, 10.5, 16, 5],
   [16, 5, 26, 10.5],
@@ -55,7 +36,6 @@ function distanceToSegment(px, py, [x1, y1, x2, y2]) {
   return Math.hypot(px - cx, py - cy);
 }
 
-/** Rounded-rectangle test in the 32-unit space. Radius 0 gives a full bleed. */
 function insidePlate(x, y, radius) {
   const half = VIEW / 2;
   const dx = Math.max(Math.abs(x - half) - (half - radius), 0);
@@ -63,12 +43,6 @@ function insidePlate(x, y, radius) {
   return Math.hypot(dx, dy) <= radius || (dx === 0 && dy === 0);
 }
 
-/**
- * Renders one square icon as RGBA bytes.
- *
- * Supersampled rather than analytically anti-aliased: at these sizes the extra
- * samples cost milliseconds and the edge quality is indistinguishable.
- */
 function render(size, radius) {
   const samples = size >= 192 ? 4 : 8;
   const out = Buffer.alloc(size * size * 4);
@@ -76,7 +50,6 @@ function render(size, radius) {
 
   for (let py = 0; py < size; py++) {
     for (let px = 0; px < size; px++) {
-      // Accumulate premultiplied, so transparent edges do not fringe dark.
       let r = 0;
       let g = 0;
       let b = 0;
@@ -101,7 +74,6 @@ function render(size, radius) {
             g += 255;
             b += 255;
           } else {
-            // favicon.svg's gradient runs corner to corner.
             const t = Math.min(1, Math.max(0, (x + y) / (VIEW * 2)));
             r += GRADIENT_FROM[0] + (GRADIENT_TO[0] - GRADIENT_FROM[0]) * t;
             g += GRADIENT_FROM[1] + (GRADIENT_TO[1] - GRADIENT_FROM[1]) * t;
@@ -122,10 +94,6 @@ function render(size, radius) {
   }
   return out;
 }
-
-/* ------------------------------------------------------------------
-   PNG encoding
-   ------------------------------------------------------------------ */
 
 const CRC_TABLE = (() => {
   const table = new Uint32Array(256);
@@ -158,13 +126,12 @@ function encodePng(size, rgba) {
   const header = Buffer.alloc(13);
   header.writeUInt32BE(size, 0);
   header.writeUInt32BE(size, 4);
-  header[8] = 8; // bit depth
-  header[9] = 6; // truecolour with alpha
+  header[8] = 8;
+  header[9] = 6;
   header[10] = 0;
   header[11] = 0;
   header[12] = 0;
 
-  // Filter byte 0 (none) in front of every scanline.
   const raw = Buffer.alloc(size * (size * 4 + 1));
   for (let y = 0; y < size; y++) {
     raw[y * (size * 4 + 1)] = 0;
@@ -179,21 +146,16 @@ function encodePng(size, rgba) {
   ]);
 }
 
-/* ------------------------------------------------------------------
-   ICO encoding (32-bit BMP entries, the widely-compatible form)
-   ------------------------------------------------------------------ */
-
 function bmpEntry(size, rgba) {
   const header = Buffer.alloc(40);
   header.writeUInt32LE(40, 0);
   header.writeInt32LE(size, 4);
-  header.writeInt32LE(size * 2, 8); // XOR image plus AND mask
+  header.writeInt32LE(size * 2, 8);
   header.writeUInt16LE(1, 12);
   header.writeUInt16LE(32, 14);
 
   const xor = Buffer.alloc(size * size * 4);
   for (let y = 0; y < size; y++) {
-    // BMP rows run bottom-up, and channels are BGRA.
     const source = (size - 1 - y) * size * 4;
     for (let x = 0; x < size; x++) {
       const s = source + x * 4;
@@ -205,7 +167,6 @@ function bmpEntry(size, rgba) {
     }
   }
 
-  // Alpha in the XOR data carries transparency, so the mask stays clear.
   const maskRow = Math.ceil(size / 8);
   const padded = Math.ceil(maskRow / 4) * 4;
   const and = Buffer.alloc(padded * size);
@@ -241,19 +202,12 @@ function encodeIco(images) {
   return Buffer.concat([header, ...directory, ...bodies]);
 }
 
-/* ------------------------------------------------------------------
-   Emit
-   ------------------------------------------------------------------ */
-
 const PNG_SIZES = [72, 96, 128, 144, 152, 192, 384, 512];
 const ICO_SIZES = [16, 32, 48];
 
 mkdirSync(join(publicDir, 'icons'), { recursive: true });
 
 for (const size of PNG_SIZES) {
-  // Full bleed: these are declared `maskable`, so the platform applies its own
-  // shape and any corner rounding baked in here would be cropped anyway. The
-  // mark occupies the middle 62% of the square, well inside the safe zone.
   const png = encodePng(size, render(size, 0));
   const file = join(publicDir, 'icons', `icon-${size}x${size}.png`);
   writeFileSync(file, png);

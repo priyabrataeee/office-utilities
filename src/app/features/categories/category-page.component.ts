@@ -15,12 +15,6 @@ import { SeoService } from '../../core/services/seo.service';
 import type { ToolCategoryId } from '../../core/models/tool.model';
 import { CATEGORY_CONTENT } from '../../core/data/category-content';
 
-/**
- * Landing page for one category, e.g. `/pdf`.
- *
- * Bound from route data via `withComponentInputBinding`, so each feature's
- * routes file supplies only its category id.
- */
 @Component({
   selector: 'app-category-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -109,11 +103,9 @@ export class CategoryPageComponent {
   protected readonly registry = inject(ToolRegistryService);
   private readonly seo = inject(SeoService);
 
-  /** Supplied by route data. */
   readonly categoryId = input.required<ToolCategoryId>();
 
   protected readonly current = computed(() => this.registry.category(this.categoryId()));
-  /** Editorial copy, where this category has any. */
   protected readonly content = computed(() => CATEGORY_CONTENT[this.categoryId()]);
   protected readonly tools = computed(() =>
     this.registry

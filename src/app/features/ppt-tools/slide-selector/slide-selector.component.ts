@@ -20,7 +20,6 @@ import {
 } from '../../../core/engines/pptx.engine';
 import { parsePageRanges, withSuffix } from '../../../core/utils/file.util';
 
-/** Keeps only the chosen slides and rebuilds the .pptx around them. */
 @Component({
   selector: 'app-slide-selector',
   changeDetection: ChangeDetectionStrategy.OnPush,

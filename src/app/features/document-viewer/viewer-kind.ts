@@ -1,6 +1,5 @@
 import { extensionOf } from '../../core/utils/file.util';
 
-/** Which sub-viewer should open a file. */
 export type ViewerKind =
   | 'pdf'
   | 'docx'
@@ -56,7 +55,6 @@ export function detectViewerKind(file: File): ViewerKind {
   const byExtension = BY_EXTENSION[extensionOf(file.name)];
   if (byExtension) return byExtension;
 
-  // Fall back to the MIME type the browser reported.
   const type = file.type.toLowerCase();
   if (type === 'application/pdf') return 'pdf';
   if (type.startsWith('image/')) return 'image';
@@ -73,7 +71,6 @@ export function detectViewerKind(file: File): ViewerKind {
 
 export const ALL_VIEWER_EXTENSIONS: readonly string[] = Object.keys(BY_EXTENSION);
 
-/** Extensions each explicit viewer route should accept. */
 export function acceptsFor(kind: ViewerKind | 'auto'): string[] {
   if (kind === 'auto') return [...ALL_VIEWER_EXTENSIONS];
   return Object.entries(BY_EXTENSION)

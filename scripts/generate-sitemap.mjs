@@ -1,10 +1,3 @@
-/**
- * Emits sitemap.xml, robots.txt and llms.txt into the built output.
- *
- * Both are derived from the same catalog the app uses, so adding a tool
- * automatically enrols it in SEO — nothing extra to remember.
- */
-
 import { execSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -14,7 +7,6 @@ const here = dirname(fileURLToPath(import.meta.url));
 const rootDir = resolve(here, '..');
 const outputDir = resolve(rootDir, 'dist/office-utility/browser');
 
-// Prefer the deploy-time override so sitemap and app agree on the origin.
 const site = (
   process.env['OU_SITE_ORIGIN'] ||
   extract(readFileSync(resolve(rootDir, 'src/app/core/site.config.ts'), 'utf8'), /'(https?:\/\/[^']+)'/)
@@ -25,9 +17,6 @@ const catalogSource = readFileSync(
   resolve(rootDir, 'src/app/core/data/tool-catalog.ts'),
   'utf8',
 );
-// Keep categories and tools separate before extracting slugs. The previous
-// version split one combined list at a hard-coded index of nine, which would
-// silently omit a tenth category from the sitemap and AI index.
 const categoryCatalog = catalogSource.slice(0, catalogSource.indexOf('export const TOOLS'));
 const categorySlugList = [...categoryCatalog.matchAll(/slug:\s*'([^']+)'/g)].map(
   (match) => match[1],
@@ -35,19 +24,12 @@ const categorySlugList = [...categoryCatalog.matchAll(/slug:\s*'([^']+)'/g)].map
 
 const toolPaths = extractToolPaths(catalogSource, categoryCatalog);
 
-// Guide file names come from the catalog's own imports, so a new guide
-// enrols itself in the sitemap and llms.txt with no second list to maintain.
 const guideFiles = [
   ...readFileSync(resolve(rootDir, 'src/app/core/data/guide-catalog.ts'), 'utf8').matchAll(
     /from '\.\/guides\/([^']+)'/g,
   ),
 ].map(([, name]) => name);
 
-/**
- * A guide's own `updated`/`published` date, which is what the page and its
- * Article schema display. The sitemap must agree with them rather than report
- * whenever the file was last touched in git.
- */
 const guideDateBySlug = new Map();
 
 const guideSlugs = guideFiles
@@ -75,30 +57,6 @@ const staticPaths = [
 const categoryPaths = categorySlugList.map((slug) => `/${slug}`);
 const allPaths = [...new Set([...staticPaths, ...categoryPaths, ...toolPaths])];
 
-/**
- * Last-modified dates.
- *
- * `changefreq` and `priority` are gone: Google ignores both and says so. It
- * does read `lastmod`, but only while it stays truthful — stamping every page
- * with today's build date is the fastest way to have it ignored here too.
- *
- * So each URL is dated from the last commit that touched the source actually
- * behind it: a guide from its own file, a tool page from the catalog and the
- * copy layer, a static page from its component. Pages inherit a real editing
- * history rather than a deployment timestamp.
- */
-/*
- * Where the dates come from.
- *
- * `git log` gives a truthful per-file date, but only where the full history
- * exists. Cloudflare builds from a depth-1 clone, so every file reports the
- * deploy commit and all 135 URLs end up stamped with the same day — which is
- * exactly the "lastmod everywhere is identical" signal Google learns to ignore.
- *
- * So the dates are resolved here when history is available and written to
- * `${SNAPSHOT_NAME}`, which is committed. A shallow build reads that snapshot
- * instead of asking git a question it cannot answer.
- */
 const SNAPSHOT_NAME = 'content-dates.json';
 const snapshotPath = resolve(here, SNAPSHOT_NAME);
 
@@ -145,12 +103,9 @@ function gitDate(file) {
 }
 
 function lastCommitDate(path, files) {
-  // A declared content date always wins: it is what the page itself shows.
   const declared = guideDateBySlug.get(path);
   if (declared) return declared;
   if (!fullHistory) {
-    // Trust the committed snapshot, or say nothing. An omitted lastmod is
-    // better than a date every page shares.
     return snapshot[path] ?? '';
   }
   let newest = '';
@@ -186,9 +141,7 @@ const staticSources = {
 function sourcesFor(path) {
   if (guideFileBySlug.has(path)) return [guideFileBySlug.get(path)];
   if (staticSources[path]) return [staticSources[path]];
-  // A category hub reflects its own copy and the catalog it lists.
   if (path.split('/').length === 2) return [CATEGORY_COPY, CATALOG];
-  // A tool page reflects the catalog entry and its extended copy.
   return [CATALOG, TOOL_COPY];
 }
 
@@ -202,9 +155,6 @@ const sitemapUrls = allPaths.map((path) => {
   </url>`;
 });
 
-// Refresh the committed snapshot whenever a build had real history to read,
-// so the next shallow CI build inherits today's answers rather than last
-// month's. Sorted so the diff is reviewable.
 if (fullHistory) {
   const sorted = Object.fromEntries(Object.entries(resolvedDates).sort(([a], [b]) => a.localeCompare(b)));
   writeFileSync(snapshotPath, JSON.stringify(sorted, null, 2) + '\n');
@@ -216,10 +166,6 @@ ${sitemapUrls.join('\n')}
 </urlset>
 `;
 
-// Assistants that cite sources send real referral traffic, and this site has
-// nothing to protect from being read — every page is public documentation of a
-// free tool. So the AI crawlers are allowed by name rather than left to the
-// wildcard, which removes any ambiguity about intent.
 const AI_AGENTS = [
   'GPTBot',
   'OAI-SearchBot',
@@ -257,29 +203,18 @@ writeFileSync(join(outputDir, 'sitemap.xml'), sitemap);
 writeFileSync(join(outputDir, 'robots.txt'), robots);
 writeFileSync(join(outputDir, 'llms.txt'), buildLlmsTxt());
 
-// GitHub Pages has no wildcard redirect; a copy of the app shell at 404.html
-// is the standard workaround, and it hurts nothing on hosts that do have
-// wildcard redirects.
 try {
   const shell = readFileSync(join(outputDir, 'index.html'), 'utf8');
   writeFileSync(join(outputDir, '404.html'), shell);
-} catch {
-  /* running before the browser bundle exists is fine — sitemap still writes */
-}
+} catch {}
 
 console.log(`Wrote ${allPaths.length} URLs to sitemap.xml (${site})`);
-
-// --- helpers ---------------------------------------------------------
 
 function extract(source, pattern) {
   const match = source.match(pattern);
   return match ? match[1] : null;
 }
 
-/**
- * The tool catalog stores category and tool slugs separately, so a full URL
- * needs both. We rebuild the mapping by walking the source in order.
- */
 function extractToolPaths(source, categoriesSource) {
   const categoryBySlug = new Map();
   const categoryRe = /id:\s*'([a-z]+)',\s*slug:\s*'([^']+)'/g;
@@ -298,17 +233,6 @@ function extractToolPaths(source, categoriesSource) {
   return tools;
 }
 
-/**
- * Writes llms.txt — a plain-Markdown map of the site for language models.
- *
- * An assistant asked "how do I merge a PDF without uploading it" has to work
- * out what this site offers from whatever page it happened to fetch. This
- * gives it the whole catalog in one file, in the order a person would explain
- * it, so the answer cites the right tool rather than the home page.
- *
- * Generated from the catalog for the same reason the sitemap is: a hand-kept
- * copy would be wrong within a week.
- */
 function buildLlmsTxt() {
   const categories = [];
   const categoryRe =
@@ -334,8 +258,6 @@ function buildLlmsTxt() {
     });
   }
 
-  // Guides carry the reasoning a tool listing cannot: why a browser-based
-  // converter differs from a server one, and what each tool cannot do.
   const guideEntries = guideFiles
     .map((file) => {
       const source = readFileSync(

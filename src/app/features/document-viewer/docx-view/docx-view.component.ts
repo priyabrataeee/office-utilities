@@ -16,7 +16,6 @@ import { sanitizeHtml } from '../../../core/engines/markdown.engine';
 import { markdownOutline } from '../../../core/engines/markdown.engine';
 import type { DocBlock } from '../../../core/engines/doc-model';
 
-/** Word document reader with an outline, search and print. */
 @Component({
   selector: 'app-docx-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -138,7 +137,6 @@ export class DocxViewComponent {
     try {
       const content = await readDocx(file);
       this.blocks.set(content.blocks);
-      // Sanitised before it is ever bound, since the source is a user file.
       this.html.set(this.sanitizer.bypassSecurityTrustHtml(await sanitizeHtml(content.html)));
     } catch (error) {
       this.error.set(error instanceof Error ? error.message : String(error));

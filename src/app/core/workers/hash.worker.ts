@@ -1,14 +1,5 @@
 /// <reference lib="webworker" />
 
-/**
- * Streaming file hashing, off the main thread.
- *
- * Web Crypto's `digest` needs the whole buffer at once, which rules out
- * multi-gigabyte files. SHA-256 is therefore implemented here over a chunked
- * stream; CRC32 is a simple table-driven pass. Both report progress so the UI
- * can show something honest on a large file.
- */
-
 export type HashAlgorithm = 'SHA-256' | 'SHA-384' | 'SHA-512' | 'CRC32';
 
 export interface HashRequest {
@@ -57,7 +48,6 @@ async function run(request: HashRequest): Promise<void> {
 
   const results: Record<string, string> = {};
 
-  // SHA-256 and CRC32 stream, so they work on files far larger than memory.
   if (wantsSha256 || wantsCrc) {
     const sha256 = wantsSha256 ? createSha256() : null;
     let crc = 0xffffffff;
@@ -78,8 +68,6 @@ async function run(request: HashRequest): Promise<void> {
     if (wantsCrc) results['CRC32'] = ((crc ^ 0xffffffff) >>> 0).toString(16).padStart(8, '0');
   }
 
-  // SHA-384/512 need 64-bit arithmetic, so they use Web Crypto — which wants
-  // the whole file at once. The UI warns before offering these on large files.
   if (wide.length) {
     const buffer = await file.arrayBuffer();
     for (const algorithm of wide) {
@@ -99,10 +87,6 @@ async function run(request: HashRequest): Promise<void> {
     milliseconds: performance.now() - started,
   });
 }
-
-/* ------------------------------------------------------------------
-   SHA-2 family
-   ------------------------------------------------------------------ */
 
 interface ShaState {
   update(chunk: Uint8Array): void;
@@ -188,7 +172,6 @@ function createSha256(): ShaState {
       const blockCount = Math.ceil((buffer.length + 9) / 64);
       const total = blockCount * 64;
       const view = new DataView(padded.buffer);
-      // Length is 64-bit big-endian; files above 2^53 bits are not a concern.
       view.setUint32(total - 8, Math.floor(bitLength / 0x100000000));
       view.setUint32(total - 4, bitLength >>> 0);
 
@@ -210,10 +193,6 @@ function concat(a: Uint8Array, b: Uint8Array): Uint8Array {
   out.set(b, a.length);
   return out;
 }
-
-/* ------------------------------------------------------------------
-   CRC32
-   ------------------------------------------------------------------ */
 
 const CRC_TABLE = (() => {
   const table = new Uint32Array(256);

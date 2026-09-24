@@ -65,7 +65,6 @@ export class WatermarkComponent extends ToolBase {
       (this.kind() === 'text' ? this.text().trim().length > 0 : !!this.watermarkImage()),
   );
 
-  /** CSS transform that mirrors what pdf-lib will draw, for the live preview. */
   protected readonly previewTransform = computed(
     () => `translate(-50%, -50%) rotate(${-this.rotation()}deg)`,
   );

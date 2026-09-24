@@ -19,12 +19,6 @@ import { withSuffix } from '../../../core/utils/file.util';
 
 export type CleanMode = 'clean' | 'duplicates' | 'blanks';
 
-/**
- * Spreadsheet cleaner, duplicate remover and blank-row remover.
- *
- * All three are the same pipeline — inspect, preview the delta, export — with
- * a different default rule set, so they share one component.
- */
 @Component({
   selector: 'app-sheet-clean',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,7 +41,6 @@ export class SheetCleanComponent extends SpreadsheetToolBase {
     return this.toolIdInput();
   }
 
-  /* Cleaning rules */
   protected readonly trimWhitespace = signal(true);
   protected readonly collapseSpaces = signal(true);
   protected readonly removeBlankRows = signal(true);
@@ -57,7 +50,6 @@ export class SheetCleanComponent extends SpreadsheetToolBase {
   protected readonly stripNonPrintable = signal(true);
   protected readonly normaliseCase = signal<CleanOptions['normaliseCase']>('none');
 
-  /* Duplicate rules */
   protected readonly keyColumns = signal<number[]>([]);
   protected readonly caseInsensitive = signal(true);
   protected readonly ignoreWhitespace = signal(true);
@@ -115,7 +107,6 @@ export class SheetCleanComponent extends SpreadsheetToolBase {
     this.analyse();
   }
 
-  /** Recomputes the preview whenever a rule changes. */
   protected analyse(): void {
     const sheet = this.activeSheet();
     if (!sheet) return;

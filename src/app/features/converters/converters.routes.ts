@@ -1,11 +1,5 @@
 import { Routes } from '@angular/router';
 
-/**
- * Converters.
- *
- * Fourteen catalog entries over four components: the markup conversions all
- * share one pipeline, and the image conversions all share another.
- */
 const docConvert = () =>
   import('./doc-convert/doc-convert.component').then((m) => m.DocConvertComponent);
 const imageConvert = () =>

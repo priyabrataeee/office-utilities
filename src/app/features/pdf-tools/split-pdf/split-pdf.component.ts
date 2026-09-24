@@ -36,7 +36,6 @@ export class SplitPdfComponent extends ToolBase {
   protected readonly pageCount = signal(0);
   protected readonly thumbnails = signal<(string | null)[]>([]);
   protected readonly mode = signal<SplitMode>('marks');
-  /** Zero-based indices where a new document begins. */
   protected readonly breaks = signal<number[]>([]);
   protected readonly chunkSize = signal(1);
   protected readonly rangesInput = signal('');
@@ -45,7 +44,6 @@ export class SplitPdfComponent extends ToolBase {
 
   private doc: PDFDocumentProxy | null = null;
 
-  /** The split plan, recomputed live so the preview always matches. */
   protected readonly parts = computed<SplitPart[]>(() => {
     const total = this.pageCount();
     if (!total) return [];
@@ -125,7 +123,6 @@ export class SplitPdfComponent extends ToolBase {
       const doc = this.doc;
       this.pageCount.set(doc.numPages);
       this.thumbnails.set(new Array(doc.numPages).fill(null));
-      // Halfway is the split people reach for most often.
       this.breaks.set(doc.numPages > 1 ? [Math.ceil(doc.numPages / 2)] : []);
       this.rangesInput.set(doc.numPages > 1 ? `1-${Math.ceil(doc.numPages / 2)}; ${Math.ceil(doc.numPages / 2) + 1}-${doc.numPages}` : '1');
       void this.renderThumbnails(doc);
@@ -142,9 +139,7 @@ export class SplitPdfComponent extends ToolBase {
           next[index - 1] = thumbnail;
           return next;
         });
-      } catch {
-        /* keep the placeholder */
-      }
+      } catch {}
       if (index % 4 === 0) await new Promise((resolve) => setTimeout(resolve, 0));
     }
   }

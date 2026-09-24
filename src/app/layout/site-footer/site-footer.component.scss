@@ -7,7 +7,8 @@
 .footer {
   margin-top: var(--ou-s-20);
   border-top: 1px solid var(--ou-border);
-  background: var(--ou-bg-subtle);
+  background: color-mix(in srgb, var(--ou-bg-subtle) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(140%);
 }
 
 .footer__inner {
@@ -124,9 +125,6 @@
   font-size: var(--ou-fs-xs);
   color: var(--ou-text-subtle);
 
-  /* Must wrap. Without it the row is as wide as its nine links combined, and on
-     a phone that pushes the whole layout wider than the screen — so the browser
-     zooms the entire page out to fit and it looks shrunken. */
   nav {
     display: flex;
     flex-wrap: wrap;
@@ -146,8 +144,6 @@
   }
 }
 
-/* Sits in the brand column beside the privacy line rather than buried in the
-   row of legal links, where it read as boilerplate. */
 .footer__support {
   display: inline-flex;
   gap: var(--ou-s-3);

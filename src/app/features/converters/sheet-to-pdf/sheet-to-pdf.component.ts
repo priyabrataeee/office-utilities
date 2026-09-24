@@ -10,7 +10,6 @@ import { renderDocumentToPdf } from '../../../core/engines/pdf-writer';
 import { heading, type DocBlock, type PageSizeName, type TableCell } from '../../../core/engines/doc-model';
 import { withExtension } from '../../../core/utils/file.util';
 
-/** Renders a worksheet as a paginated PDF table with a repeating header. */
 @Component({
   selector: 'app-sheet-to-pdf',
   changeDetection: ChangeDetectionStrategy.OnPush,

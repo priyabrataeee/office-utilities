@@ -36,7 +36,6 @@ export class RemoveWatermarkComponent extends ToolBase {
   protected readonly preview = signal<string | null>(null);
   protected readonly isScan = signal(false);
 
-  /** Cover-mode region, expressed as page fractions. */
   protected readonly useCover = signal(false);
   protected readonly coverX = signal(0.25);
   protected readonly coverY = signal(0.4);
@@ -66,8 +65,6 @@ export class RemoveWatermarkComponent extends ToolBase {
       const doc = await openPdf(await file.arrayBuffer());
       try {
         const info = await describePdf(doc);
-        // No text layer at all is the signature of a scan, where a watermark
-        // is part of the page image and cannot be lifted out.
         this.isScan.set(!info.hasTextLayer);
         this.preview.set(await renderThumbnail(doc, 1, 380));
       } finally {

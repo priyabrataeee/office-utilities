@@ -9,7 +9,6 @@ export interface Toast {
   readonly detail?: string;
 }
 
-/** Transient, non-blocking feedback. Never used for anything destructive. */
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   private nextId = 1;
@@ -41,7 +40,6 @@ export class ToastService {
     return this.show('warning', message, detail, 6000);
   }
 
-  /** Turns any thrown value into a readable error toast. */
   fromError(error: unknown, fallback = 'Something went wrong'): number {
     const message = error instanceof Error ? error.message : String(error ?? '');
     return this.error(fallback, message || undefined);

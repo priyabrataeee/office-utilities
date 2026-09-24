@@ -4,7 +4,6 @@
   display: block;
 }
 
-/* ---------------- hero ---------------- */
 .hero {
   position: relative;
   padding-block: var(--ou-s-16) var(--ou-s-12);
@@ -165,7 +164,6 @@
   }
 }
 
-/* ---------------- file → tool picker ---------------- */
 .picker {
   margin-top: var(--ou-s-4);
   border: 1px solid var(--ou-accent-border);
@@ -249,7 +247,6 @@
   }
 }
 
-/* ---------------- sections ---------------- */
 .section {
   padding-block: var(--ou-s-12) 0;
 }
@@ -272,7 +269,6 @@
   }
 }
 
-/* ---------------- categories ---------------- */
 .cats {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr));
@@ -336,7 +332,6 @@
   color: var(--accent);
 }
 
-/* ---------------- promise ---------------- */
 .promise {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -402,7 +397,6 @@
   }
 }
 
-/* Mirrors the tool-page FAQ so the two read as one site. */
 .faq__list {
   max-width: 68ch;
 }

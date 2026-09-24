@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 
-/** Word toolkit. The four conversions share one component. */
 export const routes: Routes = [
   {
     path: '',

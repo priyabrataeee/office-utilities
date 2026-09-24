@@ -24,14 +24,6 @@ import { guide as watermarkPdf } from './guides/watermark-a-pdf';
 import { guide as markdownExport } from './guides/markdown-to-word-pdf-html';
 import { guide as duplicateFiles } from './guides/find-duplicate-files';
 
-/**
- * The written guides, in the order they are listed.
- *
- * Ordering is editorial rather than chronological: the pieces that explain why
- * the site exists come first, because they are the ones that make sense of
- * everything else. Each guide lives in its own file — a single catalog would
- * be thousands of lines of prose and impossible to review.
- */
 export const GUIDES: readonly GuideDefinition[] = [
   safeConverters,
   whatHappensOnUpload,

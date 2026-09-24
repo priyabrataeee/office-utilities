@@ -6,11 +6,6 @@ import { ToastService } from '../../../core/services/toast.service';
 import { MonetizationService } from '../../../core/services/monetization.service';
 import type { OutputFile } from '../../../core/models/file.model';
 
-/**
- * The consistent "your file is ready" step shared by every producing tool:
- * per-file download, ZIP for the whole set, open in a new tab, print, share,
- * and a size delta when the tool set one.
- */
 @Component({
   selector: 'app-result-panel',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -93,12 +88,6 @@ import type { OutputFile } from '../../../core/models/file.model';
           }
         </ul>
 
-        <!--
-          Placed after the download list on purpose: the ask comes once the
-          person has what they came for, not while they are still working.
-          Every producing tool renders this panel, so this is the one spot
-          that reaches everyone who actually got value out of the site.
-        -->
         <a
           class="support"
           [href]="money.donationUrl"
@@ -129,7 +118,6 @@ export class ResultPanelComponent {
   readonly title = input('Ready to download');
   readonly zipName = input('office-utilities.zip');
   readonly allowReset = input(true);
-  /** Original size in bytes; enables the "n% smaller" indicator. */
   readonly originalSize = input<number | null>(null);
 
   readonly reset = output<void>();

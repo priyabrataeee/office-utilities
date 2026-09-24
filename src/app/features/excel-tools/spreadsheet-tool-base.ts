@@ -3,13 +3,6 @@ import { ToolBase } from '../../shared/tool-base';
 import { parseCsv, readWorkbook, type SheetData, type WorkbookData } from '../../core/engines/xlsx.engine';
 import { extensionOf, readAsText } from '../../core/utils/file.util';
 
-/**
- * Shared loading for every spreadsheet tool.
- *
- * Handles the two entry paths — a real workbook via SheetJS, or delimited text
- * via the CSV parser — and exposes one sheet model either way, so the tools
- * above never care which kind of file arrived.
- */
 export abstract class SpreadsheetToolBase extends ToolBase {
   readonly workbook = signal<WorkbookData | null>(null);
   readonly activeSheetName = signal<string>('');
@@ -33,7 +26,6 @@ export abstract class SpreadsheetToolBase extends ToolBase {
     if (file) void this.loadSpreadsheet(file);
   }
 
-  /** Reads a workbook or delimited text file into the shared sheet model. */
   protected async loadSpreadsheet(file: File): Promise<void> {
     this.workbook.set(null);
 
@@ -81,10 +73,7 @@ export abstract class SpreadsheetToolBase extends ToolBase {
     });
   }
 
-  /** Hook for subclasses that need to react once data is available. */
-  protected onSheetLoaded(): void {
-    /* optional */
-  }
+  protected onSheetLoaded(): void {}
 
   selectSheet(name: string): void {
     this.activeSheetName.set(name);

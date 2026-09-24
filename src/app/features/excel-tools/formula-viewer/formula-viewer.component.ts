@@ -49,7 +49,6 @@ export class FormulaViewerComponent extends SpreadsheetToolBase {
     );
   });
 
-  /** Which functions this workbook actually uses, most-used first. */
   protected readonly functionUsage = computed(() => {
     const counts = new Map<string, number>();
     for (const cell of this.allFormulas()) {

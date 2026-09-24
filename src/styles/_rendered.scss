@@ -1,6 +1,5 @@
 @use 'mixins' as *;
 
-/** Scrollable frame around rendered document previews. */
 .rendered {
   max-height: 52vh;
   overflow: auto;

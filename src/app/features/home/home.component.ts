@@ -34,7 +34,6 @@ export class HomeComponent {
     return query ? this.registry.search(query).slice(0, 8) : [];
   });
 
-  /** Tools that can open whatever was just dropped, best match first. */
   protected readonly suggestions = computed<ResolvedTool[]>(() => {
     const files = this.dropped();
     if (!files.length) return [];
@@ -105,9 +104,6 @@ export class HomeComponent {
             width: 512,
             height: 512,
           },
-          // A one-person project should say so. An Organization with no human
-          // attached is the shape of a shell brand, and it is the shape search
-          // and AI systems discount when weighing who to trust.
           founder: {
             '@type': 'Person',
             name: SITE.author.name,
@@ -115,9 +111,6 @@ export class HomeComponent {
             email: SITE.author.email,
             sameAs: [...SITE.author.sameAs],
           },
-          // Gives search engines and assistants a real support route, which
-          // is one of the signals that separates a maintained site from an
-          // abandoned one.
           contactPoint: {
             '@type': 'ContactPoint',
             contactType: 'customer support',

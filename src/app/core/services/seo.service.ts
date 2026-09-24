@@ -7,27 +7,16 @@ import type { ResolvedGuide } from '../models/guide.model';
 export interface PageSeo {
   readonly title: string;
   readonly description: string;
-  /** Path beginning with `/`. Used for the canonical and og:url tags. */
   readonly path: string;
   readonly keywords?: readonly string[];
-  /** JSON-LD objects appended to the head as `application/ld+json`. */
   readonly structuredData?: readonly object[];
   readonly noIndex?: boolean;
 }
 
 const LD_ID = 'ou-structured-data';
 
-/**
- * Longest title worth emitting. Google truncates around 60 characters and Bing
- * warns past 70; staying under the tighter of the two keeps both intact.
- */
 const TITLE_LIMIT = 60;
 
-/**
- * Applies per-route metadata: title, description, canonical, Open Graph,
- * Twitter cards and JSON-LD. Runs on the server during prerendering, so the
- * markup crawlers receive is already complete.
- */
 @Injectable({ providedIn: 'root' })
 export class SeoService {
   private readonly doc = inject(DOCUMENT);
@@ -36,10 +25,6 @@ export class SeoService {
 
   apply(seo: PageSeo): void {
     const url = SITE.origin + (seo.path === '/' ? '' : seo.path);
-    // The site name is a nicety; the page's own words are what a searcher
-    // scans for. Appending it unconditionally pushed the longer guide titles
-    // past what either engine displays, so it is dropped when it would not
-    // fit. Search results show the domain regardless.
     const suffixed = `${seo.title} — ${SITE.name}`;
     const fullTitle = seo.title.includes(SITE.name)
       ? seo.title
@@ -51,8 +36,6 @@ export class SeoService {
 
     this.setName('description', metaDescription(seo.description));
     this.setName('robots', seo.noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large');
-    // No <meta name="keywords">: Google ignores it and Bing treats stuffing it
-    // as a weak spam signal. Keywords still feed on-site search.
     this.meta.removeTag("name='keywords'");
 
     this.setProperty('og:type', 'website');
@@ -75,7 +58,6 @@ export class SeoService {
     this.setStructuredData(seo.structuredData ?? []);
   }
 
-  /** Convenience builder for a tool page, including its FAQ rich result. */
   toolSeo(tool: ResolvedTool): PageSeo {
     const structuredData: object[] = [
       {
@@ -157,8 +139,6 @@ export class SeoService {
           mainEntityOfPage: { '@type': 'WebPage', '@id': SITE.origin + guide.path },
           image: `${SITE.origin}/og/cover.jpg`,
         },
-        // The question and its direct answer, so an assistant quoting this
-        // page has the answer marked up rather than inferred from prose.
         {
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
@@ -186,10 +166,6 @@ export class SeoService {
       path: `/${category.slug}`,
       keywords: [category.title.toLowerCase(), category.tagline.toLowerCase()],
       structuredData: [
-        // A category is a curated collection, and breadcrumbs alone do not say
-        // so. ItemList names the members in order, which is what lets a search
-        // or AI system answer "what PDF tools does this site have" from the hub
-        // page instead of having to crawl every tool.
         {
           '@context': 'https://schema.org',
           '@type': 'ItemList',
@@ -259,14 +235,6 @@ export class SeoService {
   }
 }
 
-/**
- * Fits a description into the roughly 160 characters search engines display.
- *
- * Cuts at a sentence end where one is available, because a description ending
- * mid-clause reads as broken in a result listing; otherwise falls back to the
- * last word boundary. The full text stays on the page — only the meta tag is
- * shortened.
- */
 export function metaDescription(text: string): string {
   const trimmed = text.trim();
   if (trimmed.length <= 160) return trimmed;

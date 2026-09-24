@@ -23,13 +23,6 @@ interface SavedSheet {
   readonly rows: string[][];
 }
 
-/**
- * Freeform workbook editor: an editable grid that becomes a real .xlsx.
- *
- * Cells are strings while being edited; type inference — number, boolean,
- * date, blank — happens once at export time so the user is never confused by
- * their spreadsheet reformatting under them as they type.
- */
 @Component({
   selector: 'app-sheet-creator',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,11 +46,6 @@ export class SheetCreatorComponent extends ToolBase {
   protected readonly styleHeader = signal(true);
   protected readonly detectTypes = signal(true);
 
-  /**
-   * Live type badges for each column, computed from the current rows so people
-   * see whether their date column looks like a date or is still being read as
-   * text before they export.
-   */
   protected readonly columnTypes = computed(() =>
     this.headers().map((_, index) => inferColumnType(this.rows(), index)),
   );
@@ -73,7 +61,6 @@ export class SheetCreatorComponent extends ToolBase {
       this.rows.set(saved.rows.map((row) => [...row]));
     }
 
-    // Persist on any edit — cheap enough since the whole payload is strings.
     effect(() => {
       const snapshot: SavedSheet = {
         title: this.title(),
@@ -237,7 +224,6 @@ function classify(value: string): CellType {
   return 'text';
 }
 
-/** Turns the string a user typed into the type the workbook should record. */
 function coerce(value: string): string | number | boolean | Date | null {
   if (value === '') return null;
   const trimmed = value.trim();

@@ -1,25 +1,12 @@
-/**
- * Image decoding and re-encoding using the browser's own codecs.
- *
- * Nothing here touches the network: every conversion goes through an
- * ImageBitmap or HTMLImageElement and a canvas, which is why the tools work
- * offline and why no image is ever uploaded.
- */
-
 export type ImageMime = 'image/png' | 'image/jpeg' | 'image/webp' | 'image/avif';
 
 export interface EncodeOptions {
   readonly mime: ImageMime;
-  /** 0–1, ignored for PNG. */
   readonly quality?: number;
-  /** Longest-edge cap in pixels; the aspect ratio is always preserved. */
   readonly maxDimension?: number;
-  /** Exact output width, overrides `maxDimension`. */
   readonly width?: number;
   readonly height?: number;
-  /** Background painted under images with transparency (JPEG needs this). */
   readonly background?: string;
-  /** Multiplier applied to the natural size, used by SVG rasterising. */
   readonly scale?: number;
 }
 
@@ -32,7 +19,6 @@ export interface ImageInfo {
 
 const OPAQUE_FORMATS = new Set<ImageMime>(['image/jpeg']);
 
-/** Reads intrinsic dimensions without fully decoding where possible. */
 export async function inspectImage(file: Blob): Promise<ImageInfo> {
   const bitmap = await decode(file);
   const info: ImageInfo = {
@@ -45,18 +31,6 @@ export async function inspectImage(file: Blob): Promise<ImageInfo> {
   return info;
 }
 
-/* ------------------------------------------------------------------
-   HEIC / HEIF
-   ------------------------------------------------------------------ */
-
-/**
- * Detects HEIC and HEIF by container signature rather than by file name.
- *
- * These are ISO base-media files: bytes 4–8 are `ftyp`, and the brand that
- * follows says which flavour. A phone will happily hand over a `.jpg` that is
- * really HEIC and a `.heic` that is really JPEG, so the bytes are the only
- * thing worth trusting.
- */
 export async function isHeicBlob(source: Blob): Promise<boolean> {
   if (source.size < 12) return false;
   try {
@@ -70,28 +44,12 @@ export async function isHeicBlob(source: Blob): Promise<boolean> {
   }
 }
 
-/**
- * Makes a blob something a canvas can draw.
- *
- * No browser ships a HEIC decoder — Safari can display the format because
- * macOS and iOS decode it outside the browser, and Chrome and Firefox cannot
- * at all. So HEIC is decoded here, by libheif compiled to WebAssembly, which
- * is imported only when a HEIC file actually turns up. It is a three-megabyte
- * download and there is no honest way to make it smaller; the alternative is
- * sending someone's camera roll to a server, which is the thing this site
- * exists not to do.
- *
- * The `/csp` build is deliberate: the default one evaluates strings as code,
- * which this site's Content-Security-Policy forbids.
- */
 export async function prepareForCanvas(source: Blob): Promise<Blob> {
   if (!(await isHeicBlob(source))) return source;
   const { heicTo } = await import('heic-to/csp');
   try {
     return await heicTo({ blob: source, type: 'image/png' });
   } catch (error) {
-    // libheif reports its failures as bare strings, which would otherwise
-    // surface to the visitor as "Error: HEIF image not found".
     throw new Error(
       'That HEIC file could not be decoded — it may be truncated, or it may be a video frame rather than a photograph.',
       { cause: error },
@@ -99,17 +57,13 @@ export async function prepareForCanvas(source: Blob): Promise<Blob> {
   }
 }
 
-/** Decodes a blob into something a canvas can draw. */
 async function decode(original: Blob): Promise<ImageBitmap | HTMLImageElement> {
   const source = await prepareForCanvas(original);
-  // SVG needs the <img> path: createImageBitmap rejects SVG in some browsers.
   const isSvg = source.type === 'image/svg+xml';
   if (!isSvg && typeof createImageBitmap === 'function') {
     try {
       return await createImageBitmap(source);
-    } catch {
-      /* fall through to the <img> path */
-    }
+    } catch {}
   }
   return decodeViaImage(URL.createObjectURL(source), true);
 }
@@ -136,7 +90,6 @@ function release(bitmap: ImageBitmap | HTMLImageElement): void {
 
 function naturalSize(source: ImageBitmap | HTMLImageElement): { width: number; height: number } {
   if (source instanceof HTMLImageElement) {
-    // SVGs without intrinsic dimensions report 0; fall back to a sane canvas.
     return {
       width: source.naturalWidth || source.width || 1024,
       height: source.naturalHeight || source.height || 1024,
@@ -177,7 +130,6 @@ function targetSize(
   return { width: Math.max(1, width), height: Math.max(1, height) };
 }
 
-/** Re-encodes an image blob into another format and/or size. */
 export async function encodeImage(source: Blob, options: EncodeOptions): Promise<Blob> {
   const decoded = await decode(source);
   try {
@@ -225,14 +177,11 @@ export async function canvasToBlob(
   );
   if (blob && blob.type === mime) return blob;
   if (blob) {
-    // The browser silently fell back to PNG — surface that instead of lying
-    // about the format in the file name.
     return blob;
   }
   throw new Error(`This browser cannot encode ${mime}.`);
 }
 
-/** True when the browser can actually produce this format. */
 export async function supportsFormat(mime: ImageMime): Promise<boolean> {
   try {
     const canvas = createCanvas(2, 2);
@@ -252,15 +201,6 @@ export async function blobToDataUrl(blob: Blob): Promise<string> {
   });
 }
 
-/**
- * Decodes a data URL into bytes.
- *
- * The obvious implementation is `fetch(dataUrl)`, and it does not work here:
- * a `data:` URL counts as a connection, so the site's Content-Security-Policy
- * refuses it unless `data:` is added to connect-src — which would loosen the
- * policy to avoid decoding base64, a poor trade. Doing it directly is also one
- * fewer trip through the network stack for something that never left the page.
- */
 export function dataUrlToBytes(dataUrl: string): Uint8Array {
   const comma = dataUrl.indexOf(',');
   if (!dataUrl.startsWith('data:') || comma < 0) {
@@ -290,18 +230,11 @@ export function dataUrlToBlob(dataUrl: string): Blob {
   });
 }
 
-/** Converts any data URL into another image format, staying local. */
 export async function convertDataUrl(dataUrl: string, mime: ImageMime): Promise<string> {
   const converted = await encodeImage(dataUrlToBlob(dataUrl), { mime, quality: 0.92 });
   return blobToDataUrl(converted);
 }
 
-/**
- * Rasterises SVG markup at a chosen scale.
- *
- * The markup is serialised into a blob URL rather than injected into the page,
- * so scripts inside the SVG never execute.
- */
 export async function svgToRaster(
   svg: string,
   options: { scale?: number; width?: number; height?: number; mime?: ImageMime; background?: string } = {},
@@ -318,7 +251,6 @@ export async function svgToRaster(
   });
 }
 
-/** Gives an SVG explicit pixel dimensions so canvas drawing is predictable. */
 function ensureSvgDimensions(svg: string): string {
   if (/<svg[^>]*\swidth=/i.test(svg) && /<svg[^>]*\sheight=/i.test(svg)) return svg;
   const viewBox = svg.match(/viewBox\s*=\s*["']([^"']+)["']/i);
@@ -329,10 +261,6 @@ function ensureSvgDimensions(svg: string): string {
   return svg.replace(/<svg\b/i, `<svg width="${width}" height="${height}"`);
 }
 
-/**
- * Compresses toward a target size by walking the quality ladder down.
- * Returns the first encoding that fits, or the smallest one attempted.
- */
 export async function compressToTarget(
   source: Blob,
   targetBytes: number,

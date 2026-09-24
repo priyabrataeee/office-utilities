@@ -1,11 +1,7 @@
-/* Layout + interaction mixins shared across the app. */
-
 @mixin container($width: var(--ou-max-w)) {
   width: 100%;
   max-width: $width;
   margin-inline: auto;
-  // clamp instead of a nested media query, so callers can keep declaring
-  // properties after the include without tripping Sass's mixed-decls rule.
   padding-inline: clamp(var(--ou-s-4), 3vw, var(--ou-s-5));
 }
 

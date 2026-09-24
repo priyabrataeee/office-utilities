@@ -20,13 +20,6 @@ import { baseNameOf, withExtension } from '../../../core/utils/file.util';
 
 export type ExportTarget = 'pdf' | 'images';
 
-/**
- * Exports a deck to PDF or to images.
- *
- * Slides are rendered to SVG first, then either rasterised for image output or
- * embedded as page-sized PNGs in a PDF — which keeps one rendering path
- * responsible for how a slide actually looks.
- */
 @Component({
   selector: 'app-pptx-export',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -204,7 +197,6 @@ export class PptxExportComponent extends ToolBase {
           page.drawImage(image, { x: 0, y: 0, width: deck.width, height: deck.height });
 
           if (this.includeNotes() && slide.notes) {
-            // Notes go on their own page so the slide keeps its exact size.
             const notesPage = pdf.addPage([deck.width, deck.height]);
             notesPage.drawText(`Slide ${index + 1} — notes`, {
               x: 40,
@@ -224,7 +216,6 @@ export class PptxExportComponent extends ToolBase {
             });
           }
         } else {
-          // Handout layout: N slides stacked on a portrait page.
           const pageWidth = 595.28;
           const pageHeight = 841.89;
           const slot = position % perPage;
@@ -263,7 +254,6 @@ export class PptxExportComponent extends ToolBase {
   }
 }
 
-/** Naive word wrap used for the notes pages. */
 function wrapText(text: string, maxChars: number): string[] {
   const lines: string[] = [];
   for (const paragraph of text.split('\n')) {

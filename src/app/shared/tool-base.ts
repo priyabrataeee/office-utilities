@@ -5,17 +5,6 @@ import { RecentService } from '../core/services/recent.service';
 import { HandoffService } from '../core/services/handoff.service';
 import type { OutputFile } from '../core/models/file.model';
 
-/**
- * Shared state machine for every producing tool.
- *
- * Handles the parts that are identical everywhere — picking up a file handed
- * over from another page, progress reporting, turning thrown errors into
- * readable messages, and collecting outputs — so each tool only implements
- * the bit that is actually its own.
- *
- * Subclasses must be constructed inside an injection context, which Angular
- * guarantees for components.
- */
 export abstract class ToolBase {
   protected readonly toast = inject(ToastService);
   protected readonly downloads = inject(DownloadService);
@@ -23,7 +12,6 @@ export abstract class ToolBase {
   private readonly handoff = inject(HandoffService);
   private readonly injector = inject(Injector);
 
-  /** Catalog id, used for usage tracking and the shell header. */
   abstract readonly toolId: string;
 
   readonly files = signal<File[]>([]);
@@ -39,26 +27,12 @@ export abstract class ToolBase {
     this.files().reduce((sum, file) => sum + file.size, 0),
   );
 
-  /**
-   * Consumes any file handed over from the home page or Recent Files.
-   * Call from the subclass constructor.
-   */
   protected acceptHandoff(): void {
-    // Claim the handoff synchronously so a later component cannot take it
-    // twice, but deliver it after the first render.
-    //
-    // Tools that serve several routes read their catalog id from route data
-    // via `withComponentInputBinding()`, which makes `toolId` a required
-    // input. Required inputs are not populated until after construction, so
-    // calling onFiles() here — which reads toolId to record the file as
-    // recent — throws NG0950 for exactly those tools, and only when a file
-    // was actually handed over.
     const pending = this.handoff.take();
     if (!pending.length) return;
     afterNextRender(() => this.onFiles(pending), { injector: this.injector });
   }
 
-  /** Wire this to `<app-file-drop-zone (filesChange)>`. */
   onFiles(files: File[]): void {
     this.files.set(files);
     this.outputs.set([]);
@@ -67,15 +41,8 @@ export abstract class ToolBase {
     this.afterFiles(files);
   }
 
-  /** Hook for subclasses that need to inspect a file as soon as it arrives. */
-  protected afterFiles(_files: File[]): void {
-    /* optional */
-  }
+  protected afterFiles(_files: File[]): void {}
 
-  /**
-   * Runs a unit of work with progress, error handling and busy state.
-   * Returns undefined when the operation failed.
-   */
   protected async run<T>(label: string, work: () => Promise<T>): Promise<T | undefined> {
     if (this.busy()) return undefined;
     this.busy.set(true);
@@ -97,7 +64,6 @@ export abstract class ToolBase {
     }
   }
 
-  /** Progress callback shaped for the engines' `(done, total)` signature. */
   protected readonly onProgress = (done: number, total: number): void => {
     this.percent.set(total > 0 ? Math.round((done / total) * 100) : null);
   };
@@ -132,7 +98,6 @@ export abstract class ToolBase {
   }
 }
 
-/** Turns anything thrown into a message worth showing a person. */
 export function describeError(error: unknown): string {
   if (error instanceof Error) {
     const message = error.message || error.name;

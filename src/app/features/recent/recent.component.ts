@@ -59,7 +59,6 @@ export class RecentComponent {
     return this.registry.forExtension(entry.extension).slice(0, 3);
   }
 
-  /** Reopens a cached file in the tool it was last used with. */
   protected async reopen(entry: RecentFileEntry): Promise<void> {
     const path = this.toolPath(entry) ?? this.suggestionsFor(entry)[0]?.path;
     if (!path) {

@@ -21,12 +21,6 @@ import { ToastService } from '../../../core/services/toast.service';
 import { SITE } from '../../../core/site.config';
 import { TOOL_CONTENT } from '../../../core/data/tool-content';
 
-/**
- * Chrome shared by every tool page: breadcrumbs, header, privacy assurance,
- * FAQ, related tools — plus the SEO metadata and usage tracking. Tools
- * project their own interface into the default slot and stay focused on
- * doing one job.
- */
 @Component({
   selector: 'app-tool-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,11 +37,8 @@ export class ToolShellComponent {
   private readonly downloads = inject(DownloadService);
   private readonly toast = inject(ToastService);
 
-  /** Catalog id of the tool being rendered. */
   readonly toolId = input.required<string>();
-  /** Renders the tool full-bleed (used by the diagram studio and viewers). */
   readonly wide = input(false);
-  /** Hides the marketing sections for immersive, app-like tools. */
   readonly minimal = input(false);
 
   protected readonly tool = computed(() => this.registry.byId(this.toolId()));
@@ -55,22 +46,7 @@ export class ToolShellComponent {
     const tool = this.tool();
     return tool ? this.registry.related(tool, 6) : [];
   });
-  /**
-   * Guides covering this tool.
-   *
-   * The link matters in both directions: a guide sends readers to the tool,
-   * and this sends the tool's visitors — and any crawler that reaches it — to
-   * the page that explains the subject properly.
-   */
   protected readonly guides = computed(() => this.guideRegistry.forTool(this.toolId()));
-  /**
-   * Extended copy, where this tool has any.
-   *
-   * Only the pages competing for real search volume carry it. Returning
-   * undefined for the rest is the intended state, not a gap to be filled: a
-   * page is better with three honest sections than with five where two were
-   * written to satisfy a template.
-   */
   protected readonly content = computed(() => TOOL_CONTENT[this.toolId()]);
   protected readonly isFavorite = computed(() => {
     this.favorites.ids();
@@ -81,9 +57,6 @@ export class ToolShellComponent {
     effect(() => {
       const tool = this.tool();
       if (!tool) return;
-      // The body is a side effect, not a computation: reading service state
-      // from inside it would make this effect depend on signals it also
-      // writes, which loops.
       untracked(() => {
         this.seo.apply(this.seo.toolSeo(tool));
         this.recent.trackTool(tool.id);

@@ -5,6 +5,7 @@ import { SiteFooterComponent } from './layout/site-footer/site-footer.component'
 import { CommandPaletteComponent } from './layout/command-palette/command-palette.component';
 import { ShortcutHelpComponent } from './layout/shortcut-help/shortcut-help.component';
 import { ToastHostComponent } from './shared/components/toast-host/toast-host.component';
+import { SiteBackgroundComponent } from './shared/components/site-background/site-background.component';
 import { CommandPaletteService } from './core/services/command-palette.service';
 import { ShortcutService } from './core/services/shortcut.service';
 import { ThemeService } from './core/services/theme.service';
@@ -14,6 +15,7 @@ import { ThemeService } from './core/services/theme.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterOutlet,
+    SiteBackgroundComponent,
     SiteHeaderComponent,
     SiteFooterComponent,
     CommandPaletteComponent,

@@ -2,20 +2,6 @@ import type { PDFDocumentProxy } from 'pdfjs-dist';
 import type { DocBlock, InlineRun, ListItem } from './doc-model';
 import { closePdf, openPdf } from './pdfjs.engine';
 
-/**
- * Recovering document structure from a PDF.
- *
- * A PDF stores glyphs at coordinates. It does not store paragraphs, headings or
- * lists — that information was thrown away when the file was produced, and no
- * converter can read it back with certainty. What follows infers structure from
- * the only evidence left: font size, font name, and the geometry of the text.
- *
- * The inference is deliberately conservative. Producing a plain paragraph where
- * the original had a heading is a small loss; inventing headings throughout a
- * document because one page used a larger font is a document nobody can edit.
- */
-
-/** One positioned run of text as pdf.js reports it. */
 interface RawItem {
   readonly str: string;
   readonly x: number;
@@ -25,7 +11,6 @@ interface RawItem {
   readonly font: string;
 }
 
-/** Items sharing a baseline, assembled back into a visual line. */
 interface Line {
   readonly text: string;
   readonly x: number;
@@ -37,15 +22,10 @@ interface Line {
 }
 
 export interface PdfExtractOptions {
-  /** Promote larger-than-body lines to headings. */
   readonly detectHeadings?: boolean;
-  /** Turn bulleted and numbered lines into real list blocks. */
   readonly detectLists?: boolean;
-  /** Join wrapped lines back into single paragraphs. */
   readonly mergeParagraphs?: boolean;
-  /** Drop running headers and footers repeated across pages. */
   readonly dropRepeated?: boolean;
-  /** Emit a page break between pages. */
   readonly pageBreaks?: boolean;
 }
 
@@ -61,26 +41,17 @@ export interface PdfExtractResult {
   readonly blocks: DocBlock[];
   readonly text: string;
   readonly pageCount: number;
-  /**
-   * False when the PDF carries no selectable text at all — almost always a
-   * scan. Nothing can be extracted without OCR, and the caller should say so
-   * rather than handing back an empty document.
-   */
   readonly hasTextLayer: boolean;
-  /** Running headers/footers that were removed, for disclosure in the UI. */
   readonly droppedLines: readonly string[];
   readonly headingCount: number;
 }
 
-/** Bold and italic survive only in the font's name, e.g. `ABCDEE+Calibri-BoldItalic`. */
 const BOLD_HINT = /bold|black|heavy|semibold|demi/i;
 const ITALIC_HINT = /italic|oblique/i;
 
-/** Leading bullet glyphs, and `1.` / `a)` / `iv.` style numbering. */
 const BULLET = /^\s*[•‣▪◦·–—*-]\s+/;
 const NUMBERED = /^\s*(\d{1,3}|[a-z]|[ivxlc]{1,5})\s*[.)]\s+/i;
 
-/** A line ending mid-sentence is a wrap, not a paragraph end. */
 const SENTENCE_END = /[.!?:;"')\]]\s*$/;
 
 export async function extractPdfDocument(
@@ -145,10 +116,6 @@ export async function extractPdfDocument(
   }
 }
 
-/* ------------------------------------------------------------------
-   Page → lines
-   ------------------------------------------------------------------ */
-
 async function linesOfPage(doc: PDFDocumentProxy, pageNumber: number): Promise<Line[]> {
   const page = await doc.getPage(pageNumber);
   try {
@@ -177,8 +144,6 @@ async function linesOfPage(doc: PDFDocumentProxy, pageNumber: number): Promise<L
     }
     if (items.length === 0) return [];
 
-    // Group by baseline. A tolerance proportional to glyph height keeps
-    // superscripts and mixed sizes on the line they visually belong to.
     const sorted = [...items].sort((a, b) => b.y - a.y || a.x - b.x);
     const groups: RawItem[][] = [];
     let current: RawItem[] = [sorted[0]];
@@ -210,8 +175,6 @@ function toLine(group: RawItem[], page: number): Line | null {
   for (const item of ordered) {
     if (previous) {
       const gap = item.x - (previous.x + previous.width);
-      // PDFs often position each word separately with no space glyph, so a
-      // horizontal gap has to be turned back into a space.
       const spaceWidth = Math.max(previous.height, item.height) * 0.2;
       if (gap > spaceWidth && !/\s$/.test(text) && !/^\s/.test(item.str)) text += ' ';
     }
@@ -222,8 +185,6 @@ function toLine(group: RawItem[], page: number): Line | null {
   text = text.replace(/\s+/g, ' ').trim();
   if (!text) return null;
 
-  // Weight by character count: a short bold lead-in should not make a whole
-  // paragraph bold.
   const weight = (predicate: (f: string) => boolean) =>
     ordered.reduce((sum, i) => sum + (predicate(i.font) ? i.str.length : 0), 0);
   const total = ordered.reduce((sum, i) => sum + i.str.length, 0) || 1;
@@ -238,10 +199,6 @@ function toLine(group: RawItem[], page: number): Line | null {
     page,
   };
 }
-
-/* ------------------------------------------------------------------
-   Lines → blocks
-   ------------------------------------------------------------------ */
 
 function blocksOfPage(
   lines: readonly Line[],
@@ -277,7 +234,6 @@ function blocksOfPage(
 
     if (bulleted || numbered) {
       flushParagraph();
-      // A switch between bullets and numbers starts a separate list.
       if (listItems.length && listOrdered !== !!numbered) flushList();
       listOrdered = !!numbered;
       listItems.push({
@@ -310,30 +266,19 @@ function blocksOfPage(
   return blocks;
 }
 
-/**
- * Decides whether a line continues the paragraph above it.
- *
- * Two signals, both needed: an unusually large vertical gap, or a previous line
- * that ended a sentence well short of the right margin. Either alone produces
- * false splits in justified text.
- */
 function startsNewParagraph(previous: Line, line: Line, bodySize: number): boolean {
   const gap = previous.y - line.y;
   if (gap > bodySize * 1.8) return true;
-  // An indent marks a new paragraph in most typeset documents.
   if (line.x - previous.x > bodySize * 0.8) return true;
   return SENTENCE_END.test(previous.text) && previous.text.length < 60;
 }
 
 function headingLevel(line: Line, bodySize: number): 1 | 2 | 3 | null {
   const ratio = line.size / bodySize;
-  // Long lines are body text however they are set; headings are short.
   if (line.text.length > 120) return null;
   if (ratio >= 1.55) return 1;
   if (ratio >= 1.28) return 2;
   if (ratio >= 1.12) return 3;
-  // A short, fully bold line above body text reads as a heading even at the
-  // same size — a very common pattern in reports written in Word.
   if (line.bold && ratio >= 0.98 && line.text.length < 70) return 3;
   return null;
 }
@@ -347,17 +292,6 @@ function runsOf(text: string, line: Line): InlineRun[] {
   return [run];
 }
 
-/* ------------------------------------------------------------------
-   Helpers
-   ------------------------------------------------------------------ */
-
-/**
- * The most common line height, taken as the body size.
- *
- * A mean would be dragged upwards by titles; the mode is what the bulk of the
- * document is actually set in. Sizes are bucketed to a tenth of a point because
- * PDF font sizes are rarely exact integers.
- */
 function modalSize(lines: readonly Line[]): number {
   const counts = new Map<number, number>();
   for (const line of lines) {
@@ -377,13 +311,6 @@ function modalSize(lines: readonly Line[]): number {
 
 const normalise = (text: string) => text.replace(/\d+/g, '#').replace(/\s+/g, ' ').trim();
 
-/**
- * Finds running headers and footers.
- *
- * A line counts as furniture when the same text — with digits masked, so
- * "Page 4 of 9" matches "Page 5 of 9" — appears near the top or bottom of most
- * pages. Requiring a majority avoids stripping a phrase that simply recurs.
- */
 function findRepeated(pages: readonly Line[][]): Set<string> {
   const repeated = new Set<string>();
   if (pages.length < 3) return repeated;

@@ -27,19 +27,11 @@ export type ImagePreset =
   | 'heic-to-jpg'
   | 'resize';
 
-/** How the output dimensions are decided, for the resize preset. */
 export type ResizeMode = 'none' | 'exact' | 'percent' | 'longest';
 
 interface Entry {
   readonly id: string;
-  /** The file as dropped — its name and size are what the visitor recognises. */
   readonly file: File;
-  /**
-   * The same image in something a canvas can draw. Identical to `file` for
-   * every format the browser decodes natively; a decoded PNG for HEIC, so the
-   * three-megabyte decoder runs once per file rather than once per preview
-   * and again per conversion.
-   */
   readonly source: Blob;
   readonly url: string;
   width: number;
@@ -97,20 +89,12 @@ const PRESETS: Record<
   },
   resize: {
     accepts: PHOTO_INPUTS,
-    // Resizing is not a conversion, so the format is left alone by default.
     target: 'auto',
     title: 'Drop images to resize',
     icon: 'maximize',
   },
 };
 
-/**
- * Batch image conversion using the browser's own encoders.
- *
- * Backs eight catalog entries; the preset chooses the accepted inputs, the
- * default target and which controls are worth showing. Everything else is the
- * same pipeline, because it is the same job.
- */
 @Component({
   selector: 'app-image-convert',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -142,7 +126,6 @@ export class ImageConvertComponent extends ToolBase {
   protected readonly keepTransparency = signal(true);
   protected readonly unsupported = signal<string[]>([]);
 
-  /* --- resize controls, only shown by the resize preset --- */
   protected readonly resizeMode = signal<ResizeMode>('exact');
   protected readonly outWidth = signal(1280);
   protected readonly outHeight = signal(720);
@@ -180,7 +163,6 @@ export class ImageConvertComponent extends ToolBase {
   constructor() {
     super();
     this.acceptHandoff();
-    // The default target comes from the preset, then never changes on its own.
     queueMicrotask(() => this.target.set(this.config().target));
     void this.checkSupport();
   }
@@ -202,11 +184,6 @@ export class ImageConvertComponent extends ToolBase {
     void this.ingest(files);
   }
 
-  /**
-   * Turns dropped files into entries, decoding anything the canvas cannot read
-   * first. HEIC is the only format that needs it, and it is slow enough that
-   * the busy overlay is worth showing.
-   */
   private async ingest(files: File[]): Promise<void> {
     const needsDecoding = this.isHeic() || this.preset() === 'any' || this.isResize();
 
@@ -239,15 +216,11 @@ export class ImageConvertComponent extends ToolBase {
           item.id === entry.id ? { ...item, width: info.width, height: info.height } : item,
         ),
       );
-      // Seed the resize boxes from the first image, so the numbers on screen
-      // describe something real rather than an arbitrary default.
       if (this.isResize() && this.entries()[0]?.id === entry.id && info.width) {
         this.outWidth.set(info.width);
         this.outHeight.set(info.height);
       }
-    } catch {
-      /* dimensions are informational only */
-    }
+    } catch {}
   }
 
   protected remove(id: string): void {
@@ -287,7 +260,6 @@ export class ImageConvertComponent extends ToolBase {
     this.lockAspect.set((event.target as HTMLInputElement).checked);
   }
 
-  /** Typing a width recomputes the height while the ratio is locked. */
   protected setOutWidth(event: Event): void {
     const width = clampNumber(Number((event.target as HTMLInputElement).value), 1, 20000);
     this.outWidth.set(width);
@@ -306,7 +278,6 @@ export class ImageConvertComponent extends ToolBase {
     }
   }
 
-  /** The size options handed to the encoder for one entry. */
   private sizeFor(entry: Entry): { width?: number; height?: number; maxDimension?: number } {
     if (!this.isResize()) {
       return { maxDimension: this.maxDimension() || undefined };
@@ -328,7 +299,6 @@ export class ImageConvertComponent extends ToolBase {
     }
   }
 
-  /** The format one entry is written in, resolving `auto` against its input. */
   private mimeFor(entry: Entry): ImageMime {
     const chosen = this.target();
     if (chosen !== 'auto') return chosen;
@@ -356,7 +326,6 @@ export class ImageConvertComponent extends ToolBase {
 
           let blob: Blob;
           if (extensionOf(entry.file.name) === '.svg') {
-            // SVG needs the markup path so it rasterises at the chosen scale.
             const svg = await readAsText(entry.file);
             blob = await svgToRaster(svg, { scale: this.scale(), mime, background });
           } else {
@@ -368,7 +337,6 @@ export class ImageConvertComponent extends ToolBase {
             });
           }
 
-          // Some browsers silently fall back to PNG; name the file honestly.
           const actualExtension =
             blob.type === mime ? extensionForMime(mime) : extensionForMime(blob.type);
           if (blob.type !== mime && !warned) {

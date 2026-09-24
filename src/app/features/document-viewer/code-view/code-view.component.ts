@@ -18,13 +18,6 @@ import { flattenJson, flattenXml, formatXml, visibleRows, type TreeRow } from '.
 export type CodeKind = 'text' | 'json' | 'xml' | 'html';
 type ViewTab = 'tree' | 'formatted' | 'raw' | 'preview';
 
-/**
- * Reader for text, JSON, XML and HTML.
- *
- * These four share almost all of their behaviour — line numbers, search,
- * wrapping, copy and download — so they share a component and differ only in
- * which tabs they offer.
- */
 @Component({
   selector: 'app-code-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -110,8 +103,6 @@ export class CodeViewComponent {
 
   protected readonly lines = computed(() => {
     const text = this.displayText();
-    // Very large files are capped: past a point, more lines help nobody and
-    // the DOM cost is real.
     const all = text.split('\n');
     return all.length > 20000 ? all.slice(0, 20000) : all;
   });
@@ -227,9 +218,7 @@ export class CodeViewComponent {
     try {
       this.raw.set(JSON.stringify(this.parsed()));
       this.tab.set('raw');
-    } catch {
-      /* nothing to minify */
-    }
+    } catch {}
   }
 
   protected async downloadFormatted(): Promise<void> {
@@ -243,7 +232,6 @@ export class CodeViewComponent {
   }
 }
 
-/** Turns a JSON parse failure into a message that points at the problem. */
 function describeJsonError(error: unknown, text: string): string {
   const message = error instanceof Error ? error.message : String(error);
   const position = Number(message.match(/position (\d+)/)?.[1] ?? NaN);

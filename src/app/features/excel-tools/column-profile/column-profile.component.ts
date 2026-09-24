@@ -20,7 +20,6 @@ const TYPE_ICONS: Record<DetectedType, string> = {
   empty: 'minus',
 };
 
-/** Column statistics and data-type detection over the same profiling pass. */
 @Component({
   selector: 'app-column-profile',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -100,7 +99,6 @@ export class ColumnProfileComponent extends SpreadsheetToolBase {
       : value.toLocaleString(undefined, { maximumFractionDigits: decimals });
   }
 
-  /** Scales a histogram bucket to a 0–100 height for the sparkline. */
   protected barHeight(column: ColumnStats, index: number): number {
     const max = Math.max(...column.histogram, 1);
     return Math.round((column.histogram[index] / max) * 100);

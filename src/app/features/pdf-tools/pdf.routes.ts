@@ -1,12 +1,5 @@
 import { Routes } from '@angular/router';
 
-/**
- * PDF toolkit routes.
- *
- * Several tools share one component and differ only by route data — the page
- * organiser in particular backs rotate, delete, reorder and extract, because
- * they are the same interaction with a different default action.
- */
 export const routes: Routes = [
   {
     path: '',

@@ -4,10 +4,6 @@ import type { OutputFile } from '../models/file.model';
 import { safeFileName } from '../utils/file.util';
 import { AnalyticsService } from './analytics.service';
 
-/**
- * Everything that leaves the app does so through here: a Blob, an object URL
- * and an anchor click. There is no network path — which is the whole point.
- */
 @Injectable({ providedIn: 'root' })
 export class DownloadService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -15,15 +11,8 @@ export class DownloadService {
 
   async save(blob: Blob, fileName: string): Promise<void> {
     if (!this.isBrowser) return;
-    // file-saver is CommonJS: its dynamic-import namespace exposes only
-    // `default`, which is the saveAs function itself. Destructuring
-    // `{ saveAs }` off the namespace yields undefined, so every download
-    // — and everything routed through save() — throws.
     const saveAs = (await import('file-saver')).default;
     saveAs(blob, safeFileName(fileName));
-    // Every save in the app routes through here, so this is the single point
-    // where "the tool worked" is true. The file name is deliberately not
-    // passed on — see AnalyticsService.
     this.analytics.toolCompleted();
   }
 
@@ -39,7 +28,6 @@ export class DownloadService {
     return this.save(output.blob, output.name);
   }
 
-  /** Bundles several outputs into a ZIP so the user gets one click, not twenty. */
   async saveZip(files: readonly OutputFile[], zipName: string): Promise<void> {
     if (!this.isBrowser || files.length === 0) return;
     const JSZip = (await import('jszip')).default;
@@ -47,7 +35,6 @@ export class DownloadService {
     const used = new Map<string, number>();
 
     for (const file of files) {
-      // Duplicate names inside a ZIP silently overwrite; disambiguate instead.
       let name = safeFileName(file.name);
       const seen = used.get(name) ?? 0;
       used.set(name, seen + 1);
@@ -62,7 +49,6 @@ export class DownloadService {
     await this.save(blob, zipName.endsWith('.zip') ? zipName : `${zipName}.zip`);
   }
 
-  /** Opens a Blob in a new tab — used by "preview in new window". */
   openInNewTab(blob: Blob): void {
     if (!this.isBrowser) return;
     const url = URL.createObjectURL(blob);
@@ -70,7 +56,6 @@ export class DownloadService {
     setTimeout(() => URL.revokeObjectURL(url), 60_000);
   }
 
-  /** Sends a Blob straight to the printer via a hidden frame. */
   print(blob: Blob): void {
     if (!this.isBrowser) return;
     const url = URL.createObjectURL(blob);
@@ -103,7 +88,6 @@ export class DownloadService {
       await navigator.clipboard.writeText(text);
       return true;
     } catch {
-      // Clipboard API needs a secure context; fall back to the legacy path.
       try {
         const area = document.createElement('textarea');
         area.value = text;
@@ -131,7 +115,6 @@ export class DownloadService {
     }
   }
 
-  /** Native share sheet where available (mobile, Safari, Edge). */
   get canShareFiles(): boolean {
     return this.isBrowser && typeof navigator.canShare === 'function';
   }

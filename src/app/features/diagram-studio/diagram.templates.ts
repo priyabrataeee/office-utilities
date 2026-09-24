@@ -7,14 +7,6 @@ import {
   type ShapeKind,
 } from './diagram.model';
 
-/**
- * Starter diagrams for the type-specific landing pages.
- *
- * Each opens the studio with a stencil selected and something real on the
- * canvas — an empty grid is a poor first impression, and editing an example is
- * faster than starting from nothing.
- */
-
 export interface DiagramTemplate {
   readonly toolId: string;
   readonly stencil: string;

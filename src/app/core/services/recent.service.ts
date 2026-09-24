@@ -10,12 +10,6 @@ const RETAIN_KEY = 'retain-files';
 const MAX_TOOLS = 12;
 const MAX_FILES = 40;
 
-/**
- * Remembers which tools were used and which files were opened.
- *
- * File *metadata* is kept in localStorage. File *contents* are only kept when
- * the user turns on retention, and then only in IndexedDB on this device.
- */
 @Injectable({ providedIn: 'root' })
 export class RecentService {
   private readonly storage = inject(StorageService);
@@ -42,15 +36,6 @@ export class RecentService {
     }
   }
 
-  /**
-   * Records tool usage.
-   *
-   * Uses `update` rather than read-then-set so that calling this from inside
-   * an `effect` does not make the effect depend on the signal it writes — that
-   * combination loops forever, and does so silently until server rendering
-   * hangs on it. The early return also keeps repeat visits from churning the
-   * array identity for no reason.
-   */
   trackTool(id: string): void {
     if (this.tools()[0] === id) return;
     let next: string[] = [];
@@ -61,7 +46,6 @@ export class RecentService {
     this.storage.write(TOOLS_KEY, next);
   }
 
-  /** Records an opened file; caches bytes too when retention is enabled. */
   async trackFile(file: File, toolId?: string): Promise<void> {
     const id = `${file.name}:${file.size}:${file.lastModified}`;
     let cached = false;
@@ -89,7 +73,6 @@ export class RecentService {
     this.persistFiles();
   }
 
-  /** Returns the cached bytes for an entry, or null if they were not kept. */
   async restore(entry: RecentFileEntry): Promise<File | null> {
     if (!entry.cached) return null;
     const blob = await this.cache.get(entry.id);

@@ -3,7 +3,6 @@ import { StorageService } from './storage.service';
 
 const KEY = 'favorites';
 
-/** Persisted set of favourited tool ids, newest first. */
 @Injectable({ providedIn: 'root' })
 export class FavoritesService {
   private readonly storage = inject(StorageService);

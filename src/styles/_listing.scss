@@ -1,10 +1,5 @@
 @use 'mixins' as *;
 
-/**
- * Shared chrome for the listing pages (all tools, categories, favourites,
- * recent). Included per component so the rules stay style-scoped.
- */
-
 :host {
   display: block;
 }

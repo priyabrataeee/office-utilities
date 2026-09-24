@@ -1,12 +1,4 @@
-/* =============================================================
-   Office Utilities — Design tokens
-   A single source of truth for colour, type, spacing, motion.
-   Light is the default; `[data-theme='dark']` (or the OS
-   preference when the user has not chosen) swaps the ramp.
-   ============================================================= */
-
 :root {
-  /* ---- Neutral ramp (light) ---- */
   --ou-bg: #fbfbfd;
   --ou-bg-subtle: #f4f5f8;
   --ou-surface: #ffffff;
@@ -22,7 +14,6 @@
   --ou-text-subtle: #868da0;
   --ou-text-inverse: #ffffff;
 
-  /* ---- Brand ---- */
   --ou-accent: #5b5bd6;
   --ou-accent-hover: #4f4fc7;
   --ou-accent-active: #4444b3;
@@ -30,7 +21,6 @@
   --ou-accent-border: #d3d3f5;
   --ou-accent-text: #4141ad;
 
-  /* ---- Semantic ---- */
   --ou-success: #167c53;
   --ou-success-soft: #e5f5ed;
   --ou-warning: #a05e03;
@@ -40,7 +30,6 @@
   --ou-info: #1c68b8;
   --ou-info-soft: #e8f1fc;
 
-  /* ---- Category accents (used by tool cards / category chips) ---- */
   --ou-cat-pdf: #e0483c;
   --ou-cat-word: #2b579a;
   --ou-cat-excel: #1d7044;
@@ -51,7 +40,6 @@
   --ou-cat-file: #52607a;
   --ou-cat-view: #3a63d0;
 
-  /* ---- Radii ---- */
   --ou-r-xs: 4px;
   --ou-r-sm: 6px;
   --ou-r-md: 10px;
@@ -59,7 +47,6 @@
   --ou-r-xl: 20px;
   --ou-r-full: 999px;
 
-  /* ---- Elevation ---- */
   --ou-shadow-xs: 0 1px 2px rgba(16, 18, 27, 0.05);
   --ou-shadow-sm: 0 1px 3px rgba(16, 18, 27, 0.07), 0 1px 2px rgba(16, 18, 27, 0.04);
   --ou-shadow-md: 0 4px 12px rgba(16, 18, 27, 0.08), 0 1px 3px rgba(16, 18, 27, 0.04);
@@ -67,7 +54,6 @@
   --ou-shadow-xl: 0 24px 64px rgba(16, 18, 27, 0.18), 0 4px 12px rgba(16, 18, 27, 0.06);
   --ou-ring: 0 0 0 3px rgba(91, 91, 214, 0.28);
 
-  /* ---- Type ---- */
   --ou-font: 'Inter var', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
   --ou-font-mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
@@ -82,7 +68,6 @@
   --ou-fs-3xl: 2.25rem;
   --ou-fs-4xl: 3rem;
 
-  /* ---- Spacing scale (4px base) ---- */
   --ou-s-1: 4px;
   --ou-s-2: 8px;
   --ou-s-3: 12px;
@@ -95,15 +80,19 @@
   --ou-s-16: 64px;
   --ou-s-20: 80px;
 
-  /* ---- Layout ---- */
   --ou-max-w: 1240px;
   --ou-header-h: 60px;
 
-  /* ---- Motion ---- */
   --ou-ease: cubic-bezier(0.32, 0.72, 0, 1);
   --ou-dur-fast: 120ms;
   --ou-dur: 200ms;
   --ou-dur-slow: 380ms;
+
+
+  --ou-fog-base: #fafbfe;
+  --ou-fog-lowlight: #dde3f9;
+  --ou-fog-midtone: #d8ecfb;
+  --ou-fog-highlight: #ece5fd;
 
   color-scheme: light;
 }
@@ -157,14 +146,14 @@
   --ou-shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.4);
   --ou-ring: 0 0 0 3px rgba(124, 124, 240, 0.35);
 
+  --ou-fog-base: #0b0c10;
+  --ou-fog-lowlight: #1d2348;
+  --ou-fog-midtone: #10293f;
+  --ou-fog-highlight: #31265a;
+
   color-scheme: dark;
 }
 
-/*
-   Medium mode — a warm, low-contrast palette that sits between the two.
-   Softer greys with a warm tint, less punch than full dark, less glare than
-   pure white. Good for long editing sessions in mixed lighting.
-*/
 @mixin medium-palette {
   --ou-bg: #24252a;
   --ou-bg-subtle: #2a2b31;
@@ -214,13 +203,14 @@
   --ou-shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.3);
   --ou-ring: 0 0 0 3px rgba(168, 165, 255, 0.32);
 
+  --ou-fog-base: #24252a;
+  --ou-fog-lowlight: #2f3048;
+  --ou-fog-midtone: #293543;
+  --ou-fog-highlight: #3a3352;
+
   color-scheme: dark;
 }
 
-/*
-   Explicit user choice always wins over the system preference. The order of
-   these rules matters — the last matching declaration takes effect.
-*/
 :root[data-theme='dark'] {
   @include dark-palette;
 }
@@ -228,7 +218,6 @@
   @include medium-palette;
 }
 
-/* No explicit choice → follow the OS. Medium is opt-in only. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']):not([data-theme='medium']) {
     @include dark-palette;

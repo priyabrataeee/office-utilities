@@ -8,19 +8,8 @@ import {
   type DiagramNode,
 } from './diagram.model';
 
-/**
- * Serialises a diagram to standalone SVG.
- *
- * The live canvas is an Angular template because it has to be interactive;
- * this is the export path, and it produces clean markup with no framework
- * attributes — which is what makes the SVG usable in other tools and what the
- * PNG rasteriser consumes.
- */
-
 export interface SvgOptions {
-  /** Blank margin around the content, in units. */
   readonly padding?: number;
-  /** Crop to the content instead of using the full canvas. */
   readonly trim?: boolean;
   readonly background?: string;
 }
@@ -213,7 +202,6 @@ function renderLabel(node: DiagramNode): string {
 
   if (!lines.length) return '';
 
-  // Containers label their top-left corner; everything else centres.
   if (node.kind === 'container') {
     return (
       `<text x="${node.x + 12}" y="${node.y + 22}" font-size="${node.fontSize}" font-weight="700" ` +

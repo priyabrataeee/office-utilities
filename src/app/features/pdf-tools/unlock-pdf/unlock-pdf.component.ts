@@ -127,7 +127,6 @@ export class UnlockPdfComponent extends ToolBase {
     if (files[0]) void this.probe(files[0]);
   }
 
-  /** Determines up front whether the file is actually encrypted. */
   private async probe(file: File): Promise<void> {
     try {
       const doc = await openPdf(await file.arrayBuffer());

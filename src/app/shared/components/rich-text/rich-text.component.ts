@@ -1,25 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-/**
- * Renders a string containing `[label](/path)` links as real anchors.
- *
- * Deliberately not `innerHTML`. Guide bodies are authored in this repository
- * and would be safe to inject, but a site whose entire premise is that nothing
- * untrusted executes should not keep an HTML injection point around for
- * convenience — the next person to reuse this component may not be pasting
- * their own prose into it.
- *
- * Only internal paths are linked. An external URL is left as plain text rather
- * than silently becoming a link, so a typo cannot turn into an outbound link.
- */
-
 interface TextRun {
   readonly text: string;
   readonly href?: string;
 }
 
-/** `[label](/path)` — the path must start with a slash. */
 const LINK = /\[([^\]]+)\]\((\/[^)\s]*)\)/g;
 
 @Component({

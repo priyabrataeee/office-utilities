@@ -111,15 +111,11 @@
   max-width: 68ch;
 }
 
-/* Body copy runs to several paragraphs on the tools that carry it, so the
-   paragraphs need space between them that a single lead paragraph did not. */
 .about__text + .about__text,
 .detail__text + .detail__text {
   margin-top: var(--ou-s-4);
 }
 
-/* The second heading inside the section is a sibling of body copy rather than
-   the start of a new block, so it needs its own top spacing. */
 .detail__title + .detail__text {
   margin-top: 0;
 }
@@ -278,8 +274,6 @@
   }
 }
 
-/* On the immersive tools this section is the first prose on the page rather
-   than a continuation of the About block, so it supplies its own separation. */
 .detail--lead {
   margin-top: var(--ou-s-8);
 }

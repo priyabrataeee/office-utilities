@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 
-/** PowerPoint toolkit. Export to PDF and images share one component. */
 export const routes: Routes = [
   {
     path: '',

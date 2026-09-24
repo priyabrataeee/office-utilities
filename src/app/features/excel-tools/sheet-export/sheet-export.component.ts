@@ -42,7 +42,6 @@ export class SheetExportComponent extends SpreadsheetToolBase {
   protected readonly exportAllSheets = signal(false);
   protected readonly preview = signal('');
   protected readonly fullText = signal('');
-  /** Copying is offered only when the whole result is a sane clipboard size. */
   protected readonly copyable = computed(() => (this.activeSheet()?.rowCount ?? 0) <= 20000);
 
   protected readonly isCsv = computed(() => this.target() === 'csv');
@@ -71,7 +70,6 @@ export class SheetExportComponent extends SpreadsheetToolBase {
       return;
     }
 
-    // Preview is capped: nobody reads 200k lines, and rendering them is slow.
     const capped = { ...sheet, rows: sheet.rows.slice(0, 50) };
     const text = this.isCsv()
       ? await sheetToCsv(capped, this.delimiter(), this.includeHeader())

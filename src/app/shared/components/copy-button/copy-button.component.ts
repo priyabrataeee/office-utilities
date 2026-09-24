@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angu
 import { IconComponent } from '../icon/icon.component';
 import { DownloadService } from '../../../core/services/download.service';
 
-/** Copy-to-clipboard button that confirms in place rather than via a toast. */
 @Component({
   selector: 'app-copy-button',
   changeDetection: ChangeDetectionStrategy.OnPush,

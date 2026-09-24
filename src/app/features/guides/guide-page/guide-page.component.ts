@@ -16,10 +16,8 @@ import { ToolRegistryService } from '../../../core/services/tool-registry.servic
 import { SeoService } from '../../../core/services/seo.service';
 import { SITE } from '../../../core/site.config';
 
-/** Fraction of the way through an article the in-article ad aims for. */
 const AD_POSITION = 0.4;
 
-/** Below this, an article is too short to interrupt at all. */
 const MIN_BLOCKS_FOR_INLINE_AD = 12;
 
 @Component({
@@ -30,7 +28,6 @@ const MIN_BLOCKS_FOR_INLINE_AD = 12;
   styleUrl: './guide-page.component.scss',
 })
 export class GuidePageComponent {
-  /** Bound from route data by `withComponentInputBinding()`. */
   readonly slug = input.required<string>();
 
   private readonly guides = inject(GuideRegistryService);
@@ -48,21 +45,6 @@ export class GuidePageComponent {
     return guide ? this.guides.related(guide) : [];
   });
 
-  /**
-   * Index of the body block the in-article advertisement follows.
-   *
-   * Derived from the article's own structure rather than fixed at block N.
-   * Guides differ in how long they take to get going, so a fixed offset lands
-   * mid-sentence in one and past the useful part of another. This picks the
-   * section break nearest `AD_POSITION`, which puts the unit where the reader
-   * is already pausing.
-   *
-   * Breaks in the opening section are excluded — an ad between the direct
-   * answer and the article is the one position guaranteed to annoy — as are
-   * breaks near the end, which would stack the inline unit on top of the one
-   * below the article. Returns -1 when nothing qualifies, and the guide simply
-   * carries no inline ad.
-   */
   protected readonly inlineAdAfter = computed(() => {
     const body = this.guide()?.body ?? [];
     if (body.length < MIN_BLOCKS_FOR_INLINE_AD) return -1;
@@ -73,8 +55,6 @@ export class GuidePageComponent {
       .filter((i) => i >= 4 && i <= body.length - 5)
       .reduce((best, i) => (Math.abs(i - ideal) < Math.abs(best - ideal) ? i : best), -1);
 
-    // One block earlier, so the ad precedes the heading rather than orphaning
-    // it from the section it introduces.
     return chosen < 0 ? -1 : chosen - 1;
   });
 
@@ -82,8 +62,6 @@ export class GuidePageComponent {
     effect(() => {
       const guide = this.guide();
       if (!guide) return;
-      // Applying SEO is a side effect, not a computation — reading service
-      // state inside it would make the effect depend on what it writes.
       untracked(() => this.seo.apply(this.seo.guideSeo(guide)));
     });
   }

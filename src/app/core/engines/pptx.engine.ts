@@ -1,17 +1,3 @@
-/**
- * PowerPoint (.pptx) reading.
- *
- * A .pptx is a ZIP of OOXML parts. There is no browser API that renders one,
- * so this module parses the shape tree itself — positions, sizes, text runs,
- * tables and pictures — into a small model the viewer draws as positioned
- * HTML and the exporters turn into PDF pages or images.
- *
- * It reconstructs the deck faithfully for ordinary content. Charts, SmartArt,
- * 3-D effects and animations are not reproduced; those are reported rather
- * than silently dropped.
- */
-
-/** English Metric Units per point — OOXML's internal unit. */
 const EMU_PER_POINT = 12700;
 
 export interface SlideTextRun {
@@ -19,7 +5,6 @@ export interface SlideTextRun {
   readonly bold: boolean;
   readonly italic: boolean;
   readonly underline: boolean;
-  /** Point size, already converted from hundredths. */
   readonly size: number;
   readonly color: string | null;
   readonly font: string | null;
@@ -34,7 +19,6 @@ export interface SlideParagraph {
 
 export interface SlideShapeBase {
   readonly id: string;
-  /** Position and size in points, relative to the slide. */
   readonly x: number;
   readonly y: number;
   readonly width: number;
@@ -81,7 +65,6 @@ export interface Slide {
 }
 
 export interface Presentation {
-  /** Slide size in points. */
   readonly width: number;
   readonly height: number;
   readonly slides: readonly Slide[];
@@ -110,7 +93,6 @@ export async function readPresentation(file: Blob): Promise<Presentation> {
   const width = emuToPoints(Number(sizeNode?.getAttribute('cx') ?? 9144000));
   const height = emuToPoints(Number(sizeNode?.getAttribute('cy') ?? 6858000));
 
-  // Media is loaded once and shared by reference across slides.
   const media = await loadMedia(zip);
   const mediaByName = new Map(media.map((item) => [item.name, item.dataUrl]));
 
@@ -163,8 +145,6 @@ async function loadMedia(
   for (const entry of Object.values(zip.files)) {
     if (entry.dir || !/^ppt\/media\//i.test(entry.name)) continue;
     const extension = entry.name.slice(entry.name.lastIndexOf('.')).toLowerCase();
-    // Vector metafiles and video cannot be drawn by a browser; skip them
-    // rather than embedding megabytes that will never render.
     if (['.emf', '.wmf', '.mp4', '.avi', '.wmv', '.mov', '.m4a', '.wav', '.mp3'].includes(extension)) {
       continue;
     }
@@ -202,7 +182,6 @@ function mimeFor(extension: string): string {
   }
 }
 
-/** Maps r:id values to the media file each one points at. */
 async function loadRelationships(
   zip: import('jszip'),
   slidePath: string,
@@ -239,7 +218,6 @@ async function loadNotes(zip: import('jszip'), slideNumber: number): Promise<str
       .trim();
     if (text) lines.push(text);
   }
-  // The notes part repeats the slide number as its own paragraph; drop it.
   return lines.filter((line) => line !== String(slideNumber)).join('\n');
 }
 
@@ -377,8 +355,6 @@ function parseShape(
     }
 
     case 'p:grpSp': {
-      // Groups are flattened: their children keep absolute positions, which is
-      // close enough for viewing without implementing the full transform.
       const children: SlideShape[] = [];
       for (const child of Array.from(node.children)) {
         const parsed = parseShape(child, relationships, media, warnings);
@@ -403,7 +379,6 @@ function readFrame(node: Element): SlideShapeBase {
     y: emuToPoints(Number(offset?.getAttribute('y') ?? 0)),
     width: emuToPoints(Number(extent?.getAttribute('cx') ?? 0)),
     height: emuToPoints(Number(extent?.getAttribute('cy') ?? 0)),
-    // OOXML stores rotation in 60000ths of a degree.
     rotation: Number(transform?.getAttribute('rot') ?? 0) / 60000,
   };
 }
@@ -433,14 +408,12 @@ function readParagraphs(node: Element): SlideParagraph[] {
         bold: runProps?.getAttribute('b') === '1',
         italic: runProps?.getAttribute('i') === '1',
         underline: !!runProps?.getAttribute('u') && runProps.getAttribute('u') !== 'none',
-        // `sz` is in hundredths of a point.
         size: Number(runProps?.getAttribute('sz') ?? 1800) / 100,
         color: readSolidFill(runProps ?? undefined),
         font: runProps?.getElementsByTagName('a:latin')[0]?.getAttribute('typeface') ?? null,
       });
     }
 
-    // A paragraph with only a line break still needs to occupy a line.
     if (!runs.length && paragraph.getElementsByTagName('a:br').length === 0) continue;
 
     const align = properties?.getAttribute('algn');
@@ -462,16 +435,6 @@ function readParagraphs(node: Element): SlideParagraph[] {
   return paragraphs;
 }
 
-/* ------------------------------------------------------------------
-   Rendering to SVG (used for image export and PDF pages)
-   ------------------------------------------------------------------ */
-
-/**
- * Draws a slide as standalone SVG.
- *
- * SVG keeps text as text, so exported images stay crisp at any resolution and
- * the PDF path can rasterise at whatever DPI the user picks.
- */
 export function slideToSvg(
   slide: Slide,
   width: number,
@@ -620,7 +583,6 @@ function escapeXml(value: string): string {
     .replace(/'/g, '&apos;');
 }
 
-/** Rebuilds a .pptx containing only the chosen slides. */
 export async function extractSlides(
   file: Blob,
   keepIndices: readonly number[],
@@ -644,8 +606,6 @@ export async function extractSlides(
     zip.remove(`ppt/notesSlides/_rels/notesSlide${index + 1}.xml.rels`);
   });
 
-  // The presentation part lists slides by relationship id; drop the entries
-  // whose parts no longer exist, or PowerPoint will refuse to open the file.
   const presentationEntry = zip.file('ppt/presentation.xml');
   const relsEntry = zip.file('ppt/_rels/presentation.xml.rels');
 

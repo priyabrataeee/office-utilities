@@ -44,13 +44,6 @@ const STYLES: readonly StyleOption[] = [
   { value: 'inverse', label: 'iNVERSE cASE', example: 'cUSTOMER oRDER rEF' },
 ];
 
-/**
- * Words that stay lowercase inside a title.
- *
- * This is the difference between Title Case and capitalising every word, and
- * it is the whole reason a converter is worth having: "The Cost of a Good
- * Name" is a title, "The Cost Of A Good Name" is a mistake.
- */
 const MINOR_WORDS = new Set([
   'a', 'an', 'and', 'as', 'at', 'but', 'by', 'en', 'for', 'if', 'in', 'nor', 'of', 'on', 'or',
   'per', 'so', 'the', 'to', 'v', 'via', 'vs', 'yet',
@@ -109,7 +102,6 @@ export class CaseConvertComponent extends ToolBase {
     this.style.set(style);
   }
 
-  /** Puts the converted text back in the box, so conversions can be chained. */
   protected applyInPlace(): void {
     this.source.set(this.result());
   }
@@ -127,10 +119,6 @@ export class CaseConvertComponent extends ToolBase {
     this.reset();
   }
 }
-
-/* ------------------------------------------------------------------
-   Conversion
-   ------------------------------------------------------------------ */
 
 export function convert(text: string, style: CaseStyle): string {
   if (!text) return '';
@@ -161,7 +149,6 @@ export function convert(text: string, style: CaseStyle): string {
   }
 }
 
-/** Alternating case should skip spaces, so the rhythm survives a line break. */
 function mapLetters(text: string, transform: (char: string, index: number) => string): string {
   let index = 0;
   return [...text]
@@ -173,13 +160,6 @@ function capitalise(word: string): string {
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
-/**
- * Capitalises after every sentence break, leaving the rest lowercase.
- *
- * The standalone pronoun "I" is preserved, because lowercasing it is the one
- * error a reader notices immediately. Acronyms are not detected — there is no
- * reliable way to tell "US" from "us" without understanding the sentence.
- */
 function sentenceCase(text: string): string {
   const lowered = text.toLowerCase();
   const capitalised = lowered.replace(
@@ -189,13 +169,6 @@ function sentenceCase(text: string): string {
   return capitalised.replace(/\bi\b/g, 'I').replace(/\bi'/g, "I'");
 }
 
-/**
- * Title case in the style most publications use.
- *
- * Every word is capitalised except the short articles, conjunctions and
- * prepositions — unless one of those opens or closes the title, or follows a
- * colon, where it is capitalised regardless.
- */
 function titleCase(text: string): string {
   return text
     .split(/(\n)/)
@@ -226,11 +199,6 @@ function titleCaseLine(line: string): string {
     .join('');
 }
 
-/**
- * The programming conventions, which all split on the same word boundaries:
- * existing separators, and the lowercase-to-uppercase transition inside an
- * identifier that is already camelCase.
- */
 function programmerCase(text: string, style: CaseStyle): string {
   return text
     .split(/(\r\n|\r|\n)/)

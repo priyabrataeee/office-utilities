@@ -16,7 +16,6 @@ import { canvasToBlob, extensionForMime, type ImageMime } from '../../../core/en
 import { baseNameOf, parsePageRanges } from '../../../core/utils/file.util';
 import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
 
-/** Screen and print resolutions, expressed as PDF-point scale factors. */
 const DPI_SCALES: readonly { dpi: number; label: string }[] = [
   { dpi: 72, label: 'Screen (72 DPI)' },
   { dpi: 96, label: 'Web (96 DPI)' },
@@ -103,9 +102,7 @@ export class PdfToImagesComponent extends ToolBase {
           next[index - 1] = thumbnail;
           return next;
         });
-      } catch {
-        /* leave the placeholder in place */
-      }
+      } catch {}
       if (index % 4 === 0) await new Promise((resolve) => setTimeout(resolve, 0));
     }
   }
@@ -171,7 +168,6 @@ export class PdfToImagesComponent extends ToolBase {
     const mime = this.format();
     const extension = extensionForMime(mime);
     const base = baseNameOf(file.name);
-    // PDF user space is 72 units per inch, so the scale is just dpi / 72.
     const scale = this.dpi() / 72;
 
     const outputs = await this.run('Rendering pages…', async () => {
@@ -188,7 +184,6 @@ export class PdfToImagesComponent extends ToolBase {
             blob,
           ),
         );
-        // Release the canvas before the next page allocates another one.
         canvas.width = 0;
         canvas.height = 0;
         this.onProgress(position + 1, indices.length);

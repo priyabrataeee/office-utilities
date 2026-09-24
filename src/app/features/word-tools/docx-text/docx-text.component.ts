@@ -8,10 +8,6 @@ import { ToolBase } from '../../../shared/tool-base';
 import { extractDocxExtras, readDocx, type DocxExtraText } from '../../../core/engines/docx.engine';
 import { withExtension } from '../../../core/utils/file.util';
 
-/**
- * Extracts text including the parts a plain copy-and-paste misses: headers,
- * footers, footnotes, endnotes, comments and text boxes.
- */
 @Component({
   selector: 'app-docx-text',
   changeDetection: ChangeDetectionStrategy.OnPush,

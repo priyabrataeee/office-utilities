@@ -1,12 +1,5 @@
 import { Routes } from '@angular/router';
 
-/**
- * Root routing table.
- *
- * Every feature is its own lazily-loaded chunk, and every category owns a URL
- * prefix that matches its catalog slug — so a tool's canonical URL is derived
- * from the same data that renders its card.
- */
 export const routes: Routes = [
   {
     path: '',
@@ -61,7 +54,6 @@ export const routes: Routes = [
       import('./features/disclaimer/disclaimer.component').then((m) => m.DisclaimerComponent),
   },
 
-  /* --- tool categories, each a separate chunk --- */
   {
     path: 'view',
     loadChildren: () => import('./features/document-viewer/viewer.routes').then((m) => m.routes),

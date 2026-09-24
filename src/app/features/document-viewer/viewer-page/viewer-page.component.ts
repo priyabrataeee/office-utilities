@@ -13,13 +13,6 @@ import { CodeViewComponent, type CodeKind } from '../code-view/code-view.compone
 import { MarkdownViewComponent } from '../markdown-view/markdown-view.component';
 import { acceptsFor, detectViewerKind, type ViewerKind } from '../viewer-kind';
 
-/**
- * Host for every viewer route.
- *
- * The route supplies the format; `auto` detects it from the dropped file. Each
- * sub-viewer is `@defer`red so opening a JSON file never downloads the PDF
- * renderer, and vice versa.
- */
 @Component({
   selector: 'app-viewer-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,12 +45,6 @@ export class ViewerPageComponent extends ToolBase {
 
   protected readonly accepts = computed(() => acceptsFor(this.kind()));
 
-  /**
-   * The viewer actually in use.
-   *
-   * Detection wins over the route: someone who lands on /json-viewer and drops
-   * a CSV wants to see their data, not an error.
-   */
   protected readonly effectiveKind = computed<ViewerKind | null>(() => {
     if (!this.hasFile()) return null;
     const detected = this.detected();
@@ -66,7 +53,6 @@ export class ViewerPageComponent extends ToolBase {
     return routeKind === 'auto' ? (detected ?? null) : (routeKind as ViewerKind);
   });
 
-  /** Which flavour of the shared code viewer the current file needs. */
   protected readonly codeKind = computed<CodeKind>(() => {
     const kind = this.effectiveKind();
     return kind === 'json' || kind === 'xml' || kind === 'html' ? kind : 'text';
@@ -88,8 +74,6 @@ export class ViewerPageComponent extends ToolBase {
     if (previous) URL.revokeObjectURL(previous);
     this.imageUrl.set(kind === 'image' ? URL.createObjectURL(file) : null);
 
-    // A file dropped on a format-specific route that does not match it is
-    // worth flagging rather than failing silently in the sub-viewer.
     const routeKind = this.kind();
     if (routeKind !== 'auto' && kind !== routeKind && kind !== 'unsupported') {
       this.toast.info(

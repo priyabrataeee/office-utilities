@@ -5,7 +5,6 @@ import { ToolCardComponent } from '../../shared/components/tool-card/tool-card.c
 import { ToolRegistryService } from '../../core/services/tool-registry.service';
 import { SeoService } from '../../core/services/seo.service';
 
-/** 404 that tries to be useful: it searches the catalog with the bad URL. */
 @Component({
   selector: 'app-not-found',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -90,10 +90,6 @@
       </section>
     }
 
-    <!-- Rendered even for the immersive tools. `minimal` exists to keep the
-         canvas uncluttered, and this sits below it where it does not compete —
-         but a page with nothing on it but a canvas gives a crawler nothing to
-         index, which is how those pages ended up the thinnest on the site. -->
     @if (content(); as c) {
       <section class="detail" [class.detail--lead]="minimal()">
         @if (minimal()) {
@@ -140,11 +136,6 @@
       <app-ad-slot placement="toolFooter" />
     }
 
-    <!-- The FAQ renders even on the immersive tools. Its questions and answers
-         are emitted as FAQPage structured data regardless, and marking up
-         content a reader cannot see is against Google's structured data rules —
-         so hiding this section was not a cosmetic choice, it made the schema
-         a lie. -->
     @if (t.faq?.length) {
       <section class="faq">
         <h2 class="faq__title">Frequently asked questions</h2>

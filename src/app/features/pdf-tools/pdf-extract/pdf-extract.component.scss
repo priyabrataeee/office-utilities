@@ -2,8 +2,6 @@
 @use 'split';
 @use 'rendered';
 
-/* A scan has no text layer at all, so this is a dead end rather than a warning
-   about quality — it gets more weight than the usual hint. */
 .scanned {
   display: flex;
   gap: var(--ou-s-3);

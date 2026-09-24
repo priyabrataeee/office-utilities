@@ -1,13 +1,5 @@
 import type { CellValue } from '../../shared/components/spreadsheet-grid/spreadsheet-grid.component';
 
-/**
- * Spreadsheet engine built on SheetJS.
- *
- * Everything is loaded on demand and runs in this tab. The workbook model
- * below is deliberately plain so the grid, the statistics tools and the
- * converters can all share it without knowing about SheetJS.
- */
-
 export type Sheets = typeof import('xlsx');
 
 let libPromise: Promise<Sheets> | null = null;
@@ -23,7 +15,6 @@ export interface SheetData {
   readonly rows: CellValue[][];
   readonly rowCount: number;
   readonly columnCount: number;
-  /** `A1`-style reference of the used range. */
   readonly range: string;
   readonly formulas: readonly FormulaCell[];
   readonly hidden: boolean;
@@ -44,16 +35,10 @@ export interface WorkbookData {
 }
 
 export interface ReadOptions {
-  /** Treat the first row as headers. */
   readonly header?: boolean;
-  /** Keep dates as Date objects instead of formatted strings. */
   readonly rawDates?: boolean;
   readonly onProgress?: (sheet: number, total: number) => void;
 }
-
-/* ------------------------------------------------------------------
-   Reading
-   ------------------------------------------------------------------ */
 
 export async function readWorkbook(file: Blob, options: ReadOptions = {}): Promise<WorkbookData> {
   const XLSX = await loadSheetJs();
@@ -86,7 +71,6 @@ export async function readWorkbook(file: Blob, options: ReadOptions = {}): Promi
     const rows = useHeader ? matrix.slice(1) : matrix;
     const columnCount = Math.max(headers.length, ...rows.map((row) => row.length), 0);
 
-    // Pad short rows so every row has the same shape as the header.
     const padded = rows.map((row) => {
       const copy = [...row];
       while (copy.length < columnCount) copy.push(null);
@@ -126,7 +110,6 @@ export async function readWorkbook(file: Blob, options: ReadOptions = {}): Promi
   };
 }
 
-/** Turns duplicate or blank header cells into something usable. */
 function normaliseHeaders(row: CellValue[]): string[] {
   const seen = new Map<string, number>();
   return row.map((cell, index) => {
@@ -199,10 +182,6 @@ function extractProperties(workbook: import('xlsx').WorkBook): Record<string, st
   return out;
 }
 
-/* ------------------------------------------------------------------
-   Writing
-   ------------------------------------------------------------------ */
-
 export interface WriteSheet {
   readonly name: string;
   readonly headers?: readonly string[];
@@ -210,7 +189,6 @@ export interface WriteSheet {
 }
 
 export interface WriteOptions {
-  /** Bold, frozen header row with auto-sized columns. */
   readonly styleHeader?: boolean;
   readonly bookType?: 'xlsx' | 'csv' | 'ods';
 }
@@ -231,8 +209,6 @@ export async function writeWorkbook(
 
     if (options.styleHeader !== false && sheet.headers?.length) {
       worksheet['!freeze'] = { xSplit: 0, ySplit: 1 };
-      // Column widths estimated from the first 200 rows, which is enough to
-      // stop everything arriving as "########".
       worksheet['!cols'] = sheet.headers.map((header, column) => {
         let widest = String(header).length;
         for (const row of sheet.rows.slice(0, 200)) {
@@ -242,7 +218,6 @@ export async function writeWorkbook(
       });
     }
 
-    // Sheet names are capped at 31 characters and cannot contain []:*?/\
     const safeName = sheet.name.replace(/[[\]:*?/\\]/g, '-').slice(0, 31) || 'Sheet';
     XLSX.utils.book_append_sheet(workbook, worksheet, safeName);
   }
@@ -271,10 +246,6 @@ export async function sheetToCsv(
   return XLSX.utils.sheet_to_csv(worksheet, { FS: delimiter, blankrows: false });
 }
 
-/* ------------------------------------------------------------------
-   JSON conversion
-   ------------------------------------------------------------------ */
-
 export function sheetToJson(
   sheet: SheetData,
   style: 'objects' | 'arrays' = 'objects',
@@ -289,7 +260,6 @@ export function sheetToJson(
   });
 }
 
-/** Flattens nested JSON into dotted column names, one row per record. */
 export function jsonToSheet(value: unknown, sheetName = 'Sheet1'): WriteSheet {
   const records = Array.isArray(value)
     ? value
@@ -303,7 +273,6 @@ export function jsonToSheet(value: unknown, sheetName = 'Sheet1'): WriteSheet {
       : { value: record as CellValue },
   );
 
-  // Union of keys across every record, so sparse data still gets columns.
   const headers: string[] = [];
   for (const record of flattened) {
     for (const key of Object.keys(record)) if (!headers.includes(key)) headers.push(key);
@@ -316,7 +285,6 @@ export function jsonToSheet(value: unknown, sheetName = 'Sheet1'): WriteSheet {
   return { name: sheetName, headers, rows };
 }
 
-/** Finds the most likely array of records inside a wrapper object. */
 function findRecordArray(value: Record<string, unknown>): unknown[] | null {
   let best: unknown[] | null = null;
   for (const candidate of Object.values(value)) {
@@ -339,7 +307,6 @@ function flatten(
     if (raw === null || raw === undefined) {
       out[name] = null;
     } else if (Array.isArray(raw)) {
-      // Arrays of scalars read better joined than exploded into columns.
       out[name] = raw.every((item) => typeof item !== 'object' || item === null)
         ? raw.join(', ')
         : JSON.stringify(raw);
@@ -353,10 +320,6 @@ function flatten(
   }
   return out;
 }
-
-/* ------------------------------------------------------------------
-   Cleaning operations
-   ------------------------------------------------------------------ */
 
 export interface CleanOptions {
   readonly trimWhitespace: boolean;
@@ -459,7 +422,6 @@ function cleanCell(value: CellValue, options: CleanOptions): CellValue {
   }
 
   if (options.numbersFromText && text !== '') {
-    // Only convert when the whole cell is a number — "12 Main St" must stay text.
     const numeric = text.replace(/[\s,]/g, '');
     if (/^-?\d+(\.\d+)?$/.test(numeric)) {
       const parsed = Number(numeric);
@@ -480,12 +442,7 @@ export function isBlankRow(row: readonly CellValue[]): boolean {
   return row.every(isBlankCell);
 }
 
-/* ------------------------------------------------------------------
-   Duplicate detection
-   ------------------------------------------------------------------ */
-
 export interface DuplicateOptions {
-  /** Column indices that form the key. Empty means every column. */
   readonly keyColumns: readonly number[];
   readonly caseInsensitive: boolean;
   readonly ignoreWhitespace: boolean;
@@ -534,10 +491,6 @@ export function findDuplicates(
   };
 }
 
-/* ------------------------------------------------------------------
-   Column profiling
-   ------------------------------------------------------------------ */
-
 export type DetectedType =
   | 'integer'
   | 'decimal'
@@ -564,9 +517,7 @@ export interface ColumnStats {
   readonly shortest: string | null;
   readonly longest: string | null;
   readonly topValues: readonly { value: string; count: number }[];
-  /** Rows that do not match the inferred type, for the validation tool. */
   readonly outliers: readonly { row: number; value: string }[];
-  /** Bucketed counts for the sparkline. */
   readonly histogram: readonly number[];
 }
 
@@ -612,7 +563,6 @@ export function profileColumn(sheet: SheetData, index: number): ColumnStats {
     }
   });
 
-  // The dominant non-text type wins, provided it covers most filled cells.
   const filled = values.length;
   let type: DetectedType = 'text';
   if (filled === 0) {
@@ -622,7 +572,6 @@ export function profileColumn(sheet: SheetData, index: number): ColumnStats {
       .filter(([key]) => key !== 'empty')
       .sort((a, b) => b[1] - a[1]);
     const [topType, topCount] = ranked[0];
-    // Integers and decimals are the same family for this purpose.
     const numericCount = typeVotes.integer + typeVotes.decimal;
     if (numericCount / filled >= 0.9) {
       type = typeVotes.decimal > 0 ? 'decimal' : 'integer';
@@ -726,10 +675,6 @@ function buildHistogram(sorted: readonly number[], buckets = 12): number[] {
   }
   return counts;
 }
-
-/* ------------------------------------------------------------------
-   CSV parsing (delimited text that is not a workbook)
-   ------------------------------------------------------------------ */
 
 export interface CsvParseResult {
   readonly headers: string[];

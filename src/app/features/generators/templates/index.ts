@@ -3,7 +3,6 @@ import { INVOICE, PROPOSAL, QUOTATION } from './business';
 import { CERTIFICATE, EXPERIENCE_LETTER, OFFER_LETTER, SALARY_SLIP } from './hr';
 import { COVER_LETTER, MEETING_MINUTES, RESUME } from './personal';
 
-/** Every generator, keyed by the catalog tool id its route supplies. */
 export const GENERATORS: Record<string, GeneratorDef> = {
   'invoice-generator': INVOICE,
   'quotation-generator': QUOTATION,

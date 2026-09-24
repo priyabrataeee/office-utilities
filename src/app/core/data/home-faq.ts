@@ -1,12 +1,3 @@
-/**
- * Homepage FAQ.
- *
- * These are the questions someone asks before trusting a document site, and
- * they are the shape an AI search system can lift directly. The same array
- * feeds the visible block and the FAQPage structured data — marking up an
- * answer a reader cannot see is against Google's structured data rules, so
- * there is deliberately only one source for both.
- */
 export const HOME_FAQ: readonly { readonly q: string; readonly a: string }[] = [
   {
     q: 'Are my files uploaded anywhere?',

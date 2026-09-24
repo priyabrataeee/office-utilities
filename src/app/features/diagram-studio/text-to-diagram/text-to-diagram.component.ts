@@ -49,14 +49,6 @@ const SAMPLES: Record<Syntax, string> = {
 
 const STORAGE_KEY = 'text-to-diagram';
 
-/**
- * Text-to-diagram renderer.
- *
- * Mermaid handles its own syntax and returns an SVG we can display and export
- * directly. The indented outline is parsed here into a mind-map, so the same
- * tool can produce something useful for people who do not want to learn
- * Mermaid's grammar.
- */
 @Component({
   selector: 'app-text-to-diagram',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,23 +93,19 @@ export class TextToDiagramComponent extends ToolBase {
   constructor() {
     super();
 
-    // Restore what was last being typed, so the tool feels persistent.
     const saved = this.storage.read<{ syntax: Syntax; source: string } | null>(STORAGE_KEY, null);
     if (saved?.source) {
       this.syntax.set(saved.syntax);
       this.source.set(saved.source);
     }
 
-    // Re-render as the source or the theme changes.
     effect(() => {
       const text = this.source();
       const syntax = this.syntax();
-      // Track the theme so Mermaid's colours match the app.
       this.theme.resolved();
       void this.render(text, syntax);
     });
 
-    // Persist quietly.
     effect(() => {
       const text = this.source();
       const syntax = this.syntax();
@@ -126,7 +114,6 @@ export class TextToDiagramComponent extends ToolBase {
   }
 
   private async render(text: string, syntax: Syntax): Promise<void> {
-    // Guard against out-of-order renders when the user types quickly.
     const version = ++this.renderVersion;
 
     if (!text.trim()) {
@@ -210,10 +197,6 @@ export class TextToDiagramComponent extends ToolBase {
   }
 }
 
-/* ------------------------------------------------------------------
-   Outline → diagram
-   ------------------------------------------------------------------ */
-
 interface OutlineNode {
   readonly text: string;
   readonly depth: number;
@@ -223,13 +206,6 @@ interface OutlineNode {
   y: number;
 }
 
-/**
- * Parses an indented outline into a radial mind-map.
- *
- * Indentation is measured in leading whitespace; two-space or tab increments
- * both work. The result is laid out with the root at the centre and each
- * generation ringing the last.
- */
 function outlineToDiagram(text: string): Diagram {
   const lines = text
     .replace(/\r\n?/g, '\n')
@@ -315,7 +291,6 @@ function outlineToDiagram(text: string): Diagram {
 
   walk(root, 0);
 
-  // Nudge the graph so its bounding box sits comfortably on the canvas.
   const minX = Math.min(...nodes.map((n) => n.x));
   const minY = Math.min(...nodes.map((n) => n.y));
   const maxX = Math.max(...nodes.map((n) => n.x + n.width));
@@ -344,12 +319,6 @@ function indentDepth(line: string): number {
   return Math.floor(count / 2);
 }
 
-/**
- * Radial layout.
- *
- * The root sits at the origin; direct children go on a circle around it, and
- * each subtree fans out inside a slice of the arc so branches never overlap.
- */
 function layout(root: OutlineNode): void {
   root.x = 0;
   root.y = 0;
@@ -390,7 +359,6 @@ function positionSubtree(
   });
 }
 
-/** Blends a hex colour toward white by `amount` (0–1). */
 function mix(hex: string, amount: number): string {
   const value = hex.replace('#', '');
   const int = Number.parseInt(value.padEnd(6, '0').slice(0, 6), 16);

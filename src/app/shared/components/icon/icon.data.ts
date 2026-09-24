@@ -1,11 +1,3 @@
-/**
- * Icon set.
- *
- * Each icon is an array of SVG path `d` strings drawn on a 24×24 grid and
- * rendered stroked, so a single component can draw all of them and the whole
- * set costs one small chunk instead of a sprite request per glyph.
- */
-
 const circle = (cx: number, cy: number, r: number): string =>
   `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${r * 2} 0a${r} ${r} 0 1 0 ${-r * 2} 0`;
 
@@ -13,14 +5,12 @@ const rect = (x: number, y: number, w: number, h: number, r = 2): string =>
   `M${x + r} ${y}h${w - 2 * r}a${r} ${r} 0 0 1 ${r} ${r}v${h - 2 * r}a${r} ${r} 0 0 1 ${-r} ${r}` +
   `h${-(w - 2 * r)}a${r} ${r} 0 0 1 ${-r} ${-r}v${-(h - 2 * r)}a${r} ${r} 0 0 1 ${r} ${-r}z`;
 
-/** Outline of a document with a folded corner. */
 const page = 'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z';
 const pageFold = 'M14 3v5h5';
 
 const doc = (...inner: string[]): string[] => [page, pageFold, ...inner];
 
 export const ICONS: Record<string, string[]> = {
-  /* --- brand / navigation --- */
   logo: [
     'M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z',
     'M12 12 4 7.5M12 12l8-4.5M12 12v9',
@@ -43,7 +33,6 @@ export const ICONS: Record<string, string[]> = {
   settings: [circle(12, 12, 3), 'M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1M18.7 18.7l-2.1-2.1M7.4 7.4 5.3 5.3'],
   link: ['M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 1 0-5.7-5.7L11.5 7', 'M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 1 0 5.7 5.7L12.5 17'],
 
-  /* --- state / feedback --- */
   check: ['M5 12.5l4.5 4.5L19 7.5'],
   'check-circle': [circle(12, 12, 8.5), 'M8.5 12.2l2.6 2.6 4.6-5'],
   'x-circle': [circle(12, 12, 8.5), 'M9.5 9.5l5 5M14.5 9.5l-5 5'],
@@ -65,7 +54,6 @@ export const ICONS: Record<string, string[]> = {
   eye: ['M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z', circle(12, 12, 3)],
   'eye-off': ['M4 4l16 16', 'M9.7 5.9A9.7 9.7 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-3 3.8', 'M6.1 8A17 17 0 0 0 2.5 12S6 18.5 12 18.5c1 0 1.9-.2 2.8-.5', 'M10.2 10.3a3 3 0 0 0 4 4.2'],
 
-  /* --- file type glyphs --- */
   file: doc(),
   'file-text': doc('M8.5 13h7M8.5 16.5h7M8.5 9.5h2'),
   'file-pdf': doc('M8.2 17v-4h1.4a1.3 1.3 0 0 1 0 2.6H8.2', 'M12.4 17v-4h1a2 2 0 0 1 0 4z', 'M15.9 17v-4h2.2M15.9 15.2h1.6'),
@@ -81,7 +69,6 @@ export const ICONS: Record<string, string[]> = {
   code: ['M8.5 8 4 12l4.5 4M15.5 8l4.5 4-4.5 4M13.5 5l-3 14'],
   terminal: [rect(2.5, 4.5, 19, 15, 2), 'M6.5 9.5l3 2.5-3 2.5M12.5 15h5'],
 
-  /* --- pdf & document operations --- */
   merge: ['M6 4v5a4 4 0 0 0 4 4h8M6 20v-5a4 4 0 0 1 4-4h8', 'M15.5 9.5 19 13l-3.5 3.5'],
   scissors: [circle(6.5, 6.5, 2.5), circle(6.5, 17.5, 2.5), 'M8.6 8.2 20 17M8.6 15.8 20 7'],
   copy: [rect(8.5, 3.5, 12, 12, 2), 'M15.5 19.5a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2'],
@@ -112,14 +99,12 @@ export const ICONS: Record<string, string[]> = {
   pencil: ['M4 20l1-4.2L15.6 5.2a2 2 0 0 1 2.8 0l1.4 1.4a2 2 0 0 1 0 2.8L9.2 20z', 'M14 7l3.5 3.5'],
   scan: ['M4 8.5V6a2 2 0 0 1 2-2h2.5M15.5 4H18a2 2 0 0 1 2 2v2.5M20 15.5V18a2 2 0 0 1-2 2h-2.5M8.5 20H6a2 2 0 0 1-2-2v-2.5', 'M4 12h16'],
 
-  /* --- data & analysis --- */
   'bar-chart': ['M4 20h16', 'M7.5 20V13M12 20V6M16.5 20v-4.5'],
   function: ['M8 20V8a3.5 3.5 0 0 1 4.5-3.4', 'M6 11.5h6', 'M14 11l5 8M19 11l-5 8'],
   hash: ['M5 9.5h14M5 15h14M10 4l-1.5 16M16 4l-1.5 16'],
   database: ['M4.5 6.5c0-1.7 3.4-3 7.5-3s7.5 1.3 7.5 3-3.4 3-7.5 3-7.5-1.3-7.5-3z', 'M4.5 6.5v11c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-11', 'M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3'],
   clock: [circle(12, 12, 8.5), 'M12 7.5V12l3 2'],
 
-  /* --- diagram --- */
   workflow: [rect(3, 3.5, 7, 6, 1.5), rect(14, 14.5, 7, 6, 1.5), 'M6.5 9.5v4a2 2 0 0 0 2 2h9', 'M15.5 13l2 2.5-2 2.5'],
   boxes: [rect(3, 3.5, 7.5, 7, 1.5), rect(13.5, 3.5, 7.5, 7, 1.5), rect(8.2, 13.5, 7.5, 7, 1.5), 'M6.8 10.5v1.5M17.2 10.5v1.5'],
   network: [rect(9, 3, 6, 5, 1.5), rect(2.5, 16, 6, 5, 1.5), rect(15.5, 16, 6, 5, 1.5), 'M12 8v4M5.5 16v-2.5h13V16'],
@@ -133,7 +118,6 @@ export const ICONS: Record<string, string[]> = {
   grid: ['M3.5 9h17M3.5 15h17M9 3.5v17M15 3.5v17'],
   'mouse-pointer': ['M5 3.5 19 11l-6 1.5L10.5 19z'],
 
-  /* --- content / business --- */
   receipt: ['M6 3.5h12v17l-2.5-1.6L13 20.5l-2.5-1.6L8 20.5 6 19.2z', 'M9.5 8h5M9.5 12h5'],
   clipboard: [rect(5, 5, 14, 16, 2), 'M9 5V4a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 4v1z', 'M9 11h6M9 15h4'],
   briefcase: [rect(3, 7.5, 18, 12.5, 2), 'M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5', 'M3 13h18'],
@@ -148,7 +132,6 @@ export const ICONS: Record<string, string[]> = {
   heart: ['M12 20.3s-7.8-4.6-7.8-9.6A4.4 4.4 0 0 1 12 7.8a4.4 4.4 0 0 1 7.8 2.9c0 5-7.8 9.6-7.8 9.6z'],
   sun: [circle(12, 12, 4), 'M12 2.5v2.2M12 19.3v2.2M21.5 12h-2.2M4.7 12H2.5M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6M18.7 18.7l-1.6-1.6M6.9 6.9 5.3 5.3'],
   moon: ['M20 14.4A8.6 8.6 0 0 1 9.6 4 8.5 8.5 0 1 0 20 14.4z'],
-  // Half-circle glyph used for the "medium" theme cycle position.
   contrast: [circle(12, 12, 7.5), 'M12 4.5v15'],
   monitor: [rect(2.5, 4, 19, 12.5, 2), 'M8.5 20.5h7M12 16.5v4'],
   zap: ['M13.5 3 5 13.5h6L10.5 21 19 10.5h-6z'],

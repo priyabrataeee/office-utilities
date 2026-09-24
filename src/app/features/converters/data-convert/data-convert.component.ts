@@ -168,14 +168,11 @@ function parseJsonLoosely(text: string): unknown {
   try {
     return JSON.parse(trimmed);
   } catch (error) {
-    // JSON Lines is common enough to be worth a second attempt.
     const lines = trimmed.split('\n').filter((line) => line.trim());
     if (lines.length > 1) {
       try {
         return lines.map((line) => JSON.parse(line));
-      } catch {
-        /* fall through */
-      }
+      } catch {}
     }
     throw new Error(error instanceof Error ? `Invalid JSON — ${error.message}` : 'Invalid JSON');
   }

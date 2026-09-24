@@ -94,9 +94,6 @@
   }
 }
 
-/* The support ask, shown once the file is ready. Deliberately quieter than the
-   download buttons above it — it must never compete with the thing the person
-   came to do. */
 .support {
   display: flex;
   gap: var(--ou-s-3);

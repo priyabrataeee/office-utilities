@@ -14,13 +14,6 @@ import { FileSizePipe } from '../../pipes/file-size.pipe';
 import { ToastService } from '../../../core/services/toast.service';
 import { extensionOf, matchesAccept } from '../../../core/utils/file.util';
 
-/**
- * The single entry point for getting files into a tool.
- *
- * Accepts drag-and-drop (including whole folders), the file picker, and
- * clipboard paste. Validation happens here so that individual tools only ever
- * receive files they can actually handle.
- */
 @Component({
   selector: 'app-file-drop-zone',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +32,6 @@ export class FileDropZoneComponent {
   private readonly toast = inject(ToastService);
   private readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
 
-  /** Extensions to accept, including the dot. Empty accepts everything. */
   readonly accepts = input<readonly string[]>([]);
   readonly multiple = input(false);
   readonly maxFiles = input<number>(Infinity);
@@ -47,9 +39,7 @@ export class FileDropZoneComponent {
   readonly title = input('Drop your file here');
   readonly hint = input('');
   readonly icon = input('upload');
-  /** Renders a slim bar instead of the full drop panel. */
   readonly compact = input(false);
-  /** Show the currently selected files with remove buttons. */
   readonly showSelection = input(true);
   readonly allowFolders = input(false);
   readonly disabled = input(false);
@@ -66,12 +56,6 @@ export class FileDropZoneComponent {
     if (!list.length) return 'Any file';
     return list.map((e) => e.replace('.', '').toUpperCase()).join(', ');
   });
-  /**
-   * The badge under the drop zone. The universal viewer accepts dozens of
-   * extensions, and listing them all made one unbreakable line over 1,000px
-   * wide — wider than a phone, so the whole page zoomed out. The full list still
-   * appears in the rejection message, where it is actually needed.
-   */
   protected readonly acceptBadge = computed(() => {
     const list = this.accepts();
     if (!list.length) return 'Any file';
@@ -93,7 +77,6 @@ export class FileDropZoneComponent {
   protected onPicked(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.ingest(Array.from(input.files ?? []));
-    // Reset so picking the same file twice still fires a change event.
     input.value = '';
   }
 
@@ -132,7 +115,6 @@ export class FileDropZoneComponent {
     this.ingest(dropped);
   }
 
-  /** Lets the user paste a screenshot or a copied file straight into a tool. */
   protected onPaste(event: ClipboardEvent): void {
     if (this.disabled() || !event.clipboardData?.files.length) return;
     const target = event.target as HTMLElement | null;
@@ -155,7 +137,6 @@ export class FileDropZoneComponent {
     this.filesChange.emit([]);
   }
 
-  /** Programmatic entry point, used when reopening a recent file. */
   setFiles(files: File[]): void {
     this.ingest(files, true);
   }
@@ -213,7 +194,6 @@ export class FileDropZoneComponent {
   protected extensionOf = extensionOf;
 }
 
-/** Walks a DataTransfer recursively so dropping a folder yields its files. */
 async function collectFromDataTransfer(transfer: DataTransfer): Promise<File[]> {
   const entries = Array.from(transfer.items)
     .map((item) => (item.kind === 'file' ? item.webkitGetAsEntry?.() : null))
@@ -232,7 +212,6 @@ async function collectFromDataTransfer(transfer: DataTransfer): Promise<File[]> 
     }
     if (entry.isDirectory) {
       const reader = (entry as FileSystemDirectoryEntry).createReader();
-      // readEntries returns at most 100 entries per call; keep going until empty.
       for (;;) {
         const batch = await new Promise<FileSystemEntry[]>((resolve) =>
           reader.readEntries(resolve, () => resolve([])),

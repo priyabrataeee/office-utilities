@@ -1,11 +1,6 @@
 import type { ResolvedTool, ToolCategory, ToolCategoryId } from '../models/tool.model';
 import { TOOLS, TOOL_CATEGORIES } from './tool-catalog';
 
-/**
- * Pure catalog helpers. Kept free of Angular imports so the sitemap
- * generator can import this module directly under Node.
- */
-
 const categoryById = new Map<ToolCategoryId, ToolCategory>(
   TOOL_CATEGORIES.map((c) => [c.id, c]),
 );
@@ -37,12 +32,10 @@ export function getCategory(id: ToolCategoryId): ToolCategory | undefined {
   return categoryById.get(id);
 }
 
-/** Tools whose canonical or cross-listed category matches. */
 export function toolsInCategory(id: ToolCategoryId): ResolvedTool[] {
   return RESOLVED_TOOLS.filter((t) => t.category === id || t.alsoIn?.includes(id));
 }
 
-/** Static page routes that should appear in the sitemap. */
 export const STATIC_ROUTES: readonly string[] = [
   '/',
   '/tools',
@@ -61,10 +54,6 @@ export function allRoutes(): string[] {
   ];
 }
 
-/* ------------------------------------------------------------------
-   Search
-   ------------------------------------------------------------------ */
-
 export interface SearchHit {
   readonly tool: ResolvedTool;
   readonly score: number;
@@ -72,11 +61,6 @@ export interface SearchHit {
 
 const normalise = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
-/**
- * Field-weighted substring search. Deliberately simple and synchronous —
- * with fewer than a hundred entries this runs in well under a millisecond,
- * which is what makes the command palette feel instant.
- */
 export function searchTools(query: string, pool: readonly ResolvedTool[] = RESOLVED_TOOLS): SearchHit[] {
   const q = normalise(query);
   if (!q) return [];
@@ -120,7 +104,6 @@ export function searchTools(query: string, pool: readonly ResolvedTool[] = RESOL
   return hits.sort((a, b) => b.score - a.score || a.tool.title.localeCompare(b.tool.title));
 }
 
-/** Tools related to `tool`: same category first, then keyword overlap. */
 export function relatedTools(tool: ResolvedTool, limit = 6): ResolvedTool[] {
   const keywords = new Set(tool.keywords);
   return RESOLVED_TOOLS.filter((t) => t.id !== tool.id)
@@ -137,7 +120,6 @@ export function relatedTools(tool: ResolvedTool, limit = 6): ResolvedTool[] {
     .map((x) => x.t);
 }
 
-/** Tools that can open a given file extension, best first. */
 export function toolsForExtension(ext: string): ResolvedTool[] {
   const needle = ext.startsWith('.') ? ext.toLowerCase() : `.${ext.toLowerCase()}`;
   return RESOLVED_TOOLS.filter((t) => t.accepts.includes(needle)).sort(

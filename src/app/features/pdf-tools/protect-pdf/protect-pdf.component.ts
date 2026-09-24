@@ -46,7 +46,6 @@ export class ProtectPdfComponent extends ToolBase {
   protected readonly showPassword = signal(false);
   protected readonly useOwnerPassword = signal(false);
 
-  /** Kept as one object so the template can drive it from a list. */
   protected readonly permissions = signal<Record<PermissionKey, boolean>>({
     printing: true,
     copying: false,
@@ -79,7 +78,6 @@ export class ProtectPdfComponent extends ToolBase {
     () => this.hasFile() && this.userPassword().length > 0 && this.passwordsMatch(),
   );
 
-  /** Local-only strength hint; nothing is checked against any service. */
   protected readonly strength = computed<StrengthReport | null>(() => {
     const password = this.userPassword();
     if (!password) return null;

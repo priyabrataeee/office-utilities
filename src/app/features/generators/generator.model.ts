@@ -1,13 +1,5 @@
 import type { DocBlock } from '../../core/engines/doc-model';
 
-/**
- * Schema for the document generators.
- *
- * Each generator is data: a set of form sections plus a pure function from the
- * collected values to document blocks. One component renders the form, the
- * live preview and the PDF/DOCX export for all ten of them.
- */
-
 export type FieldType =
   | 'text'
   | 'textarea'
@@ -31,15 +23,12 @@ export interface FieldDef {
   readonly placeholder?: string;
   readonly help?: string;
   readonly options?: readonly SelectOption[];
-  /** Grid span, 1–3 columns. Defaults to 1. */
   readonly span?: 1 | 2 | 3;
   readonly min?: number;
   readonly max?: number;
   readonly step?: number;
   readonly rows?: number;
-  /** For `repeat`: the shape of one row. */
   readonly columns?: readonly FieldDef[];
-  /** For `repeat` and `list`: singular noun used on the add button. */
   readonly itemLabel?: string;
   readonly required?: boolean;
 }
@@ -49,7 +38,6 @@ export interface SectionDef {
   readonly icon: string;
   readonly description?: string;
   readonly fields: readonly FieldDef[];
-  /** Hidden unless the named boolean field is true. */
   readonly showWhen?: string;
 }
 
@@ -57,16 +45,11 @@ export type FormValue = string | number | boolean | FormValue[] | { [key: string
 export type FormData = Record<string, FormValue>;
 
 export interface GeneratorDef {
-  /** Catalog tool id. */
   readonly toolId: string;
   readonly sections: readonly SectionDef[];
-  /** Starting values, also used by "load sample". */
   readonly initial: () => FormData;
-  /** File name stem for the export. */
   readonly fileName: (data: FormData) => string;
-  /** Pure transform from form values to document blocks. */
   readonly render: (data: FormData) => DocBlock[];
-  /** Page defaults for this document type. */
   readonly page?: {
     readonly size?: 'A4' | 'Letter' | 'Legal';
     readonly orientation?: 'portrait' | 'landscape';
@@ -74,10 +57,6 @@ export interface GeneratorDef {
     readonly font?: 'sans' | 'serif';
   };
 }
-
-/* ------------------------------------------------------------------
-   Value helpers used by every template
-   ------------------------------------------------------------------ */
 
 export function str(data: FormData, key: string, fallback = ''): string {
   const value = data[key];
@@ -103,7 +82,6 @@ export function list(data: FormData, key: string): string[] {
   return Array.isArray(value) ? value.map((item) => String(item)) : [];
 }
 
-/** Formats a number as currency without assuming a locale's symbol placement. */
 export function money(amount: number, currency: string): string {
   const formatted = amount.toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -123,7 +101,6 @@ export function formatDate(value: string): string {
   });
 }
 
-/** Today in the `yyyy-mm-dd` shape a date input expects. */
 export function today(offsetDays = 0): string {
   const date = new Date();
   date.setDate(date.getDate() + offsetDays);
@@ -154,7 +131,6 @@ const ONES = [
 ];
 const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
 
-/** Spells an amount out, as payslips and cheques require. */
 export function amountInWords(amount: number): string {
   const whole = Math.floor(Math.abs(amount));
   const cents = Math.round((Math.abs(amount) - whole) * 100);

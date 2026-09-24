@@ -23,13 +23,9 @@ import { clamp, withSuffix } from '../../../core/utils/file.util';
 
 export type SignatureMode = 'draw' | 'type' | 'upload';
 
-/** Where the signature sits, as fractions of the visible page. */
 interface Placement {
-  /** Left edge, 0–1 of the page width. */
   x: number;
-  /** Top edge, 0–1 of the page height. */
   y: number;
-  /** Signature width, 0–1 of the page width. */
   width: number;
 }
 
@@ -54,15 +50,12 @@ export class SignPdfComponent extends ToolBase {
   private readonly pad = viewChild<ElementRef<HTMLCanvasElement>>('pad');
   private readonly stage = viewChild<ElementRef<HTMLElement>>('stage');
 
-  /* --- document --- */
   protected readonly pageCount = signal(0);
   protected readonly pageIndex = signal(1);
   protected readonly pageImage = signal<string | null>(null);
   protected readonly rendering = signal(false);
-  /** Visible width ÷ visible height, so the stage matches the rendered page. */
   protected readonly pageAspect = signal(1 / Math.SQRT2);
 
-  /* --- signature --- */
   protected readonly mode = signal<SignatureMode>('draw');
   protected readonly typedName = signal('');
   protected readonly inkColor = signal('#11224b');
@@ -70,14 +63,12 @@ export class SignPdfComponent extends ToolBase {
   protected readonly signatureAspect = signal(3);
   protected readonly hasInk = signal(false);
 
-  /* --- placement --- */
   protected readonly placement = signal<Placement>({ x: 0.58, y: 0.78, width: 0.28 });
   protected readonly includeDate = signal(false);
   protected readonly dateText = signal(today());
 
   protected readonly ready = computed(() => this.hasFile() && !!this.signature());
 
-  /** Percentage form of the placement, for the overlay's inline styles. */
   protected readonly boxStyle = computed(() => {
     const place = this.placement();
     return {
@@ -112,21 +103,9 @@ export class SignPdfComponent extends ToolBase {
     });
     if (!opened) return;
     this.pageCount.set(opened);
-    // Deliberately started after the opening run has finished rather than
-    // from an effect watching pageCount: ToolBase.run() refuses to start
-    // while another run is in flight, so a render kicked off from inside the
-    // open would be dropped on the floor and the page would never appear.
     await this.renderCurrent(file, this.pageIndex());
   }
 
-  /**
-   * Renders the page being signed.
-   *
-   * This keeps its own flag rather than going through `run()`, because it is
-   * a background refresh of the preview rather than the operation the visitor
-   * asked for — it should not block them from drawing a signature, and a page
-   * that cannot be rasterised should not read as the whole tool failing.
-   */
   private async renderCurrent(file: File, pageNumber: number): Promise<void> {
     if (this.rendering()) return;
     this.rendering.set(true);
@@ -169,10 +148,6 @@ export class SignPdfComponent extends ToolBase {
     if (file) void this.renderCurrent(file, next);
   }
 
-  /* ------------------------------------------------------------------
-     Drawing pad
-     ------------------------------------------------------------------ */
-
   protected setMode(mode: SignatureMode): void {
     this.mode.set(mode);
     this.signature.set(null);
@@ -183,8 +158,6 @@ export class SignPdfComponent extends ToolBase {
   private context(): CanvasRenderingContext2D | null {
     const canvas = this.pad()?.nativeElement;
     if (!canvas) return null;
-    // The pad is sized in CSS pixels but drawn at device resolution, so a
-    // signature does not come out jagged on a phone.
     const ratio = window.devicePixelRatio || 1;
     const width = Math.round(canvas.clientWidth * ratio);
     const height = Math.round(canvas.clientHeight * ratio);
@@ -210,7 +183,6 @@ export class SignPdfComponent extends ToolBase {
     const point = this.padPoint(event);
     context.beginPath();
     context.moveTo(point.x, point.y);
-    // A tap with no movement should still leave a mark.
     context.lineTo(point.x + 0.01, point.y);
     context.stroke();
     this.hasInk.set(true);
@@ -246,7 +218,6 @@ export class SignPdfComponent extends ToolBase {
     this.signature.set(null);
   }
 
-  /** Trims the pad to its ink and keeps the result as the signature. */
   private commitPad(): void {
     const canvas = this.pad()?.nativeElement;
     if (!canvas) return;
@@ -258,10 +229,6 @@ export class SignPdfComponent extends ToolBase {
     this.signature.set(trimmed.dataUrl);
     this.signatureAspect.set(trimmed.width / trimmed.height);
   }
-
-  /* ------------------------------------------------------------------
-     Typed and uploaded signatures
-     ------------------------------------------------------------------ */
 
   protected setTypedName(event: Event): void {
     this.typedName.set((event.target as HTMLInputElement).value);
@@ -315,10 +282,6 @@ export class SignPdfComponent extends ToolBase {
     });
   }
 
-  /* ------------------------------------------------------------------
-     Placement
-     ------------------------------------------------------------------ */
-
   protected setWidth(event: Event): void {
     const width = Number((event.target as HTMLInputElement).value) / 100;
     this.placement.update((place) => ({ ...place, width }));
@@ -332,7 +295,6 @@ export class SignPdfComponent extends ToolBase {
     this.dateText.set((event.target as HTMLInputElement).value);
   }
 
-  /** Clicking anywhere on the page moves the signature there. */
   protected placeAt(event: PointerEvent): void {
     const host = this.stage()?.nativeElement;
     if (!host || !this.signature()) return;
@@ -377,10 +339,6 @@ export class SignPdfComponent extends ToolBase {
     this.dragOffset = null;
   }
 
-  /* ------------------------------------------------------------------
-     Stamping
-     ------------------------------------------------------------------ */
-
   protected async apply(): Promise<void> {
     const file = this.primaryFile();
     const signature = this.signature();
@@ -401,9 +359,6 @@ export class SignPdfComponent extends ToolBase {
       const rotation = ((page.getRotation().angle % 360) + 360) % 360;
       const quarter = rotation === 90 || rotation === 270;
 
-      // The page the visitor placed the signature on is the *displayed* page,
-      // which is the media box turned by the page's own /Rotate. Everything
-      // below is worked out in that visible frame and mapped back at the end.
       const visibleWidth = quarter ? mediaHeight : mediaWidth;
       const visibleHeight = quarter ? mediaWidth : mediaHeight;
 
@@ -412,9 +367,6 @@ export class SignPdfComponent extends ToolBase {
       const boxHeight = boxWidth / this.signatureAspect();
       const left = place.x * visibleWidth;
       const top = place.y * visibleHeight;
-      // pdf-lib anchors at the image's own lower-left corner, which — once the
-      // image is counter-rotated to stand upright — is the corner the visitor
-      // sees at the bottom left of the signature.
       const anchor = toUserSpace(
         left,
         top + boxHeight,
@@ -469,18 +421,6 @@ export class SignPdfComponent extends ToolBase {
   }
 }
 
-/* ------------------------------------------------------------------
-   Geometry
-   ------------------------------------------------------------------ */
-
-/**
- * Maps a point in the displayed page back into PDF user space.
- *
- * The displayed frame has its origin at the top-left and y increasing
- * downwards; user space has its origin at the bottom-left with y increasing
- * upwards, and is additionally turned by the page's /Rotate entry before it
- * is shown. Each case below is that mapping inverted.
- */
 function toUserSpace(
   vx: number,
   vy: number,
@@ -500,17 +440,6 @@ function toUserSpace(
   }
 }
 
-/* ------------------------------------------------------------------
-   Canvas helpers
-   ------------------------------------------------------------------ */
-
-/**
- * Crops a canvas down to the pixels that actually have ink in them.
- *
- * Without this, a signature drawn in the middle of the pad carries the pad's
- * whitespace with it, and placing it on the page becomes guesswork — the
- * visible mark would sit nowhere near where the box says it is.
- */
 function trimToInk(
   canvas: HTMLCanvasElement,
 ): { dataUrl: string; width: number; height: number } | null {
@@ -560,7 +489,6 @@ function loadImageElement(src: string): Promise<HTMLImageElement> {
   });
 }
 
-/** Keeps the box inside the page, allowing for its own size. */
 function clampFraction(value: number, size: number): number {
   return Math.min(Math.max(value, 0), Math.max(0, 1 - size));
 }

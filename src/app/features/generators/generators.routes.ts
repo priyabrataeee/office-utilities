@@ -1,11 +1,5 @@
 import { Routes } from '@angular/router';
 
-/**
- * Document generators.
- *
- * Ten documents, one component: each route supplies the generator id, and the
- * template definition drives the form, the preview and the export.
- */
 const page = () =>
   import('./generator-page/generator-page.component').then((m) => m.GeneratorPageComponent);
 

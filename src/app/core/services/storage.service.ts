@@ -1,14 +1,6 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
-/**
- * SSR-safe wrapper around `localStorage`.
- *
- * On the server every read returns the supplied fallback and every write is a
- * no-op, so components can use persisted state without platform checks of
- * their own. Quota errors are swallowed: losing a preference must never break
- * a tool the user is in the middle of.
- */
 @Injectable({ providedIn: 'root' })
 export class StorageService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -32,21 +24,16 @@ export class StorageService {
     if (!this.isBrowser) return;
     try {
       localStorage.setItem(this.prefix + key, JSON.stringify(value));
-    } catch {
-      /* quota exceeded or storage disabled — preferences are best-effort */
-    }
+    } catch {}
   }
 
   remove(key: string): void {
     if (!this.isBrowser) return;
     try {
       localStorage.removeItem(this.prefix + key);
-    } catch {
-      /* ignore */
-    }
+    } catch {}
   }
 
-  /** Keys owned by this app, without the internal prefix. */
   keys(): string[] {
     if (!this.isBrowser) return [];
     try {
@@ -58,12 +45,10 @@ export class StorageService {
     }
   }
 
-  /** Wipes every key this app owns. Used by the Privacy page. */
   clearAll(): void {
     for (const key of this.keys()) this.remove(key);
   }
 
-  /** Approximate number of bytes this app occupies in localStorage. */
   usedBytes(): number {
     if (!this.isBrowser) return 0;
     let total = 0;
@@ -71,6 +56,6 @@ export class StorageService {
       const raw = localStorage.getItem(this.prefix + key) ?? '';
       total += (this.prefix + key).length + raw.length;
     }
-    return total * 2; // UTF-16 code units
+    return total * 2;
   }
 }

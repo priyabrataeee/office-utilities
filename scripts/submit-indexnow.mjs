@@ -1,21 +1,5 @@
-/**
- * Pushes the sitemap's URLs to IndexNow.
- *
- * IndexNow is a ping rather than a crawl request: participating engines — Bing,
- * Yandex, Seznam, Naver — are told a URL changed instead of waiting to rediscover
- * it. Google does not participate, so this does nothing for Google Search.
- *
- * Run it AFTER a deploy, never before: the engine fetches the key file from the
- * live site to verify ownership, so pinging a URL list that is not yet published
- * earns a 403 rather than a crawl.
- *
- *   npm run indexnow             submit every URL in the sitemap
- *   npm run indexnow -- --dry    print what would be sent and exit
- */
-
 import { readFileSync, existsSync } from 'node:fs';
 
-/** Must match the file name in public/ — asserted below rather than assumed. */
 const KEY = '95c7861e7a6f7071744b0b13f9503c83';
 const HOST = 'office-utilities.org';
 const ENDPOINT = 'https://api.indexnow.org/indexnow';
@@ -24,9 +8,6 @@ const MAX_URLS = 10000;
 
 const dry = process.argv.includes('--dry');
 
-/* The key file is the whole of the ownership proof. A mismatch between it and
-   the constant above fails as 403 at the API, which is a confusing way to find
-   out about a typo. */
 const keyFile = `public/${KEY}.txt`;
 if (!existsSync(keyFile)) {
   console.error(`IndexNow: key file missing. Expected ${keyFile}`);
@@ -77,8 +58,6 @@ const res = await fetch(ENDPOINT, {
   body: JSON.stringify(payload),
 });
 
-/* The documented codes, spelled out — "422" on its own is not a useful thing to
-   read six months from now. */
 const MEANING = {
   200: 'OK — URLs submitted.',
   202: 'Accepted — URLs received, key validation still pending.',

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ShortcutService, type Shortcut } from '../../core/services/shortcut.service';
 
-/** Lists whatever shortcuts are registered right now, grouped by area. */
 @Component({
   selector: 'app-shortcut-help',
   changeDetection: ChangeDetectionStrategy.OnPush,

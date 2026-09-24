@@ -16,12 +16,6 @@ interface DuplicateGroup {
   readonly wasted: number;
 }
 
-/**
- * Finds byte-identical files by hashing content, not by comparing names.
- *
- * Files are grouped by size first, because two files of different sizes can
- * never be identical — which means most of a folder is never hashed at all.
- */
 @Component({
   selector: 'app-duplicate-detector',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,8 +76,6 @@ export class DuplicateDetectorComponent extends ToolBase {
     this.groups.set([]);
 
     const found = await this.run('Comparing files…', async () => {
-      // Same size is a precondition for being identical, so this prunes the
-      // work dramatically on a real folder.
       const bySize = new Map<number, File[]>();
       for (const file of files) {
         if (file.size === 0) continue;

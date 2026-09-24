@@ -63,12 +63,6 @@ const SOURCE_META: Record<DocSource, { accepts: string[]; label: string; placeho
   },
 };
 
-/**
- * Markup conversion hub.
- *
- * Everything routes through the shared document model: parse the source into
- * blocks once, then hand those blocks to whichever writer the target needs.
- */
 @Component({
   selector: 'app-doc-convert',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -100,7 +94,6 @@ export class DocConvertComponent extends ToolBase {
   protected readonly textOutput = signal('');
   protected readonly droppedCharacters = signal(0);
 
-  /* Page options, used by the PDF and DOCX writers. */
   protected readonly pageSize = signal<PageSizeName>('A4');
   protected readonly fontFamily = signal<'sans' | 'serif' | 'mono'>('sans');
   protected readonly fontSize = signal(11);
@@ -275,7 +268,6 @@ export class DocConvertComponent extends ToolBase {
   }
 }
 
-/** Splits plain text into paragraphs, optionally numbering each line. */
 function plainTextToBlocks(text: string, lineNumbers: boolean): DocBlock[] {
   const lines = text.replace(/\r\n?/g, '\n').split('\n');
   const width = String(lines.length).length;

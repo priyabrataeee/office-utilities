@@ -4,14 +4,6 @@ import type {
   TextItem,
 } from 'pdfjs-dist/types/src/display/api';
 
-/**
- * PDF.js wrapper for everything that needs *rendering* rather than writing:
- * the viewer, page thumbnails, text extraction, search and rasterising.
- *
- * The worker, cmaps, fonts and wasm are served from our own origin so the
- * "nothing leaves your device" guarantee holds even for the assets.
- */
-
 export type PdfJs = typeof import('pdfjs-dist');
 
 let pdfjsPromise: Promise<PdfJs> | null = null;
@@ -36,17 +28,14 @@ export class PasswordRequiredError extends Error {
 
 export interface OpenOptions {
   readonly password?: string;
-  /** Called with a 0–1 fraction while the document is parsed. */
   readonly onProgress?: (fraction: number) => void;
 }
 
-/** Opens a PDF for rendering. Throws `PasswordRequiredError` when locked. */
 export async function openPdf(
   data: ArrayBuffer | Uint8Array,
   options: OpenOptions = {},
 ): Promise<PDFDocumentProxy> {
   const pdfjs = await loadPdfJs();
-  // pdf.js transfers and neuters the buffer it is given, so hand it a copy.
   const bytes = data instanceof Uint8Array ? data.slice() : new Uint8Array(data.slice(0));
 
   const task = pdfjs.getDocument({
@@ -76,19 +65,11 @@ export async function openPdf(
   }
 }
 
-/**
- * Releases a document's worker resources.
- *
- * `destroy` exists at runtime but is absent from the published types, so it is
- * called defensively here rather than cast at every call site.
- */
 export async function closePdf(doc: PDFDocumentProxy | null | undefined): Promise<void> {
   if (!doc) return;
   try {
     await (doc as unknown as { destroy?: () => Promise<void> }).destroy?.();
-  } catch {
-    /* the document may already have been torn down */
-  }
+  } catch {}
 }
 
 export interface PdfPageSize {
@@ -109,16 +90,12 @@ export async function pageSizes(doc: PDFDocumentProxy): Promise<PdfPageSize[]> {
 }
 
 export interface RenderOptions {
-  /** CSS pixels per PDF point. */
   readonly scale?: number;
-  /** Extra rotation applied on top of the page's own, in degrees. */
   readonly rotation?: number;
-  /** Cap on the longest edge; prevents allocating enormous canvases. */
   readonly maxDimension?: number;
   readonly background?: string;
 }
 
-/** Renders one page onto a fresh canvas. */
 export async function renderPage(
   doc: PDFDocumentProxy,
   pageNumber: number,
@@ -163,7 +140,6 @@ export async function renderPageProxy(
   return canvas;
 }
 
-/** Renders a small preview, used by the page-organiser grids. */
 export async function renderThumbnail(
   doc: PDFDocumentProxy,
   pageNumber: number,
@@ -186,7 +162,6 @@ export interface PageText {
   readonly items: readonly { str: string; x: number; y: number; width: number; height: number }[];
 }
 
-/** Extracts the text layer of one page, preserving line breaks. */
 export async function extractPageText(
   doc: PDFDocumentProxy,
   pageNumber: number,
@@ -206,7 +181,6 @@ export async function extractPageText(
     });
 
     for (const item of positioned) {
-      // A vertical jump means a new visual line, which the raw stream loses.
       if (lastY !== null && Math.abs(item.y - lastY) > 3) {
         lines.push(currentLine.trimEnd());
         currentLine = '';
@@ -248,7 +222,6 @@ export interface SearchHit {
   readonly excerpt: string;
 }
 
-/** Case-insensitive full-text search across a document's text layer. */
 export function searchPages(pages: readonly PageText[], query: string): SearchHit[] {
   const needle = query.trim().toLowerCase();
   if (needle.length < 2) return [];
@@ -300,7 +273,6 @@ export async function describePdf(doc: PDFDocumentProxy): Promise<PdfDocumentInf
   const metadata = await doc.getMetadata().catch(() => null);
   const info = (metadata?.info ?? {}) as Record<string, unknown>;
 
-  // Sampling the first pages is enough to tell a scan from a text PDF.
   let hasTextLayer = false;
   for (let index = 1; index <= Math.min(3, doc.numPages); index++) {
     const page = await doc.getPage(index);
@@ -320,9 +292,7 @@ export async function describePdf(doc: PDFDocumentProxy): Promise<PdfDocumentInf
       }
     };
     walk(raw, 0);
-  } catch {
-    /* outlines are optional */
-  }
+  } catch {}
 
   return {
     pageCount: doc.numPages,
@@ -345,7 +315,6 @@ function str(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim() ? value.trim() : undefined;
 }
 
-/** Converts a PDF date string (D:YYYYMMDDHHmmSS) into something readable. */
 function formatPdfDate(value: string | undefined): string | undefined {
   if (!value) return undefined;
   const match = value.match(/^D:(\d{4})(\d{2})?(\d{2})?(\d{2})?(\d{2})?(\d{2})?/);

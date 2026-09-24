@@ -328,9 +328,7 @@
                     stroke-width="1.4"
                   />
                 }
-                @case ('text') {
-                  <!-- text-only node has no chrome -->
-                }
+                @case ('text') {}
                 @default {
                   @if (shapeOutline(node)) {
                     <path

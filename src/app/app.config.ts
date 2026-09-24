@@ -21,13 +21,9 @@ import { routes } from './app.routes';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    // Signals drive every component here, so zone.js change detection is dead
-    // weight — going zoneless keeps large file operations from thrashing CD.
     provideZonelessChangeDetection(),
     provideRouter(
       routes,
-      // Route `data` is bound straight to component inputs, which is how each
-      // category page and shared tool component is configured.
       withComponentInputBinding(),
       withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }),
       withRouterConfig({ paramsInheritanceStrategy: 'always' }),
