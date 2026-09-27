@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Office Utilities Guides</title>
+    <link>https://office-utilities.org/guides</link>
+    <description>In-depth guides on document privacy, PDF tools, Office formats, and browser-based file utilities.</description>
+    <language>en-US</language>
+    <lastBuildDate>Sat, 26 Sep 2026 23:33:24 GMT</lastBuildDate>
+    <atom:link href="https://office-utilities.org/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>How to write a résumé an ATS can actually read</title>
+      <link>https://office-utilities.org/guides/how-to-write-a-resume-an-ats-can-read</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-write-a-resume-an-ats-can-read</guid>
+      <pubDate>Sun, 06 Sep 2026 00:00:00 GMT</pubDate>
+      <description>What an applicant tracking system extracts from a CV, why columns and text boxes disappear, and a two-minute test that shows you exactly what the machine sees.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to make an invoice without signing up for anything</title>
+      <link>https://office-utilities.org/guides/how-to-make-an-invoice-without-signing-up</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-make-an-invoice-without-signing-up</guid>
+      <pubDate>Sun, 06 Sep 2026 00:00:00 GMT</pubDate>
+      <description>What an invoice has to contain, why most free invoice generators ask for an account, and how to produce a numbered PDF invoice without handing over your client list.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to compare two Word documents and see what changed</title>
+      <link>https://office-utilities.org/guides/how-to-compare-two-word-documents</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-compare-two-word-documents</guid>
+      <pubDate>Sun, 06 Sep 2026 00:00:00 GMT</pubDate>
+      <description>How document comparison works, why it disagrees with tracked changes, the edits a diff cannot see, and how to compare two contract drafts without sending either to a server.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to clean up a messy spreadsheet</title>
+      <link>https://office-utilities.org/guides/how-to-clean-up-a-messy-spreadsheet</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-clean-up-a-messy-spreadsheet</guid>
+      <pubDate>Sun, 06 Sep 2026 00:00:00 GMT</pubDate>
+      <description>The order to do it in, why trailing spaces defeat duplicate detection, how a single text cell poisons a numeric column, and how to clean a spreadsheet without uploading the data in it.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to convert images between PNG, JPG and WebP</title>
+      <link>https://office-utilities.org/guides/how-to-convert-images-between-png-jpg-and-webp</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-convert-images-between-png-jpg-and-webp</guid>
+      <pubDate>Sun, 06 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Which image format to use and when, why converting a JPG twice makes it worse, what happens to transparency, and how to convert without uploading the picture anywhere.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to watermark a PDF (and what it actually stops)</title>
+      <link>https://office-utilities.org/guides/how-to-watermark-a-pdf-and-what-it-actually-stops</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-watermark-a-pdf-and-what-it-actually-stops</guid>
+      <pubDate>Sun, 06 Sep 2026 00:00:00 GMT</pubDate>
+      <description>How text and image watermarks are stored in a PDF, why some can be deleted in seconds, and an honest account of what a watermark deters rather than prevents.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to convert Markdown to Word, PDF or HTML</title>
+      <link>https://office-utilities.org/guides/how-to-convert-markdown-to-word-pdf-or-html</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-convert-markdown-to-word-pdf-or-html</guid>
+      <pubDate>Sun, 06 Sep 2026 00:00:00 GMT</pubDate>
+      <description>What survives the conversion from Markdown and what does not, why tables and code blocks are the two things to check, and how to produce a .docx for someone who does not want a text file.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to find duplicate files without a cloud scanner</title>
+      <link>https://office-utilities.org/guides/how-to-find-duplicate-files-on-your-computer</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-find-duplicate-files-on-your-computer</guid>
+      <pubDate>Sun, 06 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Why matching on name and size is not enough, how a file hash proves two files are identical, which copy to keep, and how to check a folder without a program that indexes your disk.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>Is it safe to use online PDF converters?</title>
+      <link>https://office-utilities.org/guides/is-it-safe-to-use-online-pdf-converters</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/is-it-safe-to-use-online-pdf-converters</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Most online converters upload a copy of your document to a server you know nothing about. Here is what that means in practice, and how to tell which tools avoid it entirely.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to merge PDFs without uploading them anywhere</title>
+      <link>https://office-utilities.org/guides/how-to-merge-pdfs-without-uploading</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-merge-pdfs-without-uploading</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Combine several PDFs into one without sending them to a server — what changes in the merged file, what does not, and how to check the tool you are using really works locally.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>What actually happens when you upload a file to a converter</title>
+      <link>https://office-utilities.org/guides/what-happens-when-you-upload-a-file-to-a-converter</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/what-happens-when-you-upload-a-file-to-a-converter</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>A step-by-step account of where your document goes after you press the button, why &quot;deleted after one hour&quot; is harder than it sounds, and which claims you can verify yourself.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to work with confidential documents safely online</title>
+      <link>https://office-utilities.org/guides/how-to-work-with-confidential-documents-online</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-work-with-confidential-documents-online</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>A practical routine for handling contracts, payslips and client files with online tools — what to check before you start, what to strip before you share, and where the real leaks happen.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to convert PDF to Word without losing formatting</title>
+      <link>https://office-utilities.org/guides/how-to-convert-pdf-to-word-without-losing-formatting</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-convert-pdf-to-word-without-losing-formatting</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Why PDF to Word is never a perfect reproduction, which parts of a document reliably survive, and how to get the cleanest possible result from the conversion.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to compress a PDF without making the text blurry</title>
+      <link>https://office-utilities.org/guides/how-to-compress-a-pdf-without-making-text-blurry</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-compress-a-pdf-without-making-text-blurry</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Blurry text after compression means the whole page was turned into an image. Here is what is actually making your PDF large, and how to shrink it while keeping text sharp.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to convert Word to PDF and keep your fonts</title>
+      <link>https://office-utilities.org/guides/how-to-convert-word-to-pdf-and-keep-your-fonts</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-convert-word-to-pdf-and-keep-your-fonts</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Why a converted document reflows or changes typeface, how font embedding actually works, and what to do when the PDF does not match what you saw in Word.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to extract text from a PDF</title>
+      <link>https://office-utilities.org/guides/how-to-extract-text-from-a-pdf</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-extract-text-from-a-pdf</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Getting clean, usable text out of a PDF — why copy and paste produces a mess, why columns come out interleaved, and what to do when there is no text in the file at all.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>Why your Excel dates break when you export to CSV</title>
+      <link>https://office-utilities.org/guides/why-excel-dates-break-when-you-export-to-csv</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/why-excel-dates-break-when-you-export-to-csv</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Dates turn into numbers, days and months swap places, and leading zeros vanish. Here is what a spreadsheet actually stores in a date cell, and how to export so the other side reads it correctly.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to remove metadata from a document before sharing it</title>
+      <link>https://office-utilities.org/guides/how-to-remove-metadata-from-a-document-before-sharing</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-remove-metadata-from-a-document-before-sharing</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Documents carry author names, company details, edit history and cropped-away image data. Here is what is hidden in a file, how to see it, and how to remove it before you send.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to open DOCX, XLSX and PPTX without Microsoft Office</title>
+      <link>https://office-utilities.org/guides/how-to-open-docx-xlsx-and-pptx-without-microsoft-office</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-open-docx-xlsx-and-pptx-without-microsoft-office</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>You have been sent a Word, Excel or PowerPoint file and do not have Office. What your options are, what each one costs you, and which parts of a document survive in each.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>Why your PowerPoint is too big to email — and how to fix it</title>
+      <link>https://office-utilities.org/guides/why-your-powerpoint-is-too-big-to-email</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/why-your-powerpoint-is-too-big-to-email</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>A deck of twenty slides should not be 80 MB. Find out exactly which images are responsible, and shrink the file without touching the design.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to split a PDF by chapter</title>
+      <link>https://office-utilities.org/guides/how-to-split-a-pdf-by-chapter</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-split-a-pdf-by-chapter</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Breaking a long PDF into sections — how to find the right page boundaries quickly, and when splitting is the wrong tool for what you actually want.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to password-protect a PDF (and what that actually protects)</title>
+      <link>https://office-utilities.org/guides/how-to-password-protect-a-pdf</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-password-protect-a-pdf</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>The difference between the two PDF passwords, what permissions really enforce, and an honest account of what encryption does and does not protect you from.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+    <item>
+      <title>How to fix a sideways or upside-down scanned PDF</title>
+      <link>https://office-utilities.org/guides/how-to-fix-a-sideways-scanned-pdf</link>
+      <guid isPermaLink="true">https://office-utilities.org/guides/how-to-fix-a-sideways-scanned-pdf</guid>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Rotating pages so the fix sticks in every reader and when printed — including why some documents look right on screen and come out wrong on paper.</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>
+  </channel>
+</rss>

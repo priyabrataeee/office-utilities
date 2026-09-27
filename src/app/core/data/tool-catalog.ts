@@ -440,7 +440,15 @@ export const TOOLS: readonly ToolDefinition[] = [
     description:
       'Add as many PDFs as you like, drag them into the order you want and download a single merged document. Bookmarks from each source file are preserved and page sizes are left untouched.',
     icon: 'merge',
-    keywords: ['combine pdf', 'join pdf', 'pdf merger', 'concatenate pdf'],
+    keywords: [
+      'combine pdf',
+      'join pdf',
+      'pdf merger',
+      'concatenate pdf',
+      'merge pdf without uploading',
+      'offline pdf merger',
+      'private pdf combine',
+    ],
     accepts: ['.pdf'],
     popular: true,
     faq: [
@@ -463,7 +471,15 @@ export const TOOLS: readonly ToolDefinition[] = [
     description:
       'Split a PDF at chosen page breaks, into fixed-size chunks, or into one file per page. Preview every resulting document before downloading them individually or as a ZIP.',
     icon: 'scissors',
-    keywords: ['divide pdf', 'separate pdf', 'pdf splitter', 'cut pdf'],
+    keywords: [
+      'divide pdf',
+      'separate pdf',
+      'pdf splitter',
+      'cut pdf',
+      'split pdf without uploading',
+      'offline pdf splitter',
+      'extract pdf pages',
+    ],
     accepts: ['.pdf'],
     popular: true,
     faq: [
@@ -639,7 +655,15 @@ export const TOOLS: readonly ToolDefinition[] = [
     description:
       'Reduce PDF size by downsampling and re-encoding embedded images, removing duplicated resources and stripping metadata. Choose a quality target and compare the before and after size before you download.',
     icon: 'minimize',
-    keywords: ['reduce pdf size', 'optimise pdf', 'smaller pdf', 'shrink pdf'],
+    keywords: [
+      'reduce pdf size',
+      'optimise pdf',
+      'smaller pdf',
+      'shrink pdf',
+      'compress pdf without upload',
+      'offline pdf compressor',
+      'private pdf compression',
+    ],
     accepts: ['.pdf'],
     popular: true,
     faq: [

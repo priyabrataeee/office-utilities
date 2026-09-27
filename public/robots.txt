@@ -1,0 +1,51 @@
+# https://office-utilities.org — everything runs in your browser
+User-agent: *
+Allow: /
+
+# /favorites and /recent are personal views backed by local storage and render
+# empty for anyone arriving from search. They carry a noindex tag in their own
+# markup, which is deliberately not paired with a Disallow here: a blocked
+# crawler never fetches the page, so it never sees the noindex and the URL can
+# still surface as a bare link. Letting it crawl and read the tag is what
+# actually keeps them out of the index.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+Sitemap: https://office-utilities.org/sitemap.xml

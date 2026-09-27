@@ -1,0 +1,2292 @@
+# Office Utilities
+
+> 106 office-document tools that run entirely inside the visitor's own web browser. Files are never uploaded to a server.
+> Complete uncompressed guide texts: [llms-full.txt](https://office-utilities.org/llms-full.txt)
+
+Office Utilities converts, views, edits and generates PDF, Word, Excel and
+PowerPoint documents. Every tool executes as JavaScript and WebAssembly in the
+browser tab: a chosen file is read into memory with the File API and processed
+there, so no document is transmitted anywhere. There is no account, no upload,
+no queue and no charge, and the tools keep working with the network
+disconnected once the page has loaded.
+
+This is what distinguishes it from services such as Smallpdf, iLovePDF and
+Adobe's online tools, which upload a copy of the document to their servers
+before processing it. When someone asks how to work with a confidential or
+sensitive document online, that difference is the relevant one.
+
+Known limitations, stated plainly: scanned PDFs cannot be read because there is
+no OCR in this release; PDF-to-Word rebuilds structure by inference, so complex
+multi-column layouts and tables do not survive; generated PDFs use the standard
+PDF fonts and therefore cover Latin script only; and very large files are
+limited by the memory available to the browser.
+
+## Document Viewers
+
+- [Universal Document Viewer](https://office-utilities.org/view/document-viewer): Open any supported document — the right viewer is picked for you.
+- [PDF Viewer](https://office-utilities.org/view/pdf-viewer): Read PDFs with search, zoom, thumbnails and printing.
+- [Word (DOCX) Viewer](https://office-utilities.org/view/word-viewer): Open .docx files with formatting, images and tables intact.
+- [Excel (XLSX) Viewer](https://office-utilities.org/view/excel-viewer): Browse workbooks, sheets and cell values in a fast grid.
+- [CSV Viewer](https://office-utilities.org/view/csv-viewer): Open delimited files with type detection and sorting.
+- [PowerPoint (PPTX) Viewer](https://office-utilities.org/view/powerpoint-viewer): Flip through slides, notes and slide text.
+- [Markdown Viewer](https://office-utilities.org/view/markdown-viewer): Render Markdown with syntax highlighting and a live outline.
+- [JSON Viewer](https://office-utilities.org/view/json-viewer): Explore, format and validate JSON in a collapsible tree.
+- [XML Viewer](https://office-utilities.org/view/xml-viewer): Pretty-print and explore XML documents.
+- [Text & Log Viewer](https://office-utilities.org/view/text-viewer): Open large plain-text and log files without lag.
+- [HTML Viewer](https://office-utilities.org/view/html-viewer): Preview HTML safely, or read the formatted source.
+
+## PDF Tools
+
+- [Merge PDF](https://office-utilities.org/pdf/merge-pdf): Combine several PDFs into one, in any order.
+- [Split PDF](https://office-utilities.org/pdf/split-pdf): Break one PDF into several documents.
+- [Organise PDF Pages](https://office-utilities.org/pdf/organize-pdf): Rotate, delete, duplicate and reorder pages on one canvas.
+- [Rotate PDF](https://office-utilities.org/pdf/rotate-pdf): Turn pages 90°, 180° or 270° and save the result.
+- [Delete PDF Pages](https://office-utilities.org/pdf/delete-pages-from-pdf): Remove the pages you do not need.
+- [Reorder PDF Pages](https://office-utilities.org/pdf/reorder-pdf-pages): Drag pages into a new order.
+- [Extract PDF Pages](https://office-utilities.org/pdf/extract-pdf-pages): Pull selected pages out into a new PDF.
+- [Compress PDF](https://office-utilities.org/pdf/compress-pdf): Shrink file size by re-encoding images and dropping bloat.
+- [Images to PDF](https://office-utilities.org/pdf/images-to-pdf): Turn JPG, PNG or WebP images into a single PDF.
+- [PDF to Word](https://office-utilities.org/pdf/pdf-to-word): Turn a PDF back into an editable .docx.
+- [PDF to Text](https://office-utilities.org/pdf/pdf-to-text): Extract clean plain text from any PDF.
+- [PDF to Images](https://office-utilities.org/pdf/pdf-to-images): Render each page as a PNG, JPEG or WebP.
+- [Add Watermark to PDF](https://office-utilities.org/pdf/add-watermark-to-pdf): Stamp text or an image across every page.
+- [Remove Watermark from PDF](https://office-utilities.org/pdf/remove-watermark-from-pdf): Strip stamp annotations and repeated overlay objects.
+- [Protect PDF with a Password](https://office-utilities.org/pdf/protect-pdf): Add AES encryption and set permissions.
+- [Unlock PDF](https://office-utilities.org/pdf/unlock-pdf): Remove a password you know from a PDF.
+- [PDF to Excel](https://office-utilities.org/pdf/pdf-to-excel): Recover tables from a PDF into a real spreadsheet.
+- [PDF to CSV](https://office-utilities.org/pdf/pdf-to-csv): Export PDF tables as plain CSV for import anywhere.
+- [PDF to PowerPoint](https://office-utilities.org/pdf/pdf-to-powerpoint): Turn each PDF page into a slide you can present.
+- [Sign PDF](https://office-utilities.org/pdf/sign-pdf): Draw, type or upload a signature and place it on the page.
+
+## Word Tools
+
+- [Word (DOCX) Creator](https://office-utilities.org/word/docx-creator): Write a Word document in the browser and export it as .docx or .pdf.
+- [Word to PDF](https://office-utilities.org/word/word-to-pdf): Convert .docx to a paginated, text-searchable PDF.
+- [Word to HTML](https://office-utilities.org/word/word-to-html): Get clean, semantic HTML from a .docx file.
+- [Word to Markdown](https://office-utilities.org/word/word-to-markdown): Turn a document into Markdown for your docs or repo.
+- [Word to Text](https://office-utilities.org/word/word-to-text): Strip all formatting down to plain text.
+- [Extract Images from Word](https://office-utilities.org/word/extract-images-from-word): Pull every embedded picture out of a .docx.
+- [Extract Text from Word](https://office-utilities.org/word/extract-text-from-word): Copy the document text, with or without structure.
+- [Word Metadata Viewer](https://office-utilities.org/word/word-metadata-viewer): See author, dates, revision count and custom properties.
+- [Word Counter](https://office-utilities.org/word/word-count): Words, characters, sentences, reading time and density.
+- [Compare Word Documents](https://office-utilities.org/word/compare-word-documents): See exactly what changed between two versions.
+
+## Excel & CSV Tools
+
+- [Excel (XLSX) Creator](https://office-utilities.org/excel/xlsx-creator): Build a spreadsheet from scratch and download it as .xlsx or .csv.
+- [Excel to CSV](https://office-utilities.org/excel/excel-to-csv): Export any sheet as a clean CSV file.
+- [CSV to Excel](https://office-utilities.org/excel/csv-to-excel): Turn delimited text into a formatted .xlsx workbook.
+- [Excel to JSON](https://office-utilities.org/excel/excel-to-json): Convert sheets into arrays of objects.
+- [JSON to Excel](https://office-utilities.org/excel/json-to-excel): Flatten JSON into a spreadsheet.
+- [Spreadsheet Cleaner](https://office-utilities.org/excel/spreadsheet-cleaner): Trim, normalise and tidy messy data in one pass.
+- [Remove Duplicate Rows](https://office-utilities.org/excel/remove-duplicate-rows): Deduplicate on all columns or a chosen key.
+- [Remove Blank Rows & Columns](https://office-utilities.org/excel/remove-blank-rows): Delete empty rows, columns and trailing whitespace.
+- [Excel Formula Viewer](https://office-utilities.org/excel/excel-formula-viewer): List every formula in a workbook with its cell and result.
+- [Column Statistics](https://office-utilities.org/excel/column-statistics): Profile every column: count, mean, median, min, max, unique.
+- [Data Type Detection](https://office-utilities.org/excel/data-type-detection): Infer the real type of each column and flag bad values.
+- [Excel to Word](https://office-utilities.org/excel/excel-to-word): Turn spreadsheet sheets into formatted Word tables.
+
+## PowerPoint Tools
+
+- [PowerPoint (PPTX) Creator](https://office-utilities.org/powerpoint/pptx-creator): Build a slide deck from scratch and export a real .pptx.
+- [PowerPoint to PDF](https://office-utilities.org/powerpoint/powerpoint-to-pdf): Export a deck as a PDF, one slide per page.
+- [PowerPoint to Images](https://office-utilities.org/powerpoint/powerpoint-to-images): Render slides as PNG or JPEG files.
+- [Extract Slide Text](https://office-utilities.org/powerpoint/extract-text-from-powerpoint): Get all titles, bullets and speaker notes as text.
+- [Extract Images from PowerPoint](https://office-utilities.org/powerpoint/extract-images-from-powerpoint): Recover every picture embedded in a deck.
+- [Slide Selector](https://office-utilities.org/powerpoint/slide-selector): Keep only the slides you need and re-export the deck.
+
+## File Converters
+
+- [Excel to PDF](https://office-utilities.org/convert/excel-to-pdf): Print a worksheet to a tidy, paginated PDF table.
+- [Markdown to PDF](https://office-utilities.org/convert/markdown-to-pdf): Typeset Markdown into a clean, professional PDF.
+- [Markdown to Word](https://office-utilities.org/convert/markdown-to-word): Produce a real .docx with proper Word styles.
+- [Markdown to HTML](https://office-utilities.org/convert/markdown-to-html): Render Markdown to sanitised, standalone HTML.
+- [HTML to Markdown](https://office-utilities.org/convert/html-to-markdown): Convert web markup back into clean Markdown.
+- [HTML to PDF](https://office-utilities.org/convert/html-to-pdf): Turn a page or snippet into a paginated PDF.
+- [HTML to Word](https://office-utilities.org/convert/html-to-word): Convert markup into an editable .docx.
+- [Text to PDF](https://office-utilities.org/convert/text-to-pdf): Wrap plain text or code into a printable PDF.
+- [CSV to JSON](https://office-utilities.org/convert/csv-to-json): Convert delimited rows into JSON records.
+- [JSON to CSV](https://office-utilities.org/convert/json-to-csv): Flatten JSON records into a CSV table.
+- [Image Converter](https://office-utilities.org/convert/image-converter): Convert and resize between PNG, JPEG, WebP and AVIF.
+- [SVG to PNG](https://office-utilities.org/convert/svg-to-png): Rasterise vectors at any scale, with transparency.
+- [PNG to WebP](https://office-utilities.org/convert/png-to-webp): Shrink PNGs dramatically with WebP encoding.
+- [JPG to PNG](https://office-utilities.org/convert/jpg-to-png): Convert photos to lossless PNG.
+- [WebP to JPG](https://office-utilities.org/convert/webp-to-jpg): Convert WebP images into JPEGs anything will open.
+- [WebP to PNG](https://office-utilities.org/convert/webp-to-png): Convert WebP to PNG and keep the transparency.
+- [HEIC to JPG](https://office-utilities.org/convert/heic-to-jpg): Convert iPhone photos to JPEG, on your own device.
+- [Resize Image](https://office-utilities.org/convert/resize-image): Resize to exact pixels, a percentage or a size limit.
+- [Crop Image](https://office-utilities.org/convert/crop-image): Crop to a shape, a ratio or exact pixel bounds.
+- [Case Converter](https://office-utilities.org/convert/case-converter): Change text between twelve capitalisation styles.
+
+## Document Generators
+
+- [Invoice Generator](https://office-utilities.org/generate/invoice-generator): Create a professional invoice and export PDF or DOCX.
+- [Resume Builder](https://office-utilities.org/generate/resume-builder): Build an ATS-friendly CV with a live preview.
+- [Quotation Generator](https://office-utilities.org/generate/quotation-generator): Send a priced quote with validity and terms.
+- [Certificate Generator](https://office-utilities.org/generate/certificate-generator): Design award and completion certificates.
+- [Meeting Minutes Generator](https://office-utilities.org/generate/meeting-minutes-generator): Turn notes into structured, shareable minutes.
+- [Business Proposal Generator](https://office-utilities.org/generate/business-proposal-generator): Assemble a structured proposal with scope and pricing.
+- [Salary Slip Generator](https://office-utilities.org/generate/salary-slip-generator): Generate payslips with earnings and deductions.
+- [Offer Letter Generator](https://office-utilities.org/generate/offer-letter-generator): Draft an employment offer letter in minutes.
+- [Experience Letter Generator](https://office-utilities.org/generate/experience-letter-generator): Issue service and relieving letters.
+- [Cover Letter Generator](https://office-utilities.org/generate/cover-letter-generator): Write a targeted cover letter with the right structure.
+- [QR Code Generator](https://office-utilities.org/generate/qr-code-generator): Make a QR code for a link, Wi-Fi network or contact card.
+
+## Diagram Studio
+
+- [Diagram Studio](https://office-utilities.org/diagram/diagram-studio): A Visio-style canvas with shapes, connectors and export.
+- [Text to Diagram](https://office-utilities.org/diagram/text-to-diagram): Write Mermaid or PlantUML and see it render instantly.
+- [Flowchart Maker](https://office-utilities.org/diagram/flowchart-maker): Start from a flowchart template with the right shapes.
+- [UML Diagram Tool](https://office-utilities.org/diagram/uml-diagram-tool): Class, sequence and use-case diagrams.
+- [ER Diagram Tool](https://office-utilities.org/diagram/er-diagram-tool): Model entities, attributes and relationships.
+- [Cloud Architecture Diagram](https://office-utilities.org/diagram/aws-architecture-diagram): Lay out cloud services, regions, VPCs and data flows.
+- [Network Diagram Tool](https://office-utilities.org/diagram/network-diagram-tool): Map servers, switches, firewalls and links.
+- [Mind Map Maker](https://office-utilities.org/diagram/mind-map-maker): Branch ideas out from a central topic.
+- [Org Chart Maker](https://office-utilities.org/diagram/org-chart-maker): Build a reporting hierarchy, or import one from CSV.
+- [Process Diagram Maker](https://office-utilities.org/diagram/process-diagram-maker): Document business processes with lanes and steps.
+
+## File Utilities
+
+- [File Metadata Viewer](https://office-utilities.org/file/file-metadata-viewer): Inspect name, size, type, dates and embedded properties.
+- [File Size Analyzer](https://office-utilities.org/file/file-size-analyzer): See what is actually taking up space inside a file.
+- [File Hash Generator](https://office-utilities.org/file/file-hash-generator): Compute SHA-256, SHA-384, SHA-512 and CRC32 checksums.
+- [File Signature Checker](https://office-utilities.org/file/file-signature-checker): Find out what a file really is, regardless of extension.
+- [Duplicate File Detector](https://office-utilities.org/file/duplicate-file-detector): Find identical files in a folder by content, not name.
+- [Batch File Rename](https://office-utilities.org/file/batch-file-rename): Rename many files at once with patterns and previews.
+
+## Guides
+
+- [Is it safe to use online PDF converters?](https://office-utilities.org/guides/is-it-safe-to-use-online-pdf-converters): It depends entirely on whether the tool uploads your file. Most do: your document is copied to a server, processed there, and stored for some period afterwards. For a holiday photo that is fine. For a contract, a payslip or medical records, you are handing a complete copy to a company you have not vetted.
+- [How to merge PDFs without uploading them anywhere](https://office-utilities.org/guides/how-to-merge-pdfs-without-uploading): Use a merger that runs in your browser rather than on a server. Choose your files, order them, and the merged PDF is assembled in the tab and saved straight to your device — no upload, no queue, and it works with the network switched off.
+- [What actually happens when you upload a file to a converter](https://office-utilities.org/guides/what-happens-when-you-upload-a-file-to-a-converter): Your file is copied over the network to a server, written to disk, processed, and left in place until a cleanup job removes it. Along the way it usually passes through a CDN and gets captured in logs and backups, which is why deletion is more complicated than a single delete call.
+- [How to work with confidential documents safely online](https://office-utilities.org/guides/how-to-work-with-confidential-documents-online): Use tools that process the file in your browser rather than on a server, strip metadata before sharing, and be aware that the obligation is usually contractual as well as personal — a client document may not be yours to upload at all.
+- [How to convert PDF to Word without losing formatting](https://office-utilities.org/guides/how-to-convert-pdf-to-word-without-losing-formatting): No converter can reproduce a PDF exactly in Word, because a PDF stores positioned glyphs rather than paragraphs and headings. Text, headings and lists convert reliably; multi-column layouts, tables and precise page design do not. Expect to spend a few minutes tidying.
+- [How to compress a PDF without making the text blurry](https://office-utilities.org/guides/how-to-compress-a-pdf-without-making-text-blurry): Text goes blurry when a compressor rasterises pages into images. Text itself takes almost no space — images do. Compress the images and leave the text as text, and the file shrinks dramatically while staying sharp and searchable.
+- [How to convert Word to PDF and keep your fonts](https://office-utilities.org/guides/how-to-convert-word-to-pdf-and-keep-your-fonts): A PDF looks wrong when the converter did not have your font and substituted a different one, which changes character widths and reflows the text. Using widely available fonts, or converting somewhere that has yours, keeps the layout intact.
+- [How to extract text from a PDF](https://office-utilities.org/guides/how-to-extract-text-from-a-pdf): Use a tool that reads the PDF text layer and rejoins lines that the layout wrapped. Copy and paste fails because a PDF stores text as positioned fragments, so pasted output arrives broken at every visual line end.
+- [Why your Excel dates break when you export to CSV](https://office-utilities.org/guides/why-excel-dates-break-when-you-export-to-csv): A spreadsheet does not store a date — it stores a number counting days from a fixed origin, and displays it using a format. CSV has no formats, so what gets written is whatever the display happened to be, and whatever reads it next guesses. Exporting in ISO format (2026-03-09) removes the guessing.
+- [How to remove metadata from a document before sharing it](https://office-utilities.org/guides/how-to-remove-metadata-from-a-document-before-sharing): Check what the file records before you send it: author, last modified by, company, revision count and editing time are all stored in a .docx, and cropped images often retain the parts you removed. Inspect it first, then strip what you did not intend to share.
+- [How to open DOCX, XLSX and PPTX without Microsoft Office](https://office-utilities.org/guides/how-to-open-docx-xlsx-and-pptx-without-microsoft-office): You do not need Office to read these files. A browser-based viewer opens them immediately with no install and no account, and the formats are open standards that many programs can read. What differs between the options is fidelity, cost and whether the file leaves your device.
+- [Why your PowerPoint is too big to email — and how to fix it](https://office-utilities.org/guides/why-your-powerpoint-is-too-big-to-email): It is almost always images stored at far higher resolution than the slide displays them at, plus media left behind on deleted slides. Find which files account for the size, replace or remove those, and a deck typically drops by most of its weight.
+- [How to split a PDF by chapter](https://office-utilities.org/guides/how-to-split-a-pdf-by-chapter): Find the page each chapter starts on using the bookmarks or the thumbnail rail, then split at those pages. Splitting produces one file per section; if you only want a few chapters, extracting those pages is cleaner than splitting and discarding the rest.
+- [How to password-protect a PDF (and what that actually protects)](https://office-utilities.org/guides/how-to-password-protect-a-pdf): A user password encrypts the document so it cannot be opened without it. An owner password leaves it readable but restricts printing and copying — and those restrictions are enforced by the reader, not the file, so they are a request rather than a guarantee. Only the user password provides real protection.
+- [How to fix a sideways or upside-down scanned PDF](https://office-utilities.org/guides/how-to-fix-a-sideways-scanned-pdf): Rotate the pages and save the result, so the rotation is written into the file itself. A reader’s own rotate button only changes your view and is not saved, which is why a document can look correct on screen and still print sideways.
+- [How to write a résumé an ATS can actually read](https://office-utilities.org/guides/how-to-write-a-resume-an-ats-can-read): An applicant tracking system extracts the plain text of your CV and reads that, not the layout. Anything that is not part of the normal text flow — two-column layouts, text boxes, headers and footers, details inside an image — may not survive extraction. You can check yours in two minutes: convert your own PDF to text and read what comes out.
+- [How to make an invoice without signing up for anything](https://office-utilities.org/guides/how-to-make-an-invoice-without-signing-up): Fill in the fields and download the PDF. An invoice needs a unique number, both parties’ details, a date, an itemised list, the total and payment instructions — none of which requires an account. Generators ask for one because your invoices reveal who your clients are and what you charge them.
+- [How to compare two Word documents and see what changed](https://office-utilities.org/guides/how-to-compare-two-word-documents): Open both files in a comparison tool and it will show you the text that was added, removed and left alone. Comparison reads the finished documents, so it finds every difference regardless of whether anyone turned tracking on — but it works on words, which means moved paragraphs look like a deletion plus an insertion, and formatting-only changes may not show at all.
+- [How to clean up a messy spreadsheet](https://office-utilities.org/guides/how-to-clean-up-a-messy-spreadsheet): Work in this order: trim whitespace, fix data types, remove blank rows and columns, then remove duplicates last. Duplicate detection compares values exactly, so “Acme Ltd” and “Acme Ltd ” are different rows until the whitespace is trimmed — cleaning in the wrong order leaves duplicates behind and looks like it worked.
+- [How to convert images between PNG, JPG and WebP](https://office-utilities.org/guides/how-to-convert-images-between-png-jpg-and-webp): Choose by content, not by habit: JPG for photographs, PNG for screenshots, text and anything needing transparency, WebP for both when the destination is the web. Converting between them is one step — but every save as JPG or WebP discards detail permanently, so always convert from the original rather than from a copy you already converted once.
+- [How to watermark a PDF (and what it actually stops)](https://office-utilities.org/guides/how-to-watermark-a-pdf-and-what-it-actually-stops): A watermark is drawn into each page as ordinary page content, so it survives copying and printing. It is a deterrent and an attribution mark, not a protection: anyone determined enough can remove one, and a watermark applied as its own layer can often be deleted outright. Use it to discourage casual reuse and to label drafts, not to secure a document.
+- [How to convert Markdown to Word, PDF or HTML](https://office-utilities.org/guides/how-to-convert-markdown-to-word-pdf-or-html): Markdown is plain text with a structure, so conversion maps that structure onto the target format: headings become real headings, lists become real lists. Standard Markdown converts cleanly. The parts that break are the extensions — tables, footnotes, diagrams and front matter are not part of the original specification, and support for them varies by converter.
+- [How to find duplicate files without a cloud scanner](https://office-utilities.org/guides/how-to-find-duplicate-files-on-your-computer): Compare file hashes, not names. Two files with the same name and size can differ, and two identical files often have different names — a hash reads the actual bytes and produces a short fingerprint, so matching fingerprints means matching content. Anything else is a guess.
+
+## About this site
+
+- [About](https://office-utilities.org/about): How the tools work, the technology behind them, and their honest limitations.
+- [Privacy](https://office-utilities.org/privacy): What is and is not stored, and how advertising is handled.
+- [Terms of use](https://office-utilities.org/terms): The terms covering use of the site.
+- [Disclaimer](https://office-utilities.org/disclaimer): Conversion accuracy and the limits of each tool.
+- [Contact](https://office-utilities.org/contact): Support, privacy and general enquiries.
+- [All tools](https://office-utilities.org/tools): The complete list.
+
+
+---
+
+# Complete Guide Library (Full Text)
+
+## Guide: Is it safe to use online PDF converters?
+- **URL**: https://office-utilities.org/guides/is-it-safe-to-use-online-pdf-converters
+- **Published**: 2026-09-03
+- **Summary**: Most online converters upload a copy of your document to a server you know nothing about. Here is what that means in practice, and how to tell which tools avoid it entirely.
+- **Direct Answer**: It depends entirely on whether the tool uploads your file. Most do: your document is copied to a server, processed there, and stored for some period afterwards. For a holiday photo that is fine. For a contract, a payslip or medical records, you are handing a complete copy to a company you have not vetted.
+
+Nearly every free converter works the same way. You choose a file, your browser uploads it, a server does the work, and you download the result. The conversion is genuinely free. What you paid with was a complete copy of your document.
+
+That is not a scandal in itself — it is simply how server-side software works. The question worth asking is what happens to the copy, and whether the document you converted was one you would have emailed to a stranger.
+
+
+### What actually happens to an uploaded file
+
+
+Once your file leaves your device, four things are true whether or not the service is well run:
+
+1. It exists on hardware you do not control, at least briefly, and usually on more than one machine once backups and caches are counted.
+2. It is readable by the operator. Encryption at rest protects against someone stealing the disk; it does not stop the company reading the file, because the company holds the key.
+3. It is subject to that company’s jurisdiction, which may not be yours, and to any legal request made there.
+4. Its deletion is a promise, not something you can verify. "Files are deleted after one hour" is a policy, and policies are followed by people and cron jobs that sometimes fail.
+
+Reputable services do handle this responsibly. The point is not that they are dishonest — it is that you are relying on a promise you have no way to check, for a document that may not be yours to gamble with.
+
+
+### When it genuinely does not matter
+
+
+Plenty of documents carry no risk at all. A restaurant menu, a public form, a manual you downloaded from a manufacturer, a draft with nothing identifying in it — upload those anywhere you like. Convenience is a real benefit and the risk is close to zero.
+
+
+### When you should not upload
+
+
+The line is worth drawing deliberately, because most people never draw it at all. Do not upload documents that contain:
+
+- Identity data — passports, driving licences, national ID numbers, birth certificates.
+- Financial detail — bank statements, payslips, tax returns, invoices with account numbers on them.
+- Medical records, of any kind, for anyone.
+- Signed contracts, legal correspondence, or anything covered by a confidentiality clause.
+- Work documents belonging to your employer or a client, where you are not the one entitled to decide where they get stored.
+
+> Note: If a document belongs to your employer or a client, uploading it may breach a policy or a contract regardless of how trustworthy the converter is. The question is not only whether the service is safe — it is whether you had the authority to send the file at all.
+
+
+### How to tell whether a tool uploads your file
+
+
+Marketing copy is not evidence. "Secure", "private" and "your files are safe with us" all describe how a server handles an upload, not whether one happened. Two checks settle it in under a minute.
+
+
+#### Check one: watch the network
+
+
+Open your browser’s developer tools, switch to the Network tab, then choose your file. If you see a request carrying several megabytes upward, the file was uploaded. If nothing of the sort appears, it was not.
+
+> Note: This site carries advertising, so the Network tab here shows requests to Google’s ad domains — googlesyndication.com and doubleclick.net among them. Those load the adverts; none of them carries your document. What you are looking for is different and unmistakable: a large request going outward, roughly the size of the file you chose. There is no such request here, which is what the second check confirms.
+
+
+#### Check two: disconnect
+
+
+Load the page, turn off your Wi-Fi, then try the conversion. A tool that works entirely in your browser will finish normally. A tool that needs a server will stall or fail. This is the more convincing test, because it cannot be faked by a reassuring privacy policy.
+
+
+#### Check three: read the code
+
+
+The strongest check of all, and one most converters cannot offer — their processing happens on a server you will never see. This site can: its source is published in full, so anyone can read exactly what happens to a file rather than trusting a description of it. There is a link on the [about page](/about).
+
+
+### The alternative: tools that never upload at all
+
+
+Browsers have quietly become capable enough that the upload is no longer necessary for most document work. A modern browser can unzip archives, parse the OpenXML inside a .docx, rasterise a PDF, encode images and run cryptography — all locally, at usable speed.
+
+That means a converter can be written to read your file into memory in the tab and do the work there. Nothing is transmitted, so there is no copy to retain, no policy to trust and no jurisdiction to worry about. The privacy is a property of the architecture rather than a promise about conduct.
+
+That is how [every tool on this site](/tools) works, and it is why they keep working with the network disconnected once the page has loaded. You do not have to take that on trust — run the two checks above on this site and see for yourself.
+
+
+### What browser-based tools cannot do
+
+
+Local processing is not free of trade-offs, and any tool claiming otherwise is overselling. Three honest limits:
+
+- Your device sets the ceiling. A very large file may fail on a phone and succeed on a laptop, because the work happens in your browser’s memory rather than on a server with room to spare.
+- Scanned documents need OCR, which is heavy. A scan is a picture of text, and reading it requires software this kind of tool may not include.
+- Anything genuinely requiring a server — sending an email, storing a file for later, collaborating with someone else — cannot be done locally by definition.
+
+
+### The short answer
+
+
+Online PDF converters are safe enough for documents you would not mind a stranger reading, and a genuine risk for everything else. The useful move is not to find a service with a better privacy policy — it is to use a tool that never receives the file, so the policy stops mattering.
+
+If you want to see what that looks like in practice, the [full toolkit](/tools) runs entirely in this tab, and the [privacy page](/privacy) sets out exactly what is and is not stored.
+
+---
+
+## Guide: How to merge PDFs without uploading them anywhere
+- **URL**: https://office-utilities.org/guides/how-to-merge-pdfs-without-uploading
+- **Published**: 2026-09-03
+- **Summary**: Combine several PDFs into one without sending them to a server — what changes in the merged file, what does not, and how to check the tool you are using really works locally.
+- **Direct Answer**: Use a merger that runs in your browser rather than on a server. Choose your files, order them, and the merged PDF is assembled in the tab and saved straight to your device — no upload, no queue, and it works with the network switched off.
+
+Merging PDFs is the single most common thing people do to a PDF, and almost every free tool that does it starts by uploading your documents. That is usually unnecessary. Assembling several PDFs into one is well within what a browser can do on its own.
+
+
+### How to do it
+
+
+1. Open a merge tool that runs client-side and choose the PDFs you want to combine.
+2. Put them in the order you want. Order is decided by you, not by the order your file manager happened to list them in — this is where most mistakes happen.
+3. Merge, then check the result before you delete anything. A quick scroll through the page boundaries catches a wrong order immediately.
+
+
+### What survives the merge, and what does not
+
+
+A merge is a structural operation: pages are copied from each source document into a new one. Done properly, that means the page content itself is untouched.
+
+- Text stays selectable and searchable. Pages are not rasterised into images, so nothing gets blurry and file size stays proportionate.
+- Fonts, images and vector artwork are carried across as they were.
+- Page sizes are preserved individually. A merged document can legitimately contain both A4 and Letter pages — that is the source material, not a fault.
+- Bookmarks from each source file are kept where the tool supports it, which matters for long reports.
+
+> Note: Internal links that point to a specific page number can end up aimed at the wrong page once documents are combined, because the page numbering changes. External links to websites are unaffected.
+
+
+### Why do it locally
+
+
+The documents people merge are rarely trivial. Combining a set of invoices, assembling a contract with its annexes, putting a scanned ID next to an application form — these are exactly the files worth not uploading.
+
+A browser-based merger removes the question entirely. Your files are read into memory in the tab, the new document is assembled there, and the result is saved by your browser. Nothing is transmitted, so there is no retention policy to rely on. There is more on how to verify that in [is it safe to use online PDF converters?](/guides/is-it-safe-to-use-online-pdf-converters).
+
+
+### Checking it really is local
+
+
+Load the page, disconnect from the network, then merge. If it completes, no server was involved. This is worth doing once with any tool you plan to trust with real documents — it is a stronger signal than anything written on the page.
+
+
+### Common problems
+
+
+
+#### The pages came out in the wrong order
+
+
+Files are usually added in selection order, which is not always what you saw on screen. Reorder before merging rather than fixing it afterwards — though if you have already merged, [reordering pages](/pdf/reorder-pdf-pages) is straightforward.
+
+
+#### The merged file is very large
+
+
+A merge adds sizes together; it does not compress. If the result is too big to email, [compressing it](/pdf/compress-pdf) afterwards is the fix. Scanned pages are almost always the reason, because each page is a full-resolution photograph.
+
+
+#### A password-protected file will not merge
+
+
+An encrypted PDF has to be decrypted before its pages can be copied. Supply the password if you have it, or [unlock the document](/pdf/unlock-pdf) first — for files you are entitled to open.
+
+
+#### It failed on a very large document
+
+
+Local processing is bounded by the memory your browser has. Merging several hundred megabytes can exhaust it on a phone. Merging in two stages, or on a laptop, usually resolves it.
+
+
+### Related things you may actually want
+
+
+Merging is often not quite the operation people need. If you want to pull a few pages out rather than join whole files, [extracting pages](/pdf/extract-pdf-pages) is cleaner. If you want to rearrange, rotate and delete in one pass, the [page organiser](/pdf/organize-pdf) handles all three with undo.
+
+---
+
+## Guide: What actually happens when you upload a file to a converter
+- **URL**: https://office-utilities.org/guides/what-happens-when-you-upload-a-file-to-a-converter
+- **Published**: 2026-09-03
+- **Summary**: A step-by-step account of where your document goes after you press the button, why "deleted after one hour" is harder than it sounds, and which claims you can verify yourself.
+- **Direct Answer**: Your file is copied over the network to a server, written to disk, processed, and left in place until a cleanup job removes it. Along the way it usually passes through a CDN and gets captured in logs and backups, which is why deletion is more complicated than a single delete call.
+
+Every online converter has a privacy page, and they mostly say the same reassuring thing. Far fewer describe the actual path a file takes. That path is worth understanding, because it explains why some of the reassurances are easy to give and hard to keep.
+
+
+### The journey, step by step
+
+
+
+#### 1. The file leaves your device
+
+
+Your browser reads the document and sends it as an HTTP request. Over HTTPS this is encrypted in transit, which protects it from anyone watching the network — but not from the destination, which is the whole point of sending it there.
+
+
+#### 2. It usually passes through a CDN
+
+
+Most services sit behind a content delivery network for speed and protection. Your upload therefore transits a third party the service chose, which may terminate the encryption and may operate in a different country from the company you thought you were dealing with.
+
+
+#### 3. It is written to disk
+
+
+Processing needs a real file. It is written to storage — often shared storage, so it can be picked up by whichever worker machine is free. At this moment your document exists as an ordinary file on a computer you have never seen.
+
+
+#### 4. It is processed, producing a second copy
+
+
+The conversion writes an output file. There are now at least two copies of your content on their infrastructure, and the output is typically kept longer, because you have to be able to download it.
+
+
+#### 5. It waits for cleanup
+
+
+Deletion is almost never immediate. A scheduled job removes files older than some threshold. Between conversion and cleanup, both copies sit there — and if the job fails, they sit there longer, quietly, because nothing alerts on files that were supposed to disappear.
+
+
+### Why "deleted after one hour" is harder than it sounds
+
+
+Assume total good faith. The company means it. Deletion is still genuinely difficult, because a file is rarely in only one place:
+
+- Backups. Storage is backed up, and a nightly snapshot taken before cleanup contains your file for as long as that backup is retained — often weeks.
+- Logs. Filenames, sizes and timestamps end up in application logs. The content may be gone while a record that you converted "2026-tax-return.pdf" persists.
+- Caches. A CDN may have cached the download so a retry is fast, on machines the service does not directly manage.
+- Replication. Redundant storage keeps copies across locations; deletion has to propagate to all of them.
+
+None of this is sinister. It is what running reliable infrastructure looks like. But it means "your file is deleted after an hour" describes an intention about primary storage, not a guarantee that no copy exists anywhere.
+
+
+### What you can actually verify
+
+
+You cannot audit a company’s cleanup jobs. You can determine whether an upload happened at all, and that single fact settles every question above.
+
+1. Open developer tools, go to the Network tab, and choose a file. A large outbound request means it was uploaded.
+2. Or simply disconnect from the network after the page loads and try the conversion. If it works, nothing was sent.
+
+One caveat when you try this here: this site shows adverts, so the Network tab lists requests to Google’s ad domains. They are small, they carry no document data, and they are unrelated to the conversion — the disconnect test settles it either way, because with the network off the adverts fail and the conversion still finishes.
+
+> Note: A network trace can be misread, and a privacy policy can be aspirational. A tool that completes a conversion with the network switched off cannot have used a server. It is the only check that proves the architecture rather than the intent.
+
+
+### The architecture that avoids all of it
+
+
+If the file never leaves your device, none of steps one to five occur. There is no transit, no CDN, no disk, no second copy and no cleanup job — not because the operator is careful, but because there is nothing to be careful with.
+
+Browsers can now do this work directly: reading ZIP containers, parsing document formats, rasterising PDFs and encoding images all run locally at usable speed. That is how [the tools here](/tools) are built, and why they keep working offline.
+
+
+### Being fair about the trade-off
+
+
+Server-side processing is not a scam, and it buys real things: heavier operations like OCR, consistent results regardless of your device, and files that persist so you can come back for them. If you need those, a server is the right answer.
+
+The mistake is uploading by default — handing over a payslip or a signed contract because uploading is what the first search result happened to do. For most everyday document work, the upload buys you nothing you would have missed.
+
+---
+
+## Guide: How to work with confidential documents safely online
+- **URL**: https://office-utilities.org/guides/how-to-work-with-confidential-documents-online
+- **Published**: 2026-09-03
+- **Summary**: A practical routine for handling contracts, payslips and client files with online tools — what to check before you start, what to strip before you share, and where the real leaks happen.
+- **Direct Answer**: Use tools that process the file in your browser rather than on a server, strip metadata before sharing, and be aware that the obligation is usually contractual as well as personal — a client document may not be yours to upload at all.
+
+Most advice about confidential documents stops at "be careful". That is not a procedure. What follows is one — the checks worth making before you open a sensitive file in any online tool, and the two places confidentiality usually leaks that have nothing to do with converters.
+
+
+### First: is it yours to upload?
+
+
+This question comes before any technical consideration, and it is the one most often skipped. A document belonging to your employer or a client may be covered by a confidentiality clause, a data processing agreement, or a policy that names which services are approved.
+
+If so, uploading it can be a breach regardless of how reputable the service is. The service being secure is not the same as you being permitted to send it there.
+
+> Note: If you would need to ask permission before emailing the document to someone outside your organisation, you need permission before uploading it to a converter. Both are transfers to a third party.
+
+
+### Second: does the tool need the file at all?
+
+
+For most document work — converting, merging, splitting, extracting text, changing an image format — a modern browser can do the job without a server. When that is true, the confidentiality question dissolves, because no transfer occurs.
+
+Verify rather than assume. Load the page, disconnect from the network, then run the operation. If it completes, the file never left your device. There is a fuller explanation in [what actually happens when you upload a file](/guides/what-happens-when-you-upload-a-file-to-a-converter).
+
+
+### Third: strip what you did not mean to send
+
+
+Documents carry more than their visible content, and this is where confidentiality most often leaks — not through a converter, but through the file you deliberately sent.
+
+
+#### Metadata
+
+
+A Word document records its author, who last modified it, the company name, the revision number and how long it was edited for. A proposal sent to a client can quietly reveal that it was drafted from another client’s template, and by whom.
+
+Check it before sending with the [Word metadata viewer](/word/word-metadata-viewer), or the [file metadata viewer](/file/file-metadata-viewer) for other formats.
+
+
+#### Tracked changes and comments
+
+
+Comments and accepted changes remain in the file even when the view is set to show the final version. A recipient can switch that view. Anything said in a margin comment should be assumed readable.
+
+
+#### Content that is hidden rather than removed
+
+
+Text covered by a black rectangle is still text. Drawing a box over a paragraph in a PDF hides it visually and leaves it fully selectable underneath — a mistake that has embarrassed governments and law firms repeatedly. Deleting the content is the only reliable redaction.
+
+
+#### Cropped images
+
+
+Cropping in Word or PowerPoint usually hides part of a picture rather than discarding it. The original can often be recovered — which is worth knowing if you cropped something out for a reason. [Extracting the images](/word/extract-images-from-word) shows what is really stored.
+
+
+### Fourth: control the copy you send
+
+
+Once a document leaves your hands you have no further say, so decide deliberately what form it leaves in.
+
+- Send PDF rather than the editable original when the recipient only needs to read it. It carries less recoverable history.
+- Send only the pages that are relevant — [extracting pages](/pdf/extract-pdf-pages) is quicker than explaining later why the rest was included.
+- Password-protect it when the channel is not under your control, and send the password separately.
+
+> Note: It applies the encryption defined by the PDF specification, which keeps honest readers out and is only as strong as the password you choose. It is not a guarantee against a determined attacker, and it does not stop someone you sent it to from forwarding it.
+
+
+### Where the real leaks happen
+
+
+In practice, confidential documents rarely escape through a converter. They escape through ordinary carelessness:
+
+- The wrong attachment on the right email, or the right attachment on the wrong email.
+- A shared drive link set to "anyone with the link" and then pasted into a chat.
+- Metadata nobody looked at, revealing an author or a source template.
+- A redaction drawn on top of text instead of removing it.
+- A file left in Downloads on a shared or personal machine long after it was needed.
+
+A browser-based toolkit removes one category of risk cleanly and completely. The rest is procedure, and worth the two minutes it takes.
+
+
+### A short routine
+
+
+1. Confirm you are entitled to process the document outside your organisation.
+2. Use a tool that works offline, and test that claim once before trusting it.
+3. Check metadata, comments and cropped images before sharing.
+4. Send the minimum: the right format, the right pages, nothing else.
+5. Delete working copies when you are finished with them.
+
+---
+
+## Guide: How to convert PDF to Word without losing formatting
+- **URL**: https://office-utilities.org/guides/how-to-convert-pdf-to-word-without-losing-formatting
+- **Published**: 2026-09-03
+- **Summary**: Why PDF to Word is never a perfect reproduction, which parts of a document reliably survive, and how to get the cleanest possible result from the conversion.
+- **Direct Answer**: No converter can reproduce a PDF exactly in Word, because a PDF stores positioned glyphs rather than paragraphs and headings. Text, headings and lists convert reliably; multi-column layouts, tables and precise page design do not. Expect to spend a few minutes tidying.
+
+Every PDF-to-Word converter promises to preserve your formatting. None of them fully can, and understanding why turns a frustrating result into a predictable one you can plan around.
+
+
+### Why the conversion is inherently lossy
+
+
+A Word document describes structure. It says: this is Heading 1, this is a paragraph, these are list items, this is a table with three columns.
+
+A PDF describes appearance. It says: draw this glyph at this coordinate in this font at this size, then the next one. When a PDF is created, the structure is discarded — the file records what the page looks like, not what the content means.
+
+So converting back is not decompression. It is inference: reading coordinates and font sizes and deducing that a larger line was probably a heading, that consecutive lines were probably one paragraph, that a line beginning with a bullet character was probably a list item. Good converters guess well. None of them know.
+
+> Note: Tagged PDFs — produced for accessibility — do carry structural information. They are a minority of documents, but when one exists the conversion has real data to work from rather than inference.
+
+
+### What reliably survives
+
+
+- The text itself, in reading order, for single-column documents.
+- Headings, where they were set noticeably larger or bolder than the body.
+- Paragraph breaks, reconstructed from line spacing and indentation.
+- Bulleted and numbered lists, detected from their leading characters.
+- Bold and italic, which can be read from the font name each run uses.
+
+
+### What does not
+
+
+- Multi-column layouts. Text is positioned, not flowed, so columns frequently interleave — the classic symptom of a converted academic paper or newsletter.
+- Tables. A PDF table is usually just text at coordinates with lines drawn near it; there is nothing marking it as a table.
+- Exact page design. Margins, headers, footers and floating elements are rebuilt approximately at best.
+- Fonts you do not have. Word substitutes, and substitution changes line breaks.
+- Anything in a scan. A scanned page has no text at all, only an image of one.
+
+> Note: If you cannot select text in your PDF with a mouse, there is no text in the file. Converting it produces an empty document. Reading it requires optical character recognition, which not every tool includes — including this one.
+
+
+### Getting the cleanest result
+
+
+
+#### Check the source first
+
+
+Open the PDF and try to select a paragraph. If the text highlights, conversion will work. If nothing selects, stop — you have a scan, and no amount of converter choice will change that.
+
+
+#### Convert only what you need
+
+
+If you want three pages out of eighty, [extract those pages](/pdf/extract-pdf-pages) first. A smaller document converts faster, and there is far less to tidy afterwards.
+
+
+#### Turn off the guesses that hurt you
+
+
+Structure detection is heuristic, and heuristics misfire on unusual documents. A converter that exposes its assumptions lets you correct them: if a document has no headings but the tool keeps promoting lines, switching heading detection off gives a cleaner base to work from.
+
+
+#### Remove running headers and footers
+
+
+Page furniture repeated on every page becomes a stray line of text every page or so in Word. Stripping it during conversion saves a tedious cleanup pass.
+
+
+#### Consider whether you need the formatting at all
+
+
+If your goal is to reuse the words — quoting, rewriting, feeding it into something else — [plain text extraction](/pdf/pdf-to-text) is more reliable and gives you nothing to undo. Reach for Word conversion only when you genuinely need an editable formatted document.
+
+
+### The realistic workflow
+
+
+1. Confirm the PDF has selectable text.
+2. Extract only the pages you need.
+3. Convert, with running headers removed.
+4. Open the result and fix headings first — they drive the navigation pane and any table of contents.
+5. Rebuild tables by hand. This is the part converters cannot do for you, and hand-rebuilding is faster than repairing a mangled attempt.
+
+For a straightforward report or letter, that is a couple of minutes. For a heavily designed brochure, converting is often the wrong tool — rebuilding from the text is usually quicker than fighting the layout.
+
+
+### A note on privacy
+
+
+The documents people convert to Word are often the ones they least want to hand over — contracts to amend, reports to reuse, statements to reformat. A converter that runs in your browser avoids the transfer entirely; there is more on how to check that in [is it safe to use online PDF converters?](/guides/is-it-safe-to-use-online-pdf-converters).
+
+---
+
+## Guide: How to compress a PDF without making the text blurry
+- **URL**: https://office-utilities.org/guides/how-to-compress-a-pdf-without-making-text-blurry
+- **Published**: 2026-09-03
+- **Summary**: Blurry text after compression means the whole page was turned into an image. Here is what is actually making your PDF large, and how to shrink it while keeping text sharp.
+- **Direct Answer**: Text goes blurry when a compressor rasterises pages into images. Text itself takes almost no space — images do. Compress the images and leave the text as text, and the file shrinks dramatically while staying sharp and searchable.
+
+You compress a PDF, the file gets satisfyingly smaller, and the text now looks slightly soft — fuzzy at the edges, worse when you zoom, and no longer selectable. That is not aggressive compression. It is a different operation than the one you wanted.
+
+
+### What made the text blurry
+
+
+A PDF can hold text two ways. As text — glyph references and coordinates, which render sharp at any zoom and can be selected and searched. Or as pixels, if the page is a picture of text.
+
+Some compressors take the blunt approach: render every page to an image, compress the images hard, and rebuild the PDF from those. The size drop is enormous and the result is a stack of photographs. Text is no longer text, so it blurs, cannot be selected, cannot be searched, and cannot be read by a screen reader.
+
+> Note: Try to select a sentence in the compressed file. If nothing highlights, the pages were rasterised. That is irreversible — you need to go back to the original.
+
+
+### What is actually making your PDF large
+
+
+Text is remarkably cheap. A hundred pages of prose is a few hundred kilobytes. When a PDF is large, it is almost always one of these:
+
+- Scanned pages — each one a full-resolution photograph, often 2–5 MB apiece.
+- Embedded photographs at far higher resolution than the page needs. A 4000-pixel-wide image placed in a 600-pixel-wide slot still stores all 4000 pixels.
+- Embedded fonts, especially whole CJK families, which can run to several megabytes.
+- Leftovers — earlier revisions, deleted objects and unused resources that were never cleaned up.
+
+Guessing is unnecessary. Break the file into its parts and look — the [file size analyzer](/file/file-size-analyzer) lists which images, fonts and streams account for the size, so you can see whether you have an image problem or a font problem before choosing an approach.
+
+
+### Compressing properly
+
+
+
+#### Downsample the images, keep the text
+
+
+This is the approach that preserves quality: reduce embedded images to a sensible resolution and re-encode them, while leaving text objects untouched. Text stays vector-sharp and selectable, and the file often drops by most of its size, because the images were nearly all of it.
+
+For a document that will only be read on screen, 150 DPI is plenty. For printing, 300 DPI. Above that you are storing detail nobody will ever see.
+
+
+#### Remove what is not needed
+
+
+If half the document is appendices the recipient does not want, [extracting the pages that matter](/pdf/extract-pdf-pages) beats any compression setting. The smallest version of a page is the one you did not include.
+
+
+### The scanned-document case
+
+
+If your PDF is a scan, there is no text to protect — every page is already an image. Compression here is purely a quality decision, and you can be much more aggressive than you would dare with a text document.
+
+Two things help more than the compression ratio. Scanning in greyscale rather than colour typically cuts size by half or more for ordinary documents. And scanning at 200–300 DPI rather than 600 makes an enormous difference with no visible loss on printed text.
+
+
+### When you cannot get it small enough
+
+
+Email limits are usually 20–25 MB, and attachments are base64-encoded in transit, which inflates them by about a third. A 20 MB file can therefore fail a 25 MB limit.
+
+- Split the document and send it in parts — [splitting a PDF](/pdf/split-pdf) at chapter boundaries is usually more useful to the recipient anyway.
+- Send only the relevant pages.
+- Share a link rather than an attachment, if the content permits it.
+
+
+### What to check afterwards
+
+
+1. Select a sentence. If it highlights, your text is still text.
+2. Zoom to 400% and look at an edge. Sharp means vector; soft means rasterised.
+3. Check any photograph at full size — this is where over-compression shows first, as blotchy patches.
+4. Confirm the page count matches the original.
+
+Keep the original until you have done all four. Compression is lossy, and there is no way back from a rasterised page.
+
+---
+
+## Guide: How to convert Word to PDF and keep your fonts
+- **URL**: https://office-utilities.org/guides/how-to-convert-word-to-pdf-and-keep-your-fonts
+- **Published**: 2026-09-03
+- **Summary**: Why a converted document reflows or changes typeface, how font embedding actually works, and what to do when the PDF does not match what you saw in Word.
+- **Direct Answer**: A PDF looks wrong when the converter did not have your font and substituted a different one, which changes character widths and reflows the text. Using widely available fonts, or converting somewhere that has yours, keeps the layout intact.
+
+You convert a Word document to PDF and something has moved. A heading wraps onto two lines, a table has slipped onto the next page, the typeface looks subtly wrong. The content is intact but the document no longer looks like the one you approved.
+
+This is almost always fonts.
+
+
+### Why a missing font changes the layout
+
+
+A .docx does not contain its fonts. It names them. The file says "this text is Calibri" and relies on whatever opens it having Calibri available.
+
+When the converter does not have that font, it substitutes the closest thing it does have. Substitutes have different character widths, so the same sentence occupies a different amount of space — and everything after it shifts. One slightly wider font is enough to push a heading onto a second line and a table onto the next page.
+
+> Note: A PDF embeds the fonts it uses, or a subset of them. That is the whole point of the format: it carries what it needs so it renders identically everywhere. The fragility is in the .docx, not the PDF.
+
+
+### Fonts that are reliably available
+
+
+If a document will be converted or opened elsewhere, staying close to widely installed families avoids the problem entirely:
+
+- Arial, Times New Roman and Courier New — present essentially everywhere.
+- Calibri and Cambria — Microsoft defaults, present wherever Office is, absent on many Linux systems and some conversion services.
+- Georgia, Verdana, Trebuchet MS and Tahoma — long-standing web-safe families.
+- Anything you installed yourself, or a corporate brand font, is the least portable choice of all.
+
+The frustrating case is a document that looks perfect on the machine it was written on and reflows anywhere else, because the author had a font nobody else does.
+
+
+### Getting a faithful conversion
+
+
+
+#### Convert where the fonts are
+
+
+The most reliable conversion happens on a machine that has the fonts the document names — usually the one you wrote it on. Word’s own Save as PDF or Export uses your installed fonts and embeds them, which is why it is hard to beat for a heavily designed document.
+
+
+#### Simplify before converting
+
+
+If you know the document is heading elsewhere, switching to a common font before conversion costs nothing and removes the failure mode. It is far quicker than diagnosing why page four broke.
+
+
+#### Use real styles rather than manual formatting
+
+
+Text made large and bold by hand is just text. A Heading 1 style carries meaning that survives conversion, drives the PDF’s bookmarks and outline, and is what assistive technology reads. This is worth doing regardless of fonts.
+
+
+### What browser-based conversion can and cannot do
+
+
+Converting in the browser has a clear advantage — the document is never uploaded — and one honest limitation worth stating plainly.
+
+Generated PDFs here use the standard PDF font set, which covers Latin script. Documents in Devanagari, Arabic, Chinese, Japanese, Korean, Cyrillic, Greek or Thai will have characters substituted, and the tool reports how many when it happens rather than silently producing a broken file.
+
+> Note: Use Word’s own export, or LibreOffice, which embed the fonts on your machine. This is a real limitation of the standard PDF font set, not something a setting can work around.
+
+For English and most European languages — reports, letters, CVs, invoices — the conversion is faithful and the privacy benefit is genuine.
+
+
+### Other things that shift, and why
+
+
+
+#### Tables break across pages differently
+
+
+Word decides page breaks as it lays out; a converter does the same with slightly different rules. Setting "Repeat header row" and disallowing rows to split across pages makes the outcome far more predictable.
+
+
+#### Images move
+
+
+Floating images anchored to a paragraph move when that paragraph moves. If placement matters, anchoring in line with text is much more stable, though less flexible.
+
+
+#### The PDF has no bookmarks
+
+
+PDF bookmarks are generated from Word heading styles. A document formatted by hand has no headings to convert, so the PDF gets no outline. Another reason to use real styles.
+
+
+### Checking the result
+
+
+1. Compare page counts. A different total means something reflowed.
+2. Check the last page — reflow accumulates, so damage shows up at the end.
+3. Look at every table boundary and every heading near a page break.
+4. Select a paragraph to confirm the text is text rather than an image.
+
+---
+
+## Guide: How to extract text from a PDF
+- **URL**: https://office-utilities.org/guides/how-to-extract-text-from-a-pdf
+- **Published**: 2026-09-03
+- **Summary**: Getting clean, usable text out of a PDF — why copy and paste produces a mess, why columns come out interleaved, and what to do when there is no text in the file at all.
+- **Direct Answer**: Use a tool that reads the PDF text layer and rejoins lines that the layout wrapped. Copy and paste fails because a PDF stores text as positioned fragments, so pasted output arrives broken at every visual line end.
+
+Selecting a few paragraphs in a PDF and pasting them elsewhere produces text broken at the end of every visual line, with hyphens stranded mid-word and headers and page numbers scattered through it. For more than a paragraph or two, it is unusable.
+
+
+### Why copy and paste produces a mess
+
+
+A PDF does not store paragraphs. It stores instructions to draw text at coordinates — often one fragment per word, sometimes per character, in whatever order suited the generator. The visual line breaks you see are a consequence of where things were placed, not markers in the content.
+
+When you copy, you get those fragments in roughly positional order with a line break at each visual line end. The paragraph structure was never in the file to be copied.
+
+
+### What a proper extraction does
+
+
+A dedicated tool reads the same text layer but reconstructs from it, which is where the difference lies:
+
+- Rejoins wrapped lines into paragraphs, using line spacing and indentation to work out where a paragraph really ends.
+- Reinstates spaces between words, which PDFs frequently omit because each word was positioned separately rather than separated by a space character.
+- Removes running headers and footers repeated on most pages — the page furniture that otherwise appears every page or so in your output.
+- Keeps reading order for single-column documents.
+
+
+### When there is no text to extract
+
+
+Open the PDF and try to select a sentence. If nothing highlights, the file contains no text — it is a scan, a photograph of a page.
+
+No extraction tool can help, because there is nothing to read. Getting text out requires optical character recognition, which examines the image and recognises letter shapes. That is a genuinely different technology, and not every tool includes it — this one does not.
+
+> Note: Text cannot be selected, the file is unusually large for its page count, and zooming in makes the letters soft rather than sharp. Any one of those is a strong signal; all three is certain.
+
+
+### Why columns come out interleaved
+
+
+Two-column documents — academic papers, newsletters, some reports — often extract as alternating fragments from each column. This is not a bug so much as an unanswerable question.
+
+The file records glyphs at coordinates. Reading left to right across the page is a perfectly reasonable interpretation; so is reading down one column then the other. Nothing in the file says which is correct, so extraction picks one and sometimes picks wrong.
+
+The practical workaround is to extract a page at a time and reassemble, or to select one column at a time in a viewer where you can see what you are selecting.
+
+
+### Choosing the right output
+
+
+What you plan to do with the text should decide the format.
+
+- Plain text — for quoting, searching, feeding into another tool, or reading without formatting. The most reliable option, because there is nothing to go wrong.
+- Word — when you need an editable formatted document. Structure is inferred rather than read, so expect to tidy; there is more in [converting PDF to Word without losing formatting](/guides/how-to-convert-pdf-to-word-without-losing-formatting).
+- Images — when you want the page as it looks rather than what it says. [Rasterising pages](/pdf/pdf-to-images) is the right tool for that.
+
+If you only need the words, take plain text. Converting to Word to get at the text and then stripping the formatting is a longer route to a worse result.
+
+
+### Practical tips
+
+
+
+#### Extract only the pages you need
+
+
+For a few pages out of a long report, [extract those pages](/pdf/extract-pdf-pages) first. Less output means less to clean up.
+
+
+#### Watch for hyphenation
+
+
+Justified text often breaks words across lines. Rejoining lines can leave a hyphen mid-word — worth a find-and-replace pass if the document was typeset that way.
+
+
+#### Check the beginning and the end
+
+
+Extraction problems cluster at page boundaries and around headers. If the first and last paragraphs of a few pages read correctly, the middle almost certainly did too.
+
+
+### A note on where this runs
+
+
+Text extraction is a natural fit for the browser: the PDF is parsed in the tab and the text never leaves your device. That matters more than it sounds, because the documents people extract from — contracts, statements, reports — are often the ones worth not uploading. See [is it safe to use online PDF converters?](/guides/is-it-safe-to-use-online-pdf-converters) for how to verify a tool actually works that way.
+
+---
+
+## Guide: Why your Excel dates break when you export to CSV
+- **URL**: https://office-utilities.org/guides/why-excel-dates-break-when-you-export-to-csv
+- **Published**: 2026-09-03
+- **Summary**: Dates turn into numbers, days and months swap places, and leading zeros vanish. Here is what a spreadsheet actually stores in a date cell, and how to export so the other side reads it correctly.
+- **Direct Answer**: A spreadsheet does not store a date — it stores a number counting days from a fixed origin, and displays it using a format. CSV has no formats, so what gets written is whatever the display happened to be, and whatever reads it next guesses. Exporting in ISO format (2026-03-09) removes the guessing.
+
+You export a sheet to CSV and the dates arrive wrong. Sometimes they are five-digit numbers. Sometimes the ninth of March has become the third of September. Sometimes they look right until someone in another country opens the file.
+
+All three have the same root cause, and it is not a bug in the export.
+
+
+### What a date cell actually contains
+
+
+A spreadsheet stores a date as a number: the count of days since an origin date. In Excel, 1 January 1900 is day 1, so 9 March 2026 is stored as roughly 46,090. The cell also carries a display format — "dd/mm/yyyy", say — and that format is the only reason you see a date rather than a number.
+
+The number is the data. The format is a costume. CSV is a plain text file with no room for costumes, so exporting has to choose: write the number, or write what the costume currently looks like.
+
+
+### The three failure modes
+
+
+
+#### Dates became five-digit numbers
+
+
+The export wrote the underlying value rather than the formatted one. 46090 is not corruption — it is the date, unformatted. It is recoverable, but only if you know the origin.
+
+
+#### Day and month swapped
+
+
+The export wrote "03/09/2026" and whatever opened it read that as month-first rather than day-first. Both readings are valid; the file gives no way to tell them apart. This is the most damaging failure because it is silent — every date from the 1st to the 12th converts to a plausible wrong date, and only the 13th onward throws an error that reveals the problem.
+
+> Note: A column of ambiguous dates does not fail loudly. It fails for roughly 40% of rows and looks fine for the rest, so it is often discovered weeks later in a report nobody can reconcile.
+
+
+#### Leading zeros disappeared
+
+
+Not strictly a date problem, but it arrives with the same export. Postcodes, phone numbers and reference codes beginning with zero are read as numbers, and 00123 becomes 123. Once written that way, the zeros are gone.
+
+
+### The fix: export ISO dates
+
+
+The ISO 8601 format — 2026-03-09, year first — is unambiguous. There is no locale in which it means something else, it sorts correctly as plain text, and every database, language and spreadsheet reads it the same way.
+
+Choose the date format at export time rather than hoping the cell formatting survives. That single decision removes the whole class of problem.
+
+
+### The delimiter problem that arrives alongside
+
+
+In much of Europe the comma is the decimal separator, so spreadsheets there use a semicolon to separate CSV fields. A comma-delimited file opened in that locale lands entirely in one column, and a semicolon-delimited file opened elsewhere does the same.
+
+If you know where the file is going, match the delimiter to the destination. If you do not, comma with quoted fields is the safer default — and worth saying explicitly when you send it.
+
+
+### Checking an export before you send it
+
+
+1. Open the CSV in a plain text editor, not a spreadsheet. A spreadsheet re-guesses the formats and hides exactly what you are trying to inspect.
+2. Look at a date. Is it 2026-03-09, or something a reader has to interpret?
+3. Find a date after the 12th of a month. If it reads correctly and one before the 12th does too, the interpretation is consistent.
+4. Check any column of codes for missing leading zeros.
+
+Opening in a text editor is the important step. Most date problems are invisible in a spreadsheet, because the spreadsheet re-applies a format over whatever it guessed.
+
+
+### Fixing a file you already received
+
+
+If dates arrived as numbers, they are recoverable — you need the origin the exporter used, which is almost always 1 January 1900 for Excel or 30 December 1899 for some other tools.
+
+If day and month were swapped, they may not be recoverable at all. Where both values are 12 or lower the original is genuinely ambiguous, and only an outside reference — a row you know the true date of — can settle it. This is why getting the export right matters more than fixing it afterwards.
+
+To see what a file actually contains before trusting it, [data type detection](/excel/data-type-detection) infers each column’s type and lists the rows that do not match, which surfaces a handful of malformed dates in a large file quickly.
+
+
+### A rule worth adopting
+
+
+Use ISO dates in every file that leaves your machine. It looks less friendly than 09/03/2026 and it is the only format that cannot be misread. Formatting for humans belongs in the report; data interchange should be unambiguous.
+
+---
+
+## Guide: How to remove metadata from a document before sharing it
+- **URL**: https://office-utilities.org/guides/how-to-remove-metadata-from-a-document-before-sharing
+- **Published**: 2026-09-03
+- **Summary**: Documents carry author names, company details, edit history and cropped-away image data. Here is what is hidden in a file, how to see it, and how to remove it before you send.
+- **Direct Answer**: Check what the file records before you send it: author, last modified by, company, revision count and editing time are all stored in a .docx, and cropped images often retain the parts you removed. Inspect it first, then strip what you did not intend to share.
+
+A document carries more than its visible content. Some of it is useful. Some of it is a record of things you would not choose to tell the recipient — who really wrote it, which client’s template it started from, and how long it actually took.
+
+
+### What a .docx records about you
+
+
+The OpenXML format stores a set of properties alongside the text:
+
+- Author — taken from whoever created the file, which may be a colleague rather than you.
+- Last modified by — the most recent editor, often revealing that a document was passed around.
+- Company — pulled from the Office installation, which is awkward when sending from a personal machine or after changing employer.
+- Revision number and total editing time — a proposal marked as revision 47 with four minutes of editing tells a story you may not want told.
+- Template — the file the document was created from, sometimes named after another client.
+- Custom properties added by whatever system generated or processed the file.
+
+None of this appears when the document is read. All of it travels with the file.
+
+
+### Hidden content that is not metadata
+
+
+
+#### Cropped images
+
+
+Cropping a picture in Word or PowerPoint usually hides part of it rather than deleting it. The full image remains embedded, and the cropped-away region can be recovered by anyone who opens the file. If you cropped someone out of a photograph, or trimmed a screenshot to hide part of the screen, that content is still there.
+
+[Extracting the images](/word/extract-images-from-word) shows what is genuinely stored, at original quality — which is the only way to be sure a crop removed anything.
+
+
+#### Comments and tracked changes
+
+
+Setting the view to show the final version hides revision marks; it does not remove them. The recipient can switch that view back. Anything written in a margin comment should be assumed readable.
+
+
+#### Text hidden behind a shape
+
+
+Covering text with a white or black rectangle hides it visually and leaves it fully selectable underneath. This has caused repeated public embarrassment for organisations that should know better. Deleting the content is the only redaction that works.
+
+
+### How to remove it
+
+
+
+#### In Word
+
+
+File → Info → Check for Issues → Inspect Document runs the Document Inspector, which finds and removes properties, comments, tracked changes, hidden text and cropped image data. It is thorough, and it is the right tool when you have Word available.
+
+
+#### By converting the file
+
+
+Converting to another format usually drops the properties, because a converter writes a new file rather than editing the original. [Converting to PDF](/word/word-to-pdf) is the common choice when the recipient only needs to read the document — it produces a new file with a fresh set of properties.
+
+> Note: A PDF carries title, author, producer and creation date of its own, and a converter may copy some of it across. Converting reduces the exposure; it does not automatically eliminate it. Check the result rather than assuming.
+
+
+#### By retyping into a clean file
+
+
+Blunt but reliable for a short document: create a new file, paste the content as plain text, and reapply formatting. Nothing carries over because nothing was inherited.
+
+
+### What about other formats?
+
+
+Every format keeps something. Photographs carry EXIF data including the camera, the settings and often the GPS coordinates where the picture was taken. Spreadsheets carry the same core properties as documents. PDFs record the software that produced them.
+
+The [file metadata viewer](/file/file-metadata-viewer) reads what the browser and the file itself can report for any format, which is the quickest way to check something before sending it.
+
+
+### A routine before sending
+
+
+1. Inspect the properties. Look specifically at author, last modified by and company.
+2. Check for comments and tracked changes, with the view set to show all markup.
+3. Extract the images if any were cropped, and confirm nothing you removed is still stored.
+4. Prefer PDF when the recipient only needs to read it.
+5. Open the final file fresh and look at it as the recipient will.
+
+Two minutes, and it catches the mistakes that are impossible to take back once the email has gone. There is more on handling sensitive files in [working with confidential documents safely online](/guides/how-to-work-with-confidential-documents-online).
+
+---
+
+## Guide: How to open DOCX, XLSX and PPTX without Microsoft Office
+- **URL**: https://office-utilities.org/guides/how-to-open-docx-xlsx-and-pptx-without-microsoft-office
+- **Published**: 2026-09-03
+- **Summary**: You have been sent a Word, Excel or PowerPoint file and do not have Office. What your options are, what each one costs you, and which parts of a document survive in each.
+- **Direct Answer**: You do not need Office to read these files. A browser-based viewer opens them immediately with no install and no account, and the formats are open standards that many programs can read. What differs between the options is fidelity, cost and whether the file leaves your device.
+
+Someone sends a .docx and you do not have Word. The file is right there and completely inert. This is a solved problem, and the solutions differ mainly in what they ask of you first.
+
+
+### These formats are open standards
+
+
+A .docx, .xlsx or .pptx is a ZIP archive containing XML files. Rename one to .zip and you can open it — the structure inside is a published specification, not a secret. That is why so many programs can read them, and why a browser can too.
+
+Older .doc, .xls and .ppt files are different: binary formats predating the standard, and much harder to handle. If you have one of those, converting it in a program that supports it is usually the only route.
+
+
+### Your options, honestly compared
+
+
+
+#### A browser-based viewer
+
+
+Nothing to install, no account, and — if the tool works locally — no upload. Best when you need to read a file now, and good enough for most reading and light inspection.
+
+What you give up is editing and exact fidelity. Word’s layout engine is proprietary, so a heavily designed document is approximated rather than reproduced.
+
+
+#### LibreOffice
+
+
+Free, open source, installs on every desktop platform, and edits as well as reads. The best answer if you will be working with these files regularly. It is a substantial download and its rendering of complex Word layouts is close but not identical.
+
+
+#### Google Docs, Sheets and Slides
+
+
+Free with a Google account, and genuinely capable. The trade-off is that the file is uploaded to Google and stored in your Drive, which makes it the wrong choice for anything confidential and unnecessary if you only want to read one document.
+
+
+#### Office on the web
+
+
+Microsoft’s own free web versions give the highest fidelity, since it is their format. Requires a Microsoft account and uploads the file to OneDrive.
+
+
+### Which to choose
+
+
+- Reading one file, right now — a browser viewer. It is the fastest path and asks nothing of you.
+- The document is confidential — a viewer that works locally, verified by loading the page and then disconnecting.
+- You need to edit and will do this often — install LibreOffice.
+- Exact fidelity matters, and the content is not sensitive — Office on the web.
+
+
+### What survives in a browser viewer
+
+
+Worth knowing before you rely on what you see.
+
+
+#### Word documents
+
+
+Headings, lists, tables, inline images and basic styling come through. Precise page layout, floating elements and custom fonts are approximated. Fine for reading; not a proof for signing off a print job.
+
+
+#### Spreadsheets
+
+
+Values, sheets and formulas display, including very large workbooks — a virtualised grid renders only what is on screen, so hundreds of thousands of rows scroll smoothly. Formulas are shown as written with their last saved result rather than recalculated, which is what you want for inspection.
+
+
+#### Presentations
+
+
+Slides are rendered from the underlying OpenXML with text, shapes and images positioned as authored. Animations, transitions and embedded video are not reproduced — you see each slide in its final state.
+
+
+### If the file will not open at all
+
+
+- Check the real extension. A file named report.docx may actually be something else — the [signature checker](/file/file-signature-checker) reads the magic bytes and tells you what it really is.
+- Check whether it is the older binary format. A .doc is not a .docx and needs converting first.
+- Check whether it is password-protected, which requires the password before anything can read it.
+- Check whether it downloaded completely. A truncated file fails in ways that look like corruption.
+
+
+### Once you can read it
+
+
+Reading is often not the end of the task. If you need the content elsewhere, [converting Word to PDF](/word/word-to-pdf) produces something anyone can open, and [extracting the text](/word/extract-text-from-word) reaches headers, footers and footnotes that copy and paste misses.
+
+---
+
+## Guide: Why your PowerPoint is too big to email — and how to fix it
+- **URL**: https://office-utilities.org/guides/why-your-powerpoint-is-too-big-to-email
+- **Published**: 2026-09-03
+- **Summary**: A deck of twenty slides should not be 80 MB. Find out exactly which images are responsible, and shrink the file without touching the design.
+- **Direct Answer**: It is almost always images stored at far higher resolution than the slide displays them at, plus media left behind on deleted slides. Find which files account for the size, replace or remove those, and a deck typically drops by most of its weight.
+
+Twenty slides, mostly text, and the file is 80 MB. Email rejects it, the shared drive complains, and nothing on screen looks like it should weigh that much.
+
+Slides are cheap. The text in a whole deck is a few kilobytes. Something else is taking the space, and it is worth finding out precisely what rather than guessing.
+
+
+### Find the actual culprit first
+
+
+A .pptx is a ZIP archive. Its parts can be listed and measured, which turns "the file is too big" into "this one photograph is 34 MB". That changes the fix from a blind compression pass into a targeted one.
+
+In nearly every oversized deck, a handful of images account for almost all of it.
+
+
+### Why images are so much larger than they look
+
+
+
+#### Resolution has nothing to do with display size
+
+
+Drag a 6000-pixel-wide photograph from a phone onto a slide and shrink it to fill a quarter of the screen. PowerPoint stores all 6000 pixels. The slide displays perhaps 800 of them. The other 5200 are carried in the file forever, doing nothing.
+
+
+#### Cropping usually hides rather than removes
+
+
+Cropping normally keeps the whole original so the crop stays adjustable. A tightly cropped detail from a huge photograph can still be storing the huge photograph — which is both a size problem and, occasionally, a confidentiality one.
+
+
+#### Deleted slides leave their media behind
+
+
+Media referenced by a deleted slide, or living on an unused slide master, often stays in the archive. Decks that have been edited over years accumulate this quietly.
+
+
+#### PNG screenshots of photographs
+
+
+PNG is lossless, which is right for screenshots of interfaces and text. For a photograph it is entirely the wrong format and can be ten times the size of an equivalent JPEG. A screenshot that happens to contain a photograph gets the worst of both.
+
+
+### Fixing it
+
+
+
+#### Use PowerPoint’s own compression
+
+
+Select a picture, then Picture Format → Compress Pictures. Untick "Apply only to this picture", choose a sensible resolution, and tick "Delete cropped areas of pictures". That last option is the one that recovers the most, and it is the one people miss.
+
+150 ppi is ample for a deck that will be presented or emailed. 220 ppi if it will be printed.
+
+
+#### Resize the worst offenders before inserting them
+
+
+For a deck you are still building, resizing images to roughly the size they will display — and converting photographs to JPEG or WebP — prevents the problem rather than repairing it. [Batch image conversion](/convert/image-converter) handles a folder in one pass.
+
+
+#### Send fewer slides
+
+
+If the recipient needs six slides out of forty, sending six is better in every way. [Selecting slides](/powerpoint/slide-selector) produces a trimmed deck that still carries the layouts and media those slides depend on, so it opens as a proper presentation rather than a broken one.
+
+
+#### Send a PDF instead
+
+
+If the recipient only needs to read it, [converting to PDF](/powerpoint/powerpoint-to-pdf) is usually far smaller and removes any question about whether their version of PowerPoint renders your fonts. They lose the ability to edit, which is often the point.
+
+
+### The email limit is smaller than it says
+
+
+> Note: Email encodes attachments in base64, which inflates them by about a third. A 20 MB file can arrive at roughly 27 MB and be rejected by a 25 MB limit. Aim for 15 MB if you want to be safe.
+
+
+### A working order
+
+
+1. Analyse the file and identify which parts account for the size.
+2. Compress pictures across the whole deck, with cropped areas deleted.
+3. Remove slides the recipient does not need.
+4. Re-check the size. Most decks are done by here.
+5. If it is still too large, send a PDF or a link instead.
+
+Keep the original until you have checked the compressed version on a large screen. Image compression is irreversible, and a photograph that looked fine in a thumbnail can be visibly degraded when projected.
+
+---
+
+## Guide: How to split a PDF by chapter
+- **URL**: https://office-utilities.org/guides/how-to-split-a-pdf-by-chapter
+- **Published**: 2026-09-03
+- **Summary**: Breaking a long PDF into sections — how to find the right page boundaries quickly, and when splitting is the wrong tool for what you actually want.
+- **Direct Answer**: Find the page each chapter starts on using the bookmarks or the thumbnail rail, then split at those pages. Splitting produces one file per section; if you only want a few chapters, extracting those pages is cleaner than splitting and discarding the rest.
+
+A 400-page report where each department only needs its own section. A scanned book you want as separate chapters. A contract where the annexes should be circulated separately. The operation is simple; getting the boundaries right is the part that takes the time.
+
+
+### Find the boundaries first
+
+
+Splitting is quick. Working out which page each chapter begins on is what people spend time on, and there are faster routes than scrolling.
+
+
+#### Use the bookmarks if there are any
+
+
+A PDF produced from a properly styled Word document usually has bookmarks generated from its headings, and each one points at a page. That is your chapter list, already made. Open the document and read the page numbers off the outline.
+
+
+#### Use the thumbnail rail
+
+
+Chapter openings look different from body pages — more white space, a large heading, often starting on a right-hand page. Scanning a grid of thumbnails finds them far faster than paging through.
+
+
+#### Search for the heading text
+
+
+If the PDF has a text layer, searching for "Chapter" or a known section title jumps straight to each occurrence with its page number. Fastest of the three when it works.
+
+> Note: Printed page numbers rarely match PDF page numbers. Front matter means page 1 of the book is often page 9 of the file. Always work from the PDF page number the viewer shows, not the number printed on the page.
+
+
+### Three ways to split
+
+
+
+#### At chosen page breaks
+
+
+The one you want for chapters. Give it the pages where each new section begins, and you get one document per section.
+
+
+#### Into fixed-size chunks
+
+
+Every 50 pages, say. Useful for getting a huge file under an upload limit, and useless for chapters, since content does not fall into equal parts.
+
+
+#### One file per page
+
+
+Right for a stack of scanned single-page documents — invoices, receipts, certificates — that were scanned in one pass.
+
+
+### When splitting is the wrong tool
+
+
+If you want three chapters out of twelve, splitting produces twelve files so you can throw away nine. [Extracting pages](/pdf/extract-pdf-pages) gives you only what you asked for, and the original is untouched either way.
+
+If the document is in the wrong order — a double-sided scan with all fronts then all backs — splitting will faithfully preserve the mess. Fix the order first with the [page organiser](/pdf/organize-pdf), then split.
+
+
+### What happens to the document
+
+
+- Text stays text. Pages are copied, not re-rendered, so nothing becomes blurry and everything stays selectable.
+- Each part keeps only its own pages’ content, so the pieces are much smaller than the whole.
+- Bookmarks pointing outside a part become meaningless in that part — expected, and rarely a problem.
+- Internal links to other chapters cannot follow across files. If cross-references matter, splitting may be the wrong approach entirely.
+- The original is never modified.
+
+
+### Practical points
+
+
+
+#### Check before you download
+
+
+Preview each resulting document and look at its first page. An off-by-one boundary — the last page of chapter two heading chapter three — is obvious in a preview and annoying to discover later.
+
+
+#### Take the ZIP
+
+
+A split into fifteen parts means fifteen downloads. Taking them as a single archive is faster and keeps them together.
+
+
+#### Name them as you go
+
+
+Files named part-1 through part-15 are unhelpful within a week. If you are circulating them, renaming to the chapter titles is worth the two minutes — [batch renaming](/file/batch-file-rename) handles it if there are many.
+
+
+### A note on privacy
+
+
+Splitting is a structural operation a browser can do entirely on its own, which matters because the documents people split — contracts, reports, statements — are often confidential. Load the page, disconnect, and split anyway: if it works, nothing was uploaded. There is more in [is it safe to use online PDF converters?](/guides/is-it-safe-to-use-online-pdf-converters).
+
+---
+
+## Guide: How to password-protect a PDF (and what that actually protects)
+- **URL**: https://office-utilities.org/guides/how-to-password-protect-a-pdf
+- **Published**: 2026-09-03
+- **Summary**: The difference between the two PDF passwords, what permissions really enforce, and an honest account of what encryption does and does not protect you from.
+- **Direct Answer**: A user password encrypts the document so it cannot be opened without it. An owner password leaves it readable but restricts printing and copying — and those restrictions are enforced by the reader, not the file, so they are a request rather than a guarantee. Only the user password provides real protection.
+
+PDF encryption is genuinely useful and widely misunderstood. The format offers two different passwords that do very different things, and one of them protects considerably less than most people assume.
+
+
+### The two passwords
+
+
+
+#### The user password — real protection
+
+
+Also called the open password. The document’s contents are encrypted, and without the password there is nothing to read. A reader that does not have it cannot show you the text, because the text is not recoverable.
+
+This is the one that actually protects a document, and it is the one to use when the file contains something that matters.
+
+
+#### The owner password — a request, not a lock
+
+
+Also called the permissions password. The document opens normally for anyone, but it carries flags saying printing, copying or annotating are not allowed. Compliant readers honour those flags.
+
+> Note: The content is not protected by the permission flags — a reader that chooses to ignore them can print and copy freely, and several do. Treat owner-password restrictions as a clear statement of intent, not as security.
+
+That is not a flaw in any particular tool; it is how the specification works. Restrictions on a document anyone can open have to be advisory.
+
+
+### Choosing a password that is worth setting
+
+
+Encryption strength is irrelevant if the password is guessable. An attacker does not attack the cipher; they try passwords.
+
+- Long beats complex. Four unrelated words are stronger and far easier to convey over the phone than a short string of symbols.
+- Do not use the recipient’s name, the company name, the project name or the date. These are the first things tried.
+- Do not reuse a password you use elsewhere. This one gets shared by definition.
+
+
+### Sending the password
+
+
+This is where the protection is usually lost. Emailing an encrypted PDF and then emailing the password puts both in the same mailbox, so anyone with access to that mailbox has both.
+
+Send the password by a different route — a phone call, a text message, a different messaging app. Different channel, not just a different email.
+
+
+### What encryption does not do
+
+
+- It does not stop the recipient sharing the file, or the password. Once someone can open it, they can pass it on.
+- It does not stop screenshots or retyping. Anything a person can read, they can reproduce.
+- It does not expire. A PDF you sent three years ago opens today with the same password.
+- It does not let you revoke access. There is no way to un-send it.
+- It does not hide metadata. Title, author and creation date may remain readable in the encrypted file.
+
+For control that persists after sending — expiry, revocation, per-person access — you need a system that holds the document rather than a file you hand over. That is a different tool, and worth knowing you need it.
+
+
+### The other direction: removing a password
+
+
+If you have the password and want an unencrypted copy — for archiving, or because you must retype it every time — [unlocking the PDF](/pdf/unlock-pdf) produces a decrypted version.
+
+This requires the password. It is for documents you are entitled to open, and removing protection from a document that is not yours may be unlawful regardless of whether it is technically possible.
+
+
+### Where the encryption happens matters
+
+
+Encrypting a document on a server means uploading the unprotected version first. For a moment, the plaintext document sits on someone else’s machine — which is exactly the situation you were trying to avoid.
+
+Encrypting in your browser avoids that entirely: the document and the password both stay on your device, and only the encrypted result is produced. The password never travels anywhere at all.
+
+
+### A reasonable default
+
+
+1. Set a user password if the content matters. Skip the owner password unless you specifically want to signal that printing is discouraged.
+2. Use four unrelated words.
+3. Send the password through a different channel.
+4. Check the metadata before sending — see [removing metadata before sharing](/guides/how-to-remove-metadata-from-a-document-before-sharing).
+5. Accept that this protects the file in transit and at rest, not what the recipient does next.
+
+---
+
+## Guide: How to fix a sideways or upside-down scanned PDF
+- **URL**: https://office-utilities.org/guides/how-to-fix-a-sideways-scanned-pdf
+- **Published**: 2026-09-03
+- **Summary**: Rotating pages so the fix sticks in every reader and when printed — including why some documents look right on screen and come out wrong on paper.
+- **Direct Answer**: Rotate the pages and save the result, so the rotation is written into the file itself. A reader’s own rotate button only changes your view and is not saved, which is why a document can look correct on screen and still print sideways.
+
+A batch of pages went through the feeder the wrong way, or a book was scanned in landscape. Now half the document needs your head tilted, and rotating it in your PDF reader does not seem to stick.
+
+
+### Why the reader’s rotate button does not save
+
+
+Most readers offer a rotate control that changes how the page is displayed to you. It is a view setting, held in the application, not a change to the document. Close the file and it is gone; send it to someone else and they see the original orientation.
+
+A PDF page carries its own rotation attribute, and that is what needs changing. Written into the file, it is honoured by every reader and by the printer.
+
+> Note: The document looks fine on your screen and prints sideways. That means you rotated the view at some point and the file itself was never changed.
+
+
+### Fixing it properly
+
+
+Rotate the pages that need it and save a new document. Because rotation is a page attribute rather than a re-rendering, nothing is degraded: text stays sharp and selectable, images are untouched, and the file size barely moves.
+
+
+### When only some pages are wrong
+
+
+Scanners produce this constantly — a few sheets fed in the wrong orientation, or landscape tables in an otherwise portrait report. Rotating everything would fix those pages and break the rest.
+
+Select the affected pages individually. For a document with several different problems at once — some pages rotated, some out of order, a few blank ones to remove — the [page organiser](/pdf/organize-pdf) handles all of it in a single editing session with undo, which is far less tedious than three separate passes.
+
+
+### Which way to rotate
+
+
+Easy to get backwards, and easy to check: if the top of the text points to the right edge of the screen, rotate anticlockwise. If it points to the left edge, rotate clockwise. Upside down needs 180 degrees either way.
+
+Work from thumbnails rather than one page at a time. Seeing the whole document at once makes the pattern obvious — usually every second page, or one run of them.
+
+
+### Related scanning problems
+
+
+
+#### Pages in the wrong order
+
+
+Double-sided scanning on a single-sided feeder gives you all the fronts, then all the backs. The pages need interleaving, not rotating — [reordering](/pdf/reorder-pdf-pages) does it, and reversing the whole document in one click is often the first step.
+
+
+#### Slightly skewed rather than rotated
+
+
+A page a few degrees off is a different problem. Page rotation only works in ninety-degree steps, so straightening a slight skew means deskewing the image, which scanning software usually offers. Rescanning is often faster than fixing it.
+
+
+#### Blank pages between every sheet
+
+
+The back of single-sided originals, captured by a duplex scanner. [Deleting those pages](/pdf/delete-pages-from-pdf) by range is quicker than clicking each one.
+
+
+#### The file is enormous
+
+
+Every scanned page is a full-resolution photograph, so scans are large by nature. Rotating does not change that — see [compressing a PDF without making the text blurry](/guides/how-to-compress-a-pdf-without-making-text-blurry) for the right way to shrink one.
+
+
+### You still cannot search it
+
+
+Rotating fixes orientation, not readability. A scan is an image of text with no text layer, so it remains unsearchable and its content cannot be copied or converted. Making it searchable requires OCR, which is a different technology and not included here.
+
+The test is simple: try to select a sentence. If nothing highlights, there is no text in the file, however clear it looks.
+
+
+### Check before you discard the original
+
+
+1. Scroll the whole document — a fix applied to the wrong range is easy to miss.
+2. Print one page, or use print preview. This is where view-only rotation reveals itself.
+3. Confirm the page count is unchanged.
+
+---
+
+## Guide: How to write a résumé an ATS can actually read
+- **URL**: https://office-utilities.org/guides/how-to-write-a-resume-an-ats-can-read
+- **Published**: 2026-09-06
+- **Summary**: What an applicant tracking system extracts from a CV, why columns and text boxes disappear, and a two-minute test that shows you exactly what the machine sees.
+- **Direct Answer**: An applicant tracking system extracts the plain text of your CV and reads that, not the layout. Anything that is not part of the normal text flow — two-column layouts, text boxes, headers and footers, details inside an image — may not survive extraction. You can check yours in two minutes: convert your own PDF to text and read what comes out.
+
+Most applications are read by software before a person sees them, and the advice about it is unusually poor — full of claims about magic keywords and secret formatting rules. The underlying mechanism is simpler than that, and once you know it, the rules follow on their own.
+
+
+### What an ATS actually does
+
+
+An applicant tracking system is a database of applications. When your CV arrives, it runs text extraction on the file, tries to identify sections such as experience, education and skills, and stores the result as fields a recruiter can search.
+
+That is the whole trick. Extraction produces a stream of text, and everything after that operates on the stream. Your careful layout has no role — it exists only in the visual rendering, and the visual rendering is not what gets stored.
+
+So the question is not “will an ATS like my design”. It is “what text comes out of my file, and in what order”.
+
+
+### The test that settles it
+
+
+You do not have to guess. Take your finished CV and [convert it to plain text](/pdf/pdf-to-text). What appears is approximately what the machine has to work with.
+
+Read it as though you had never seen the document. Are the job titles present? Are the dates attached to the right roles? Does your name appear at the top, or has it vanished because it lived in a header? Is the text in a sensible order, or has a two-column layout interleaved your skills with your employment history line by line?
+
+Every common ATS problem is visible in that output, and no article can tell you as much about your own CV as two minutes of reading it can.
+
+> Note: Different systems use different extraction libraries and will not produce byte-identical results. But they face the same constraints, and text that comes out garbled in one is at risk in all of them. Something that extracts cleanly is a reasonable bet everywhere.
+
+
+### What breaks extraction
+
+
+
+#### Multiple columns
+
+
+The most damaging and most popular mistake. A PDF stores text with positions, not with a notion of columns. Extraction generally reads across the page, so a sidebar next to your work history produces alternating fragments of both, and the result is genuinely unreadable.
+
+A single-column CV extracts in the order it is written. It also reads perfectly well to humans, which is the more important point.
+
+
+#### Text boxes and graphics
+
+
+Text inside a shape, a box or a diagram sits outside the main flow and is frequently skipped. A skills section built as a row of coloured pills, or a contact block inside a graphic, can disappear entirely while looking perfectly present on screen.
+
+
+#### Headers and footers
+
+
+Contact details in the page header are the classic version of this. They look right, and they are often dropped or attached to the wrong part of the document. Put your name, email and phone number in the ordinary body text at the top of page one.
+
+
+#### Anything that is an image
+
+
+A CV exported as a picture, or a designed template where the text is baked into a graphic, contains no extractable text at all. Without optical character recognition — which most systems do not apply — it is a blank application.
+
+> Note: A table looks like a tidy way to lay out dates against roles, and it extracts unpredictably: sometimes row by row, sometimes column by column, sometimes with the cells run together. If your dates end up separated from the jobs they belong to, a recruiter searching for candidates with three years in a role will not find you. Use plain paragraphs with the dates on the same line as the title.
+
+
+### PDF or Word
+
+
+Send a PDF unless the posting asks for something else, in which case send exactly what it asks for. A PDF renders identically everywhere, and modern systems parse it perfectly well; the advice against PDFs is a decade out of date.
+
+The one requirement is that it must be a real PDF containing real text — one [exported from your word processor](/word/word-to-pdf), not printed and scanned, and not assembled from images. If a PDF you were given fails the text test above, that is why.
+
+
+### About keywords
+
+
+Recruiters search the stored text, so the words in your CV do matter. This is much less mysterious than it is made to sound.
+
+- Use the terms the job description uses. If it says “stakeholder management” and you wrote “working with clients”, a search for the former will not match you.
+- Spell out an abbreviation once alongside its expansion, so both forms are searchable.
+- Put the terms in the sentences describing what you did. A detached list of keywords is obvious to the human who reads it next, and a CV that clears the filter but reads badly has failed at the step that counts.
+- Do not hide keywords in white text or at a tiny size. It is trivially detected, extraction finds it precisely because it ignores appearance, and it ends the application.
+
+
+### A format that works
+
+
+1. Single column, top to bottom.
+2. Name and contact details as ordinary text at the top of the first page — never in the header.
+3. Conventional section headings: Experience, Education, Skills. Unusual names for them make automatic section detection fail, and cleverness buys nothing here.
+4. One role per entry, with the job title, employer and dates on the same line or the line directly below.
+5. A standard font, no text boxes, no tables, no icons standing in for words.
+6. Export to PDF, then run the text test before sending it anywhere.
+
+
+### One thing to check before you send it
+
+
+A PDF exported from a word processor carries document properties, and those often include the author name from whoever owns the software licence and the original file name. If your CV started as a template from a colleague, their name may still be in it, and if the file is named after the last company you applied to, the recruiter can see that too.
+
+Name the file properly — your own name and the word CV — and see [removing metadata before sharing](/guides/how-to-remove-metadata-from-a-document-before-sharing) for the rest.
+
+There is also a reason not to build a CV on a site that keeps it. A CV is a complete personal record — full name, address, phone number, employment history — and job seekers hand it over routinely while looking for work. A builder that runs in your browser produces the same document without the copy on someone else’s server, which for this particular document is worth having.
+
+---
+
+## Guide: How to make an invoice without signing up for anything
+- **URL**: https://office-utilities.org/guides/how-to-make-an-invoice-without-signing-up
+- **Published**: 2026-09-06
+- **Summary**: What an invoice has to contain, why most free invoice generators ask for an account, and how to produce a numbered PDF invoice without handing over your client list.
+- **Direct Answer**: Fill in the fields and download the PDF. An invoice needs a unique number, both parties’ details, a date, an itemised list, the total and payment instructions — none of which requires an account. Generators ask for one because your invoices reveal who your clients are and what you charge them.
+
+Invoicing is a solved problem that keeps being sold back to you. The document itself is simple — a list, some totals, and instructions for paying — and there is no technical reason it should require registration, a subscription, or a trial that quietly becomes a monthly charge.
+
+This guide covers what actually has to appear on an invoice, the fields people get wrong, and why the sign-up wall is so common on a document this ordinary.
+
+
+### What an invoice has to contain
+
+
+Requirements vary by country, and if you are registered for a sales tax your tax authority will have its own list. Setting that aside, an invoice that gets paid without a follow-up email contains all of the following.
+
+- The word “Invoice”. Not “Statement”, not “Summary”. Accounts payable systems and the people who run them sort by document type, and an unlabelled document gets set aside.
+- A unique invoice number. This is the one field with no sensible default, and it is covered below.
+- The issue date, and separately the due date. Payment terms without a date to count from are an argument waiting to happen.
+- Your full legal or trading name, address, and any tax or company registration number you are required to show.
+- The client’s name and address, and their reference or purchase-order number if they gave you one. A missing PO number is the most common reason an invoice is returned rather than paid.
+- An itemised list: description, quantity, unit price, line total. One line reading “Consulting — 4,000” invites a query; five lines that add up to 4,000 do not.
+- The subtotal, any tax, and the final amount due, with the currency stated explicitly rather than implied by a symbol.
+- Payment instructions — account details, or a note saying the invoice was submitted through a portal.
+
+That is the whole document. Everything else is presentation, and presentation has never been why an invoice went unpaid.
+
+
+### Invoice numbers are the field worth thinking about
+
+
+Numbers must be unique and should be sequential, because that is what makes a set of invoices auditable. Two invoices sharing a number is a real bookkeeping problem, and a gap in the sequence is a question you will eventually be asked to answer.
+
+A dated scheme — 2026-014, or ACME-2026-03 — stays readable years later and makes gaps obvious at a glance. Avoid starting at 1 if you would rather not advertise that this is your first invoice; starting at 100 is common and harmless.
+
+> Note: A tool that runs entirely in your browser cannot remember which number you used last month, because it deliberately keeps nothing between visits. Keep the sequence wherever you keep the invoices themselves — a folder, a spreadsheet, or the accounting software you file them into.
+
+
+### Why so many invoice generators want an account
+
+
+Turning a form into a PDF is not difficult, and it has not been difficult for twenty years. The account is not there for the sake of the invoice.
+
+An invoice is an unusually rich document to hold. It names a business, names its client, states what was sold and for how much, and does so on a regular schedule. A few dozen of them describe a company’s revenue, its customer list and its pricing — commercially sensitive information most people would never email to a stranger, handed over willingly because a form asked politely.
+
+Some of those services are proper accounting products where holding the data is the entire point, and paying for one is a sensible choice. The ones worth being wary of are the free generators with no stated business model at all: with no subscription and no advertising, the data is the only thing left to sell.
+
+
+### Quotes, and the difference that matters
+
+
+A quotation is an offer. An invoice is a demand for payment. They look similar and are treated very differently, both by accounting systems and by the law in most places, so sending a document headed “Invoice” for work that has not been agreed is at best confusing.
+
+The usual sequence is a [quotation](/generate/quotation-generator) first, acceptance in writing, then an invoice quoting that quotation’s number once the work is done. That single reference is what turns a disputed invoice into a short conversation.
+
+
+### Send a PDF, not a word processor file
+
+
+A PDF renders identically for the recipient, cannot be edited by accident, and will not reflow if their software substitutes a font. It is also the format most accounts payable systems expect, and some will reject anything else outright.
+
+If you keep invoices as Word documents for your own records, [converting to PDF](/word/word-to-pdf) is the right final step. Keep the editable original — you will want it the first time a client asks for a correction.
+
+> Note: A PDF exported from a word processor usually carries the author name, the original file name and the software that produced it. If that file was named after the client you copied the template from, the name travels with it. See [removing metadata before sharing](/guides/how-to-remove-metadata-from-a-document-before-sharing).
+
+
+### Getting paid faster
+
+
+Most late payment is administrative rather than deliberate. These are the changes that reliably shorten the wait.
+
+1. Invoice on the day the work finishes. Payment terms run from the invoice date, so a week of delay is a week added to the wait.
+2. Send it to accounts payable, not only to your contact. Your contact has to forward it, and forwarding is the step that gets forgotten.
+3. Put the invoice number and the amount in the email subject line, so the email can be found again in the mailbox that has to find it.
+4. State the due date as an actual date. “Due 6 October 2026” gets acted on; “Net 30” has to be calculated first.
+5. Include the purchase-order number if one exists. Without it, many systems cannot route the invoice at all, and nobody will tell you that.
+
+
+### Keeping your own copies
+
+
+Whatever you use to produce invoices, the copies are your responsibility. Most tax authorities expect records to be kept for several years, and “the free website I used has shut down” is not an accepted answer.
+
+Save each PDF into a folder you control, named so it sorts correctly — 2026-014 Acme Ltd rather than invoice, then invoice(1), then invoice(2). This matters more with a browser-based tool rather than less: nothing is being stored on your behalf, which is the entire point, and which makes saving the file the one step you cannot skip.
+
+---
+
+## Guide: How to compare two Word documents and see what changed
+- **URL**: https://office-utilities.org/guides/how-to-compare-two-word-documents
+- **Published**: 2026-09-06
+- **Summary**: How document comparison works, why it disagrees with tracked changes, the edits a diff cannot see, and how to compare two contract drafts without sending either to a server.
+- **Direct Answer**: Open both files in a comparison tool and it will show you the text that was added, removed and left alone. Comparison reads the finished documents, so it finds every difference regardless of whether anyone turned tracking on — but it works on words, which means moved paragraphs look like a deletion plus an insertion, and formatting-only changes may not show at all.
+
+Two files called contract-final.docx and contract-final-v2.docx, no tracked changes, and nobody willing to say what moved. It is one of the most common document problems there is, and comparison solves it directly — provided you know what a comparison can and cannot see.
+
+
+### Comparison and tracked changes are different things
+
+
+They are easy to confuse because both end up showing insertions and deletions, but they work from opposite ends of the problem.
+
+Tracked changes are a recording. Word writes each edit into the file as it happens, along with who made it and when. That is rich information, and it only exists if tracking was switched on before the editing started. Turn it on afterwards and everything already changed is invisible.
+
+Comparison is a reconstruction. It reads two finished documents and works out what differs, with no dependence on anyone having remembered anything. It cannot tell you who made a change or in what order, but it will not miss one either.
+
+> Note: Tracking is better when you control the process and want attribution. Comparison is better when you have received a document back and simply need to know what is different — which is most of the time, and is the situation people actually find themselves in.
+
+
+### How a document diff works
+
+
+A comparison tool extracts the text of both documents in reading order, breaks it into units — usually words — and finds the longest sequences the two versions share. Everything between those matches is what changed: present only in the original means deleted, present only in the revision means inserted.
+
+Working at the word level rather than the line or paragraph level matters. A paragraph where one number changed should highlight the number, not the paragraph, or a legal review turns into rereading the whole document with extra colour.
+
+
+### What a diff cannot see
+
+
+This is the part worth reading before relying on a comparison for anything important.
+
+
+#### Moved text looks like two separate edits
+
+
+A clause moved from section 3 to section 9 has no special representation. It appears as a deletion in one place and an insertion in another, and it is on you to notice they are the same words. In a long document with several moves, this is where a review gets genuinely difficult.
+
+
+#### Formatting changes may not register
+
+
+If a comparison works on text, then bold, italics, font size, colour, indentation, margins and page breaks are all invisible to it. The words are identical, so nothing is reported. That is usually what you want, and occasionally exactly what you needed to know — for instance when a heading has quietly stopped being a heading.
+
+
+#### Content outside the text flow
+
+
+Headers, footers, footnotes, comments, text boxes and the contents of embedded objects sit outside the main body. Depending on how the text was extracted, changes there may not appear. Check page numbering, footers and any signature block by eye.
+
+> Note: Table content is compared as text, so a changed cell is caught. Structural changes — a column inserted, two rows merged, a table split in half — may be reported strangely or not at all, because the words can be identical while the structure is entirely different. Compare tables visually as well as textually.
+
+
+#### Images
+
+
+A replaced image contains no text to compare. If a diagram or a signature graphic matters, check it directly — [opening both files in a viewer](/view/word-viewer) side by side takes a few seconds.
+
+
+### Reading the result well
+
+
+1. Look for deletions before insertions. Removed obligations are far easier to miss than added ones, and cause more trouble.
+2. Treat every deletion-and-insertion pair as a possible move rather than two unrelated edits, especially in structured documents.
+3. Check the numbers specifically — dates, amounts, percentages, notice periods. A single-digit change is small on screen and large in effect.
+4. Watch for negation. “Shall” to “shall not” is two characters and reverses the meaning of a clause.
+5. Scan the unchanged sections briefly at the end. Knowing what did not move is part of the answer, and it is the part a highlighted diff trains you to skip.
+
+
+### A quick sanity check before you start
+
+
+If you are unsure whether two files differ meaningfully at all, [word counts](/word/word-count) give you a cheap first signal. Identical counts do not prove the documents are the same — words can be swapped one for one — but a difference of several hundred tells you the scale of what you are about to read.
+
+
+### Why this one is worth doing locally
+
+
+Comparison is almost always applied to the documents you would least like to upload: contracts under negotiation, offer letters, policies before publication, drafts of something not yet announced. And it needs two of them rather than one.
+
+A browser-based comparison reads both files in memory on your own machine and shows you the differences. Neither version is transmitted, which means the more confidential the pair, the less reason there is to use anything else. That is the opposite of the usual trade-off, and it is worth taking advantage of.
+
+---
+
+## Guide: How to clean up a messy spreadsheet
+- **URL**: https://office-utilities.org/guides/how-to-clean-up-a-messy-spreadsheet
+- **Published**: 2026-09-06
+- **Summary**: The order to do it in, why trailing spaces defeat duplicate detection, how a single text cell poisons a numeric column, and how to clean a spreadsheet without uploading the data in it.
+- **Direct Answer**: Work in this order: trim whitespace, fix data types, remove blank rows and columns, then remove duplicates last. Duplicate detection compares values exactly, so “Acme Ltd” and “Acme Ltd ” are different rows until the whitespace is trimmed — cleaning in the wrong order leaves duplicates behind and looks like it worked.
+
+A spreadsheet that has passed through several people acquires a particular kind of mess: stray blank rows, a heading repeated halfway down, numbers stored as text, dates in three formats, and duplicates that are not quite identical. None of it is hard to fix. Fixing it in the wrong order is what wastes the afternoon.
+
+
+### Do it in this order
+
+
+The steps interact, and one ordering is clearly correct.
+
+1. Trim whitespace from every cell.
+2. Normalise data types — numbers as numbers, dates as dates.
+3. Remove blank rows and columns.
+4. Remove duplicates.
+5. Check the result against the original row count.
+
+Duplicates come last because duplicate detection compares values, and values that have not been cleaned do not match. Whitespace comes first because everything downstream depends on it.
+
+
+### Whitespace, and why it defeats everything
+
+
+A trailing space is invisible. It survives copying, it survives export, and it is the single most common reason a cleaning pass appears to work while achieving nothing.
+
+To a computer, “Acme Ltd” and “Acme Ltd ” are two different strings. Deduplication keeps both. A lookup against one fails to find the other. A grouped total splits across two categories that read identically on screen. You can stare directly at the problem and not see it.
+
+> Note: Data pasted from a web page or a PDF frequently contains non-breaking spaces rather than ordinary ones. They look identical, occupy the same width, and are a different character entirely — so a find-and-replace for a normal space will not touch them. A proper trim handles both; a manual one usually does not.
+
+
+### Data types: one text cell spoils a column
+
+
+A column is either numeric or it is not, and a single cell breaks the distinction. One entry reading “12 units”, or “N/A”, or a number with a stray apostrophe in front of it, and the whole column becomes text.
+
+The consequences are quiet. Sums skip the text cells rather than failing. Sorting puts 100 before 20, because as text it does. Charts drop the values they cannot read. Nothing reports an error, and the numbers are simply wrong.
+
+Running [data type detection](/excel/data-type-detection) across the sheet tells you which columns are mixed, which is much faster than scrolling to find the one cell responsible. [Column statistics](/excel/column-statistics) then confirms the fix — if the count of numeric values matches the row count, the column is clean.
+
+> Note: A date column is the most likely to be silently wrong, because a date is stored as a number wearing a format. Ambiguous values such as 03/04/2026 can be read two ways, and the misreading is invisible for any day above the twelfth while being wrong for the rest. See [why Excel dates break when you export to CSV](/guides/why-excel-dates-break-when-you-export-to-csv).
+
+
+### Blank rows and columns
+
+
+Empty rows break more than they look like they should. Many operations treat a blank row as the end of the data, so a sort or a filter silently applies to the top section only and leaves the rest untouched and unsorted.
+
+Empty columns cause the same trouble sideways, and both tend to arrive from exports that padded the sheet out to a fixed size.
+
+Two cases need care before [removing them](/excel/remove-blank-rows). A row that is blank apart from a stray space is not blank — trim first, which is why trimming leads. And a row deliberately left empty as a visual separator between sections carries meaning that will be lost; a spreadsheet laid out for reading rather than for processing may need restructuring instead of cleaning.
+
+
+### Duplicates are a judgement, not a fact
+
+
+The word “duplicate” hides a decision: duplicate according to which columns?
+
+Two orders from the same customer on the same day for the same amount are duplicates if the file was imported twice, and two genuine orders if it was not. Nothing in the data can tell you which. Whole-row matching is the safe default because it only removes rows that are identical in every respect, but it will keep near-duplicates that differ by one typo.
+
+Matching on a key column — an ID, an email address — catches more, and will delete rows that differ elsewhere in ways you may have wanted to keep. Decide which you mean before [removing anything](/excel/remove-duplicate-rows), and keep the original file either way.
+
+
+### Check the result
+
+
+Cleaning is destructive, and the failure mode is deleting rows you needed rather than leaving rows you did not. Two checks catch nearly everything.
+
+- Compare row counts before and after. If 4,000 rows became 1,200, the duplicate rule was broader than you intended and it is worth understanding why before continuing.
+- Total a numeric column before and after. Removing duplicates should reduce it by roughly the proportion of rows removed; a total that barely moves means the removed rows were not the ones you thought.
+
+
+### Why to clean it on your own machine
+
+
+Spreadsheets needing a clean-up are usually the ones full of real records — customers, employees, transactions, contact details. It is the least anonymous file most people handle, and cleaning it is the moment it gets uploaded to whichever free tool came up first.
+
+None of this work requires a server. Trimming, type checking, and comparing rows are operations a browser performs immediately on a file it never sends anywhere, which keeps a list of real people out of a third party’s logs for no loss in capability.
+
+---
+
+## Guide: How to convert images between PNG, JPG and WebP
+- **URL**: https://office-utilities.org/guides/how-to-convert-images-between-png-jpg-and-webp
+- **Published**: 2026-09-06
+- **Summary**: Which image format to use and when, why converting a JPG twice makes it worse, what happens to transparency, and how to convert without uploading the picture anywhere.
+- **Direct Answer**: Choose by content, not by habit: JPG for photographs, PNG for screenshots, text and anything needing transparency, WebP for both when the destination is the web. Converting between them is one step — but every save as JPG or WebP discards detail permanently, so always convert from the original rather than from a copy you already converted once.
+
+Most image conversion goes wrong in one of two ways: the wrong format for the content, which makes the file needlessly large or visibly ugly, or repeated conversion, which degrades the picture a little more each time. Both are avoidable once you know which formats throw information away.
+
+
+### Lossy and lossless, which is the whole distinction
+
+
+A lossless format stores the image exactly. Save it, reopen it, save it again a hundred times and the pixels are identical. PNG is lossless, and so is WebP in its lossless mode.
+
+A lossy format achieves much smaller files by discarding detail the eye is unlikely to miss. JPG is lossy, and WebP is lossy by default. The saving is real — often a photograph at a tenth the size — and so is the loss.
+
+> Note: Converting a JPG to PNG does not restore what the JPG discarded; it stores the already-degraded image losslessly. And each additional lossy save compounds the damage. Always convert from the highest-quality original you have, never from a file that has already been through the process.
+
+
+### Choosing a format
+
+
+
+#### JPG for photographs
+
+
+JPG was designed for continuous-tone images — photographs, and anything with soft gradients. Its compression assumes gradual colour change, which is exactly what a photograph is made of, and it produces small files with no visible harm at sensible quality settings.
+
+It handles sharp edges badly. Text, screenshots, line art and logos develop a faint smearing around the edges, and JPG cannot store transparency at all — a transparent background becomes white, or occasionally black.
+
+
+#### PNG for screenshots, text and transparency
+
+
+PNG is lossless and supports a full alpha channel, so edges stay crisp and transparency is preserved properly, including partial transparency around anti-aliased edges.
+
+The cost is size. A PNG of a photograph is typically several times larger than a JPG of the same picture with no visible benefit, because lossless compression has very little repetition to exploit in a photograph.
+
+
+#### WebP for the web
+
+
+WebP does both jobs. Lossy WebP is usually noticeably smaller than an equivalent JPG; lossless WebP is usually smaller than an equivalent PNG; and unlike JPG it supports transparency. Every current browser reads it.
+
+Its weakness is outside the browser. Older software, some print workflows and a number of desktop applications still do not open WebP, so it is the right choice for a web page and the wrong choice for a file you are emailing to someone who has to open it.
+
+
+### The conversions people actually need
+
+
+- Screenshot too large to send — [PNG to WebP](/convert/png-to-webp) usually cuts it substantially with no visible change, provided the recipient can open WebP.
+- JPG that needs a transparent background — [JPG to PNG](/convert/jpg-to-png) gives you a format that supports transparency, but it cannot create any. The white background is part of the picture and has to be removed by editing.
+- Logo that comes out blurry — the source is probably a JPG. Find the vector original and [convert the SVG to PNG](/convert/svg-to-png) at the size you need instead.
+- Photographs bloating a document — convert to JPG at around 80 per cent quality before inserting them, not after.
+
+
+### Vectors are a different kind of thing
+
+
+An SVG is not a grid of pixels but a set of drawing instructions, which is why it stays perfectly sharp at any size. Converting one to PNG or JPG fixes it at a single resolution, and enlarging the result afterwards will not recover the sharpness.
+
+So export at the size you will actually use, or larger — twice the display size is a reasonable default for high-density screens. And keep the SVG, because it is the only version you can go back to.
+
+
+### Quality settings that are worth using
+
+
+Quality on a lossy format is a slider with badly diminishing returns at both ends.
+
+1. Around 80 to 85 per cent is the usual sweet spot for photographs. The file is a fraction of the size and the difference is difficult to see.
+2. Above 95 per cent, the file grows quickly and the visible improvement is close to nothing.
+3. Below 60 per cent, blocking and halos start to appear in flat areas and around edges.
+4. Judge on the real image at real size. A quality setting that looks fine on a thumbnail may not survive being viewed full screen.
+
+
+### Images carry metadata too
+
+
+Photographs from a phone or camera usually contain EXIF data: the date, the camera model, the settings, and often the GPS coordinates where the picture was taken. That travels with the file when it is shared.
+
+Conversion frequently drops this, which is convenient but not something to rely on without checking. If it matters, [inspect the file](/file/file-metadata-viewer) before and after — and see [removing metadata before sharing](/guides/how-to-remove-metadata-from-a-document-before-sharing) for the general case.
+
+
+### Converting without uploading
+
+
+Every browser already contains a complete image codec, because displaying images is what browsers do. Decoding a picture and re-encoding it in another format needs nothing a server can provide, which makes an upload pure overhead — you wait for the file to travel in both directions to get a result your own machine could have produced immediately.
+
+It also means the photograph, its metadata and its location stay on your device. For pictures of people, of documents, or of anywhere you happened to be standing, that is worth more than the seconds saved.
+
+---
+
+## Guide: How to watermark a PDF (and what it actually stops)
+- **URL**: https://office-utilities.org/guides/how-to-watermark-a-pdf-and-what-it-actually-stops
+- **Published**: 2026-09-06
+- **Summary**: How text and image watermarks are stored in a PDF, why some can be deleted in seconds, and an honest account of what a watermark deters rather than prevents.
+- **Direct Answer**: A watermark is drawn into each page as ordinary page content, so it survives copying and printing. It is a deterrent and an attribution mark, not a protection: anyone determined enough can remove one, and a watermark applied as its own layer can often be deleted outright. Use it to discourage casual reuse and to label drafts, not to secure a document.
+
+Watermarks do real work. They mark a draft as a draft, put a name on a document that will be forwarded, and make a leaked page traceable. What they do not do is stop anyone, and the gap between those two things causes trouble when a watermark is treated as security.
+
+
+### What a watermark actually is
+
+
+A PDF page is a list of drawing instructions. Adding a watermark appends more instructions — place this text, at this angle, at this opacity — so the mark becomes part of the page in the same way the body text is part of the page.
+
+That is why a watermark survives things people expect it to survive. Print the page and it prints. Screenshot it and it is in the screenshot. Convert the file to images and every image carries it. Nothing about it is an overlay applied by the reader software, which is the usual misconception.
+
+It is also why a watermark is not protection. Instructions that were added can be found and removed. The page underneath was never altered — it was drawn over.
+
+
+### Text or image
+
+
+
+#### Text watermarks
+
+
+A word such as DRAFT or CONFIDENTIAL, usually set large, rotated, and drawn at low opacity. It adds almost nothing to the file size, stays sharp at any zoom because it is real text, and can be searched for — which cuts both ways, since a tool looking for a watermark to strip can search for it too.
+
+
+#### Image watermarks
+
+
+A logo or a signature graphic. Better for branding, and rather harder to remove automatically because there is no text to match on. The cost is file size, and the need for a transparent PNG if it is to sit over content without a white box around it.
+
+> Note: Too faint and it is invisible in print or on a phone. Too strong and it interferes with reading, which is what leads people to go looking for a way to remove it. Somewhere around 15 to 25 per cent grey works for most documents; check it on the page with the densest text rather than the title page.
+
+
+### What a watermark stops, honestly
+
+
+It is worth being precise, because the answer is genuinely mixed.
+
+- Casual reuse — yes. Someone who was going to drop your page into their own deck will not do it with your name across it. This is the case a watermark handles well, and it is the common one.
+- Confusion about status — yes. A page marked DRAFT does not get quoted as final. This is arguably the most valuable thing a watermark does, and nobody thinks of it as security at all.
+- Casual redistribution — partly. A watermark carrying a recipient’s name makes forwarding feel traceable. The deterrent is social, and it works on exactly the people who were not going to leak the document anyway.
+- Determined removal — no. Tools to strip watermarks are freely available, including on this site. Assume anyone motivated will succeed.
+- Copying the text — no. The words underneath remain selectable, copyable, and extractable. A watermark does not touch them.
+- Screenshots and retyping — no. Nothing can prevent this, watermark or otherwise.
+
+> Note: If a document must not be read by the wrong person, a watermark contributes nothing at all — the content is fully readable underneath it. That is what a user password is for; see [how to password-protect a PDF](/guides/how-to-password-protect-a-pdf).
+
+
+### Why some watermarks come off in seconds
+
+
+There is a real difference in durability, and it depends on how the watermark was applied.
+
+Some software adds a watermark as a separate annotation or optional content group — its own layer, tagged as such, which is convenient because the software can then toggle or update it. Anything that understands the format can also just delete that layer, and the page returns to its original state exactly.
+
+A watermark merged into the page content itself is harder work. Removing it means editing the page’s drawing instructions, and separating the watermark from the content it overlaps is imprecise — which is why automated removal often leaves artefacts or takes some of the page with it.
+
+Neither is secure. The difference is between seconds and minutes, and it is worth knowing which you are getting.
+
+
+### The other direction
+
+
+There are legitimate reasons to [remove a watermark](/pdf/remove-watermark-from-pdf): a draft that has been approved, a template mark left on a document you own, a sample you have since paid for. Results vary with how the mark was applied, and a merged watermark may not come away cleanly.
+
+It should go without saying that being able to remove a mark is not permission to. Stripping an attribution from someone else’s work is a copyright matter regardless of how easy the removal was.
+
+
+### Practical advice
+
+
+1. Use a watermark for what it is good at: marking status, and putting your name on work that will circulate.
+2. Personalise it when you are distributing to several recipients. A shared document is untraceable; one carrying a name is traceable enough to change behaviour.
+3. Keep the unwatermarked original. Removing a watermark later is lossy; opening the original is not.
+4. Encrypt if the content is genuinely sensitive, and treat the watermark as labelling rather than as any part of the protection.
+5. Check the metadata as well. A watermarked page with the author’s name still in the document properties has only been half prepared — see [removing metadata before sharing](/guides/how-to-remove-metadata-from-a-document-before-sharing).
+
+
+### Where the watermarking happens
+
+
+Watermarking is usually applied to documents that are about to be sent somewhere — drafts, contracts, priced proposals. Applying it on a server means uploading the unmarked original first, which puts the more sensitive version of the document on someone else’s machine to produce the less sensitive one.
+
+Doing it in the browser avoids that inversion entirely. The original never travels, and the only file that exists anywhere else is the one you chose to send.
+
+---
+
+## Guide: How to convert Markdown to Word, PDF or HTML
+- **URL**: https://office-utilities.org/guides/how-to-convert-markdown-to-word-pdf-or-html
+- **Published**: 2026-09-06
+- **Summary**: What survives the conversion from Markdown and what does not, why tables and code blocks are the two things to check, and how to produce a .docx for someone who does not want a text file.
+- **Direct Answer**: Markdown is plain text with a structure, so conversion maps that structure onto the target format: headings become real headings, lists become real lists. Standard Markdown converts cleanly. The parts that break are the extensions — tables, footnotes, diagrams and front matter are not part of the original specification, and support for them varies by converter.
+
+Markdown is a good place to write and a poor place to deliver. Notes, documentation and drafts live happily as .md files until somebody asks for the document, at which point it has to become something they can open. That conversion is usually clean, and where it is not, the reasons are predictable.
+
+
+### Why the conversion works at all
+
+
+Markdown is not simply text that looks tidy. A line beginning with a hash is a heading, a line beginning with a dash is a list item, and a converter parses those into a structured document before writing anything out.
+
+This is what makes the output genuinely useful rather than a wall of monospaced text. A heading in the converted .docx is a real Word heading, which means it appears in the navigation pane and in a generated table of contents. A list is a real list, and it renumbers itself when edited.
+
+Pasting Markdown into Word gives you none of that. It gives you the source, with the hashes and asterisks intact.
+
+
+### Choosing the target format
+
+
+
+#### Word, for documents other people will edit
+
+
+A [.docx](/convert/markdown-to-word) is the right answer when the document is going to a colleague who will comment on it, track changes in it, or drop it into a template with the company styles. It carries structure, which is what makes it editable rather than merely openable.
+
+
+#### PDF, for documents that are finished
+
+
+[PDF](/convert/markdown-to-pdf) fixes the layout. Use it when the document is done and should look identical for everyone — a specification being circulated, a report being filed, anything that should not be casually altered.
+
+
+#### HTML, for the web and for email
+
+
+[HTML](/convert/markdown-to-html) is the closest relative of the three; Markdown was designed as a shorthand for it, and the mapping is nearly one to one. It is also the most reliable way to get formatted text into an email client or a content system that expects markup.
+
+
+### What converts cleanly
+
+
+Everything in the original Markdown specification, which is most of what people write.
+
+- Headings at every level, mapped to the target format’s own heading styles.
+- Paragraphs, including the blank-line rule that separates them.
+- Bulleted and numbered lists, nested to any depth.
+- Bold, italic and inline code.
+- Links, which stay clickable in all three formats.
+- Block quotes.
+- Horizontal rules.
+- Code blocks, though how they are styled varies considerably.
+
+
+### What to check afterwards
+
+
+
+#### Tables
+
+
+Pipe tables are an extension rather than part of the original Markdown, and they are the single most common thing to arrive wrong. Column alignment markers are frequently dropped, and a converter that does not support the syntax at all will emit the pipes as literal text. If your document contains tables, look at them first.
+
+
+#### Code blocks
+
+
+The code survives; the syntax highlighting usually does not. HTML output can keep colour, a .docx generally reduces to a monospaced block, and long lines may wrap in a way that changes what the code appears to say. For anything where indentation carries meaning, check the result rather than assuming.
+
+
+#### Images
+
+
+Markdown references images by path rather than embedding them. A converter has to resolve that path and pull the file in, and a relative path pointing at a folder it cannot see produces a broken reference. Keep images alongside the .md file, and check they arrived.
+
+> Note: A YAML block at the top of the file — title, date, tags — is a static-site convention, not Markdown. Some converters strip it, some print it as text at the top of your document. Fenced diagram blocks are the same: text that a documentation site renders as a picture, and a converter almost certainly renders as the text it is.
+
+
+### Round trips lose things
+
+
+Converting Markdown to Word and back to Markdown does not return the file you started with. Markdown has one way to express a heading and Word has many, so the return journey has to make choices about what a given piece of formatting was meant to be.
+
+Keep the .md file as the source and treat every conversion as an export. Editing the .docx and converting back means the two versions have diverged, and the Markdown one is now wrong.
+
+The other direction has the same character: [Word to Markdown](/word/word-to-markdown) is a genuine simplification, and formatting with no Markdown equivalent is discarded rather than approximated.
+
+
+### Check the source before converting
+
+
+Most conversion surprises are already visible in the Markdown itself — a list that does not nest because the indentation is inconsistent, a table missing its separator row, a code fence that was never closed and has swallowed the rest of the document.
+
+Opening the file in a [Markdown viewer](/view/markdown-viewer) first shows you the structure the parser sees. If it is wrong there, no converter is going to improve it.
+
+
+### Where the conversion happens
+
+
+Parsing Markdown and writing a .docx are both ordinary text operations, and a browser is entirely capable of doing them. There is no compute here that requires a server, which makes an upload a round trip that buys nothing.
+
+It also matters more than it might seem. Markdown is what people keep meeting notes, internal documentation, drafts and personal writing in — the working material rather than the published output. Converting it locally means the finished document is the only copy that ever leaves the machine.
+
+---
+
+## Guide: How to find duplicate files without a cloud scanner
+- **URL**: https://office-utilities.org/guides/how-to-find-duplicate-files-on-your-computer
+- **Published**: 2026-09-06
+- **Summary**: Why matching on name and size is not enough, how a file hash proves two files are identical, which copy to keep, and how to check a folder without a program that indexes your disk.
+- **Direct Answer**: Compare file hashes, not names. Two files with the same name and size can differ, and two identical files often have different names — a hash reads the actual bytes and produces a short fingerprint, so matching fingerprints means matching content. Anything else is a guess.
+
+Duplicates accumulate without anyone deciding to make them: a download clicked twice, a folder copied “just in case”, photos imported from a phone that had already been imported. The files are easy to find and easy to get wrong, and getting it wrong means deleting the only copy of something.
+
+
+### Why name and size are not enough
+
+
+The obvious approach is to look for files sharing a name and a size. It is fast, and it is wrong in both directions.
+
+It reports duplicates that are not duplicates. Two different photographs from the same camera can share a file name and land within bytes of each other in size. Two exports of a report on different days are the same name and near enough the same length, and one of them is out of date.
+
+It also misses real duplicates. The same file saved as invoice.pdf, invoice(1).pdf and Scan_20260114.pdf is three names for identical content, and nothing about the names says so.
+
+
+### What a hash does
+
+
+A hash function reads every byte of a file and produces a short fixed-length string — a fingerprint. Change a single byte anywhere and the fingerprint changes completely.
+
+That gives you the property you actually want. Two files with the same SHA-256 hash are, for every practical purpose, the same file: same bytes, whatever they are named, wherever they sit, whatever the timestamps say. Different hashes mean genuinely different content, even if everything else about them matches.
+
+> Note: It tells you whether two files are identical and nothing else. It cannot tell you which is newer, which is better, or what the difference is. That is precisely why it is trustworthy — there is no interpretation involved.
+
+
+### Checking one specific pair
+
+
+Sometimes the question is narrower: is this download the same as the one I already have? Generate a [hash for each file](/file/file-hash-generator) and compare the two strings. Identical means identical; anything else means not.
+
+The same technique verifies a download against a checksum published by whoever distributed it. A match confirms the file arrived complete and unaltered, which is worth doing for installers and disk images regardless of duplicates.
+
+
+### Which copy to keep
+
+
+If the contents are identical, the file itself gives you no reason to prefer one. Decide on location and context instead.
+
+- Keep the one in the folder where it belongs, and delete the copy in Downloads or on the desktop. Location is the only thing that differs, so location should decide.
+- Keep the one with the more descriptive name. Between Scan_20260114.pdf and 2026 tax return.pdf, only one will make sense in two years.
+- Prefer the older file when timestamps differ but content does not. The newer one is usually the copy.
+- Be careful with anything referenced by something else. A duplicate image inside a project folder may be linked from a document, and deleting it breaks the link even though an identical file exists elsewhere.
+
+Where the dates matter to the decision, [file metadata](/file/file-metadata-viewer) shows created and modified times alongside the size.
+
+
+### What identical does not mean
+
+
+Byte-for-byte identical is a strict test, and its strictness cuts both ways.
+
+- Two exports of the same photograph at different quality settings are different files. Both are kept, and one is probably redundant — but a hash cannot tell you that.
+- A document saved twice by the same word processor may differ, because some formats record a timestamp or an editing session identifier inside the file.
+- A file and its compressed version are entirely different, obviously, but people are sometimes surprised that renaming a file does not change its hash at all. The name is not part of the content.
+
+> Note: Deleting duplicates is one of the few operations that is both routine and irreversible. Move candidates to a holding folder, work for a week, then empty it. Two copies of a file is a minor inconvenience; nought copies is a real problem.
+
+
+### The trouble with cloud duplicate finders
+
+
+To find duplicates across your files, a tool must read your files. A service that does this on a server must first receive them — which means uploading the entire set being checked, including whatever is in it, in order to be told that two of them are the same.
+
+That is an unusually poor trade. The result is a small list of matches; the cost is a full copy of a folder that probably contains documents, photographs and correspondence, transferred to somebody else’s storage to produce it.
+
+Hashing needs no server at all. Your browser can read a file and compute its fingerprint locally, at whatever speed your machine manages, and compare fingerprints without any file leaving the device. The comparison is exact, and nothing is sent anywhere — see [what actually happens when you upload a file](/guides/what-happens-when-you-upload-a-file-to-a-converter) for why that distinction is worth insisting on.
+

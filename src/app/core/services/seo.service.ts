@@ -11,6 +11,8 @@ export interface PageSeo {
   readonly keywords?: readonly string[];
   readonly structuredData?: readonly object[];
   readonly noIndex?: boolean;
+  readonly image?: string;
+  readonly imageAlt?: string;
 }
 
 const LD_ID = 'ou-structured-data';
@@ -25,18 +27,21 @@ export class SeoService {
 
   apply(seo: PageSeo): void {
     const url = SITE.origin + (seo.path === '/' ? '' : seo.path);
-    const suffixed = `${seo.title} — ${SITE.name}`;
-    const fullTitle = seo.title.includes(SITE.name)
-      ? seo.title
-      : suffixed.length <= TITLE_LIMIT
-        ? suffixed
-        : seo.title;
+    const fullTitle = formatPageTitle(seo.title, SITE.name, TITLE_LIMIT);
 
     this.title.setTitle(fullTitle);
 
     this.setName('description', metaDescription(seo.description));
-    this.setName('robots', seo.noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large');
+    this.setName(
+      'robots',
+      seo.noIndex
+        ? 'noindex, nofollow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+    );
     this.meta.removeTag("name='keywords'");
+
+    const ogImage = seo.image || `${SITE.origin}/og/cover.jpg`;
+    const ogImageAlt = seo.imageAlt || `${SITE.name} — ${SITE.tagline}`;
 
     this.setProperty('og:type', 'website');
     this.setProperty('og:site_name', SITE.name);
@@ -45,14 +50,14 @@ export class SeoService {
     this.setProperty('og:url', url);
     this.setProperty('og:locale', 'en');
     this.setName('author', SITE.name);
-    this.setProperty('og:image', `${SITE.origin}/og/cover.jpg`);
-    this.setProperty('og:image:alt', `${SITE.name} — ${SITE.tagline}`);
+    this.setProperty('og:image', ogImage);
+    this.setProperty('og:image:alt', ogImageAlt);
 
     this.setName('twitter:card', 'summary_large_image');
     this.setName('twitter:site', SITE.twitter);
     this.setName('twitter:title', fullTitle);
     this.setName('twitter:description', seo.description);
-    this.setName('twitter:image', `${SITE.origin}/og/cover.jpg`);
+    this.setName('twitter:image', ogImage);
 
     this.setCanonical(url);
     this.setStructuredData(seo.structuredData ?? []);
@@ -62,19 +67,33 @@ export class SeoService {
     const structuredData: object[] = [
       {
         '@context': 'https://schema.org',
-        '@type': 'SoftwareApplication',
+        '@type': ['SoftwareApplication', 'WebApplication'],
         name: tool.title,
         applicationCategory: 'BusinessApplication',
         applicationSubCategory: tool.categoryRef.title,
         operatingSystem: 'Any (web browser)',
         description: tool.description,
         url: SITE.origin + tool.path,
+        image: `${SITE.origin}/icons/icon-512x512.png`,
         isAccessibleForFree: true,
-        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+          availability: 'https://schema.org/InStock',
+        },
         featureList: [...tool.keywords],
         browserRequirements: 'Requires JavaScript. Works in any modern browser.',
         inLanguage: SITE.locale,
-        publisher: { '@type': 'Organization', name: SITE.name, url: SITE.origin },
+        publisher: {
+          '@type': 'Organization',
+          name: SITE.name,
+          url: SITE.origin,
+          logo: {
+            '@type': 'ImageObject',
+            url: `${SITE.origin}/icons/icon-512x512.png`,
+          },
+        },
       },
       this.breadcrumbs([
         { name: 'Home', path: '/' },
@@ -96,20 +115,40 @@ export class SeoService {
     }
 
     return {
-      title: `${tool.title} — Free, Nothing Uploaded`,
+      title: `${tool.title} — Free, No Uploads`,
       description: tool.description,
       path: tool.path,
-      keywords: [...tool.keywords, tool.title.toLowerCase(), 'online', 'free', 'no upload'],
+      image: `${SITE.origin}/og/categories/${tool.categoryRef.id}.svg`,
+      imageAlt: `${tool.title} — ${SITE.name}`,
+      keywords: [
+        ...tool.keywords,
+        tool.title.toLowerCase(),
+        'online',
+        'free',
+        'no upload',
+        'offline in browser',
+        'privacy first',
+      ],
       structuredData,
     };
   }
 
   guideSeo(guide: ResolvedGuide): PageSeo {
+    const wordCount = guide.body.reduce((count, block) => {
+      if ('text' in block && typeof block.text === 'string') {
+        return count + block.text.trim().split(/\s+/).length;
+      }
+      if ('items' in block && Array.isArray(block.items)) {
+        return count + block.items.reduce((c, item) => c + item.trim().split(/\s+/).length, 0);
+      }
+      return count;
+    }, 0);
+
     return {
       title: guide.title,
       description: guide.summary,
       path: guide.path,
-      keywords: [...guide.keywords],
+      keywords: [...guide.keywords, 'document security', 'privacy guide', 'office tools'],
       structuredData: [
         {
           '@context': 'https://schema.org',
@@ -119,6 +158,7 @@ export class SeoService {
           url: SITE.origin + guide.path,
           datePublished: guide.published,
           dateModified: guide.updated ?? guide.published,
+          wordCount: wordCount > 0 ? wordCount : undefined,
           inLanguage: SITE.locale,
           author: {
             '@type': 'Person',
@@ -161,10 +201,18 @@ export class SeoService {
 
   categorySeo(category: ToolCategory, tools: readonly ResolvedTool[]): PageSeo {
     return {
-      title: `${category.title} — ${tools.length} browser-based tools`,
+      title: `${category.title} — ${tools.length} Browser Tools`,
       description: category.description,
       path: `/${category.slug}`,
-      keywords: [category.title.toLowerCase(), category.tagline.toLowerCase()],
+      image: `${SITE.origin}/og/categories/${category.id}.svg`,
+      imageAlt: `${category.title} — ${SITE.name}`,
+      keywords: [
+        category.title.toLowerCase(),
+        category.tagline.toLowerCase(),
+        'free office tools',
+        'browser based',
+        'no upload',
+      ],
       structuredData: [
         {
           '@context': 'https://schema.org',
@@ -233,6 +281,28 @@ export class SeoService {
       this.doc.head.appendChild(script);
     }
   }
+}
+
+export function formatPageTitle(rawTitle: string, brand: string, limit = 60): string {
+  const cleanTitle = rawTitle.trim();
+  if (cleanTitle.includes(brand)) return cleanTitle;
+
+  const suffix = ` — ${brand}`;
+  if (cleanTitle.length + suffix.length <= limit) {
+    return cleanTitle + suffix;
+  }
+
+  const available = limit - suffix.length;
+  if (available < 16) {
+    return cleanTitle.length <= limit ? cleanTitle : cleanTitle.slice(0, limit - 1) + '…';
+  }
+
+  let truncated = cleanTitle.slice(0, available);
+  const wordEnd = truncated.lastIndexOf(' ');
+  if (wordEnd > 10) {
+    truncated = truncated.slice(0, wordEnd).replace(/[,;:—-]$/, '');
+  }
+  return `${truncated}${suffix}`;
 }
 
 export function metaDescription(text: string): string {

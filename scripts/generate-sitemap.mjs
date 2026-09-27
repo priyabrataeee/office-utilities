@@ -1,11 +1,12 @@
 import { execSync } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const rootDir = resolve(here, '..');
 const outputDir = resolve(rootDir, 'dist/office-utility/browser');
+const publicDir = resolve(rootDir, 'public');
 
 const site = (
   process.env['OU_SITE_ORIGIN'] ||
@@ -22,7 +23,7 @@ const categorySlugList = [...categoryCatalog.matchAll(/slug:\s*'([^']+)'/g)].map
   (match) => match[1],
 );
 
-const toolPaths = extractToolPaths(catalogSource, categoryCatalog);
+const toolPathList = extractToolPaths(catalogSource, categoryCatalog);
 
 const guideFiles = [
   ...readFileSync(resolve(rootDir, 'src/app/core/data/guide-catalog.ts'), 'utf8').matchAll(
@@ -32,16 +33,26 @@ const guideFiles = [
 
 const guideDateBySlug = new Map();
 
-const guideSlugs = guideFiles
-  .map((file) => {
-    const source = readFileSync(resolve(rootDir, 'src/app/core/data/guides/' + file + '.ts'), 'utf8');
-    const slug = extract(source, /slug:\s*'([^']+)'/);
-    const updated = extract(source, /updated:\s*'(\d{4}-\d{2}-\d{2})'/);
-    const published = extract(source, /published:\s*'(\d{4}-\d{2}-\d{2})'/);
-    if (slug && (updated || published)) guideDateBySlug.set('/guides/' + slug, updated || published);
-    return slug;
-  })
-  .filter(Boolean);
+const parsedGuides = [];
+for (const file of guideFiles) {
+  const source = readFileSync(resolve(rootDir, 'src/app/core/data/guides/' + file + '.ts'), 'utf8');
+  const cleanSource = source
+    .replace(/import type[^;]+;/g, '')
+    .replace(/export const guide:\s*GuideDefinition\s*=\s*/, 'return ');
+  try {
+    const guide = new Function(cleanSource)();
+    if (guide && guide.slug) {
+      parsedGuides.push(guide);
+      const updated = guide.updated || guide.published;
+      if (updated) guideDateBySlug.set('/guides/' + guide.slug, updated);
+    }
+  } catch (err) {
+    console.error(`Error parsing guide ${file}:`, err);
+  }
+}
+
+const guideSlugs = parsedGuides.map((g) => g.slug);
+
 const staticPaths = [
   '/',
   '/tools',
@@ -55,7 +66,7 @@ const staticPaths = [
   ...guideSlugs.map((slug) => `/guides/${slug}`),
 ];
 const categoryPaths = categorySlugList.map((slug) => `/${slug}`);
-const allPaths = [...new Set([...staticPaths, ...categoryPaths, ...toolPaths])];
+const allPaths = [...new Set([...staticPaths, ...categoryPaths, ...toolPathList])];
 
 const SNAPSHOT_NAME = 'content-dates.json';
 const snapshotPath = resolve(here, SNAPSHOT_NAME);
@@ -198,17 +209,34 @@ ${AI_AGENTS.map((agent) => `User-agent: ${agent}\nAllow: /`).join('\n\n')}
 Sitemap: ${site}/sitemap.xml
 `;
 
-mkdirSync(outputDir, { recursive: true });
-writeFileSync(join(outputDir, 'sitemap.xml'), sitemap);
-writeFileSync(join(outputDir, 'robots.txt'), robots);
-writeFileSync(join(outputDir, 'llms.txt'), buildLlmsTxt());
+const llmsTxt = buildLlmsTxt();
+const llmsFullTxt = buildLlmsFullTxt();
+const rssXml = buildRssXml();
 
-try {
-  const shell = readFileSync(join(outputDir, 'index.html'), 'utf8');
-  writeFileSync(join(outputDir, '404.html'), shell);
-} catch {}
+// Write to public/ so assets are available during dev and automatically copied on build
+mkdirSync(publicDir, { recursive: true });
+writeFileSync(join(publicDir, 'sitemap.xml'), sitemap);
+writeFileSync(join(publicDir, 'robots.txt'), robots);
+writeFileSync(join(publicDir, 'llms.txt'), llmsTxt);
+writeFileSync(join(publicDir, 'llms-full.txt'), llmsFullTxt);
+writeFileSync(join(publicDir, 'rss.xml'), rssXml);
+
+// Write to outputDir if already built
+if (existsSync(outputDir)) {
+  writeFileSync(join(outputDir, 'sitemap.xml'), sitemap);
+  writeFileSync(join(outputDir, 'robots.txt'), robots);
+  writeFileSync(join(outputDir, 'llms.txt'), llmsTxt);
+  writeFileSync(join(outputDir, 'llms-full.txt'), llmsFullTxt);
+  writeFileSync(join(outputDir, 'rss.xml'), rssXml);
+
+  try {
+    const shell = readFileSync(join(outputDir, 'index.html'), 'utf8');
+    writeFileSync(join(outputDir, '404.html'), shell);
+  } catch {}
+}
 
 console.log(`Wrote ${allPaths.length} URLs to sitemap.xml (${site})`);
+console.log(`Generated robots.txt, llms.txt, llms-full.txt, and rss.xml (${parsedGuides.length} guides)`);
 
 function extract(source, pattern) {
   const match = source.match(pattern);
@@ -258,19 +286,8 @@ function buildLlmsTxt() {
     });
   }
 
-  const guideEntries = guideFiles
-    .map((file) => {
-      const source = readFileSync(
-        resolve(rootDir, "src/app/core/data/guides/" + file + ".ts"),
-        'utf8',
-      );
-      const slug = extract(source, /slug:\s*'([^']+)'/);
-      const title = extract(source, /title:\s*'([^']+)'/);
-      const answer = extract(source, /answer:\s*\n\s*'([^']+)'/);
-      if (!slug || !title) return "";
-      return "- [" + title + "](" + site + "/guides/" + slug + "): " + (answer || "");
-    })
-    .filter(Boolean)
+  const guideEntries = parsedGuides
+    .map((g) => `- [${g.title}](${site}/guides/${g.slug}): ${g.answer || g.summary}`)
     .join('\n');
 
   const sections = categories
@@ -285,6 +302,7 @@ function buildLlmsTxt() {
   return `# Office Utilities
 
 > ${tools.length} office-document tools that run entirely inside the visitor's own web browser. Files are never uploaded to a server.
+> Complete uncompressed guide texts: [llms-full.txt](${site}/llms-full.txt)
 
 Office Utilities converts, views, edits and generates PDF, Word, Excel and
 PowerPoint documents. Every tool executes as JavaScript and WebAssembly in the
@@ -318,5 +336,93 @@ ${guideEntries}
 - [Disclaimer](${site}/disclaimer): Conversion accuracy and the limits of each tool.
 - [Contact](${site}/contact): Support, privacy and general enquiries.
 - [All tools](${site}/tools): The complete list.
+`;
+}
+
+function guideBodyToMarkdown(body) {
+  if (!Array.isArray(body)) return '';
+  const parts = [];
+  for (const block of body) {
+    if (block.type === 'p' && block.text) {
+      parts.push(block.text);
+    } else if (block.type === 'h2' && block.text) {
+      parts.push(`\n### ${block.text}\n`);
+    } else if (block.type === 'h3' && block.text) {
+      parts.push(`\n#### ${block.text}\n`);
+    } else if (block.type === 'ul' && Array.isArray(block.items)) {
+      parts.push(block.items.map((it) => `- ${it}`).join('\n'));
+    } else if (block.type === 'ol' && Array.isArray(block.items)) {
+      parts.push(block.items.map((it, idx) => `${idx + 1}. ${it}`).join('\n'));
+    } else if (block.type === 'note' && block.text) {
+      parts.push(`> Note: ${block.text}`);
+    }
+  }
+  return parts.join('\n\n');
+}
+
+function buildLlmsFullTxt() {
+  const guideSections = parsedGuides
+    .map((g) => {
+      const bodyMd = guideBodyToMarkdown(g.body);
+      return `## Guide: ${g.title}
+- **URL**: ${site}/guides/${g.slug}
+- **Published**: ${g.published}
+- **Summary**: ${g.summary}
+- **Direct Answer**: ${g.answer}
+
+${bodyMd}
+`;
+    })
+    .join('\n---\n\n');
+
+  return `${buildLlmsTxt()}
+
+---
+
+# Complete Guide Library (Full Text)
+
+${guideSections}
+`;
+}
+
+function buildRssXml() {
+  const escapeXml = (str) =>
+    (str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+
+  const sorted = [...parsedGuides].sort(
+    (a, b) => new Date(b.published).getTime() - new Date(a.published).getTime(),
+  );
+
+  const itemsXml = sorted
+    .map((g) => {
+      const pubDate = new Date(g.published).toUTCString();
+      return `    <item>
+      <title>${escapeXml(g.title)}</title>
+      <link>${site}/guides/${g.slug}</link>
+      <guid isPermaLink="true">${site}/guides/${g.slug}</guid>
+      <pubDate>${pubDate}</pubDate>
+      <description>${escapeXml(g.summary)}</description>
+      <author>priyabrata.saha@office-utilities.org (Priyabrata Saha)</author>
+    </item>`;
+    })
+    .join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Office Utilities Guides</title>
+    <link>${site}/guides</link>
+    <description>In-depth guides on document privacy, PDF tools, Office formats, and browser-based file utilities.</description>
+    <language>en-US</language>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+    <atom:link href="${site}/rss.xml" rel="self" type="application/rss+xml"/>
+${itemsXml}
+  </channel>
+</rss>
 `;
 }
