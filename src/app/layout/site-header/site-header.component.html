@@ -44,13 +44,8 @@
         }
       </div>
 
-      <a routerLink="/favorites" routerLinkActive="is-active">
-        Favourites
-        @if (favorites.count()) {
-          <span class="nav__count">{{ favorites.count() }}</span>
-        }
-      </a>
-      <a routerLink="/recent" routerLinkActive="is-active">Recent</a>
+      <a routerLink="/guides" routerLinkActive="is-active">Guides</a>
+      <a routerLink="/about" routerLinkActive="is-active">About</a>
     </nav>
 
     <button type="button" class="search" (click)="openPalette()" aria-label="Search tools">
@@ -60,6 +55,18 @@
     </button>
 
     <div class="header__actions">
+      <a
+        routerLink="/favorites"
+        class="ou-btn ou-btn--ghost ou-btn--icon"
+        aria-label="Favourites"
+        title="Saved favourites"
+      >
+        <app-icon name="star" [size]="16" />
+        @if (favorites.count()) {
+          <span class="nav__count">{{ favorites.count() }}</span>
+        }
+      </a>
+
       <a
         class="ou-btn ou-btn--sm support-btn"
         [href]="money.donationUrl"
@@ -116,6 +123,7 @@
       </a>
       <a routerLink="/tools" (click)="closeMenu()">All tools</a>
       <a routerLink="/categories" (click)="closeMenu()">Categories</a>
+      <a routerLink="/guides" (click)="closeMenu()">Guides &amp; Articles</a>
       <a routerLink="/favorites" (click)="closeMenu()">Favourites</a>
       <a routerLink="/recent" (click)="closeMenu()">Recent files</a>
       <hr />

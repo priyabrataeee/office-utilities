@@ -4,6 +4,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ToolCardComponent } from '../../shared/components/tool-card/tool-card.component';
 import { FileDropZoneComponent } from '../../shared/components/file-drop-zone/file-drop-zone.component';
 import { ToolRegistryService } from '../../core/services/tool-registry.service';
+import { GuideRegistryService } from '../../core/services/guide-registry.service';
 import { HandoffService } from '../../core/services/handoff.service';
 import { SeoService } from '../../core/services/seo.service';
 import { SITE } from '../../core/site.config';
@@ -21,6 +22,7 @@ import type { ResolvedTool } from '../../core/models/tool.model';
 export class HomeComponent {
   protected readonly faq = HOME_FAQ;
   protected readonly registry = inject(ToolRegistryService);
+  protected readonly guideRegistry = inject(GuideRegistryService);
   private readonly handoff = inject(HandoffService);
   private readonly router = inject(Router);
   private readonly seo = inject(SeoService);
@@ -28,6 +30,8 @@ export class HomeComponent {
   protected readonly site = SITE;
   protected readonly query = signal('');
   protected readonly dropped = signal<File[]>([]);
+
+  protected readonly featuredGuides = computed(() => this.guideRegistry.guides.slice(0, 6));
 
   protected readonly searchResults = computed(() => {
     const query = this.query().trim();

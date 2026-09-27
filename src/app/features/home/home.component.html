@@ -163,6 +163,36 @@
 </section>
 
 <section class="section ou-container">
+  <header class="section__head">
+    <div>
+      <h2>Featured Guides &amp; Insights</h2>
+      <p>Practical deep dives on document privacy, PDF engineering, and offline conversion.</p>
+    </div>
+    <a class="ou-btn ou-btn--subtle" routerLink="/guides">
+      All {{ guideRegistry.guides.length }} guides
+      <app-icon name="arrow-right" [size]="15" />
+    </a>
+  </header>
+
+  <div class="guides-grid">
+    @for (guide of featuredGuides(); track guide.slug) {
+      <a class="guide-card" [routerLink]="guide.path">
+        <div class="guide-card__meta">
+          <span class="guide-card__badge"><app-icon name="clock" [size]="13" /> {{ guide.readingMinutes }} min read</span>
+          <span class="guide-card__date">{{ guide.published }}</span>
+        </div>
+        <h3 class="guide-card__title">{{ guide.title }}</h3>
+        <p class="guide-card__summary">{{ guide.summary }}</p>
+        <span class="guide-card__action">
+          Read guide
+          <app-icon name="arrow-right" [size]="13" />
+        </span>
+      </a>
+    }
+  </div>
+</section>
+
+<section class="section ou-container">
   <div class="promise">
     <div class="promise__text">
       <h2>Why nothing is uploaded</h2>
