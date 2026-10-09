@@ -16,7 +16,9 @@ import { FogRenderer, type FogColors } from '../../../core/engines/fog.engine';
 
 const SPEED = 3.5;
 
-const REDUCED_MOTION_SPEED = SPEED * 0.15;
+const FOLLOW_MS = 1100;
+
+const TOKENS = ['--ou-fog-base', '--ou-fog-lowlight', '--ou-fog-midtone', '--ou-fog-highlight'];
 
 @Component({
   selector: 'app-site-background',
@@ -48,12 +50,6 @@ const REDUCED_MOTION_SPEED = SPEED * 0.15;
       opacity: 1;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .fog {
-        transition: none;
-      }
-    }
-
     @media print {
       :host {
         display: none;
@@ -70,6 +66,10 @@ export class SiteBackgroundComponent {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   private renderer: FogRenderer | null = null;
+  private probe: HTMLElement | null = null;
+  private swatch: CanvasRenderingContext2D | null = null;
+  private followUntil = 0;
+  private following = 0;
   protected readonly visible = signal(false);
 
   constructor() {
@@ -79,13 +79,19 @@ export class SiteBackgroundComponent {
 
   private attach(): void {
     const canvas = this.canvasRef().nativeElement;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    this.probe = this.doc.createElement('i');
+    this.probe.style.display = 'none';
+    this.el.nativeElement.appendChild(this.probe);
+    const swatch = this.doc.createElement('canvas');
+    swatch.width = swatch.height = 1;
+    this.swatch = swatch.getContext('2d', { willReadFrequently: true });
 
     const renderer = FogRenderer.create(canvas, {
       colors: this.readColors(),
       blurFactor: 0.6,
       zoom: 1,
-      speed: reduced.matches ? REDUCED_MOTION_SPEED : SPEED,
+      speed: SPEED,
       fps: 30,
       downscale: window.innerWidth < 768 ? 3 : 2,
     });
@@ -115,14 +121,10 @@ export class SiteBackgroundComponent {
     };
     this.doc.addEventListener('visibilitychange', onVisibility);
 
-    const onMotion = (event: MediaQueryListEvent) =>
-      renderer.setSpeed(event.matches ? REDUCED_MOTION_SPEED : SPEED);
-    reduced.addEventListener('change', onMotion);
-
     const themeWatcher = new MutationObserver(() => this.syncColors());
     themeWatcher.observe(this.doc.documentElement, {
       attributes: true,
-      attributeFilter: ['data-theme'],
+      attributeFilter: ['data-theme', 'data-chroma'],
     });
     const scheme = window.matchMedia('(prefers-color-scheme: dark)');
     const onScheme = () => this.syncColors();
@@ -132,7 +134,6 @@ export class SiteBackgroundComponent {
       observer.disconnect();
       themeWatcher.disconnect();
       this.doc.removeEventListener('visibilitychange', onVisibility);
-      reduced.removeEventListener('change', onMotion);
       scheme.removeEventListener('change', onScheme);
       renderer.dispose();
       this.renderer = null;
@@ -140,18 +141,31 @@ export class SiteBackgroundComponent {
   }
 
   private syncColors(): void {
-    requestAnimationFrame(() => this.renderer?.setColors(this.readColors()));
+    this.followUntil = performance.now() + FOLLOW_MS;
+    if (this.following) return;
+    const step = () => {
+      this.renderer?.setColors(this.readColors());
+      this.following = performance.now() < this.followUntil ? requestAnimationFrame(step) : 0;
+    };
+    this.following = requestAnimationFrame(step);
+    setTimeout(() => this.renderer?.setColors(this.readColors()), FOLLOW_MS + 60);
   }
 
   private readColors(): FogColors {
-    const styles = getComputedStyle(this.doc.documentElement);
-    const read = (name: string, fallback: string) =>
-      styles.getPropertyValue(name).trim() || fallback;
-    return {
-      base: read('--ou-fog-base', '#fbfbfd'),
-      lowlight: read('--ou-fog-lowlight', '#e4e6f7'),
-      midtone: read('--ou-fog-midtone', '#dfeaf7'),
-      highlight: read('--ou-fog-highlight', '#f2eefc'),
-    };
+    const [base, lowlight, midtone, highlight] = TOKENS.map((token) => this.resolve(token));
+    return { base, lowlight, midtone, highlight };
+  }
+
+  private resolve(token: string): string {
+    const probe = this.probe;
+    const swatch = this.swatch;
+    if (!probe || !swatch) return '#808080';
+    probe.style.color = `var(${token})`;
+    swatch.clearRect(0, 0, 1, 1);
+    swatch.fillStyle = '#808080';
+    swatch.fillStyle = getComputedStyle(probe).color;
+    swatch.fillRect(0, 0, 1, 1);
+    const [r, g, b] = swatch.getImageData(0, 0, 1, 1).data;
+    return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
   }
 }

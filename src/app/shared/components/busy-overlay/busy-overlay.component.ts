@@ -97,13 +97,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       color: var(--ou-text-muted);
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .busy__bar--indeterminate {
-        animation: none;
-        width: 100% !important;
-        opacity: 0.6;
-      }
-    }
   `,
 })
 export class BusyOverlayComponent {

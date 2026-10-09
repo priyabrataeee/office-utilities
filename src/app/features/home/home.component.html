@@ -1,264 +1,78 @@
-<section class="hero">
-  <div class="hero__inner">
-    <span class="hero__pill">
-      <app-icon name="shield-check" [size]="14" />
-      100% client-side · no uploads · no accounts
-    </span>
-
-    <h1 class="hero__title">
-      Office documents,<br />
-      <span class="hero__gradient">without the upload.</span>
-    </h1>
-
-    <p class="hero__lede">
-      {{ registry.tools.length }} tools for PDF, Word, Excel, PowerPoint, diagrams and file
-      inspection — all running inside this browser tab. Your files never leave your computer.
-    </p>
-
-    <div class="hero__search">
-      <app-icon name="search" [size]="18" />
-      <input
-        type="search"
-        class="hero__input"
-        placeholder="What do you need to do? Try “merge pdf” or “csv to excel”…"
-        [value]="query()"
-        (input)="onSearch($event)"
-        aria-label="Search tools"
-      />
-      @if (query()) {
-        <button type="button" class="ou-btn ou-btn--ghost ou-btn--sm ou-btn--icon" (click)="query.set('')">
-          <app-icon name="x" [size]="15" />
-        </button>
-      }
-    </div>
-
-    @if (searchResults().length) {
-      <div class="hero__results">
-        @for (tool of searchResults(); track tool.id) {
-          <a class="hero__result" [routerLink]="tool.path">
-            <app-icon [name]="tool.icon" [size]="15" />
-            <strong>{{ tool.title }}</strong>
-            <small>{{ tool.summary }}</small>
-          </a>
+<section class="workbench ou-container" aria-labelledby="switchboard-title">
+  <div class="edition"><span>OFFICE UTILITIES / LOCAL EDITION</span><span>NO ACCOUNT. NO UPLOAD.</span></div>
+  <div class="machine" [style.--channel]="channelColours[selectedCategory()]">
+    <header class="machine__head">
+      <div><span class="micro">A DIFFERENT WAY TO DO PAPERWORK</span><h1 id="switchboard-title">The file switchboard<span>.</span></h1></div>
+      <div class="machine__serial"><strong>{{ registry.tools.length }}</strong><span>TOOLS<br />ONE DEVICE</span><app-icon name="shield-check" [size]="26" /></div>
+    </header>
+    <div class="machine__body">
+      <div class="channel">
+        <div class="channel__top"><span class="micro">01 / CHOOSE A TOOLKIT</span><span class="channel__indicator">CHANNEL 0{{ channelNumber() }}</span></div>
+        @for (category of [activeCategory()]; track category.id) {
+          <div class="channel__display">
+            <span class="channel__word" aria-hidden="true">{{ channelLabels[category.id] }}</span>
+            <div class="channel__caption"><h2>{{ category.title }}</h2><app-icon [name]="category.icon" [size]="32" /></div>
+            <p>{{ category.tagline }}. On your terms.</p>
+          </div>
         }
+        <div class="channel__bottom"><span>{{ registry.countInCategory(selectedCategory()) }} TOOLS IN THIS CHANNEL</span><a [routerLink]="['/', activeCategory().slug]">Explore all <app-icon name="arrow-up-right" [size]="16" /></a></div>
       </div>
-    } @else if (query()) {
-      <p class="hero__noresult">
-        Nothing matched “{{ query() }}”. <a routerLink="/tools">Browse all tools</a>
-      </p>
-    }
-
-    <div class="hero__drop">
-      <app-file-drop-zone
-        [multiple]="true"
-        [showSelection]="false"
-        title="Drop any document to get started"
-        hint="PDF, DOCX, XLSX, PPTX, CSV, images and more — we will suggest the right tool"
-        icon="upload"
-        (filesChange)="onDropped($event)"
-      />
-
-      @if (suggestions().length) {
-        <div class="picker ou-animate-in">
-          <header class="picker__head">
-            <div>
-              <strong>{{ droppedSummary() }}</strong>
-              <span>Choose what to do next</span>
-            </div>
-            <button type="button" class="ou-btn ou-btn--sm ou-btn--ghost" (click)="clearDrop()">
-              Clear
-            </button>
-          </header>
-          <div class="picker__grid">
-            @for (tool of suggestions(); track tool.id) {
-              <button type="button" class="picker__tool" (click)="openWith(tool)">
-                <span class="picker__icon" [style.--accent]="'var(' + tool.categoryRef.accentVar + ')'">
-                  <app-icon [name]="tool.icon" [size]="16" />
-                </span>
-                <span class="picker__text">
-                  <strong>{{ tool.title }}</strong>
-                  <small>{{ tool.summary }}</small>
-                </span>
-                <app-icon name="arrow-right" [size]="14" />
-              </button>
+      <div class="routing" id="switchboard-tools" role="region" aria-label="Tools in selected toolkit" aria-live="polite">
+        <div class="routing__head"><span class="micro">02 / PICK YOUR NEXT MOVE</span><span class="routing__led" aria-hidden="true"></span></div>
+        @for (category of [activeCategory()]; track category.id) {
+          <div class="routing__list">
+            @for (tool of channelTools(); track tool.id) {
+              <a class="route" [routerLink]="tool.path" [style.--order]="$index"><span class="route__port" aria-hidden="true"></span><span class="route__text"><strong>{{ tool.title }}</strong><small>{{ tool.summary }}</small></span><app-icon name="arrow-up-right" [size]="19" /></a>
             }
           </div>
-        </div>
-      } @else if (dropped().length) {
-        <p class="hero__noresult">
-          No tool here handles that file type yet. <a routerLink="/tools">See everything we support</a>
-        </p>
-      }
-    </div>
-
-    <ul class="hero__proof">
-      <li><app-icon name="zap" [size]="15" /> No queue or size caps</li>
-      <li><app-icon name="cloud" [size]="15" /> Works offline once loaded</li>
-      <li><app-icon name="user" [size]="15" /> Nothing to sign up for</li>
-    </ul>
-  </div>
-</section>
-
-<section class="section ou-container">
-  <header class="section__head">
-    <div>
-      <h2>Popular tools</h2>
-      <p>The ones people reach for most.</p>
-    </div>
-    <a class="ou-btn ou-btn--subtle" routerLink="/tools">
-      All {{ registry.tools.length }} tools
-      <app-icon name="arrow-right" [size]="15" />
-    </a>
-  </header>
-
-  <div class="ou-grid">
-    @for (tool of registry.popular(); track tool.id) {
-      <app-tool-card [tool]="tool" [showCategory]="true" />
-    }
-  </div>
-</section>
-
-@if (registry.recentTools().length) {
-  <section class="section ou-container">
-    <header class="section__head">
-      <div>
-        <h2>Pick up where you left off</h2>
-        <p>Stored on this device only.</p>
+        }
       </div>
-      <a class="ou-btn ou-btn--subtle" routerLink="/recent">
-        Recent files
-        <app-icon name="arrow-right" [size]="15" />
-      </a>
-    </header>
-
-    <div class="ou-grid">
-      @for (tool of registry.recentTools().slice(0, 6); track tool.id) {
-        <app-tool-card [tool]="tool" [compact]="true" [showCategory]="true" />
+    </div>
+    <div class="keys" role="group" aria-label="Choose a toolkit">
+      @for (category of registry.categories; track category.id) {
+        <button class="key" type="button" [class.key--active]="selectedCategory() === category.id" [style.--key-colour]="channelColours[category.id]" [attr.aria-pressed]="selectedCategory() === category.id" [attr.aria-label]="category.title" (click)="selectedCategory.set(category.id)"><span class="key__number">0{{ $index + 1 }}</span><app-icon [name]="category.icon" [size]="20" /><strong>{{ channelLabels[category.id] }}</strong><span class="key__light" aria-hidden="true"></span></button>
       }
     </div>
-  </section>
+    <div class="intake">
+      <div class="intake__label"><app-icon name="upload" [size]="22" /><div><strong>Not sure where to start?</strong><span>Let your file choose the tools.</span></div></div>
+      <app-file-drop-zone [multiple]="true" [showSelection]="false" [compact]="true" title="Drop a file or click to browse" hint="PDF, Word, Excel, PowerPoint, images & more" icon="plus" (filesChange)="onDropped($event)" />
+    </div>
+    @if (dropped().length) {
+      <section class="handoff" aria-label="Suggested tools for your files">
+        <header><div><span class="micro">YOUR FILE IS READY / CHOOSE A TOOL</span><strong>{{ droppedSummary() }}</strong></div><button type="button" class="ou-btn ou-btn--sm" (click)="clearDrop()">Clear files</button></header>
+        @if (suggestions().length) {
+          <div class="handoff__tools">@for (tool of suggestions(); track tool.id) { <button type="button" (click)="openWith(tool)"><app-icon [name]="tool.icon" [size]="18" /><span>{{ tool.title }}</span><app-icon name="arrow-right" [size]="16" /></button> }</div>
+        } @else { <p>No tool handles this file type yet. <a routerLink="/tools">See supported tools.</a></p> }
+      </section>
+    }
+    <div class="machine__foot"><span><i></i> FILE PROCESSING STAYS ON THIS DEVICE</span><span>BUILT FOR THE WORK. NOT THE UPLOAD.</span></div>
+  </div>
+  <div class="finder">
+    <label for="workbench-search">Know what you need?<app-icon name="arrow-right" [size]="18" /></label>
+    <div class="finder__input"><app-icon name="search" [size]="18" /><input id="workbench-search" type="search" placeholder="Find a tool…" aria-label="Search tools" [value]="query()" (input)="onSearch($event)" />@if (query()) { <button type="button" aria-label="Clear search" (click)="query.set('')"><app-icon name="x" [size]="18" /></button> }</div>
+    <a routerLink="/tools">The complete toolkit <span>{{ registry.tools.length }}</span><app-icon name="arrow-up-right" [size]="18" /></a>
+  </div>
+  @if (query()) {
+    <div class="search-results" aria-label="Search results">@for (tool of searchResults(); track tool.id) { <a [routerLink]="tool.path"><app-icon [name]="tool.icon" [size]="18" /><span><strong>{{ tool.title }}</strong><small>{{ tool.summary }}</small></span><app-icon name="arrow-up-right" [size]="18" /></a> } @empty { <p>Nothing matched “{{ query() }}”. <a routerLink="/tools">Browse all tools.</a></p> }</div>
+  }
+</section>
+<section class="shelf ou-container" aria-labelledby="shortcuts-title">
+  <header class="shelf__head"><span class="micro">THE SHORTCUT SHELF</span><h2 id="shortcuts-title">Less looking.<br /><em>More doing.</em></h2><p>Eight useful starting points.<br />Always free. Always local.</p></header>
+  <div class="shortcuts">@for (tool of featuredTools; track tool.id) { <a [routerLink]="tool.path" [style.--accent]="'var(' + tool.categoryRef.accentVar + ')'" class="shortcut"><span class="shortcut__number">0{{ $index + 1 }}</span><app-icon [name]="tool.icon" [size]="23" /><strong>{{ tool.title }}</strong><app-icon name="arrow-up-right" [size]="17" /></a> }</div>
+</section>
+@if (registry.recentTools().length) {
+  <section class="recent ou-container"><header><span class="micro">LEFT ON YOUR DESK</span><h2>Pick up where you left off.</h2><p>Stored on this device only.</p></header><div class="recent__links">@for (tool of registry.recentTools().slice(0, 4); track tool.id) { <a [routerLink]="tool.path"><app-icon [name]="tool.icon" [size]="18" />{{ tool.title }}<app-icon name="arrow-up-right" [size]="16" /></a> }<a routerLink="/recent">See recent files <app-icon name="arrow-right" [size]="16" /></a></div></section>
 }
-
-<section class="section ou-container">
-  <header class="section__head">
-    <div>
-      <h2>Browse by category</h2>
-      <p>Nine toolkits, one privacy model.</p>
-    </div>
-  </header>
-
-  <div class="cats">
-    @for (category of registry.categories; track category.id) {
-      <a class="cat" [routerLink]="['/', category.slug]" [style.--accent]="'var(' + category.accentVar + ')'">
-        <span class="cat__icon"><app-icon [name]="category.icon" [size]="22" /></span>
-        <h3 class="cat__title">{{ category.title }}</h3>
-        <p class="cat__text">{{ category.tagline }}</p>
-        <span class="cat__count">
-          {{ registry.countInCategory(category.id) }} tools
-          <app-icon name="arrow-right" [size]="13" />
-        </span>
-      </a>
-    }
-  </div>
+<section class="directory ou-container" aria-labelledby="directory-title">
+  <header class="section-heading"><div><span class="micro">THE WHOLE COLLECTION</span><h2 id="directory-title">Every format has a place.</h2></div><a routerLink="/tools">Browse all tools <app-icon name="arrow-up-right" [size]="18" /></a></header>
+  <div class="directory__rows">@for (category of registry.categories; track category.id) { <a [routerLink]="['/', category.slug]" [style.--row-colour]="channelColours[category.id]"><span class="directory__code">{{ channelLabels[category.id] }}</span><h3>{{ category.title }}</h3><span class="directory__tagline">{{ category.tagline }}</span><span class="directory__count">{{ registry.countInCategory(category.id) }} tools</span><app-icon name="arrow-up-right" [size]="20" /></a> }</div>
 </section>
-
-<section class="section ou-container">
-  <header class="section__head">
-    <div>
-      <h2>Featured Guides &amp; Insights</h2>
-      <p>Practical deep dives on document privacy, PDF engineering, and offline conversion.</p>
-    </div>
-    <a class="ou-btn ou-btn--subtle" routerLink="/guides">
-      All {{ guideRegistry.guides.length }} guides
-      <app-icon name="arrow-right" [size]="15" />
-    </a>
-  </header>
-
-  <div class="guides-grid">
-    @for (guide of featuredGuides(); track guide.slug) {
-      <a class="guide-card" [routerLink]="guide.path">
-        <div class="guide-card__meta">
-          <span class="guide-card__badge"><app-icon name="clock" [size]="13" /> {{ guide.readingMinutes }} min read</span>
-          <span class="guide-card__date">{{ guide.published }}</span>
-        </div>
-        <h3 class="guide-card__title">{{ guide.title }}</h3>
-        <p class="guide-card__summary">{{ guide.summary }}</p>
-        <span class="guide-card__action">
-          Read guide
-          <app-icon name="arrow-right" [size]="13" />
-        </span>
-      </a>
-    }
-  </div>
+<section class="journal ou-container" aria-labelledby="journal-title">
+  <header class="section-heading"><div><span class="micro">NOTES FROM THE WORKSHOP</span><h2 id="journal-title">Know your documents.</h2></div><a routerLink="/guides">All {{ guideRegistry.guides.length }} guides <app-icon name="arrow-up-right" [size]="18" /></a></header>
+  <div class="journal__index">@for (guide of featuredGuides(); track guide.slug) { <a [routerLink]="guide.path" class="journal__entry"><span class="journal__number">0{{ $index + 1 }}<app-icon name="arrow-up-right" [size]="24" /></span><div><span class="micro">FIELD NOTE / {{ guide.readingMinutes }} MIN READ</span><h3>{{ guide.title }}</h3><p>{{ guide.summary }}</p></div></a> }</div>
 </section>
-
-<section class="section ou-container">
-  <div class="promise">
-    <div class="promise__text">
-      <h2>Why nothing is uploaded</h2>
-      <p>
-        Traditional online converters send your document to a server, process it there, and ask you
-        to trust a privacy policy about what happens next. {{ site.name }} does the work in the same
-        tab you are reading this in, using the browser's own PDF, ZIP, image and crypto engines.
-      </p>
-      <p>
-        That means contracts, payslips and client spreadsheets are never sent anywhere — and it is
-        why the tools keep working when your connection drops.
-      </p>
-      <a class="ou-btn ou-btn--primary" routerLink="/privacy">
-        Read the privacy model
-        <app-icon name="arrow-right" [size]="15" />
-      </a>
-    </div>
-
-    <ul class="promise__list">
-      <li>
-        <app-icon name="shield-check" [size]="18" />
-        <div>
-          <strong>No file ever leaves the device</strong>
-          <span>There is no upload endpoint to send it to; the tools run in your browser.</span>
-        </div>
-      </li>
-      <li>
-        <app-icon name="zap" [size]="18" />
-        <div>
-          <strong>Heavy work runs off the main thread</strong>
-          <span>Hashing, parsing and rendering happen in Web Workers, so the UI stays smooth.</span>
-        </div>
-      </li>
-      <li>
-        <app-icon name="cloud" [size]="18" />
-        <div>
-          <strong>Installable and offline-capable</strong>
-          <span>Add it to your desktop and the whole toolkit keeps working on a plane.</span>
-        </div>
-      </li>
-      <li>
-        <app-icon name="eye-off" [size]="18" />
-        <div>
-          <strong>No analytics on your documents</strong>
-          <span>We cannot see what you convert, because it never reaches us.</span>
-        </div>
-      </li>
-    </ul>
-  </div>
+<section class="privacy-note ou-container">
+  <div class="privacy-note__stamp" aria-hidden="true"><app-icon name="shield-check" [size]="52" /><span>LOCAL<br />BY DESIGN</span></div>
+  <div><span class="micro">A SMALL BUT IMPORTANT DIFFERENCE</span><h2>Your documents.<br />Not our business.</h2><p>{{ site.name }} processes documents on your device using locally loaded libraries. There is no document-upload step. Cached tools can work offline after their resources have loaded.</p><p>Usage analytics may record the tool used, never your filenames or document contents. Large files and conversion quality still depend on your browser, device and document.</p><a routerLink="/privacy">Read the privacy model <app-icon name="arrow-right" [size]="18" /></a></div>
 </section>
-
-<section class="section ou-container faq">
-  <header class="section__head">
-    <h2>Common questions</h2>
-    <p>The things worth knowing before you hand a document to any website.</p>
-  </header>
-
-  <div class="faq__list">
-    @for (item of faq; track item.q) {
-      <details class="faq__item">
-        <summary>
-          {{ item.q }}
-          <app-icon name="chevron-down" [size]="16" />
-        </summary>
-        <p>{{ item.a }}</p>
-      </details>
-    }
-  </div>
-</section>
+<section class="faq ou-container"><header><span class="micro">BEFORE YOU BEGIN</span><h2>A few useful answers.</h2></header><div>@for (item of faq; track item.q) { <details><summary>{{ item.q }}<app-icon name="plus" [size]="18" /></summary><p>{{ item.a }}</p></details> }</div></section>

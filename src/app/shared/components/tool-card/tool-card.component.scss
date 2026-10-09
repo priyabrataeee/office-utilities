@@ -2,38 +2,37 @@
 
 :host {
   display: block;
+  @include reveal;
 }
 
 .card {
   position: relative;
   display: flex;
+  flex-direction: column;
   gap: var(--ou-s-3);
   height: 100%;
-  padding: var(--ou-s-4);
+  padding: 24px;
   border: 1px solid var(--ou-border);
-  border-radius: var(--ou-r-lg);
-  background: var(--ou-surface);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px 4px 18px 4px;
+  background: color-mix(in oklab, var(--accent) 5%, var(--ou-surface));
   color: inherit;
   text-decoration: none;
   transition:
     border-color var(--ou-dur) var(--ou-ease),
-    box-shadow var(--ou-dur) var(--ou-ease),
-    transform var(--ou-dur) var(--ou-ease);
+    box-shadow var(--ou-dur-slow) var(--ou-ease),
+    transform var(--ou-dur-slow) var(--ou-ease);
+  @include spotlight(var(--accent));
 
   &:hover {
     text-decoration: none;
-    border-color: var(--ou-border-strong);
-    box-shadow: var(--ou-shadow-md);
-    transform: translateY(-2px);
-  }
-
-  @include reduced-motion {
-    &:hover {
-      transform: none;
-    }
+    border-color: var(--accent);
+    box-shadow: 0 22px 44px -22px color-mix(in oklab, var(--accent) 75%, transparent);
+    transform: translateY(-6px);
   }
 
   &--compact {
+    flex-direction: row;
     padding: var(--ou-s-3);
   }
 }
@@ -42,11 +41,21 @@
   display: grid;
   place-items: center;
   flex: none;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--ou-r-md);
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  background: color-mix(in oklab, var(--accent) 16%, var(--ou-surface));
   color: var(--accent);
+  transition:
+    background var(--ou-dur) var(--ou-ease),
+    color var(--ou-dur) var(--ou-ease),
+    transform var(--ou-dur-slow) var(--ou-ease);
+
+  .card:hover & {
+    background: var(--accent);
+    color: var(--ou-surface);
+    transform: rotate(-7deg) scale(1.08);
+  }
 
   .card--compact & {
     width: 30px;
@@ -58,7 +67,7 @@
 .card__body {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 7px;
   min-width: 0;
 }
 
@@ -66,6 +75,7 @@
   display: flex;
   align-items: center;
   gap: var(--ou-s-2);
+  flex-wrap: wrap;
   font-weight: 600;
   font-size: var(--ou-fs-base);
   letter-spacing: -0.01em;
@@ -83,9 +93,19 @@
 }
 
 .card__category {
-  margin-top: var(--ou-s-1);
+  margin-top: 8px;
   font-size: var(--ou-fs-xs);
-  color: var(--ou-text-subtle);
+  color: var(--accent);
+}
+
+.card__arrow {
+  position: absolute;
+  top: 26px;
+  right: 24px;
+  color: var(--ou-text-muted);
+  transition: transform var(--ou-dur) var(--ou-ease), color var(--ou-dur) var(--ou-ease);
+  .card:hover & { transform: rotate(-35deg); color: var(--accent); }
+  .card--compact & { display: none; }
 }
 
 .card__fav {

@@ -10,7 +10,7 @@
       <span aria-current="page">{{ t.title }}</span>
     </nav>
 
-    <header class="head">
+    <header class="head" [style.--accent]="'var(' + t.categoryRef.accentVar + ')'">
       <span class="head__icon" [style.--accent]="'var(' + t.categoryRef.accentVar + ')'">
         <app-icon [name]="t.icon" [size]="24" />
       </span>

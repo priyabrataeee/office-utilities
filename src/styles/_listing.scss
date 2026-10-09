@@ -29,9 +29,14 @@
 }
 
 .page__head {
+  padding: 28px;
+  border: 1px solid var(--ou-border);
+  border-left: 4px solid var(--ou-accent);
+  border-radius: 4px 4px 22px 4px;
+  background: var(--ou-surface);
   h1 {
-    font-size: var(--ou-fs-3xl);
-    letter-spacing: -0.03em;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.05em;
   }
 
   p {
@@ -116,9 +121,9 @@
   }
 
   &.is-active {
-    background: var(--ou-surface-3);
-    border-color: var(--ou-border-strong);
-    color: var(--ou-text);
+    background: var(--ou-accent-soft);
+    border-color: var(--ou-accent-border);
+    color: var(--ou-accent-text);
   }
 
   app-icon {
@@ -138,6 +143,7 @@
 }
 
 @media (max-width: 640px) {
+  .page__head { padding: 20px; }
   .page__head h1 {
     font-size: var(--ou-fs-2xl);
   }

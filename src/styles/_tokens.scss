@@ -1,6 +1,13 @@
+@property --ou-hue {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 275;
+}
+
 :root {
-  --ou-bg: #fbfbfd;
-  --ou-bg-subtle: #f4f5f8;
+  --ou-hue: 275;
+  --ou-bg: #f9f8f4;
+  --ou-bg-subtle: #f0efea;
   --ou-surface: #ffffff;
   --ou-surface-2: #f7f8fa;
   --ou-surface-3: #eef0f4;
@@ -11,15 +18,20 @@
 
   --ou-text: #10121b;
   --ou-text-muted: #5b6274;
-  --ou-text-subtle: #868da0;
+  --ou-text-subtle: #686e80;
   --ou-text-inverse: #ffffff;
 
-  --ou-accent: #5b5bd6;
-  --ou-accent-hover: #4f4fc7;
-  --ou-accent-active: #4444b3;
-  --ou-accent-soft: #eeeefc;
-  --ou-accent-border: #d3d3f5;
-  --ou-accent-text: #4141ad;
+  --ou-accent: oklch(0.48 0.23 var(--ou-hue));
+  --ou-accent-hover: oklch(0.44 0.22 var(--ou-hue));
+  --ou-accent-active: oklch(0.39 0.2 var(--ou-hue));
+  --ou-accent-soft: oklch(0.955 0.035 var(--ou-hue));
+  --ou-accent-border: oklch(0.87 0.075 var(--ou-hue));
+  --ou-accent-text: oklch(0.44 0.2 var(--ou-hue));
+  --ou-accent-solid: oklch(0.47 0.24 var(--ou-hue));
+  --ou-accent-solid-2: oklch(0.47 0.24 calc(var(--ou-hue) + 42));
+  --ou-on-accent: #ffffff;
+  --ou-accent-vivid: oklch(0.7 0.2 var(--ou-hue));
+  --ou-chip: oklch(var(--ou-chip-l) var(--ou-chip-c) var(--ou-hue));
 
   --ou-success: #167c53;
   --ou-success-soft: #e5f5ed;
@@ -30,21 +42,35 @@
   --ou-info: #1c68b8;
   --ou-info-soft: #e8f1fc;
 
-  --ou-cat-pdf: #e0483c;
-  --ou-cat-word: #2b579a;
-  --ou-cat-excel: #1d7044;
-  --ou-cat-ppt: #c74f2c;
-  --ou-cat-convert: #7c4dcc;
-  --ou-cat-generate: #b3761a;
-  --ou-cat-diagram: #0e7c86;
-  --ou-cat-file: #52607a;
-  --ou-cat-view: #3a63d0;
+  --ou-cat-l: 0.48;
+  --ou-cat-c: 0.2;
+  --ou-chip-l: 0.86;
+  --ou-chip-c: 0.14;
+  --ou-chip-ink: #202332;
+  --ou-cat-view: oklch(var(--ou-cat-l) var(--ou-cat-c) 262);
+  --ou-cat-pdf: oklch(var(--ou-cat-l) var(--ou-cat-c) 28);
+  --ou-cat-word: oklch(var(--ou-cat-l) var(--ou-cat-c) 245);
+  --ou-cat-excel: oklch(var(--ou-cat-l) var(--ou-cat-c) 138);
+  --ou-cat-ppt: oklch(var(--ou-cat-l) var(--ou-cat-c) 55);
+  --ou-cat-convert: oklch(var(--ou-cat-l) var(--ou-cat-c) 300);
+  --ou-cat-generate: oklch(var(--ou-cat-l) var(--ou-cat-c) 92);
+  --ou-cat-diagram: oklch(var(--ou-cat-l) var(--ou-cat-c) 188);
+  --ou-cat-file: oklch(var(--ou-cat-l) var(--ou-cat-c) 350);
+  --ou-chip-viewer: oklch(var(--ou-chip-l) var(--ou-chip-c) 262);
+  --ou-chip-pdf: oklch(var(--ou-chip-l) var(--ou-chip-c) 28);
+  --ou-chip-word: oklch(var(--ou-chip-l) var(--ou-chip-c) 245);
+  --ou-chip-excel: oklch(var(--ou-chip-l) var(--ou-chip-c) 138);
+  --ou-chip-powerpoint: oklch(var(--ou-chip-l) var(--ou-chip-c) 55);
+  --ou-chip-convert: oklch(var(--ou-chip-l) var(--ou-chip-c) 300);
+  --ou-chip-generate: oklch(var(--ou-chip-l) var(--ou-chip-c) 92);
+  --ou-chip-diagram: oklch(var(--ou-chip-l) var(--ou-chip-c) 188);
+  --ou-chip-file: oklch(var(--ou-chip-l) var(--ou-chip-c) 350);
 
   --ou-r-xs: 4px;
   --ou-r-sm: 6px;
-  --ou-r-md: 10px;
-  --ou-r-lg: 14px;
-  --ou-r-xl: 20px;
+  --ou-r-md: 12px;
+  --ou-r-lg: 18px;
+  --ou-r-xl: 26px;
   --ou-r-full: 999px;
 
   --ou-shadow-xs: 0 1px 2px rgba(16, 18, 27, 0.05);
@@ -52,7 +78,8 @@
   --ou-shadow-md: 0 4px 12px rgba(16, 18, 27, 0.08), 0 1px 3px rgba(16, 18, 27, 0.04);
   --ou-shadow-lg: 0 12px 32px rgba(16, 18, 27, 0.12), 0 2px 8px rgba(16, 18, 27, 0.05);
   --ou-shadow-xl: 0 24px 64px rgba(16, 18, 27, 0.18), 0 4px 12px rgba(16, 18, 27, 0.06);
-  --ou-ring: 0 0 0 3px rgba(91, 91, 214, 0.28);
+  --ou-ring: 0 0 0 3px oklch(0.62 0.2 var(--ou-hue) / 0.3);
+  --ou-glow: 0 16px 36px -16px oklch(0.6 0.24 var(--ou-hue) / 0.5);
 
   --ou-font: 'Inter var', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
@@ -82,17 +109,20 @@
 
   --ou-max-w: 1240px;
   --ou-header-h: 60px;
+  --ou-studio-lime: #d5f76c;
+  --ou-studio-coral: #ffab90;
+  --ou-studio-blue: #b5c9ff;
+  --ou-studio-ink: #202332;
 
   --ou-ease: cubic-bezier(0.32, 0.72, 0, 1);
   --ou-dur-fast: 120ms;
   --ou-dur: 200ms;
   --ou-dur-slow: 380ms;
 
-
-  --ou-fog-base: #fafbfe;
-  --ou-fog-lowlight: #dde3f9;
-  --ou-fog-midtone: #d8ecfb;
-  --ou-fog-highlight: #ece5fd;
+  --ou-fog-base: #f9f8f4;
+  --ou-fog-lowlight: oklch(0.925 0.055 var(--ou-hue));
+  --ou-fog-midtone: oklch(0.94 0.05 calc(var(--ou-hue) + 55));
+  --ou-fog-highlight: oklch(0.945 0.055 calc(var(--ou-hue) - 48));
 
   color-scheme: light;
 }
@@ -110,15 +140,20 @@
 
   --ou-text: #eef0f6;
   --ou-text-muted: #9aa2b4;
-  --ou-text-subtle: #6f7789;
+  --ou-text-subtle: #959eaf;
   --ou-text-inverse: #0b0c10;
 
-  --ou-accent: #7c7cf0;
-  --ou-accent-hover: #8d8df3;
-  --ou-accent-active: #9c9cf7;
-  --ou-accent-soft: #1c1d38;
-  --ou-accent-border: #32336a;
-  --ou-accent-text: #b3b3fb;
+  --ou-accent: oklch(0.8 0.13 var(--ou-hue));
+  --ou-accent-hover: oklch(0.85 0.12 var(--ou-hue));
+  --ou-accent-active: oklch(0.88 0.1 var(--ou-hue));
+  --ou-accent-soft: oklch(0.27 0.06 var(--ou-hue));
+  --ou-accent-border: oklch(0.42 0.1 var(--ou-hue));
+  --ou-accent-text: oklch(0.83 0.12 var(--ou-hue));
+  --ou-accent-solid: oklch(0.8 0.15 var(--ou-hue));
+  --ou-accent-solid-2: oklch(0.8 0.15 calc(var(--ou-hue) + 42));
+  --ou-on-accent: #0b0c10;
+  --ou-accent-vivid: oklch(0.78 0.17 var(--ou-hue));
+  --ou-chip: oklch(var(--ou-chip-l) var(--ou-chip-c) var(--ou-hue));
 
   --ou-success: #4bcd90;
   --ou-success-soft: #10281f;
@@ -129,27 +164,21 @@
   --ou-info: #6fb2f5;
   --ou-info-soft: #101f2f;
 
-  --ou-cat-pdf: #f4746a;
-  --ou-cat-word: #6f9de6;
-  --ou-cat-excel: #55c48c;
-  --ou-cat-ppt: #f0866a;
-  --ou-cat-convert: #b18df5;
-  --ou-cat-generate: #ecb45f;
-  --ou-cat-diagram: #4dc4cd;
-  --ou-cat-file: #93a1bb;
-  --ou-cat-view: #7d9bf0;
+  --ou-cat-l: 0.78;
+  --ou-cat-c: 0.14;
 
   --ou-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
   --ou-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.3);
   --ou-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.35);
   --ou-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35);
   --ou-shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.4);
-  --ou-ring: 0 0 0 3px rgba(124, 124, 240, 0.35);
+  --ou-ring: 0 0 0 3px oklch(0.62 0.2 var(--ou-hue) / 0.4);
+  --ou-glow: 0 16px 36px -16px oklch(0.6 0.24 var(--ou-hue) / 0.6000000000000001);
 
   --ou-fog-base: #0b0c10;
-  --ou-fog-lowlight: #1d2348;
-  --ou-fog-midtone: #10293f;
-  --ou-fog-highlight: #31265a;
+  --ou-fog-lowlight: oklch(0.245 0.09 var(--ou-hue));
+  --ou-fog-midtone: oklch(0.23 0.07 calc(var(--ou-hue) + 55));
+  --ou-fog-highlight: oklch(0.27 0.1 calc(var(--ou-hue) - 48));
 
   color-scheme: dark;
 }
@@ -167,15 +196,20 @@
 
   --ou-text: #e4e2dc;
   --ou-text-muted: #b0aea8;
-  --ou-text-subtle: #85847e;
+  --ou-text-subtle: #b2b0ab;
   --ou-text-inverse: #1a1a1e;
 
-  --ou-accent: #a8a5ff;
-  --ou-accent-hover: #b6b3ff;
-  --ou-accent-active: #c4c1ff;
-  --ou-accent-soft: #363548;
-  --ou-accent-border: #4a4a70;
-  --ou-accent-text: #c8c5ff;
+  --ou-accent: oklch(0.82 0.11 var(--ou-hue));
+  --ou-accent-hover: oklch(0.86 0.1 var(--ou-hue));
+  --ou-accent-active: oklch(0.89 0.09 var(--ou-hue));
+  --ou-accent-soft: oklch(0.33 0.05 var(--ou-hue));
+  --ou-accent-border: oklch(0.46 0.08 var(--ou-hue));
+  --ou-accent-text: oklch(0.85 0.1 var(--ou-hue));
+  --ou-accent-solid: oklch(0.82 0.13 var(--ou-hue));
+  --ou-accent-solid-2: oklch(0.82 0.13 calc(var(--ou-hue) + 42));
+  --ou-on-accent: #1a1a1e;
+  --ou-accent-vivid: oklch(0.8 0.15 var(--ou-hue));
+  --ou-chip: oklch(var(--ou-chip-l) var(--ou-chip-c) var(--ou-hue));
 
   --ou-success: #7dd4a8;
   --ou-success-soft: #253328;
@@ -186,27 +220,21 @@
   --ou-info: #8fc5f0;
   --ou-info-soft: #1f2c3a;
 
-  --ou-cat-pdf: #f19a90;
-  --ou-cat-word: #90b5e8;
-  --ou-cat-excel: #7ed4a8;
-  --ou-cat-ppt: #f3a48d;
-  --ou-cat-convert: #c1a5f0;
-  --ou-cat-generate: #edc07e;
-  --ou-cat-diagram: #78ced3;
-  --ou-cat-file: #a8b3c3;
-  --ou-cat-view: #9ab2ea;
+  --ou-cat-l: 0.82;
+  --ou-cat-c: 0.11;
 
   --ou-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.28);
   --ou-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
   --ou-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.22);
   --ou-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.42), 0 2px 8px rgba(0, 0, 0, 0.25);
   --ou-shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.3);
-  --ou-ring: 0 0 0 3px rgba(168, 165, 255, 0.32);
+  --ou-ring: 0 0 0 3px oklch(0.62 0.2 var(--ou-hue) / 0.36);
+  --ou-glow: 0 16px 36px -16px oklch(0.6 0.24 var(--ou-hue) / 0.56);
 
   --ou-fog-base: #24252a;
-  --ou-fog-lowlight: #2f3048;
-  --ou-fog-midtone: #293543;
-  --ou-fog-highlight: #3a3352;
+  --ou-fog-lowlight: oklch(0.315 0.06 var(--ou-hue));
+  --ou-fog-midtone: oklch(0.305 0.05 calc(var(--ou-hue) + 55));
+  --ou-fog-highlight: oklch(0.335 0.07 calc(var(--ou-hue) - 48));
 
   color-scheme: dark;
 }
@@ -222,4 +250,36 @@
   :root:not([data-theme='light']):not([data-theme='medium']) {
     @include dark-palette;
   }
+}
+
+:root[data-chroma='viewer'] {
+  --ou-hue: 262;
+}
+:root[data-chroma='pdf'] {
+  --ou-hue: 28;
+}
+:root[data-chroma='word'] {
+  --ou-hue: 245;
+}
+:root[data-chroma='excel'] {
+  --ou-hue: 138;
+}
+:root[data-chroma='powerpoint'] {
+  --ou-hue: 55;
+}
+:root[data-chroma='convert'] {
+  --ou-hue: 300;
+}
+:root[data-chroma='generate'] {
+  --ou-hue: 92;
+}
+:root[data-chroma='diagram'] {
+  --ou-hue: 188;
+}
+:root[data-chroma='file'] {
+  --ou-hue: 350;
+}
+
+:root {
+  transition: --ou-hue 900ms cubic-bezier(0.32, 0.72, 0, 1);
 }

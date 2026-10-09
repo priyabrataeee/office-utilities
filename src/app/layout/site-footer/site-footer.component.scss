@@ -6,7 +6,7 @@
 
 .footer {
   margin-top: var(--ou-s-20);
-  border-top: 1px solid var(--ou-border);
+  border-top: 3px solid var(--ou-accent-border);
   background: color-mix(in srgb, var(--ou-bg-subtle) 82%, transparent);
   backdrop-filter: blur(14px) saturate(140%);
 }
@@ -39,8 +39,8 @@
   width: 28px;
   height: 28px;
   border-radius: var(--ou-r-md);
-  background: linear-gradient(140deg, var(--ou-accent), color-mix(in srgb, var(--ou-accent) 55%, #12b5c9));
-  color: #fff;
+  background: linear-gradient(135deg, var(--ou-chip), oklch(0.88 0.13 calc(var(--ou-hue) + 50)));
+  color: var(--ou-chip-ink);
 }
 
 .brand__soft {

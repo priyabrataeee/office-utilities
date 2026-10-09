@@ -9,6 +9,8 @@ import { SiteBackgroundComponent } from './shared/components/site-background/sit
 import { CommandPaletteService } from './core/services/command-palette.service';
 import { ShortcutService } from './core/services/shortcut.service';
 import { ThemeService } from './core/services/theme.service';
+import { ChromaService } from './core/services/chroma.service';
+import { PointerLightService } from './core/services/pointer-light.service';
 import { MonetizationService } from './core/services/monetization.service';
 
 @Component({
@@ -30,6 +32,8 @@ export class App {
   private readonly palette = inject(CommandPaletteService);
   private readonly shortcuts = inject(ShortcutService);
   private readonly theme = inject(ThemeService);
+  private readonly chroma = inject(ChromaService);
+  private readonly pointerLight = inject(PointerLightService);
   private readonly monetization = inject(MonetizationService);
   private readonly router = inject(Router);
 

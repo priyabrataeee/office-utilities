@@ -10,7 +10,7 @@ import type { ResolvedTool } from '../../../core/models/tool.model';
   imports: [RouterLink, IconComponent],
   template: `
     @let t = tool();
-    <a class="card" [class.card--compact]="compact()" [routerLink]="t.path">
+    <a class="card" [class.card--compact]="compact()" [routerLink]="t.path" [style.--accent]="'var(' + t.categoryRef.accentVar + ')'">
       <span class="card__icon" [style.--accent]="'var(' + t.categoryRef.accentVar + ')'">
         <app-icon [name]="t.icon" [size]="compact() ? 16 : 20" />
       </span>
@@ -28,6 +28,7 @@ import type { ResolvedTool } from '../../../core/models/tool.model';
         }
       </span>
 
+      <span class="card__arrow" aria-hidden="true"><app-icon name="arrow-right" [size]="16" /></span>
       @if (isFavorite()) {
         <span class="card__fav" title="Favourite"><app-icon name="star" [size]="13" /></span>
       }

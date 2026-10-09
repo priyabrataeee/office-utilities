@@ -43,6 +43,19 @@
   display: flex;
   align-items: flex-start;
   gap: var(--ou-s-4);
+  padding: 24px;
+  border: 1px solid var(--ou-border);
+  border-top: 3px solid var(--accent, var(--ou-accent));
+  border-radius: 4px 4px 22px 4px;
+  background: linear-gradient(
+    120deg,
+    color-mix(in oklab, var(--accent, var(--ou-accent)) 9%, var(--ou-surface)),
+    var(--ou-surface) 60%
+  );
+  box-shadow:
+    var(--ou-shadow-xs),
+    0 24px 48px -32px var(--ou-accent-vivid);
+  @include spotlight(var(--accent, var(--ou-accent-vivid)), 420px);
 }
 
 .head__icon {
@@ -52,8 +65,10 @@
   width: 50px;
   height: 50px;
   border-radius: var(--ou-r-lg);
-  background: color-mix(in srgb, var(--accent) 13%, transparent);
-  color: var(--accent);
+  background: linear-gradient(135deg, var(--ou-chip), oklch(0.88 0.13 calc(var(--ou-hue) + 50)));
+  color: var(--ou-chip-ink);
+  transform: rotate(-4deg);
+  box-shadow: 0 10px 22px -10px var(--ou-accent-vivid);
 }
 
 .head__text {
@@ -222,6 +237,7 @@
 @media (max-width: 640px) {
   .head {
     flex-wrap: wrap;
+    padding: 18px;
   }
   .head__title {
     font-size: var(--ou-fs-xl);

@@ -26,6 +26,14 @@
   font-variant-numeric: tabular-nums;
 }
 
+@media (max-width: 640px) {
+  .filebar { display: grid; grid-template-columns: auto minmax(0, 1fr); }
+  .filebar__name { grid-column: 2; }
+  .filebar .ou-badge { justify-self: start; }
+  .filebar .ou-spacer { display: none; }
+  .filebar button { grid-column: 1 / -1; justify-self: start; }
+}
+
 .stage-skeleton {
   width: 100%;
   height: 420px;

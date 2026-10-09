@@ -12,20 +12,58 @@
   gap: var(--ou-s-3);
   width: 100%;
   padding: var(--ou-s-10) var(--ou-s-6);
-  border: 1.5px dashed var(--ou-border-strong);
+  border: 1.5px dashed var(--ou-accent-border);
   border-radius: var(--ou-r-xl);
-  background: var(--ou-surface);
+  background: color-mix(in srgb, var(--ou-accent) 3%, var(--ou-surface));
   color: inherit;
   text-align: center;
   cursor: pointer;
+  isolation: isolate;
   transition:
     border-color var(--ou-dur) var(--ou-ease),
     background var(--ou-dur) var(--ou-ease),
+    box-shadow var(--ou-dur-slow) var(--ou-ease),
     transform var(--ou-dur) var(--ou-ease);
+  @include spotlight;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    padding: 2px;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    background: conic-gradient(
+      from var(--ou-spin),
+      var(--ou-accent-vivid),
+      var(--ou-chip),
+      oklch(0.78 0.17 calc(var(--ou-hue) + 80)),
+      oklch(0.78 0.17 calc(var(--ou-hue) - 70)),
+      var(--ou-accent-vivid)
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    transition: opacity var(--ou-dur-slow) var(--ou-ease);
+    animation: ou-spin 3.2s linear infinite paused;
+  }
 
   &:hover:not(:disabled) {
-    border-color: var(--ou-accent);
-    background: var(--ou-surface-2);
+    border-color: transparent;
+    background: color-mix(in oklab, var(--ou-accent) 5%, var(--ou-surface));
+    box-shadow: var(--ou-glow);
+
+    &::after {
+      opacity: 1;
+      animation-play-state: running;
+    }
+
+    .dz__icon {
+      animation: ou-float 1.6s var(--ou-ease) infinite;
+    }
   }
 
   &:disabled {
@@ -34,10 +72,20 @@
   }
 
   &--dragging {
-    border-color: var(--ou-accent);
-    border-style: solid;
+    border-color: transparent;
     background: var(--ou-accent-soft);
-    transform: scale(1.005);
+    box-shadow: var(--ou-glow);
+    transform: scale(1.012);
+
+    &::after {
+      opacity: 1;
+      animation-play-state: running;
+      animation-duration: 1.4s;
+    }
+
+    .dz__icon {
+      animation: ou-pulse 1.1s ease-out infinite;
+    }
   }
 
   &--filled {
@@ -59,8 +107,10 @@
   width: 52px;
   height: 52px;
   border-radius: var(--ou-r-lg);
-  background: var(--ou-accent-soft);
-  color: var(--ou-accent-text);
+  background: linear-gradient(135deg, var(--ou-chip), oklch(0.88 0.13 calc(var(--ou-hue) + 50)));
+  color: var(--ou-chip-ink);
+  transform: rotate(-5deg);
+  box-shadow: 0 10px 22px -10px var(--ou-accent-vivid);
 
   .dz--compact & {
     width: 34px;

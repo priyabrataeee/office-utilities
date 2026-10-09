@@ -2,15 +2,25 @@
 
 :host {
   position: sticky;
-  top: 0;
+  top: 10px;
   z-index: 500;
   display: block;
+  margin: 10px auto 0;
+  width: calc(100% - 24px);
+  max-width: var(--ou-max-w);
 }
 
 .header {
-  border-bottom: 1px solid var(--ou-border);
-  background: color-mix(in srgb, var(--ou-bg) 82%, transparent);
-  backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid var(--ou-border-strong);
+  border-radius: 5px 5px 16px 5px;
+  box-shadow:
+    var(--ou-shadow-sm),
+    0 14px 30px -22px var(--ou-accent-vivid);
+  background:
+    linear-gradient(90deg, transparent, var(--ou-accent-vivid) 30%, var(--ou-chip) 70%, transparent) bottom /
+      100% 2px no-repeat,
+    color-mix(in srgb, var(--ou-surface) 90%, transparent);
+  backdrop-filter: blur(16px) saturate(180%);
 }
 
 .header__inner {
@@ -36,12 +46,18 @@
 .brand__mark {
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   border-radius: var(--ou-r-md);
-  background: linear-gradient(140deg, var(--ou-accent), color-mix(in srgb, var(--ou-accent) 55%, #12b5c9));
-  color: #fff;
-  box-shadow: var(--ou-shadow-sm);
+  background: linear-gradient(135deg, var(--ou-chip), oklch(0.88 0.13 calc(var(--ou-hue) + 50)));
+  color: var(--ou-chip-ink);
+  transform: rotate(-6deg);
+  box-shadow: 0 8px 18px -8px var(--ou-accent-vivid);
+  transition: transform var(--ou-dur-slow) var(--ou-ease);
+
+  .brand:hover & {
+    transform: rotate(8deg) scale(1.08);
+  }
 }
 
 .brand__name {
@@ -212,6 +228,7 @@
   background: var(--ou-surface);
   max-height: calc(100dvh - var(--ou-header-h));
   overflow-y: auto;
+  border-radius: 0 0 18px 18px;
   @include scrollbar;
 
   a {
@@ -290,10 +307,18 @@
   font-weight: 600;
 }
 
-@media (max-width: 22.5rem) {
+@media (max-width: 30rem) {
+  :host { width: calc(100% - 12px); top: 6px; margin-top: 6px; }
   .header__inner {
-    gap: var(--ou-s-2);
+    gap: 4px;
+    padding-inline: 8px;
   }
+  .brand { gap: 5px; }
+  .brand__name { font-size: 13px; }
+  .brand__mark { width: 26px; height: 30px; }
+  .header__actions .support-btn { padding-inline: 7px; }
+  .header__actions .ou-btn--icon { width: 30px; }
+  .header__actions > a[aria-label='Favourites'] { display: none; }
   .header__actions {
     gap: 0;
   }
