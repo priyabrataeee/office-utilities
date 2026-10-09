@@ -44,7 +44,7 @@ limited by the memory available to the browser.
 - [Delete PDF Pages](https://office-utilities.org/pdf/delete-pages-from-pdf): Remove the pages you do not need.
 - [Reorder PDF Pages](https://office-utilities.org/pdf/reorder-pdf-pages): Drag pages into a new order.
 - [Extract PDF Pages](https://office-utilities.org/pdf/extract-pdf-pages): Pull selected pages out into a new PDF.
-- [Compress PDF](https://office-utilities.org/pdf/compress-pdf): Shrink file size by re-encoding images and dropping bloat.
+- [Compress PDF](https://office-utilities.org/pdf/compress-pdf): Compress scanned pages while keeping detected text pages intact.
 - [Images to PDF](https://office-utilities.org/pdf/images-to-pdf): Turn JPG, PNG or WebP images into a single PDF.
 - [PDF to Word](https://office-utilities.org/pdf/pdf-to-word): Turn a PDF back into an editable .docx.
 - [PDF to Text](https://office-utilities.org/pdf/pdf-to-text): Extract clean plain text from any PDF.
@@ -142,7 +142,7 @@ limited by the memory available to the browser.
 - [Cloud Architecture Diagram](https://office-utilities.org/diagram/aws-architecture-diagram): Lay out cloud services, regions, VPCs and data flows.
 - [Network Diagram Tool](https://office-utilities.org/diagram/network-diagram-tool): Map servers, switches, firewalls and links.
 - [Mind Map Maker](https://office-utilities.org/diagram/mind-map-maker): Branch ideas out from a central topic.
-- [Org Chart Maker](https://office-utilities.org/diagram/org-chart-maker): Build a reporting hierarchy, or import one from CSV.
+- [Org Chart Maker](https://office-utilities.org/diagram/org-chart-maker): Edit a reporting hierarchy on a diagram canvas.
 - [Process Diagram Maker](https://office-utilities.org/diagram/process-diagram-maker): Document business processes with lanes and steps.
 
 ## File Utilities

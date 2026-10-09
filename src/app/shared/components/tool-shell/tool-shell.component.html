@@ -53,6 +53,19 @@
       <ng-content />
     </div>
 
+    @if (example(); as e) {
+      <section class="detail">
+        <h2 class="detail__title">Try it: {{ e.title }}</h2>
+        @if (e.sample; as sample) {
+          <p><a [href]="sample.href" download>{{ sample.label }}</a></p>
+        }
+        <ol>
+          @for (step of e.steps; track $index) { <li>{{ step }}</li> }
+        </ol>
+        <p class="detail__text">{{ e.check }}</p>
+      </section>
+    }
+
     @if (!minimal()) {
       <section class="about">
         <h2 class="about__title">About {{ t.title }}</h2>

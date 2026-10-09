@@ -38,8 +38,6 @@ export const MONETIZATION = {
   donationUrl: 'https://buymeacoffee.com/priyabrataeee',
 
   adsense: {
-    // Disabled during AdSense review phase so unfilled ad slots do not trigger layout policy flags.
-    // The verification script in index.html remains active for site verification.
     enabled: false,
     client: 'ca-pub-4291402082894202',
     slots: {

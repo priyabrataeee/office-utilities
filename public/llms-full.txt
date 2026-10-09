@@ -44,7 +44,7 @@ limited by the memory available to the browser.
 - [Delete PDF Pages](https://office-utilities.org/pdf/delete-pages-from-pdf): Remove the pages you do not need.
 - [Reorder PDF Pages](https://office-utilities.org/pdf/reorder-pdf-pages): Drag pages into a new order.
 - [Extract PDF Pages](https://office-utilities.org/pdf/extract-pdf-pages): Pull selected pages out into a new PDF.
-- [Compress PDF](https://office-utilities.org/pdf/compress-pdf): Shrink file size by re-encoding images and dropping bloat.
+- [Compress PDF](https://office-utilities.org/pdf/compress-pdf): Compress scanned pages while keeping detected text pages intact.
 - [Images to PDF](https://office-utilities.org/pdf/images-to-pdf): Turn JPG, PNG or WebP images into a single PDF.
 - [PDF to Word](https://office-utilities.org/pdf/pdf-to-word): Turn a PDF back into an editable .docx.
 - [PDF to Text](https://office-utilities.org/pdf/pdf-to-text): Extract clean plain text from any PDF.
@@ -142,7 +142,7 @@ limited by the memory available to the browser.
 - [Cloud Architecture Diagram](https://office-utilities.org/diagram/aws-architecture-diagram): Lay out cloud services, regions, VPCs and data flows.
 - [Network Diagram Tool](https://office-utilities.org/diagram/network-diagram-tool): Map servers, switches, firewalls and links.
 - [Mind Map Maker](https://office-utilities.org/diagram/mind-map-maker): Branch ideas out from a central topic.
-- [Org Chart Maker](https://office-utilities.org/diagram/org-chart-maker): Build a reporting hierarchy, or import one from CSV.
+- [Org Chart Maker](https://office-utilities.org/diagram/org-chart-maker): Edit a reporting hierarchy on a diagram canvas.
 - [Process Diagram Maker](https://office-utilities.org/diagram/process-diagram-maker): Document business processes with lanes and steps.
 
 ## File Utilities
@@ -679,7 +679,7 @@ Text is remarkably cheap. A hundred pages of prose is a few hundred kilobytes. W
 - Embedded fonts, especially whole CJK families, which can run to several megabytes.
 - Leftovers — earlier revisions, deleted objects and unused resources that were never cleaned up.
 
-Guessing is unnecessary. Break the file into its parts and look — the [file size analyzer](/file/file-size-analyzer) lists which images, fonts and streams account for the size, so you can see whether you have an image problem or a font problem before choosing an approach.
+The [file size analyzer](/file/file-size-analyzer) measures archive entries for Office files. For PDFs it provides only a drawing-complexity estimate for up to 200 pages; it does not measure individual images, fonts or streams in bytes. Inspect the original document before choosing a compression method.
 
 
 ### Compressing properly
@@ -692,6 +692,8 @@ Guessing is unnecessary. Break the file into its parts and look — the [file si
 This is the approach that preserves quality: reduce embedded images to a sensible resolution and re-encode them, while leaving text objects untouched. Text stays vector-sharp and selectable, and the file often drops by most of its size, because the images were nearly all of it.
 
 For a document that will only be read on screen, 150 DPI is plenty. For printing, 300 DPI. Above that you are storing detail nobody will ever see.
+
+> Note: Office Utilities uses a conservative page-level rule, not selective image downsampling. A page with an extractable text run longer than two characters is copied unchanged. A scan with OCR or a photo with a caption may therefore stay large. Pages without detected text are rasterised, which can soften fine lines. Keep the original; document bookmarks, interactive forms and digital signatures are not preserved.
 
 
 #### Remove what is not needed
@@ -924,6 +926,12 @@ Text extraction is a natural fit for the browser: the PDF is parsed in the tab a
 - **Published**: 2026-09-03
 - **Summary**: Dates turn into numbers, days and months swap places, and leading zeros vanish. Here is what a spreadsheet actually stores in a date cell, and how to export so the other side reads it correctly.
 - **Direct Answer**: A spreadsheet does not store a date — it stores a number counting days from a fixed origin, and displays it using a format. CSV has no formats, so what gets written is whatever the display happened to be, and whatever reads it next guesses. Exporting in ISO format (2026-03-09) removes the guessing.
+
+
+### Try two dates that are easy to confuse
+
+
+The Orders sheet contains 9 March 2026 and 3 September 2026, plus ISO text equivalents. Export it with [Excel to CSV](/excel/excel-to-csv), then inspect the raw CSV in a text viewer. Verify both dates and the leading zeros in order 00123 before reopening the file in a spreadsheet. CSV does not preserve cell types; import identifiers as text when required.
 
 You export a sheet to CSV and the dates arrive wrong. Sometimes they are five-digit numbers. Sometimes the ninth of March has become the third of September. Sometimes they look right until someone in another country opens the file.
 
@@ -1201,6 +1209,12 @@ Reading is often not the end of the task. If you need the content elsewhere, [co
 - **Summary**: A deck of twenty slides should not be 80 MB. Find out exactly which images are responsible, and shrink the file without touching the design.
 - **Direct Answer**: It is almost always images stored at far higher resolution than the slide displays them at, plus media left behind on deleted slides. Find which files account for the size, replace or remove those, and a deck typically drops by most of its weight.
 
+
+### Try the inspection with a sample deck
+
+
+Open this small example in the [file size analyzer](/file/file-size-analyzer). Compare the media entries with the slide XML, then open the presentation and find the illustration. This demonstrates how to identify stored assets; it is not a compression benchmark or a promise of a particular saving.
+
 Twenty slides, mostly text, and the file is 80 MB. Email rejects it, the shared drive complains, and nothing on screen looks like it should weigh that much.
 
 Slides are cheap. The text in a whole deck is a few kilobytes. Something else is taking the space, and it is worth finding out precisely what rather than guessing.
@@ -1269,7 +1283,7 @@ If the recipient needs six slides out of forty, sending six is better in every w
 #### Send a PDF instead
 
 
-If the recipient only needs to read it, [converting to PDF](/powerpoint/powerpoint-to-pdf) is usually far smaller and removes any question about whether their version of PowerPoint renders your fonts. They lose the ability to edit, which is often the point.
+If the recipient only needs to read it, [converting to PDF](/powerpoint/powerpoint-to-pdf) may be useful. Compare file sizes and inspect every slide before sending: browser conversion reconstructs the layout, and custom fonts, charts or unsupported objects can change. Keep the original presentation for editing.
 
 
 ### The email limit is smaller than it says

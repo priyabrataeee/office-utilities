@@ -9,6 +9,7 @@ import { SiteBackgroundComponent } from './shared/components/site-background/sit
 import { CommandPaletteService } from './core/services/command-palette.service';
 import { ShortcutService } from './core/services/shortcut.service';
 import { ThemeService } from './core/services/theme.service';
+import { MonetizationService } from './core/services/monetization.service';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,7 @@ export class App {
   private readonly palette = inject(CommandPaletteService);
   private readonly shortcuts = inject(ShortcutService);
   private readonly theme = inject(ThemeService);
+  private readonly monetization = inject(MonetizationService);
   private readonly router = inject(Router);
 
   constructor() {

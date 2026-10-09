@@ -4,7 +4,7 @@
       [accepts]="['.pdf']"
       [compact]="hasFile()"
       title="Drop a PDF to compress"
-      hint="Images are re-encoded locally; text pages are copied untouched."
+      hint="Scans without detected text are compressed. Pages with text are copied."
       icon="minimize"
       (filesChange)="onFiles($event)"
     />
@@ -15,8 +15,8 @@
           <app-icon name="info" [size]="16" />
           <span>
             This PDF has a real text layer, so its text pages are copied without re-encoding —
-            they stay sharp and searchable. Savings will come from image-heavy pages only, and a
-            document that is mostly text may barely shrink.
+            they stay sharp and searchable. Images on those pages are also left untouched.
+            Only pages without detected text are recompressed. OCR scans may barely shrink.
           </span>
         </p>
       }
@@ -121,7 +121,7 @@
       [active]="busy()"
       [percent]="percent()"
       [label]="progressLabel()"
-      note="Each page is examined and only rasterised when that will actually help."
+      note="Pages without detected text are rasterised. The resulting file may not be smaller."
     />
 
     @if (errorMessage()) {

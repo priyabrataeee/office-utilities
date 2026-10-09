@@ -128,8 +128,8 @@ export class CompressPdfComponent extends ToolBase {
 
     if (result.blob.size >= file.size) {
       this.toast.warning(
-        'This PDF is already well optimised',
-        'Compressing it further would make it bigger, so the original is offered instead.',
+        'These settings did not reduce the file size',
+        'The original is offered instead. Images on pages with detected text are not recompressed.',
       );
       this.setOutputs([this.output(file.name, file)]);
       return;

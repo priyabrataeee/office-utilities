@@ -13,7 +13,9 @@
     "build:zip": "npm run build && node scripts/package-dist.mjs",
     "package": "node scripts/package-dist.mjs",
     "icons": "node scripts/generate-icons.mjs",
-    "indexnow": "node scripts/submit-indexnow.mjs"
+    "indexnow": "node scripts/submit-indexnow.mjs",
+    "samples": "node scripts/generate-review-samples.mjs",
+    "verify:review": "node scripts/verify-review-fixes.mjs"
   },
   "prettier": {
     "printWidth": 100,

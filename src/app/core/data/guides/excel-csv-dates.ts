@@ -16,7 +16,11 @@ export const guide: GuideDefinition = {
   ],
   tools: ['excel-to-csv', 'data-type-detection', 'spreadsheet-cleaner'],
   published: '2026-09-03',
+  updated: '2026-10-08',
   body: [
+    { type: 'h2', text: 'Try two dates that are easy to confuse' },
+    { type: 'download', href: '/samples/date-export.xlsx', text: 'Download the fictional date-export workbook' },
+    { type: 'p', text: 'The Orders sheet contains 9 March 2026 and 3 September 2026, plus ISO text equivalents. Export it with [Excel to CSV](/excel/excel-to-csv), then inspect the raw CSV in a text viewer. Verify both dates and the leading zeros in order 00123 before reopening the file in a spreadsheet. CSV does not preserve cell types; import identifiers as text when required.' },
     {
       type: 'p',
       text: 'You export a sheet to CSV and the dates arrive wrong. Sometimes they are five-digit numbers. Sometimes the ninth of March has become the third of September. Sometimes they look right until someone in another country opens the file.',

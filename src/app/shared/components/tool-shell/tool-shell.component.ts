@@ -20,6 +20,7 @@ import { DownloadService } from '../../../core/services/download.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { SITE } from '../../../core/site.config';
 import { TOOL_CONTENT } from '../../../core/data/tool-content';
+import { TOOL_EXAMPLES } from '../../../core/data/tool-examples';
 
 @Component({
   selector: 'app-tool-shell',
@@ -48,6 +49,7 @@ export class ToolShellComponent {
   });
   protected readonly guides = computed(() => this.guideRegistry.forTool(this.toolId()));
   protected readonly content = computed(() => TOOL_CONTENT[this.toolId()]);
+  protected readonly example = computed(() => TOOL_EXAMPLES[this.toolId()]);
   protected readonly isFavorite = computed(() => {
     this.favorites.ids();
     return this.favorites.isFavorite(this.toolId());

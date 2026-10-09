@@ -25,6 +25,9 @@
     <div class="prose ou-prose">
       @for (block of g.body; track $index) {
         @switch (block.type) {
+          @case ('download') {
+            <p><a [href]="block.href" download>{{ block.text }}</a></p>
+          }
           @case ('h2') {
             <h2>{{ block.text }}</h2>
           }

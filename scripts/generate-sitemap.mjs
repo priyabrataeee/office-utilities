@@ -229,10 +229,7 @@ if (existsSync(outputDir)) {
   writeFileSync(join(outputDir, 'llms-full.txt'), llmsFullTxt);
   writeFileSync(join(outputDir, 'rss.xml'), rssXml);
 
-  try {
-    const shell = readFileSync(join(outputDir, 'index.html'), 'utf8');
-    writeFileSync(join(outputDir, '404.html'), shell);
-  } catch {}
+  writeFileSync(join(outputDir, '404.html'), readFileSync(join(publicDir, '404.html'), 'utf8'));
 }
 
 console.log(`Wrote ${allPaths.length} URLs to sitemap.xml (${site})`);

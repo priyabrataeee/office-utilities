@@ -16,7 +16,11 @@ export const guide: GuideDefinition = {
   ],
   tools: ['file-size-analyzer', 'pptx-extract-images', 'slide-selector', 'pptx-to-pdf'],
   published: '2026-09-03',
+  updated: '2026-10-08',
   body: [
+    { type: 'h2', text: 'Try the inspection with a sample deck' },
+    { type: 'download', href: '/samples/presentation-example.pptx', text: 'Download the fictional two-slide presentation' },
+    { type: 'p', text: 'Open this small example in the [file size analyzer](/file/file-size-analyzer). Compare the media entries with the slide XML, then open the presentation and find the illustration. This demonstrates how to identify stored assets; it is not a compression benchmark or a promise of a particular saving.' },
     {
       type: 'p',
       text: 'Twenty slides, mostly text, and the file is 80 MB. Email rejects it, the shared drive complains, and nothing on screen looks like it should weigh that much.',
@@ -34,7 +38,7 @@ export const guide: GuideDefinition = {
     {
       type: 'tool',
       toolId: 'file-size-analyzer',
-      text: 'Breaks a PPTX, DOCX, XLSX, PDF or ZIP into its parts, sized in proportion.',
+      text: 'Measures entries in PPTX, DOCX, XLSX and ZIP archives. PDF results are drawing-complexity estimates.',
     },
     {
       type: 'p',
@@ -91,7 +95,7 @@ export const guide: GuideDefinition = {
     { type: 'h3', text: 'Send a PDF instead' },
     {
       type: 'p',
-      text: 'If the recipient only needs to read it, [converting to PDF](/powerpoint/powerpoint-to-pdf) is usually far smaller and removes any question about whether their version of PowerPoint renders your fonts. They lose the ability to edit, which is often the point.',
+      text: 'If the recipient only needs to read it, [converting to PDF](/powerpoint/powerpoint-to-pdf) may be useful. Compare file sizes and inspect every slide before sending: browser conversion reconstructs the layout, and custom fonts, charts or unsupported objects can change. Keep the original presentation for editing.',
     },
 
     { type: 'h2', text: 'The email limit is smaller than it says' },

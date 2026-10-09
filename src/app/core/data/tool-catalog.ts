@@ -438,7 +438,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Merge PDF',
     summary: 'Combine several PDFs into one, in any order.',
     description:
-      'Add as many PDFs as you like, drag them into the order you want and download a single merged document. Bookmarks from each source file are preserved and page sizes are left untouched.',
+      'Combine PDFs in your chosen order without uploading them. Page sizes and visual quality are preserved. Document bookmarks and interactive forms are not transferred.',
     icon: 'merge',
     keywords: [
       'combine pdf',
@@ -458,7 +458,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       },
       {
         q: 'Will merging change the quality of my pages?',
-        a: 'No. Pages are copied byte-for-byte into the new document, so text stays selectable and images are never re-encoded.',
+        a: 'Pages are copied without rasterising them, so existing text stays selectable and images are not re-encoded. The PDF is rewritten, so the file bytes change. Document bookmarks, interactive form structure and digital signatures are not preserved.',
       },
     ],
   },
@@ -651,9 +651,9 @@ export const TOOLS: readonly ToolDefinition[] = [
     category: 'pdf',
     slug: 'compress-pdf',
     title: 'Compress PDF',
-    summary: 'Shrink file size by re-encoding images and dropping bloat.',
+    summary: 'Compress scanned pages while keeping detected text pages intact.',
     description:
-      'Reduce PDF size by downsampling and re-encoding embedded images, removing duplicated resources and stripping metadata. Choose a quality target and compare the before and after size before you download.',
+      'Compress scanned PDF pages locally with adjustable JPEG quality and resolution. Pages with detected text are copied without image compression, including photos on those pages. Compare the result before downloading; savings are not guaranteed.',
     icon: 'minimize',
     keywords: [
       'reduce pdf size',
@@ -2550,7 +2550,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Certificate Generator',
     summary: 'Design award and completion certificates.',
     description:
-      'Produce landscape certificates of achievement, participation or completion with decorative borders, a title, recipient name, description, date and up to two signature blocks. Generate one, or a batch from a CSV of names.',
+      'Create a free completion, achievement or participation certificate. Enter one recipient, the award details and signatories, then export PDF or Word without an account. CSV batch generation is not available.',
     icon: 'award',
     keywords: ['award certificate', 'diploma', 'completion certificate', 'bulk certificates'],
     accepts: [],
@@ -2558,7 +2558,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I produce certificates for a whole group?',
         a:
-          'Yes. Generate one at a time, or produce a batch so a class or cohort each gets their own without retyping the layout.',
+          'Generate one certificate at a time, change the recipient and export again. CSV import and automatic batch generation are not available.',
       },
       {
         q: 'What can I put on it?',
@@ -2637,7 +2637,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Salary Slip Generator',
     summary: 'Generate payslips with earnings and deductions.',
     description:
-      'Create a payslip with employee details, earnings, deductions, employer contributions and net pay in words. Totals compute automatically and you can export a single slip or a batch from a CSV.',
+      'Create an individual payslip with employee details, earnings and deductions. Review the totals and export PDF or Word. CSV batch generation is not available.',
     icon: 'wallet',
     keywords: ['payslip', 'pay stub', 'payroll', 'salary statement'],
     accepts: [],
@@ -2650,7 +2650,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I produce slips for the whole team?',
         a:
-          'Yes. Generate a single slip, or import a CSV to produce a batch in one pass rather than repeating the form for each employee.',
+          'Generate each slip separately by updating the form and exporting again. CSV import and automatic batch generation are not available.',
       },
       {
         q: 'Does it comply with payroll law where I am?',
@@ -2993,7 +2993,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Mind Map Maker',
     summary: 'Branch ideas out from a central topic.',
     description:
-      'Grow a mind map from a central node with keyboard-driven branching — Tab for a child, Enter for a sibling — automatic radial layout and a colour per branch. Export SVG, PNG or an indented outline.',
+      'Start with a mind-map template, edit ideas and arrange connected branches manually. Choose colours and export SVG or PNG. Save Diagram Studio JSON for later editing.',
     icon: 'git-branch',
     keywords: ['brainstorm', 'idea map', 'concept map', 'outline'],
     accepts: [],
@@ -3001,17 +3001,17 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Do I have to place each node?',
         a:
-          'No. Press Tab for a child and Enter for a sibling, and the radial layout arranges everything automatically — the point is to capture thoughts at typing speed.',
+          'The template is pre-arranged, but additional nodes are placed manually. Automatic radial layout and keyboard child/sibling creation are not supported.',
       },
       {
         q: 'How do I keep branches distinguishable?',
         a:
-          'Each branch takes its own colour automatically, which is what lets you find your way around a map once it has grown past a dozen nodes.',
+          'Choose node and connector colours in the inspector. Colours are not automatically assigned to new branches.',
       },
       {
         q: 'Can I get the content out as text?',
         a:
-          'Yes. Export an indented outline alongside SVG and PNG, which is useful when the map was a way of drafting a document.',
+          'There is no plain-text outline export. Use SVG or PNG for sharing and JSON to preserve the editable diagram.',
       },
     ],
   },
@@ -3020,27 +3020,27 @@ export const TOOLS: readonly ToolDefinition[] = [
     category: 'diagram',
     slug: 'org-chart-maker',
     title: 'Org Chart Maker',
-    summary: 'Build a reporting hierarchy, or import one from CSV.',
+    summary: 'Edit a reporting hierarchy on a diagram canvas.',
     description:
-      'Create an organisation chart from cards with name, title, department and photo initials, laid out automatically as a tree. Import a CSV of employee and manager pairs to generate the whole structure at once.',
+      'Start with an editable organisation chart, change the labels, position people and connect reporting lines. Import saved Diagram Studio JSON or export SVG and PNG. CSV import and automatic tree layout are not available.',
     icon: 'users',
     keywords: ['organisation chart', 'hierarchy', 'reporting structure', 'team chart'],
-    accepts: ['.csv'],
+    accepts: ['.json'],
     faq: [
       {
         q: 'Do I have to build the tree by hand?',
         a:
-          'No. Import a CSV of employee and manager pairs and the whole structure is generated, which is far quicker than placing a card per person.',
+          'A starter hierarchy is provided. Edit the labels and arrange additional nodes and connectors manually. You can also import a previously saved Diagram Studio JSON file.',
       },
       {
         q: 'What appears on each card?',
         a:
-          'Name, title, department and photo initials — enough to identify people without needing photographs of everyone.',
+          'An editable text label. Use separate lines for a name, title and department.',
       },
       {
         q: 'Is the layout automatic?',
         a:
-          'Yes, arranged as a tree from the reporting relationships, so adding a person does not mean rearranging everyone below them.',
+          'No. The starter template is arranged for you, but new nodes are positioned manually. Grid and snap controls help align them.',
       },
     ],
   },
@@ -3111,7 +3111,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'File Size Analyzer',
     summary: 'See what is actually taking up space inside a file.',
     description:
-      'Break a container file — PDF, DOCX, XLSX, PPTX or ZIP — into its parts and show which images, fonts and streams account for the size, as a sortable table and a proportional treemap. The fastest way to find the 12 MB photo bloating a deck.',
+      'Inspect measured entry sizes in DOCX, XLSX, PPTX and ZIP archives. For PDFs, compare heuristic drawing scores across the first 200 pages; these scores are not storage sizes.',
     icon: 'bar-chart',
     keywords: ['what is making my file big', 'treemap', 'zip contents', 'bloat'],
     accepts: ['.pdf', '.docx', '.xlsx', '.pptx', '.zip'],
@@ -3125,12 +3125,12 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Which formats can it analyse?',
         a:
-          'PDF, DOCX, XLSX, PPTX and ZIP — all of which are container formats whose internal parts can be listed and measured.',
+          'DOCX, XLSX, PPTX and ZIP entry sizes are measured. PDFs show estimated page drawing complexity, not measured bytes.',
       },
       {
-        q: 'What is the treemap for?',
+        q: 'What does the proportional chart show?',
         a:
-          'It shows each part sized in proportion to its bytes, so the one item responsible for most of the file is obvious at a glance.',
+          'For archives it shows the share of measured entry sizes. For PDFs it shows shares of a heuristic drawing score, not shares of file size.',
       },
     ],
   },

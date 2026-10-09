@@ -27,6 +27,7 @@ export interface GuideToolCard {
 }
 
 export type GuideBlock =
+  | { readonly type: 'download'; readonly href: string; readonly text: string }
   | GuideParagraph
   | GuideHeading
   | GuideList

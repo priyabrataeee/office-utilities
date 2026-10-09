@@ -47,14 +47,14 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'You choose how hard to push, and the result reports what it actually saved rather than promising a percentage in advance.',
     ],
     howItWorks: [
-      'Each page is examined before anything is changed. Pages that are predominantly vector text are copied through untouched, because rasterising a page of text would make the file both larger and visibly worse — the common failure of tools that treat every page the same way.',
-      'Pages carrying significant image content are rendered with PDF.js and re-encoded through the browser’s own canvas codecs at the quality you selected. That is a lossy step and it is the only lossy step: everything else in the document is copied as-is.',
+      'The compressor checks for extractable text on each page. If it finds a text run longer than two characters, it copies that entire page without recompressing its images. A photograph with a caption, and a scan with an OCR text layer, can therefore receive no image compression.',
+      'Pages without detected text are rendered as JPEG images at the selected resolution and quality. Fine lines and any text drawn as outlines can soften. This is page rasterisation, not selective replacement of embedded images. The new document does not preserve document bookmarks, interactive forms or digital signatures.',
       'Compression is therefore bounded by what is in your file. A scanned document is mostly photographs and compresses heavily. A text report with two logos has almost nothing to remove, and a tool claiming it can shrink one by 80 per cent is either rasterising your text or not telling you what it did.',
     ],
     useCases: [
       'Getting a scanned document under an email attachment limit without printing and rescanning it.',
-      'Reducing a photo-heavy report before uploading it to a portal that caps file size.',
-      'Shrinking a deck exported to PDF where every slide carries a full-resolution background image.',
+      'Reducing image-only pages in a scanned report before uploading it to a portal that caps file size.',
+      'Comparing lighter and stronger JPEG settings on scans without an OCR text layer.',
       'Preparing a document for a government or banking form with a strict size cap, where the file contains personal identity documents.',
     ],
   },
@@ -1538,12 +1538,12 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
   'mind-map': {
     about: [
       'Mind maps work when thinking is faster than typing, which means the interaction has to keep up with you.',
-      'Keyboard-driven branching: Tab for a child, Enter for a sibling.',
+      'Start with a launch-planning template and arrange connected ideas on the canvas.',
     ],
     howItWorks: [
-      'Nodes are created from the keyboard so your hands never leave it — Tab adds a child, Enter adds a sibling. The value of a mind map is capturing thoughts before they are lost, and reaching for a mouse between every node breaks that.',
-      'The layout is computed as the map grows: branches are positioned and spaced automatically, so adding a node in the middle rearranges the rest rather than leaving you to tidy up.',
-      'It is a thinking tool rather than a document. Export it when a structure has emerged, and expect the finished artefact to be an outline or a diagram rather than the map itself.',
+      'Add shapes from the palette, edit their labels and connect ideas using the canvas controls.',
+      'Arrange new branches manually and choose their colours in the inspector. Automatic radial layout and Tab/Enter branching are not available.',
+      'Export SVG or PNG to share the map. Save JSON for later editing; text-outline export is not available.',
     ],
     useCases: [
       'Brainstorming before any structure exists.',
@@ -1556,11 +1556,11 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
   'org-chart': {
     about: [
       'Org charts are needed for onboarding, planning and reorganisations — and they are a list of named employees and their reporting lines, which is personal data.',
-      'Cards with name, title, department and photo initials.',
+      'Editable text cards connected by reporting lines.',
     ],
     howItWorks: [
-      'The hierarchy is laid out automatically from the reporting relationships you set, so moving a person moves their reports with them rather than leaving you to reposition a subtree by hand.',
-      'Cards carry title and department alongside the name, because a chart of names alone answers who reports to whom and not the question people usually have, which is who does what.',
+      'The starter hierarchy is already positioned. Additional nodes and reporting lines are arranged manually; there is no automatic tree layout or CSV employee import.',
+      'Use each text label for a name, title and department. Export JSON for later editing, or SVG and PNG for sharing.',
       'Everything stays in this tab. A complete org chart is a roster of your staff, their seniority and your management structure — useful to a recruiter, useful to anyone attempting social engineering, and routinely uploaded to free chart tools.',
     ],
     useCases: [
@@ -1595,7 +1595,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Break a PDF, DOCX, XLSX, PPTX or ZIP into its parts and see what is heavy.',
     ],
     howItWorks: [
-      'Office formats are ZIP archives, so the container is opened here and every entry listed with its compressed and uncompressed size. PDFs are parsed for their embedded objects. Either way the report comes from the file’s actual structure rather than an estimate.',
+      'Office formats are ZIP archives, so the container is opened here and entries are listed with their compressed and uncompressed sizes. PDFs use heuristic drawing scores for up to 200 pages instead. PDF scores are not measured byte sizes and do not reveal individual font or image storage.',
       'The answer is nearly always images. A single photograph placed at full camera resolution and displayed two centimetres wide can be most of a document, and it is invisible from the page.',
       'Seeing the breakdown tells you what to do rather than leaving you to guess. One enormous image means replace that image; hundreds of small ones mean compress them all; a large content stream with no images means the document is genuinely long and compression will not help.',
     ],

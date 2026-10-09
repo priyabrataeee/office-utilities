@@ -16,6 +16,7 @@ export const guide: GuideDefinition = {
   ],
   tools: ['compress-pdf', 'file-size-analyzer', 'pdf-to-images'],
   published: '2026-09-03',
+  updated: '2026-10-08',
   body: [
     {
       type: 'p',
@@ -53,12 +54,12 @@ export const guide: GuideDefinition = {
     },
     {
       type: 'p',
-      text: 'Guessing is unnecessary. Break the file into its parts and look — the [file size analyzer](/file/file-size-analyzer) lists which images, fonts and streams account for the size, so you can see whether you have an image problem or a font problem before choosing an approach.',
+      text: 'The [file size analyzer](/file/file-size-analyzer) measures archive entries for Office files. For PDFs it provides only a drawing-complexity estimate for up to 200 pages; it does not measure individual images, fonts or streams in bytes. Inspect the original document before choosing a compression method.',
     },
     {
       type: 'tool',
       toolId: 'file-size-analyzer',
-      text: 'Shows every part of a PDF, DOCX, XLSX, PPTX or ZIP sized in proportion.',
+      text: 'Measures entries in Office and ZIP archives; estimates PDF page drawing complexity.',
     },
 
     { type: 'h2', text: 'Compressing properly' },
@@ -74,7 +75,12 @@ export const guide: GuideDefinition = {
     {
       type: 'tool',
       toolId: 'compress-pdf',
-      text: 'Compresses toward a target size while leaving text as text.',
+      text: 'Re-encodes pages without detected text; copies pages with text, including their images. There is no target-file-size guarantee.',
+    },
+    {
+      type: 'note',
+      title: 'What this browser tool actually compresses',
+      text: 'Office Utilities uses a conservative page-level rule, not selective image downsampling. A page with an extractable text run longer than two characters is copied unchanged. A scan with OCR or a photo with a caption may therefore stay large. Pages without detected text are rasterised, which can soften fine lines. Keep the original; document bookmarks, interactive forms and digital signatures are not preserved.',
     },
     { type: 'h3', text: 'Remove what is not needed' },
     {
