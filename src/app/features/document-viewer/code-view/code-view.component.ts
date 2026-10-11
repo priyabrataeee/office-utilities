@@ -166,7 +166,9 @@ export class CodeViewComponent {
           break;
         }
         case 'html': {
-          this.htmlPreview.set(this.sanitizer.bypassSecurityTrustHtml(await sanitizeHtml(text)));
+          this.htmlPreview.set(
+            this.sanitizer.bypassSecurityTrustHtml(withoutRemoteResources(await sanitizeHtml(text))),
+          );
           this.tab.set('preview');
           break;
         }
@@ -230,6 +232,18 @@ export class CodeViewComponent {
   protected highlight(line: string): string {
     return line;
   }
+}
+
+function withoutRemoteResources(html: string): string {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const names = ['src', 'srcset', 'poster', 'background'];
+  for (const element of Array.from(doc.body.querySelectorAll('[src], [srcset], [poster], [background]'))) {
+    for (const name of names) {
+      const value = element.getAttribute(name);
+      if (value !== null && !/^\s*(data:|blob:)/i.test(value)) element.removeAttribute(name);
+    }
+  }
+  return doc.body.innerHTML;
 }
 
 function describeJsonError(error: unknown, text: string): string {

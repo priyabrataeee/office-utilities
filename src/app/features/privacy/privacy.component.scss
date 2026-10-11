@@ -4,6 +4,11 @@
   font-size: var(--ou-fs-lg);
 }
 
+.updated {
+  font-size: var(--ou-fs-sm);
+  color: var(--ou-text-subtle);
+}
+
 .claims {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));

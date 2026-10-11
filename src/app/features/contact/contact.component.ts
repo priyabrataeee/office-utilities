@@ -80,8 +80,9 @@ import { SITE } from '../../core/site.config';
         <h2>Before you write</h2>
         <p>
           A few answers that come up often are already written down. The
-          <a routerLink="/about">about page</a> covers how the tools work and what they genuinely
-          cannot do — no OCR for scanned pages, no reconstruction of complex PDF layouts, and
+          <a routerLink="/about">about page</a> covers how the tools work, and the
+          <a routerLink="/disclaimer">disclaimer</a> lists what they genuinely cannot do — no OCR
+          for scanned pages, no exact reconstruction of multi-column PDF layouts or tables, and
           Latin-script fonts only in generated PDFs. Most tools also carry their own questions and
           answers at the bottom of the page.
         </p>

@@ -11,6 +11,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { MonetizationService } from '../../../core/services/monetization.service';
+import { PrivacyChoicesService } from '../../../core/services/privacy-choices.service';
 
 @Component({
   selector: 'app-ad-slot',
@@ -28,6 +29,7 @@ import { MonetizationService } from '../../../core/services/monetization.service
           [attr.data-ad-slot]="slot()"
           data-ad-format="auto"
           data-full-width-responsive="false"
+          [attr.data-restrict-data-processing]="choices.adsOptedOut() ? '1' : null"
         ></ins>
       </aside>
     }
@@ -38,6 +40,7 @@ export class AdSlotComponent {
   readonly placement = input.required<string>();
 
   protected readonly money = inject(MonetizationService);
+  protected readonly choices = inject(PrivacyChoicesService);
   private readonly unit = viewChild<ElementRef<HTMLElement>>('unit');
 
   protected readonly slot = computed(() => this.money.slotFor(this.placement()));

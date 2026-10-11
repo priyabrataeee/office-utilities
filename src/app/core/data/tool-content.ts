@@ -43,7 +43,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
 
   'compress-pdf': {
     about: [
-      'Most oversized PDFs are oversized for one reason: photographs stored at far higher resolution than anything will ever display or print them at. Compression is mostly a matter of finding those and re-encoding them sensibly.',
+      'Most oversized PDFs are oversized for one reason: photographs stored at far higher resolution than anything will ever display or print them at. This tool handles the commonest case, the scanned page that is one large photograph, by re-rendering those pages as JPEGs at a resolution and quality you choose.',
       'You choose how hard to push, and the result reports what it actually saved rather than promising a percentage in advance.',
     ],
     howItWorks: [
@@ -101,7 +101,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Each page becomes its own image at a resolution you choose.',
     ],
     howItWorks: [
-      'Pages are rendered by PDF.js onto a canvas at the scale you pick, then encoded as PNG or JPEG by the browser’s own image codecs. The rendering is the same one the viewer on this site uses, so what you get is what you saw.',
+      'Pages are rendered by PDF.js onto a canvas at the scale you pick, then encoded as PNG, JPEG or WebP by the browser’s own image codecs. The rendering is the same one the viewer on this site uses, so what you get is what you saw.',
       'Resolution is the decision that matters. Rendering at higher scale produces a sharper image and a proportionally larger file — doubling the scale roughly quadruples the pixel count. For screen use the default is enough; for print, render higher than looks necessary, because an image cannot be sharpened after the fact.',
       'PNG is lossless and right for pages of text and line art, where JPEG artefacts show clearly around letter edges. JPEG is right for pages that are mostly photographs. Whichever you choose, the result is a picture: the text in it is no longer selectable or searchable, which is sometimes precisely the point.',
     ],
@@ -335,8 +335,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Fill in the fields and download the PDF. There is no account, and the details stay in this tab.',
     ],
     howItWorks: [
-      'The form is rendered into a PDF in the browser and saved straight to your device. Nothing is submitted: the client’s name, your bank details and the line items exist only in this page, and closing the tab is the end of them.',
-      'That has one consequence worth planning around. Nothing is stored between visits, so the invoice number is not remembered for you. Numbers must be unique and should be sequential — a dated scheme such as 2026-014 stays readable years later and makes gaps obvious — and the sequence needs to live wherever you keep the invoices themselves.',
+      'The form is rendered into a PDF in the browser and saved straight to your device. Nothing is submitted: the client’s name, your bank details and the line items never leave this browser. The form is kept as a draft in this browser’s local storage so you can come back to it, and Reset or the Privacy page clears it.',
+      'One thing is worth planning around. Only the last draft is kept, and nothing counts invoices for you, so the next invoice number is yours to track. Numbers must be unique and should be sequential — a dated scheme such as 2026-014 stays readable years later and makes gaps obvious — and the sequence needs to live wherever you keep the invoices themselves.',
       'The output is a normal PDF with selectable text, which is what accounts payable systems expect to receive and what they can run their own text extraction against.',
     ],
     useCases: [
@@ -371,7 +371,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Every page appears as a thumbnail. Drag, rotate and remove, then export once.',
     ],
     howItWorks: [
-      'Thumbnails are rendered by PDF.js at a small scale, which is why a long document previews quickly: the pages are drawn at preview size rather than full resolution and discarded from memory as you scroll.',
+      'Thumbnails are rendered by PDF.js at a small scale, which is why a long document previews quickly: the pages are drawn at preview size rather than full resolution.',
       'Your edits are recorded as a plan — this page moves here, that one is rotated, this one goes — and nothing is written until you export. At that point pdf-lib builds the output by copying the pages you kept, in the order you put them, with the rotations you set.',
       'Because the export copies pages rather than re-rendering them, the result is lossless no matter how much rearranging you did. The thumbnails are a picture of the page; the exported document contains the original.',
     ],
@@ -620,12 +620,12 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
   'compare-docx': {
     about: [
       'Two files called contract-final.docx and contract-final-v2.docx, no tracked changes, and nobody willing to say what moved. Comparison answers it directly.',
-      'Load both and see every insertion and deletion.',
+      'Load both and see what was added, removed and edited.',
     ],
     howItWorks: [
-      'The text of both documents is extracted in reading order, broken into words, and the longest sequences the two versions share are found. Everything between those matches is what changed: present only in the original means deleted, present only in the revision means inserted.',
-      'Working at word level rather than line or paragraph level is what makes the result readable. A paragraph where one number changed highlights the number, not the whole paragraph — otherwise a legal review becomes rereading the document with extra colour.',
-      'Two limits are worth knowing before you rely on it. Moved text has no special representation: a clause relocated from section 3 to section 9 appears as a deletion in one place and an insertion in another, and noticing they are the same words is your job. And a comparison of text cannot see formatting, so a heading that quietly stopped being a heading reports as no change at all.',
+      'The text of both documents is extracted in reading order and split into paragraphs, and the longest run of paragraphs the two versions share is found. A paragraph present only in the original is a deletion, one present only in the revision is an insertion, and an edited paragraph is compared again word by word.',
+      'That second, word-level pass is what makes the inline view readable. A paragraph where one number changed highlights the number, not the whole paragraph — otherwise a legal review becomes rereading the document with extra colour.',
+      'Three limits are worth knowing before you rely on it. Moved text has no special representation: a clause relocated from section 3 to section 9 appears as a deletion in one place and an insertion in another, and noticing they are the same words is your job. And a comparison of text cannot see formatting, so a heading that quietly stopped being a heading reports as no change at all. And only the first 4,000 non-empty paragraphs of each file are compared.',
     ],
     useCases: [
       'Finding out what the other side actually changed in a contract they returned.',
@@ -804,7 +804,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     howItWorks: [
       'Slides are written with PptxGenJS, which produces a genuine OpenXML presentation — a ZIP of the same parts PowerPoint itself writes. The result opens in PowerPoint, Keynote and Google Slides as an editable deck rather than as a set of pictures.',
-      'Content goes into real placeholders rather than free-floating text boxes. That is what makes the outline view work, what lets a corporate template restyle the deck when you apply one, and what keeps the text accessible to a screen reader.',
+      'Titles and bullets are written as ordinary editable text boxes positioned by the chosen layout, not as template placeholders. Every word stays editable and searchable in PowerPoint, but the outline view will not list the titles and applying a corporate template will not restyle the slides for you.',
       'Layouts are deliberately few. A deck assembled from four consistent layouts reads better than one where every slide was positioned by hand, and it is far easier for someone else to pick up and continue.',
     ],
     useCases: [
@@ -876,7 +876,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     howItWorks: [
       'Slides are parsed and rendered as thumbnails so you can judge the deck visually, which is the only sensible way to decide what a shorter version should contain.',
-      'The export writes a new presentation containing the slides you selected, in their original order, with the original left untouched. Nothing is edited in place, so a selection you regret costs nothing.',
+      'The export writes a new presentation containing the slides you selected, in their original order, with the original left untouched. The unwanted slides and their notes are deleted from the package; the shared media pool is left as it was, so a picture used only on a deleted slide is no longer shown but is still stored in the file.',
       'Because the source deck is parsed rather than rendered to pictures, the exported slides remain editable slides rather than images of slides.',
     ],
     useCases: [
@@ -893,8 +893,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Drop in almost any document and it opens in the right reader.',
     ],
     howItWorks: [
-      'The file’s type is determined from its bytes rather than its extension, then the matching reader is loaded on demand: PDF.js for PDFs, Mammoth for Word, SheetJS for spreadsheets, a direct OpenXML parser for PowerPoint, and dedicated readers for CSV, Markdown, JSON, XML, HTML and plain text.',
-      'Reading the bytes matters because extensions lie constantly. A .txt that is really a PDF, or a .xls that is really an HTML table, both open correctly here and both defeat a viewer that trusts the file name.',
+      'The viewer is chosen from the file’s extension, falling back to the type the browser reports when the extension is unknown, and the matching reader is loaded on demand: PDF.js for PDFs, Mammoth for Word, SheetJS for spreadsheets, a direct OpenXML parser for PowerPoint, and dedicated readers for CSV, Markdown, JSON, XML, HTML and plain text.',
+      'That means a mislabelled file opens in the wrong viewer: a PDF saved with a .txt extension is shown as text. If something looks like nonsense, run it through the File Signature Checker, which reads the bytes and tells you what the file really is, then rename it.',
       'Only the reader you need is downloaded. Opening a Markdown file does not fetch the PDF engine, which is why the page stays light despite handling a dozen formats.',
     ],
     useCases: [
@@ -930,7 +930,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     howItWorks: [
       'PapaParse reads the file, detecting the delimiter from the content — comma, tab or semicolon — and handling quoted fields, escaped quotes and line breaks inside cells. Those are the cases that defeat splitting on commas, and they are common in exported data.',
-      'Values are displayed as text exactly as stored. Nothing is converted to a number or a date, so 00123 stays 00123 and a 16-digit reference stays a full number instead of being rounded into scientific notation.',
+      'Cells that look like plain numbers are read as numbers, and true and false as booleans, so that columns sort numerically. Everything else stays as the text in the file: dates are not reinterpreted, a code such as 00123 keeps its leading zeros, and a reference longer than 15 digits is not rounded.',
       'That is the reason to look at a CSV here before opening it anywhere else: this shows what the file contains, and a spreadsheet shows what it decided the file meant.',
     ],
     useCases: [
@@ -947,8 +947,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'This renders the slides from the file’s own structure, on your machine.',
     ],
     howItWorks: [
-      'A .pptx is a ZIP of OpenXML parts and no browser API renders one, so the shape tree of each slide is parsed here: positions, sizes, text runs, tables and pictures, converted from OpenXML’s internal units into points and drawn as positioned HTML.',
-      'Because the slides are reconstructed as elements rather than rasterised, the text stays selectable and searchable and stays sharp at any zoom — which a viewer that renders slides to images cannot offer.',
+      'A .pptx is a ZIP of OpenXML parts and no browser API renders one, so the shape tree of each slide is parsed here: positions, sizes, text runs, tables and pictures, converted from OpenXML’s internal units into points and drawn as an SVG.',
+      'Because the slides are reconstructed as vector elements rather than rasterised, the text stays real text and stays sharp at any zoom — which a viewer that renders slides to images cannot offer.',
       'Charts, SmartArt, 3-D effects, transitions and animations are not reproduced. They are behaviours of PowerPoint’s renderer rather than content in the file, and this reports them rather than dropping them silently.',
     ],
     useCases: [
@@ -1019,8 +1019,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'A virtualised reader with line numbers, wrap toggle and encoding detection.',
     ],
     howItWorks: [
-      'The view is virtualised, so only the lines currently on screen exist in the page and they are recycled as you scroll. That is what allows a very large file to open immediately instead of freezing the browser while it builds elements for every line.',
-      'Encoding is detected rather than assumed. A byte-order mark identifies UTF-16 and UTF-8 variants; without one, the bytes are examined for valid UTF-8 sequences before falling back. Guessing wrong is what produces a screen of replacement characters in files containing any non-English text.',
+      'The file is read into memory and shown line by line, and the display stops at 20,000 lines with a notice, which keeps the page from freezing while it builds an element for every line of a huge log.',
+      'The text is decoded as UTF-8, which is what almost every modern tool writes. There is no encoding detection: a file in UTF-16 or a legacy code page shows replacement characters wherever it contains non-English text, and the fix is to resave it as UTF-8.',
       'Line numbers come from the file’s own line breaks, and the wrap toggle changes only display — turning wrapping off is usually right for logs, where the important content sits at the end of long lines.',
     ],
     useCases: [
@@ -1037,8 +1037,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Render it in a sandbox, or read the source as highlighted markup.',
     ],
     howItWorks: [
-      'The rendered view runs inside a sandboxed frame with scripting disabled, so nothing in the document executes and no tracking pixel or remote resource is fetched. You see the page as it is written rather than as it would behave.',
-      'The source view parses the markup with the browser’s own parser inside an inert document — the same parser, without the execution — and pretty-prints it with syntax highlighting so structure is readable.',
+      'The preview shows the markup after DOMPurify has sanitised it: scripts, event handlers, style sheets and forms are removed, and images or media that point at a remote address are dropped, so nothing in the document executes and no tracking pixel is fetched. Because its own styles are removed, you see the content in this site’s typography rather than the page as designed.',
+      'The source view parses the markup with the browser’s own parser inside an inert document — the same parser, without the execution — and re-indents it so the structure is readable.',
       'That combination is the useful part: the rendered view tells you what a document looks like, and the source view tells you what it actually contains, including the remote resources it would have loaded.',
     ],
     useCases: [
@@ -1289,7 +1289,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Landscape certificates of achievement, participation or completion.',
     ],
     howItWorks: [
-      'The certificate is composed and written as a PDF at landscape page size, with the decorative border and typography drawn as vector graphics rather than placed as a background image — so it stays sharp at any zoom and prints cleanly at any size.',
+      'The certificate is composed and written as a PDF at landscape page size, with the text and the rule under the recipient’s name drawn as vector graphics rather than placed as a background image — so it stays sharp at any zoom and prints cleanly at any size. The design is typographic: there is no decorative border or seal.',
       'Because the output is a vector PDF rather than a rasterised design, the recipient’s name remains real selectable text. That matters if certificates are ever searched, filed or verified.',
       'Names go in exactly as typed, which is worth a moment’s care. A certificate with a misspelled name is worse than no certificate, and it is the single most common thing to get wrong when producing them quickly.',
     ],
@@ -1344,7 +1344,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     howItWorks: [
       'Earnings and deductions are itemised separately and the net figure is computed from them, so the slip shows the arithmetic rather than asserting a total. That is what makes a payslip answer questions instead of prompting them.',
-      'Everything stays in this tab. A payslip carries a person’s full name, salary, deductions and often their tax and bank identifiers together on one page — the combination that makes it worth more to an attacker than most documents a business handles.',
+      'Everything stays in this browser: the slip is generated here, and the form is kept as a local draft until you reset it. A payslip carries a person’s full name, salary, deductions and often their tax and bank identifiers together on one page — the combination that makes it worth more to an attacker than most documents a business handles.',
       'Statutory requirements for what a payslip must show vary by country and by employment type. This produces the document; whether it satisfies your jurisdiction’s rules is worth confirming against them.',
     ],
     useCases: [
@@ -1417,7 +1417,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     howItWorks: [
       'Shapes, connectors and text are held as a document model and rendered as vectors, so the canvas stays sharp at any zoom and exports at any size without pixelation.',
       'Connectors are routed rather than drawn as straight lines: they attach to shapes and re-route when a shape moves, which is what keeps a diagram legible after the tenth rearrangement instead of degrading into crossed lines.',
-      'Nothing is saved to a server, which has a consequence worth planning around — the diagram exists in this tab until you export it. That is the trade for a diagram of your internal network that never leaves your machine.',
+      'Nothing is saved to a server, which has a consequence worth planning around — the only copy is the auto-saved one in this browser until you export it, and clearing browser data removes it. That is the trade for a diagram of your internal network that never leaves your machine.',
     ],
     useCases: [
       'Documenting an internal system architecture that should not be stored externally.',
@@ -1430,7 +1430,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
   'text-to-diagram': {
     about: [
       'Dragging boxes is slow, and a diagram defined as text can be version-controlled, reviewed in a pull request and regenerated when the system changes.',
-      'Type Mermaid, a PlantUML subset, or a simple indented outline.',
+      'Type Mermaid or a simple indented outline.',
     ],
     howItWorks: [
       'The text is parsed and laid out automatically — you describe what connects to what, and positioning is computed rather than chosen. That is the trade: less control over the exact look, and no manual rearranging when a node is added.',
@@ -1452,7 +1452,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     howItWorks: [
       'The stencil carries the standard flowchart vocabulary — terminators for start and end, rectangles for processes, diamonds for decisions, parallelograms for input and output. Those shapes are a convention readers already know, which is what makes a flowchart readable without a legend.',
-      'Connectors route themselves around shapes and follow them when they move, so adding a step to the middle of a chart does not mean redrawing everything after it.',
+      'Connectors stay attached to their shapes and follow them when they move, so adding a step to the middle of a chart does not mean redrawing everything after it.',
       'A decision diamond should have every branch labelled. An unlabelled fork is the most common flaw in a hand-drawn flowchart and the one that makes readers guess.',
     ],
     useCases: [
@@ -1523,7 +1523,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Routers, switches, firewalls, servers, clients and the links between them.',
     ],
     howItWorks: [
-      'The stencil uses conventional network symbols, which matter because network diagrams are read under pressure by people who did not draw them. A recognisable firewall symbol is understood instantly; a labelled rectangle has to be read.',
+      'The stencil is a set of labelled, colour-coded shapes — router, switch, firewall, server, client, wireless access point and an internet cloud — rather than vendor icon artwork. Keep the labels: network diagrams are read under pressure by people who did not draw them, and a named box is unambiguous.',
       'Connections can carry labels for interface, VLAN or address, and those labels are usually the reason the diagram is being consulted at all — a topology with no addressing tells you what connects to what but not where to look.',
       'It stays on your machine. A network diagram names your internal addressing, your segmentation and your security appliances; it is among the most useful documents an attacker could obtain, and uploading one to a free diagramming service is a genuine exposure rather than a theoretical one.',
     ],
@@ -1631,9 +1631,9 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Hash every file and group the ones that are genuinely identical.',
     ],
     howItWorks: [
-      'Every file is read and digested with the Web Crypto API — the browser’s own audited implementation, the same primitive used for TLS. Files with matching digests are byte-for-byte identical whatever they are called and wherever they sit.',
+      'Files are first grouped by size, because two files of different lengths cannot be identical. Every file that shares its size with another is then read in full and digested with SHA-256 in this tab. Files with matching digests are byte-for-byte identical whatever they are called and wherever they sit.',
       'That gives the property name-and-size matching cannot: no false positives, and no missed duplicates hiding behind a different filename. Files are read in this tab and never transmitted, which is the difference from a cloud duplicate finder — those must receive your entire folder in order to tell you two files match.',
-      'Hashing is not free. Every byte of every file has to be read, so a large folder takes time proportional to its total size, on your own hardware.',
+      'Hashing is not free. Every byte of every candidate file has to be read, so a folder full of same-sized files takes time proportional to their total size, on your own hardware.',
     ],
     useCases: [
       'Clearing space by finding photographs imported more than once.',
@@ -1682,10 +1682,10 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
   'file-hash-generator': {
     about: [
       'A hash is a fingerprint: read every byte, produce a short string, and change one byte anywhere to change the string completely.',
-      'SHA-1, SHA-256, SHA-384 and SHA-512 for any file.',
+      'SHA-256, SHA-384, SHA-512 and CRC32 for any file.',
     ],
     howItWorks: [
-      'Hashing uses the Web Crypto API — crypto.subtle.digest — which is the browser’s own audited implementation of these algorithms, the same primitive used for TLS. The file is read here and the digest rendered as lowercase hexadecimal.',
+      'SHA-384 and SHA-512 use the Web Crypto API — crypto.subtle.digest — which is the browser’s own audited implementation, the same primitive used for TLS. SHA-256 and CRC32 are computed by a worker in this tab that reads the file in chunks, which is what lets them handle files larger than memory. Each digest is rendered as lowercase hexadecimal.',
       'Web Crypto is only available over HTTPS or on localhost. A hashing function delivered over a connection an attacker could modify would offer no assurance at all, and that restriction is enforced by the browser rather than by this page.',
       'One thing to be clear about: a hash is a fingerprint, not encryption. It cannot be reversed, but identical input always produces identical output, so a plain hash of a common password is trivially reversed with a lookup table. Storing passwords needs a deliberately slow, salted algorithm such as bcrypt, scrypt or Argon2 — not any of these.',
     ],
@@ -1741,7 +1741,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     howItWorks: [
       'Every page is rendered by PDF.js onto a canvas at the resolution you choose, encoded as a JPEG, and placed onto a slide by pptxgenjs. The canvas is released between pages, so a long document does not accumulate every image it has drawn in memory.',
-      'The slide can take the PDF page’s own proportions, which means nothing is cropped and nothing is letterboxed — a custom slide size is defined for exactly that purpose. Force 16:9 or 4:3 instead when the deck has to sit inside a template, and the page is fitted within the slide rather than stretched to it.',
+      'The slide can take the proportions of the PDF’s first page, so a document whose pages are all one size is neither cropped nor letterboxed — a custom slide size is defined for exactly that purpose. A page of a different shape is fitted inside that slide with white margins. Force 16:9 or 4:3 instead when the deck has to sit inside a template, and the page is fitted within the slide rather than stretched to it.',
       'The text is not rebuilt as editable text boxes, and that is a decision rather than a shortcoming. A PDF holds positioned glyphs, not paragraphs; reassembling them into boxes means guessing at every line break, every font substitution and every alignment, and a deck that is subtly wrong in a hundred places is worse than one that is faithfully an image. What the text layer is good for is the speaker notes, where it goes instead — so the words stay searchable and copyable even though the slide is a picture.',
     ],
     useCases: [
@@ -1765,7 +1765,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     useCases: [
       'Returning a signed rental agreement, NDA or employment contract without owning a printer.',
       'Signing a document containing salary or bank details, where an upload to a converter site is precisely the wrong move.',
-      'Adding initials to several pages of an agreement in one sitting.',
+      'Initialling one page of an agreement; for several pages, sign one, then load the signed file again for the next.',
       'Putting a countersignature on a form that arrived already signed by the other side.',
     ],
   },
@@ -1777,7 +1777,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     howItWorks: [
       'SheetJS reads the workbook, including .xls and .xlsm, and each selected sheet becomes a table block in the shared document model that also feeds the PDF and HTML writers. The docx library then renders it using Word’s own table styling and a repeating header row, so the column names reappear at the top of every page the table runs over.',
-      'Formulas arrive as their computed results. Word has no formula engine for table cells, so there is nothing for =SUM(B2:B9) to be other than the number it evaluated to — which is what a report wants anyway. Dates are written the way your locale writes dates rather than as an ISO timestamp, and numbers keep their grouping.',
+      'Formulas arrive as their computed results. Word has no formula engine for table cells, so there is nothing for =SUM(B2:B9) to be other than the number it evaluated to — which is what a report wants anyway. Dates and numbers are written as the spreadsheet displays them: a date keeps its cell format rather than becoming a serial number, and a number keeps its thousands separators only if the cell was formatted with them.',
       'Cell fill colours, fonts and conditional formatting are deliberately dropped. Spreadsheet formatting is a working aid — highlighted outliers, colour-coded statuses — and carrying it into a report produces a table that looks imported. What is worth knowing before you start is the column count: past eight or so, no amount of styling makes a table fit a portrait page, and the tool says so and offers landscape rather than silently producing something unreadable.',
     ],
     useCases: [
@@ -1826,12 +1826,12 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
 
   'heic-to-jpg': {
     about: [
-      'An iPhone photographs in HEIC because it is roughly half the size of the equivalent JPEG. Then the file reaches a Windows machine, a web form or a colleague, and nothing will open it — the format is patent-encumbered, so no browser ships a decoder and most software still does not.',
+      'An iPhone photographs in HEIC because it is roughly half the size of the equivalent JPEG. Then the file reaches a Windows machine, a web form or a colleague, and nothing will open it — the format is patent-encumbered, so Chrome, Edge and Firefox ship no decoder and most Windows software still needs an add-on.',
       'This decodes it here, on your own device, and hands back an ordinary JPEG. Which is the point: your camera roll is the last thing that should be going to somebody’s server for a format conversion.',
     ],
     howItWorks: [
       'HEIC is decoded by libheif compiled to WebAssembly, loaded only when a HEIC file actually appears. It is around three megabytes, fetched once per visit, and there is no smaller honest option — a browser genuinely cannot do this by itself, and the alternative on offer elsewhere is an upload.',
-      'Detection is by the file’s own bytes rather than its name. HEIC and HEIF are ISO base-media containers, identifiable by the brand recorded just after the file type marker, so a photograph that arrived renamed to .jpg is still recognised and a genuine JPEG named .heic is not mangled.',
+      'The decoder is chosen by the file’s own bytes rather than its name. HEIC and HEIF are ISO base-media containers, identifiable by the brand recorded just after the file type marker, so a genuine JPEG that was named .heic is passed through rather than mangled. This page accepts files ending in .heic or .heif.',
       'One consequence worth knowing: re-encoding through a canvas drops the EXIF block, so the JPEG carries no timestamp, camera model or GPS position. For anything you are about to share that is an improvement rather than a loss — but it is a real change, and if you need the metadata, keep the original alongside.',
       'Safari can display HEIC without any of this, because macOS and iOS decode it outside the browser. Everywhere else, the decoder is the only way, which is why this one tool is slower than every other on the site.',
     ],

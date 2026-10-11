@@ -4,10 +4,11 @@ import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MONETIZATION } from '../site.config';
 import { isAdEligiblePath } from '../data/ad-policy';
+import { PrivacyChoicesService } from './privacy-choices.service';
 
 declare global {
   interface Window {
-    adsbygoogle?: unknown[];
+    adsbygoogle?: unknown[] & { requestNonPersonalizedAds?: number };
   }
 }
 
@@ -17,12 +18,13 @@ export class MonetizationService {
   private readonly doc = inject(DOCUMENT);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly choices = inject(PrivacyChoicesService);
   private loaderStarted = false;
 
   constructor() {
     afterNextRender(() => {
       if (!MONETIZATION.adsense.enabled) return;
-      this.loadForCurrentPage();
+      if (this.router.navigated) this.loadForCurrentPage();
       this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
         if (event instanceof NavigationStart && this.loaderStarted && !isAdEligiblePath(event.url)) {
           this.doc.defaultView?.location.assign(event.url);
@@ -57,7 +59,10 @@ export class MonetizationService {
   fillSlot(): void {
     if (!this.adsEnabled) return;
     try {
-      (window.adsbygoogle = window.adsbygoogle ?? []).push({});
+      const queue: NonNullable<Window['adsbygoogle']> = window.adsbygoogle ?? [];
+      window.adsbygoogle = queue;
+      if (this.choices.adsOptedOut()) queue.requestNonPersonalizedAds = 1;
+      queue.push({});
     } catch {}
   }
 }

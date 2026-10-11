@@ -737,7 +737,8 @@ function coerce(text: string): CellValue {
   if (lower === 'true') return true;
   if (lower === 'false') return false;
   const numeric = trimmed.replace(/,/g, '');
-  if (/^-?\d+(\.\d+)?$/.test(numeric)) {
+  const digits = numeric.replace(/[-.]/g, '').length;
+  if (/^-?\d+(\.\d+)?$/.test(numeric) && !/^-?0\d/.test(numeric) && digits <= 15) {
     const parsed = Number(numeric);
     if (Number.isFinite(parsed)) return parsed;
   }

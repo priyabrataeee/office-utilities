@@ -39,11 +39,13 @@ export class PrivacyChoicesService {
     const gtag = win?.gtag;
     if (!gtag) return;
     try {
-      gtag('consent', 'update', {
-        ad_storage: optOut ? 'denied' : 'granted',
-        ad_user_data: optOut ? 'denied' : 'granted',
-        ad_personalization: optOut ? 'denied' : 'granted',
-      });
+      if (optOut) {
+        gtag('consent', 'update', {
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+        });
+      }
       gtag('set', 'restricted_data_processing', optOut);
     } catch {}
   }

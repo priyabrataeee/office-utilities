@@ -19,6 +19,8 @@ const LD_ID = 'ou-structured-data';
 
 const TITLE_LIMIT = 60;
 
+const TITLE_MAX = 70;
+
 @Injectable({ providedIn: 'root' })
 export class SeoService {
   private readonly doc = inject(DOCUMENT);
@@ -291,18 +293,14 @@ export function formatPageTitle(rawTitle: string, brand: string, limit = 60): st
   if (cleanTitle.length + suffix.length <= limit) {
     return cleanTitle + suffix;
   }
-
-  const available = limit - suffix.length;
-  if (available < 16) {
-    return cleanTitle.length <= limit ? cleanTitle : cleanTitle.slice(0, limit - 1) + '…';
+  if (cleanTitle.length <= TITLE_MAX) {
+    return cleanTitle;
   }
 
-  let truncated = cleanTitle.slice(0, available);
-  const wordEnd = truncated.lastIndexOf(' ');
-  if (wordEnd > 10) {
-    truncated = truncated.slice(0, wordEnd).replace(/[,;:—-]$/, '');
-  }
-  return `${truncated}${suffix}`;
+  const window = cleanTitle.slice(0, TITLE_MAX - 1);
+  const wordEnd = window.lastIndexOf(' ');
+  const cut = wordEnd > 10 ? window.slice(0, wordEnd) : window;
+  return `${cut.replace(/[\s,;:(—-]+$/, '')}…`;
 }
 
 export function metaDescription(text: string): string {

@@ -77,7 +77,7 @@ export const TOOL_CATEGORIES: readonly ToolCategory[] = [
     title: 'Diagram Studio',
     tagline: 'Draw it or describe it',
     description:
-      'A lightweight Visio-style canvas for flowcharts, UML, ER models, cloud architecture and mind maps — plus instant diagrams from Mermaid or PlantUML text.',
+      'A lightweight Visio-style canvas for flowcharts, UML, ER models, cloud architecture and mind maps — plus instant diagrams from Mermaid text.',
     icon: 'workflow',
     accentVar: '--ou-cat-diagram',
   },
@@ -101,7 +101,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Universal Document Viewer',
     summary: 'Open any supported document — the right viewer is picked for you.',
     description:
-      'Drop in a PDF, Word, Excel, PowerPoint, CSV, Markdown, JSON, XML, HTML or text file and Office Utilities detects the format and opens it with the right viewer. Search inside the document, zoom, jump between pages, go fullscreen, print or download — all without uploading anything.',
+      'Drop in a PDF, Word, Excel, PowerPoint, CSV, Markdown, JSON, XML, HTML or text file and Office Utilities picks the right viewer from the file’s extension. What each viewer offers differs — the PDF reader has search, zoom, thumbnails, fullscreen and print; the others have the controls that suit their format — and nothing is uploaded.',
     icon: 'eye',
     keywords: ['open file', 'preview', 'reader', 'online viewer', 'no upload'],
     accepts: [
@@ -122,11 +122,11 @@ export const TOOLS: readonly ToolDefinition[] = [
     faq: [
       {
         q: 'Are my documents uploaded to a server?',
-        a: 'No. Every viewer runs as JavaScript and WebAssembly inside your browser tab. The file is read with the FileReader API and never crosses the network.',
+        a: 'No. Every viewer runs as JavaScript and WebAssembly inside your browser tab. The file is read from your disk by the page itself and never crosses the network.',
       },
       {
         q: 'How large a file can I open?',
-        a: 'The practical limit is your available memory. Files up to a few hundred megabytes generally work; parsing happens in a Web Worker so the interface stays responsive.',
+        a: 'The practical limit is your available memory. PDFs of a few hundred megabytes generally work, because PDF.js parses in a Web Worker and renders pages on demand. Word, Excel and PowerPoint files are parsed on the main thread, so a very large one can make the page pause while it opens.',
       },
     ],
   },
@@ -168,7 +168,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Word (DOCX) Viewer',
     summary: 'Open .docx files with formatting, images and tables intact.',
     description:
-      'View Microsoft Word documents without Word. Headings, lists, tables, inline images and basic styling are preserved, and you can search the text, zoom, print or export the result.',
+      'View Microsoft Word documents without Word. Headings, lists, tables, inline images and basic styling are preserved, and you can zoom, print or download the original. Use your browser’s own find command to search the text.',
     icon: 'file-word',
     keywords: ['docx viewer', 'open word online', 'read docx', 'word reader'],
     accepts: ['.docx'],
@@ -199,7 +199,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Excel (XLSX) Viewer',
     summary: 'Browse workbooks, sheets and cell values in a fast grid.',
     description:
-      'Open .xlsx and .xls workbooks in a virtualised spreadsheet grid. Switch between sheets, freeze the header row, search across cells, inspect formulas and export any sheet to CSV or JSON.',
+      'Open .xlsx and .xls workbooks in a virtualised spreadsheet grid. Switch between sheets, keep the header row pinned while you scroll, search across cells, sort by a column, inspect formulas and export any sheet to CSV.',
     icon: 'file-excel',
     keywords: ['xlsx viewer', 'open excel online', 'spreadsheet viewer', 'xls reader'],
     accepts: ['.xlsx', '.xls', '.xlsm', '.ods'],
@@ -219,7 +219,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Which spreadsheet formats can it open?',
         a:
-          'It reads .xlsx, .xls, .xlsm and .ods. Any sheet can be exported to CSV or JSON once open.',
+          'It reads .xlsx, .xls, .xlsm and .ods. Any sheet can be exported to CSV once open; for JSON, use the Excel to JSON tool.',
       },
     ],
   },
@@ -260,7 +260,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'PowerPoint (PPTX) Viewer',
     summary: 'Flip through slides, notes and slide text.',
     description:
-      'Open .pptx presentations in the browser. Slides are rendered from the underlying OpenXML with text, shapes and images positioned as authored. Navigate with the thumbnail rail or arrow keys, read speaker notes and present fullscreen.',
+      'Open .pptx presentations in the browser. Slides are rendered from the underlying OpenXML with text, shapes and images positioned as authored. Navigate with the thumbnail rail or arrow keys, and read the speaker notes beside each slide.',
     icon: 'file-ppt',
     keywords: ['pptx viewer', 'open powerpoint online', 'slide viewer'],
     accepts: ['.pptx'],
@@ -288,9 +288,9 @@ export const TOOLS: readonly ToolDefinition[] = [
     category: 'viewer',
     slug: 'markdown-viewer',
     title: 'Markdown Viewer',
-    summary: 'Render Markdown with syntax highlighting and a live outline.',
+    summary: 'Render Markdown safely, with a live outline of its headings.',
     description:
-      'Preview Markdown exactly as it will publish: GitHub-flavoured tables, task lists, fenced code with syntax highlighting and an auto-generated table of contents. Output is sanitised before rendering.',
+      'Preview Markdown exactly as it will publish: GitHub-flavoured tables, task lists, fenced code blocks and an auto-generated outline of headings. Code is shown in a monospaced block without colour highlighting. Output is sanitised before rendering.',
     icon: 'markdown',
     keywords: ['md preview', 'readme viewer', 'markdown render'],
     accepts: ['.md', '.markdown', '.mdx'],
@@ -299,7 +299,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Which Markdown flavour does it use?',
         a:
-          'GitHub-flavoured Markdown, so tables, task lists, strikethrough and fenced code blocks with syntax highlighting all render as they would on GitHub.',
+          'GitHub-flavoured Markdown, so tables, task lists, strikethrough and fenced code blocks all render. Code blocks are monospaced but not colour-highlighted.',
       },
       {
         q: 'Is it safe to open a Markdown file from someone else?',
@@ -320,7 +320,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'JSON Viewer',
     summary: 'Explore, format and validate JSON in a collapsible tree.',
     description:
-      'Paste or open a JSON file to browse it as a collapsible tree, pretty-print or minify it, see exactly where a parse error is, and copy any subtree to the clipboard.',
+      'Open a JSON file to browse it as a collapsible, searchable tree, pretty-print or minify it, see exactly where a parse error is, and copy or download the formatted result.',
     icon: 'braces',
     keywords: ['json formatter', 'json beautifier', 'json validator', 'json tree'],
     accepts: ['.json', '.jsonl', '.geojson'],
@@ -334,12 +334,12 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I copy just one part of a large document?',
         a:
-          'Yes. Any node in the tree can be copied on its own, so you can lift a single nested object out of a large API response without editing by hand.',
+          'Not directly. The copy button takes the whole formatted or raw document. To lift one nested object, collapse the tree to find it, then copy the document and cut that part out.',
       },
       {
         q: 'Does it support JSON Lines and GeoJSON?',
         a:
-          'Yes. .jsonl files are read as one record per line, and .geojson is treated as ordinary JSON with the same tree view.',
+          'GeoJSON, yes: it is ordinary JSON and gets the same tree view. A JSON Lines file is not one JSON document, so it is reported as invalid and shown as raw text with the position of the first error.',
       },
     ],
   },
@@ -379,7 +379,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Text & Log Viewer',
     summary: 'Open large plain-text and log files without lag.',
     description:
-      'A virtualised reader for plain text and log files. Line numbers, wrap toggle, encoding detection and instant search let you work with files far larger than a normal textarea can handle.',
+      'A plain reader for text, log and config files, with a wrap toggle, a search box that counts matching lines, and copy. Files are read as UTF-8 and the first 20,000 lines are displayed.',
     icon: 'file-text',
     keywords: ['txt viewer', 'log viewer', 'large text file'],
     accepts: ['.txt', '.log', '.ini', '.conf', '.env'],
@@ -387,12 +387,12 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can it open a log file that is hundreds of megabytes?',
         a:
-          'Yes. The view is virtualised, rendering only the lines on screen, which is why it stays responsive with files far beyond what a normal text area can hold.',
+          'It will open, but only the first 20,000 lines are displayed and the whole file is held in memory, so a log of hundreds of megabytes is better split first.',
       },
       {
         q: 'Does it handle different text encodings?',
         a:
-          'Encoding is detected from the file\'s byte order mark and content, so UTF-8 and UTF-16 files display correctly rather than as mojibake.',
+          'Files are read as UTF-8. A file saved in another encoding, such as UTF-16 or Windows-1252, can show replacement characters; resave it as UTF-8 first.',
       },
       {
         q: 'Can I turn off line wrapping?',
@@ -408,7 +408,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'HTML Viewer',
     summary: 'Preview HTML safely, or read the formatted source.',
     description:
-      'Render an HTML file in a sandboxed frame or read it as pretty-printed, syntax-highlighted source. Scripts are disabled and the markup is sanitised, so opening untrusted files is safe.',
+      'Preview an HTML file after it has been sanitised, or read it as pretty-printed source. Scripts, styles, forms and remote images are removed before anything is shown, so opening an untrusted file is safe.',
     icon: 'code',
     keywords: ['html preview', 'html formatter', 'render html'],
     accepts: ['.html', '.htm'],
@@ -416,12 +416,12 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Is it safe to open an untrusted HTML file?',
         a:
-          'Yes. The file renders in a sandboxed frame with scripts disabled and the markup sanitised, so nothing in the file can execute or reach the network.',
+          'Yes. The markup is sanitised before it is shown: scripts, event handlers, styles and forms are stripped and remote images and media are dropped, so nothing in the file can execute or call out.',
       },
       {
         q: 'Can I read the source instead of the rendering?',
         a:
-          'Yes. Switch to source view for pretty-printed, syntax-highlighted markup — useful for inspecting an email template or a page you have been sent.',
+          'Yes. Switch to the formatted or raw view for the markup itself, indented for reading — useful for inspecting an email template or a page you have been sent.',
       },
       {
         q: 'Will external images and styles load?',
@@ -669,7 +669,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     faq: [
       {
         q: 'How much smaller will my PDF get?',
-        a: 'It depends entirely on the source. Image-heavy scans often shrink by 50–90%; a PDF that is mostly vector text may barely change, because there is little redundancy to remove.',
+        a: 'It depends entirely on the source. Pages with no detectable text, such as plain scans, are re-rendered as JPEGs and usually shrink a great deal. Pages that contain text, including OCR scans and pages with photographs, are copied unchanged, so a mostly-text PDF will not shrink and the original is offered back.',
       },
     ],
   },
@@ -994,7 +994,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       },
       {
         q: 'What size are the slides?',
-        a: 'Either matched to the PDF\'s own page shape, so nothing is cropped or letterboxed, or forced to 16:9 or 4:3 when the deck has to match a template.',
+        a: 'Either matched to the shape of the PDF\'s first page, so pages of that shape are neither cropped nor letterboxed, or forced to 16:9 or 4:3 when the deck has to match a template.',
       },
     ],
   },
@@ -1023,7 +1023,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       },
       {
         q: 'Where does my signature go?',
-        a: 'Onto the page, and nowhere else. It is drawn in this tab, stamped into the PDF in this tab, and discarded when you close it. Nothing is stored and nothing is sent.',
+        a: 'Onto the page, and nowhere else. It is drawn in this tab, stamped into the PDF in this tab, and discarded when you close it. The signature is never stored or sent; only the PDF\'s name is added to the recent-files list in your own browser.',
       },
       {
         q: 'Can I add the date as well?',
@@ -1208,7 +1208,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Extract Text from Word',
     summary: 'Copy the document text, with or without structure.',
     description:
-      'Extract text from .docx including headers, footers, footnotes, comments and text boxes — content that a plain copy-and-paste often misses. Choose structured or flat output and copy it straight to the clipboard.',
+      'Extract text from .docx including headers, footers, footnotes, comments and text boxes — content that a plain copy-and-paste often misses. Choose which parts to include and copy the result straight to the clipboard.',
     icon: 'text-select',
     keywords: ['docx text extraction', 'read docx text', 'copy from word'],
     accepts: ['.docx'],
@@ -1221,7 +1221,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I keep the structure?',
         a:
-          'Yes. Choose structured output to keep each part labelled and separate, or flat output when you just want one continuous block of text.',
+          'Yes. Each part you tick — headers, footers, footnotes, endnotes, comments, text boxes — is added under its own labelled divider after the body text. Untick everything but the body for one continuous block.',
       },
       {
         q: 'Does it include tracked changes?',
@@ -1297,7 +1297,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Compare Word Documents',
     summary: 'See exactly what changed between two versions.',
     description:
-      'Load two .docx files and get a side-by-side or inline diff of their text, computed with a word-level longest-common-subsequence algorithm. Additions, deletions and moved paragraphs are highlighted.',
+      'Load two .docx, .txt or Markdown files and get an inline or side-by-side diff of their text. Paragraphs are matched first with a longest-common-subsequence algorithm, then each edited paragraph is compared word by word. Added, removed and edited paragraphs are highlighted; a moved paragraph shows as one deletion and one insertion.',
     icon: 'git-compare',
     keywords: ['docx diff', 'document comparison', 'track changes', 'redline'],
     accepts: ['.docx'],
@@ -1306,7 +1306,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'How does it decide what changed?',
         a:
-          'It runs a word-level longest-common-subsequence diff, so additions and deletions are identified per word rather than by flagging whole paragraphs as different.',
+          'It matches paragraphs first, using a longest-common-subsequence diff, then compares each edited paragraph word by word, so a one-word edit highlights that word in the inline view. A paragraph that was mostly rewritten is shown as one removed paragraph and one added paragraph.',
       },
       {
         q: 'Does it compare formatting too?',
@@ -1354,7 +1354,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Excel to CSV',
     summary: 'Export any sheet as a clean CSV file.',
     description:
-      'Convert .xlsx or .xls workbooks to CSV. Choose which sheet to export, the delimiter, whether to keep the header row and how dates and numbers should be formatted. Export every sheet at once as a ZIP.',
+      'Convert .xlsx or .xls workbooks to CSV. Choose which sheet to export, the delimiter and whether to keep the header row. Dates and numbers are written as the sheet displays them. Export every sheet at once as a ZIP.',
     icon: 'table',
     keywords: ['xlsx to csv', 'spreadsheet to csv', 'export sheet'],
     accepts: ['.xlsx', '.xls', '.xlsm', '.ods'],
@@ -1369,7 +1369,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'How are dates handled?',
         a:
-          'You choose the format before exporting. This matters because a spreadsheet stores a date as a number, and different tools reading the CSV will interpret an ambiguous format differently.',
+          'They are written as the cell displays them; there is no date-format option here. If a column shows an ambiguous format such as 03/04/2026, change it to yyyy-mm-dd in the spreadsheet before exporting, because different tools reading the CSV will interpret the ambiguous form differently.',
       },
       {
         q: 'Can I use a semicolon instead of a comma?',
@@ -1385,7 +1385,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'CSV to Excel',
     summary: 'Turn delimited text into a formatted .xlsx workbook.',
     description:
-      'Convert CSV or TSV into a real Excel workbook with a frozen, bold header row, auto-sized columns and values typed as numbers, dates or text rather than everything landing as a string.',
+      'Convert CSV or TSV into a real Excel workbook with a frozen, bold header row, auto-sized columns and plain numbers typed as numbers rather than everything landing as a string. Codes with leading zeros, long reference numbers and dates are kept as text exactly as written.',
     icon: 'file-excel',
     keywords: ['csv to xlsx', 'import csv', 'make workbook'],
     accepts: ['.csv', '.tsv', '.txt'],
@@ -1395,7 +1395,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Will my numbers arrive as numbers?',
         a:
-          'Yes. Values are typed as numbers, dates or text as appropriate, rather than everything landing as a string the way a plain CSV import often does.',
+          'Plain numbers, yes, and true or false become booleans. Anything with a leading zero or more than 15 digits is kept as text so it is not altered, and dates are kept as the text in the file rather than converted.',
       },
       {
         q: 'Does the output look presentable?',
@@ -1416,7 +1416,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Excel to JSON',
     summary: 'Convert sheets into arrays of objects.',
     description:
-      'Turn a worksheet into JSON — an array of objects keyed by the header row, or an array of arrays. Control key casing, blank-cell handling and whether to emit compact or pretty-printed output.',
+      'Turn a worksheet into JSON — an array of objects keyed by the header row, or an array of arrays. Choose between the two shapes and between compact and pretty-printed output. Keys are the header text exactly as written, and blank cells become null.',
     icon: 'braces',
     keywords: ['xlsx to json', 'sheet to json', 'spreadsheet api'],
     accepts: ['.xlsx', '.xls', '.csv'],
@@ -1431,12 +1431,12 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I control the key names?',
         a:
-          'Yes. Key casing is configurable, so headers like "First Name" can become firstName rather than a key you have to quote everywhere.',
+          'Not here. Keys are the header cells exactly as written, so "First Name" stays "First Name". Rename the headers in the sheet first if you want firstName.',
       },
       {
         q: 'What happens to empty cells?',
         a:
-          'You choose: omit the key entirely, or include it with a null value. Which you want depends on whether the consumer distinguishes missing from empty.',
+          'The key is kept with a null value, so every object has the same set of keys. There is no option to omit empty keys.',
       },
     ],
   },
@@ -1477,7 +1477,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Spreadsheet Cleaner',
     summary: 'Trim, normalise and tidy messy data in one pass.',
     description:
-      'Clean up imported data: trim whitespace, collapse repeated spaces, normalise line endings and casing, strip non-printable characters, convert numeric strings to numbers and standardise dates. Every rule is a toggle and you can preview the effect before exporting.',
+      'Clean up imported data: trim whitespace, collapse repeated spaces, normalise casing, strip non-printable characters, convert numeric strings to numbers, and remove blank rows, blank columns and duplicate rows. Dates are left as they are. Every rule is a toggle and you can preview the effect before exporting.',
     icon: 'sparkles',
     keywords: ['clean data', 'trim whitespace', 'normalise', 'tidy spreadsheet'],
     accepts: ['.xlsx', '.xls', '.csv'],
@@ -1486,7 +1486,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'What does it actually clean?',
         a:
-          'Stray whitespace, repeated spaces, inconsistent line endings and casing, non-printable characters, numbers stored as text, and dates in mixed formats.',
+          'Stray whitespace, repeated spaces, inconsistent casing, non-printable characters, numbers stored as text, blank rows and columns, and duplicate rows. It does not rewrite dates.',
       },
       {
         q: 'Why do exported spreadsheets need cleaning at all?',
@@ -1565,7 +1565,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Excel Formula Viewer',
     summary: 'List every formula in a workbook with its cell and result.',
     description:
-      'Audit a workbook by listing every formula it contains alongside its cell reference, sheet, cached result and the functions it uses. Search for a function name to find every place it appears, or view the sheet in formula mode.',
+      'Audit a workbook by listing every formula it contains alongside its cell reference, sheet, cached result and the functions it uses. Search for a function name to find every place it appears, across the whole workbook or one sheet at a time.',
     icon: 'function',
     keywords: ['audit formulas', 'show formulas', 'inspect workbook'],
     accepts: ['.xlsx', '.xlsm', '.xls'],
@@ -1672,7 +1672,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       },
       {
         q: 'What happens to a very wide sheet?',
-        a: 'It is flagged before export, and you can switch the page to landscape or drop columns you do not need. A forty-column sheet cannot be made to fit a portrait page and pretending otherwise would just produce unreadable output.',
+        a: 'It is flagged before export, and you can switch the page to landscape. To leave columns out, delete them in the spreadsheet before converting; the tool has no column picker. A forty-column sheet cannot be made to fit a portrait page and pretending otherwise would just produce unreadable output.',
       },
       {
         q: 'Are formulas converted?',
@@ -1804,7 +1804,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Extract Images from PowerPoint',
     summary: 'Recover every picture embedded in a deck.',
     description:
-      'Lists all media stored inside a .pptx — photos, logos, charts exported as images and background pictures — at original quality, with the slides each one appears on. Download any of them or all as a ZIP.',
+      'Lists all media stored inside a .pptx — photos, logos, charts exported as images and background pictures — at original quality, with each file’s name and size. Download any of them or all as a ZIP.',
     icon: 'images',
     keywords: ['pptx images', 'get pictures from slides', 'media extraction'],
     accepts: ['.pptx'],
@@ -1812,7 +1812,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Does it find every image in the deck?',
         a:
-          'It lists all media stored in the file — photos, logos, charts that were exported as pictures and background images — with the slides each one appears on.',
+          'It lists all media stored in the file — photos, logos, charts that were exported as pictures and background images. The list is not grouped by slide, because the file stores its media in one shared pool.',
       },
       {
         q: 'Is quality preserved?',
@@ -1842,7 +1842,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Does the trimmed deck still work properly?',
         a:
-          'Yes. The layouts, masters and media that the kept slides depend on are carried across, so the result opens as a normal presentation rather than a broken one.',
+          'Yes. The layouts, masters and media stay in the file, so the kept slides open as a normal presentation. Pictures that were used only on the removed slides also stay inside the file, so run Extract Images on the result before sending it to someone who should not see them.',
       },
       {
         q: 'How do I choose which slides to keep?',
@@ -1864,7 +1864,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Excel to PDF',
     summary: 'Print a worksheet to a tidy, paginated PDF table.',
     description:
-      'Convert a spreadsheet into a PDF table with a repeating header row, automatic column widths, portrait or landscape orientation and page-fitting so wide sheets stay readable.',
+      'Convert a spreadsheet into a PDF table with a repeating header row, automatic column widths, portrait or landscape orientation and an adjustable font size so wide sheets stay readable.',
     icon: 'file-pdf',
     keywords: ['xlsx to pdf', 'spreadsheet to pdf', 'print sheet'],
     accepts: ['.xlsx', '.xls', '.csv'],
@@ -1874,7 +1874,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'What happens to a very wide sheet?',
         a:
-          'Page fitting scales the table so columns stay readable, and landscape orientation is available. A sheet far wider than a page is always a compromise between size and legibility.',
+          'The columns share the width of the page, so each one gets narrower and its text wraps. Switch to landscape and lower the font size to give them room; nothing is scaled automatically. A sheet far wider than a page is always a compromise between size and legibility.',
       },
       {
         q: 'Does the header repeat on every page?',
@@ -1895,7 +1895,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Markdown to PDF',
     summary: 'Typeset Markdown into a clean, professional PDF.',
     description:
-      'Convert Markdown into a properly typeset PDF with heading hierarchy, lists, tables, block quotes, code blocks and images. Choose page size, margins and a serif or sans typeface.',
+      'Convert Markdown into a properly typeset PDF with heading hierarchy, lists, tables, block quotes and code blocks. Choose page size, margins and a serif or sans typeface. Pictures referenced by the Markdown are not fetched, so they do not appear in the PDF.',
     icon: 'file-pdf',
     keywords: ['md to pdf', 'readme to pdf', 'markdown export'],
     accepts: ['.md', '.markdown', '.txt'],
@@ -1904,7 +1904,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Which Markdown features survive?',
         a:
-          'Heading hierarchy, ordered and unordered lists, tables, block quotes, fenced code blocks and images are all typeset properly rather than dumped as plain text.',
+          'Heading hierarchy, ordered and unordered lists, tables, block quotes and fenced code blocks are all typeset properly rather than dumped as plain text. Images are left out, because fetching them would mean a network request.',
       },
       {
         q: 'Can I control how it looks?',
@@ -2088,7 +2088,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'What happens to very long lines?',
         a:
-          'They wrap to the page width. Line wrapping is configurable so you can decide between wrapping and letting long lines run to the margin.',
+          'They wrap to the page width, always; there is no setting to let a long line run off the page. A smaller font size or a larger page fits more characters on each line.',
       },
     ],
   },
@@ -2189,7 +2189,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'SVG to PNG',
     summary: 'Rasterise vectors at any scale, with transparency.',
     description:
-      'Render an SVG to PNG at 1× up to 8× scale or at an exact pixel size, keeping transparency or filling a background colour. Ideal for turning icons and logos into raster assets.',
+      'Render an SVG to PNG at anything from half size to 8× its natural size, keeping transparency or filling a background colour. Ideal for turning icons and logos into raster assets.',
     icon: 'image',
     keywords: ['svg rasterise', 'vector to png', 'export icon'],
     accepts: ['.svg'],
@@ -2197,7 +2197,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'What size will the PNG be?',
         a:
-          'Whatever you choose — from 1× up to 8× the SVG\'s natural size, or an exact pixel dimension when you need to hit a specific target.',
+          'The SVG\'s natural size multiplied by the scale you pick, from 0.5× to 8×. To hit an exact pixel size, pick the nearest larger scale and then use Resize Image on the result.',
       },
       {
         q: 'Can I keep the transparent background?',
@@ -2218,7 +2218,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'PNG to WebP',
     summary: 'Shrink PNGs dramatically with WebP encoding.',
     description:
-      'Convert PNG images to WebP, typically cutting file size by 25–80% at visually identical quality. Choose lossless or lossy mode and compare the before and after size for every file.',
+      'Convert PNG images to WebP, typically cutting file size by 25–80% at visually identical quality. Set the quality with one slider and compare the before and after size for every file.',
     icon: 'minimize',
     keywords: ['webp converter', 'optimise images', 'web performance'],
     accepts: ['.png', '.jpg', '.jpeg'],
@@ -2229,9 +2229,9 @@ export const TOOLS: readonly ToolDefinition[] = [
           'Typically 25–80% smaller at visually identical quality. The saving is largest on photographic images and smallest on simple graphics that PNG already compresses well.',
       },
       {
-        q: 'Should I choose lossless or lossy?',
+        q: 'What quality should I choose?',
         a:
-          'Lossless for screenshots, logos and anything with text or sharp edges. Lossy for photographs, where the size saving is much larger and the difference is not visible.',
+          'Keep the slider high for screenshots, logos and anything with text or sharp edges, where compression shows first. Lower it for photographs, where the size saving is much larger and the difference is not visible. There is no separate lossless switch.',
       },
       {
         q: 'Can I see what I saved?',
@@ -2355,7 +2355,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     faq: [
       {
         q: 'Why can nothing on my PC open a HEIC?',
-        a: 'Because no browser and little desktop software ships a HEIC decoder — the format is patent-encumbered. An iPhone and a Mac decode it outside the browser, which is why the same file opens on one machine and not another.',
+        a: 'Because Chrome, Edge, Firefox and most Windows software ship no HEIC decoder — the format is patent-encumbered. An iPhone and a Mac decode it in the operating system, which is why the same file opens on one machine and not another.',
       },
       {
         q: 'Why is this tool slower than the others?',
@@ -2491,7 +2491,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Resume Builder',
     summary: 'Build an ATS-friendly CV with a live preview.',
     description:
-      'Enter your experience, education, skills and projects and get a clean, single-column resume that applicant tracking systems can actually parse. Live preview, reorderable sections, and export to PDF or DOCX.',
+      'Enter your experience, education, skills and projects and get a clean, single-column resume that applicant tracking systems can actually parse. Live preview, a fixed section order chosen for parsers, and export to PDF or DOCX.',
     icon: 'user',
     keywords: ['cv maker', 'curriculum vitae', 'ats resume', 'job application'],
     accepts: [],
@@ -2505,12 +2505,12 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I reorder the sections?',
         a:
-          'Yes. Move experience above education or lead with projects, depending on whether your strongest evidence is what you have done or what you have studied.',
+          'No. The order is fixed: summary, experience, education, skills, projects, languages. A section you leave empty is left out, and entries inside a section appear in the order you add them.',
       },
       {
         q: 'Is my personal information stored anywhere?',
         a:
-          'No. What you type stays in your browser, and the exported file is produced on your device. Nothing is submitted to a server.',
+          'Only in your own browser. What you type is kept as a draft in local storage so you can come back to it, the exported file is produced on your device, and nothing is submitted to a server.',
       },
     ],
   },
@@ -2521,7 +2521,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Quotation Generator',
     summary: 'Send a priced quote with validity and terms.',
     description:
-      'Create a professional quotation or estimate with line items, optional items, taxes, validity period and terms and conditions, then export it as PDF or DOCX ready to send.',
+      'Create a professional quotation or estimate with line items, a discount, taxes, a validity date and terms and conditions, then export it as PDF or DOCX ready to send.',
     icon: 'receipt',
     keywords: ['estimate', 'price quote', 'proposal pricing', 'quote template'],
     accepts: [],
@@ -2529,7 +2529,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I mark some items as optional?',
         a:
-          'Yes. Optional line items are shown separately and excluded from the headline total, which is how you present upsells without inflating the price the client first sees.',
+          'Not as a separate group. Every line item counts towards the total, so list an optional extra in the notes or terms, or send it as a second quotation.',
       },
       {
         q: 'Does it handle taxes?',
@@ -2563,7 +2563,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'What can I put on it?',
         a:
-          'A title, recipient name, description, date, decorative border and up to two signature blocks — enough for achievement, participation or completion certificates.',
+          'A certificate type, recipient name, reason, issuing organisation, date, an optional certificate ID, an accent colour and up to two signature blocks — enough for achievement, participation or completion certificates.',
       },
       {
         q: 'Why is it landscape?',
@@ -2645,7 +2645,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Are the totals calculated for me?',
         a:
-          'Yes. Earnings, deductions and employer contributions are totalled automatically and the net pay is written out in words as well as figures.',
+          'Yes. Earnings and deductions are totalled automatically and the net pay is written out in words as well as figures.',
       },
       {
         q: 'Can I produce slips for the whole team?',
@@ -2788,7 +2788,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Diagram Studio',
     summary: 'A Visio-style canvas with shapes, connectors and export.',
     description:
-      'Drag shapes onto an infinite grid, connect them with routed arrows, add text and icons, group and align, and undo anything. Export to PNG, SVG or JSON, and everything you draw auto-saves to your browser.',
+      'Drag shapes onto a grid, connect them with straight, right-angled or curved arrows, add text labels, snap everything to the grid, and undo any step. Export to PNG, SVG or JSON, and everything you draw auto-saves to your browser. Shapes are selected one at a time; there is no grouping or automatic alignment.',
     icon: 'workflow',
     keywords: ['visio alternative', 'draw diagram', 'canvas editor', 'shapes'],
     accepts: ['.json'],
@@ -2807,7 +2807,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I undo a mistake?',
         a:
-          'Yes, anything on the canvas can be undone — moving, connecting, grouping, aligning and deleting are all part of one undoable history.',
+          'Yes, anything on the canvas can be undone — adding, moving, resizing, connecting and deleting are all part of one undoable history.',
       },
     ],
   },
@@ -2816,18 +2816,18 @@ export const TOOLS: readonly ToolDefinition[] = [
     category: 'diagram',
     slug: 'text-to-diagram',
     title: 'Text to Diagram',
-    summary: 'Write Mermaid or PlantUML and see it render instantly.',
+    summary: 'Write Mermaid or an indented outline and see it render instantly.',
     description:
-      'Type Mermaid, a PlantUML subset or a simple indented outline and watch the diagram redraw as you type. Export SVG or PNG, or hand the result to Diagram Studio to fine-tune by hand.',
+      'Type Mermaid or a simple indented outline and watch the diagram redraw as you type. Export SVG or PNG. An outline can also be saved as JSON and opened in Diagram Studio to fine-tune by hand. PlantUML is not supported.',
     icon: 'terminal',
     keywords: ['mermaid', 'plantuml', 'diagram as code', 'text diagram'],
-    accepts: ['.mmd', '.puml', '.txt'],
+    accepts: ['.mmd', '.txt'],
     popular: true,
     faq: [
       {
         q: 'Which syntaxes can I write in?',
         a:
-          'Mermaid, a subset of PlantUML, or a simple indented outline when you do not want to learn a syntax at all.',
+          'Mermaid, or a simple indented outline when you do not want to learn a syntax at all. PlantUML source is not understood; rewrite it as Mermaid first.',
       },
       {
         q: 'Do I have to press a button to see the result?',
@@ -2837,7 +2837,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I adjust the layout by hand afterwards?',
         a:
-          'Yes. Hand the result to Diagram Studio to move things around, which is the usual way to fix an automatic layout that is nearly right.',
+          'For an outline, yes: download it as JSON and open that file in Diagram Studio to move things around. A Mermaid diagram is exported as a finished SVG or PNG and cannot be edited on the canvas.',
       },
     ],
   },
@@ -2877,7 +2877,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'UML Diagram Tool',
     summary: 'Class, sequence and use-case diagrams.',
     description:
-      'Draw UML by hand with class boxes, interfaces, inheritance and association connectors — or generate one from Mermaid or PlantUML text and refine it on the canvas.',
+      'Draw UML by hand with class boxes, interfaces, actors, use cases and packages, joined by connectors with arrow, hollow-triangle, diamond or circle ends. To generate a class diagram from text instead, use Text to Diagram with Mermaid.',
     icon: 'boxes',
     keywords: ['class diagram', 'sequence diagram', 'use case', 'software design'],
     accepts: [],
@@ -2885,7 +2885,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I generate a diagram instead of drawing it?',
         a:
-          'Yes. Write it as Mermaid or PlantUML text and generate the diagram, then refine it on the canvas — usually faster than placing every class by hand.',
+          'Not on this canvas. Text to Diagram renders Mermaid class and sequence diagrams as a finished SVG or PNG; a diagram generated that way cannot be opened here for editing.',
       },
       {
         q: 'Which UML elements are supported?',
@@ -2906,7 +2906,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'ER Diagram Tool',
     summary: 'Model entities, attributes and relationships.',
     description:
-      'Design a database schema with entity tables, typed attribute rows, primary and foreign keys and crow’s-foot cardinality connectors. Export as SVG for documentation or JSON to keep editing later.',
+      'Design a database schema with entity tables, typed attribute rows, primary and foreign keys written on each row, and labelled relationship connectors. Export as SVG for documentation or JSON to keep editing later.',
     icon: 'database',
     keywords: ['entity relationship', 'database design', 'schema diagram', 'crow foot'],
     accepts: [],
@@ -2914,7 +2914,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I show cardinality properly?',
         a:
-          'Yes. Crow\'s-foot connectors express one-to-many and many-to-many relationships in the notation most database documentation uses.',
+          'As a label. Connectors end in an arrow, triangle, diamond or circle, and there is no crow\'s-foot symbol, so write the cardinality (1:N, N:M) on the connector or use a relationship diamond.',
       },
       {
         q: 'Can I record column types and keys?',
@@ -3141,7 +3141,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'File Hash Generator',
     summary: 'Compute SHA-256, SHA-384, SHA-512 and CRC32 checksums.',
     description:
-      'Generate cryptographic checksums for any file using the browser’s native Web Crypto implementation, streaming in chunks so multi-gigabyte files work. Paste an expected hash to verify a download in one step.',
+      'Generate checksums for any file without sending it anywhere. SHA-256 and CRC32 read the file in 8 MB chunks, so multi-gigabyte files work; SHA-384 and SHA-512 use the browser’s Web Crypto implementation and need the whole file in memory. Paste an expected hash to verify a download in one step.',
     icon: 'fingerprint',
     keywords: ['sha256', 'checksum', 'verify download', 'md5 alternative', 'crc32'],
     accepts: [],
@@ -3150,7 +3150,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can it handle very large files?',
         a:
-          'Yes. Hashing streams the file in chunks rather than loading it whole, so multi-gigabyte files work without exhausting memory.',
+          'Yes for SHA-256 and CRC32, which read the file in chunks rather than loading it whole. SHA-384 and SHA-512 load the whole file into memory first, so a very large file can fail with those two.',
       },
       {
         q: 'How do I verify a download?',
@@ -3160,7 +3160,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Is the hashing done in the browser?',
         a:
-          'Yes, using the browser\'s native Web Crypto implementation, so the file is never sent anywhere to be checksummed.',
+          'Yes, using the browser\'s native Web Crypto implementation for SHA-384 and SHA-512 and a background worker in this tab for SHA-256 and CRC32, so the file is never sent anywhere to be checksummed.',
       },
     ],
   },

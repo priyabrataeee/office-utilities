@@ -87,7 +87,7 @@
 
     @if (tools().length) {
       <section class="usedin">
-        <h2>Tools mentioned in this guide</h2>
+        <h2>Related tools</h2>
         <div class="usedin__grid">
           @for (tool of tools(); track tool.id) {
             <a class="usedin__card" [routerLink]="tool.path">

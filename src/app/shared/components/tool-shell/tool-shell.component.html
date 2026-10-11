@@ -16,12 +16,12 @@
       </span>
 
       <div class="head__text">
-        <h1 class="head__title">
-          {{ t.title }}
+        <div class="head__heading">
+          <h1 class="head__title">{{ t.title }}</h1>
           @if (t.badge) {
             <span class="ou-badge" [class.ou-badge--accent]="t.badge === 'new'">{{ t.badge }}</span>
           }
-        </h1>
+        </div>
         <p class="head__summary">{{ t.summary }}</p>
       </div>
 
@@ -82,7 +82,7 @@
             <app-icon name="shield-check" [size]="16" />
             <div>
               <strong>Processed on your device</strong>
-              <span>Your file is read by this page and never uploaded anywhere.</span>
+              <span>Everything you open or type here is handled by this page and never uploaded anywhere.</span>
             </div>
           </li>
           <li>

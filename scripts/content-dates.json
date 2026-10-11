@@ -1,149 +1,590 @@
 {
-  "/": "2026-09-27",
-  "/about": "2026-09-20",
-  "/categories": "2026-09-25",
-  "/contact": "2026-09-25",
-  "/convert": "2026-10-09",
-  "/convert/case-converter": "2026-10-09",
-  "/convert/crop-image": "2026-10-09",
-  "/convert/csv-to-json": "2026-10-09",
-  "/convert/excel-to-pdf": "2026-10-09",
-  "/convert/heic-to-jpg": "2026-10-09",
-  "/convert/html-to-markdown": "2026-10-09",
-  "/convert/html-to-pdf": "2026-10-09",
-  "/convert/html-to-word": "2026-10-09",
-  "/convert/image-converter": "2026-10-09",
-  "/convert/jpg-to-png": "2026-10-09",
-  "/convert/json-to-csv": "2026-10-09",
-  "/convert/markdown-to-html": "2026-10-09",
-  "/convert/markdown-to-pdf": "2026-10-09",
-  "/convert/markdown-to-word": "2026-10-09",
-  "/convert/png-to-webp": "2026-10-09",
-  "/convert/resize-image": "2026-10-09",
-  "/convert/svg-to-png": "2026-10-09",
-  "/convert/text-to-pdf": "2026-10-09",
-  "/convert/webp-to-jpg": "2026-10-09",
-  "/convert/webp-to-png": "2026-10-09",
-  "/diagram": "2026-10-09",
-  "/diagram/aws-architecture-diagram": "2026-10-09",
-  "/diagram/diagram-studio": "2026-10-09",
-  "/diagram/er-diagram-tool": "2026-10-09",
-  "/diagram/flowchart-maker": "2026-10-09",
-  "/diagram/mind-map-maker": "2026-10-09",
-  "/diagram/network-diagram-tool": "2026-10-09",
-  "/diagram/org-chart-maker": "2026-10-09",
-  "/diagram/process-diagram-maker": "2026-10-09",
-  "/diagram/text-to-diagram": "2026-10-09",
-  "/diagram/uml-diagram-tool": "2026-10-09",
-  "/disclaimer": "2026-09-03",
-  "/excel": "2026-10-09",
-  "/excel/column-statistics": "2026-10-09",
-  "/excel/csv-to-excel": "2026-10-09",
-  "/excel/data-type-detection": "2026-10-09",
-  "/excel/excel-formula-viewer": "2026-10-09",
-  "/excel/excel-to-csv": "2026-10-09",
-  "/excel/excel-to-json": "2026-10-09",
-  "/excel/excel-to-word": "2026-10-09",
-  "/excel/json-to-excel": "2026-10-09",
-  "/excel/remove-blank-rows": "2026-10-09",
-  "/excel/remove-duplicate-rows": "2026-10-09",
-  "/excel/spreadsheet-cleaner": "2026-10-09",
-  "/excel/xlsx-creator": "2026-10-09",
-  "/file": "2026-10-09",
-  "/file/batch-file-rename": "2026-10-09",
-  "/file/duplicate-file-detector": "2026-10-09",
-  "/file/file-hash-generator": "2026-10-09",
-  "/file/file-metadata-viewer": "2026-10-09",
-  "/file/file-signature-checker": "2026-10-09",
-  "/file/file-size-analyzer": "2026-10-09",
-  "/generate": "2026-10-09",
-  "/generate/business-proposal-generator": "2026-10-09",
-  "/generate/certificate-generator": "2026-10-09",
-  "/generate/cover-letter-generator": "2026-10-09",
-  "/generate/experience-letter-generator": "2026-10-09",
-  "/generate/invoice-generator": "2026-10-09",
-  "/generate/meeting-minutes-generator": "2026-10-09",
-  "/generate/offer-letter-generator": "2026-10-09",
-  "/generate/qr-code-generator": "2026-10-09",
-  "/generate/quotation-generator": "2026-10-09",
-  "/generate/resume-builder": "2026-10-09",
-  "/generate/salary-slip-generator": "2026-10-09",
-  "/guides": "2026-10-09",
-  "/guides/how-to-clean-up-a-messy-spreadsheet": "2026-09-06",
-  "/guides/how-to-compare-two-word-documents": "2026-09-06",
-  "/guides/how-to-compress-a-pdf-without-making-text-blurry": "2026-10-08",
-  "/guides/how-to-convert-images-between-png-jpg-and-webp": "2026-09-06",
-  "/guides/how-to-convert-markdown-to-word-pdf-or-html": "2026-09-06",
-  "/guides/how-to-convert-pdf-to-word-without-losing-formatting": "2026-09-03",
-  "/guides/how-to-convert-word-to-pdf-and-keep-your-fonts": "2026-09-03",
-  "/guides/how-to-extract-text-from-a-pdf": "2026-09-03",
-  "/guides/how-to-find-duplicate-files-on-your-computer": "2026-09-06",
-  "/guides/how-to-fix-a-sideways-scanned-pdf": "2026-09-03",
-  "/guides/how-to-make-an-invoice-without-signing-up": "2026-09-06",
-  "/guides/how-to-merge-pdfs-without-uploading": "2026-09-03",
-  "/guides/how-to-open-docx-xlsx-and-pptx-without-microsoft-office": "2026-09-03",
-  "/guides/how-to-password-protect-a-pdf": "2026-09-03",
-  "/guides/how-to-remove-metadata-from-a-document-before-sharing": "2026-09-03",
-  "/guides/how-to-split-a-pdf-by-chapter": "2026-09-03",
-  "/guides/how-to-watermark-a-pdf-and-what-it-actually-stops": "2026-09-06",
-  "/guides/how-to-work-with-confidential-documents-online": "2026-09-03",
-  "/guides/how-to-write-a-resume-an-ats-can-read": "2026-09-06",
-  "/guides/is-it-safe-to-use-online-pdf-converters": "2026-09-03",
-  "/guides/what-happens-when-you-upload-a-file-to-a-converter": "2026-09-03",
-  "/guides/why-excel-dates-break-when-you-export-to-csv": "2026-10-08",
-  "/guides/why-your-powerpoint-is-too-big-to-email": "2026-10-08",
-  "/pdf": "2026-10-09",
-  "/pdf/add-watermark-to-pdf": "2026-10-09",
-  "/pdf/compress-pdf": "2026-10-09",
-  "/pdf/delete-pages-from-pdf": "2026-10-09",
-  "/pdf/extract-pdf-pages": "2026-10-09",
-  "/pdf/images-to-pdf": "2026-10-09",
-  "/pdf/merge-pdf": "2026-10-09",
-  "/pdf/organize-pdf": "2026-10-09",
-  "/pdf/pdf-to-csv": "2026-10-09",
-  "/pdf/pdf-to-excel": "2026-10-09",
-  "/pdf/pdf-to-images": "2026-10-09",
-  "/pdf/pdf-to-powerpoint": "2026-10-09",
-  "/pdf/pdf-to-text": "2026-10-09",
-  "/pdf/pdf-to-word": "2026-10-09",
-  "/pdf/protect-pdf": "2026-10-09",
-  "/pdf/remove-watermark-from-pdf": "2026-10-09",
-  "/pdf/reorder-pdf-pages": "2026-10-09",
-  "/pdf/rotate-pdf": "2026-10-09",
-  "/pdf/sign-pdf": "2026-10-09",
-  "/pdf/split-pdf": "2026-10-09",
-  "/pdf/unlock-pdf": "2026-10-09",
-  "/powerpoint": "2026-10-09",
-  "/powerpoint/extract-images-from-powerpoint": "2026-10-09",
-  "/powerpoint/extract-text-from-powerpoint": "2026-10-09",
-  "/powerpoint/powerpoint-to-images": "2026-10-09",
-  "/powerpoint/powerpoint-to-pdf": "2026-10-09",
-  "/powerpoint/pptx-creator": "2026-10-09",
-  "/powerpoint/slide-selector": "2026-10-09",
-  "/privacy": "2026-09-25",
-  "/terms": "2026-09-05",
-  "/tools": "2026-09-20",
-  "/view": "2026-10-09",
-  "/view/csv-viewer": "2026-10-09",
-  "/view/document-viewer": "2026-10-09",
-  "/view/excel-viewer": "2026-10-09",
-  "/view/html-viewer": "2026-10-09",
-  "/view/json-viewer": "2026-10-09",
-  "/view/markdown-viewer": "2026-10-09",
-  "/view/pdf-viewer": "2026-10-09",
-  "/view/powerpoint-viewer": "2026-10-09",
-  "/view/text-viewer": "2026-10-09",
-  "/view/word-viewer": "2026-10-09",
-  "/view/xml-viewer": "2026-10-09",
-  "/word": "2026-10-09",
-  "/word/compare-word-documents": "2026-10-09",
-  "/word/docx-creator": "2026-10-09",
-  "/word/extract-images-from-word": "2026-10-09",
-  "/word/extract-text-from-word": "2026-10-09",
-  "/word/word-count": "2026-10-09",
-  "/word/word-metadata-viewer": "2026-10-09",
-  "/word/word-to-html": "2026-10-09",
-  "/word/word-to-markdown": "2026-10-09",
-  "/word/word-to-pdf": "2026-10-09",
-  "/word/word-to-text": "2026-10-09"
+  "/": {
+    "date": "2026-10-11",
+    "hash": "2061386a3d9efd21"
+  },
+  "/about": {
+    "date": "2026-09-20",
+    "hash": "caa4738006e9572c"
+  },
+  "/categories": {
+    "date": "2026-10-11",
+    "hash": "6b3e45cb5c168ef3"
+  },
+  "/contact": {
+    "date": "2026-10-11",
+    "hash": "52bdb0cdcb4986ff"
+  },
+  "/convert": {
+    "date": "2026-10-11",
+    "hash": "9079c08ece6240da"
+  },
+  "/convert/case-converter": {
+    "date": "2026-09-23",
+    "hash": "d4b865c5893b0b0a"
+  },
+  "/convert/crop-image": {
+    "date": "2026-09-23",
+    "hash": "e0961dddb8bfa949"
+  },
+  "/convert/csv-to-json": {
+    "date": "2026-09-09",
+    "hash": "6893992961d767ed"
+  },
+  "/convert/excel-to-pdf": {
+    "date": "2026-10-11",
+    "hash": "03aaefabe175abdd"
+  },
+  "/convert/heic-to-jpg": {
+    "date": "2026-10-11",
+    "hash": "95489bd24e70bd58"
+  },
+  "/convert/html-to-markdown": {
+    "date": "2026-09-09",
+    "hash": "b697101a8ab44945"
+  },
+  "/convert/html-to-pdf": {
+    "date": "2026-09-09",
+    "hash": "b272faea7b55cba6"
+  },
+  "/convert/html-to-word": {
+    "date": "2026-09-09",
+    "hash": "4f9d64c97c074cec"
+  },
+  "/convert/image-converter": {
+    "date": "2026-09-09",
+    "hash": "a23fba0bb26c861b"
+  },
+  "/convert/jpg-to-png": {
+    "date": "2026-09-09",
+    "hash": "74526635ff093910"
+  },
+  "/convert/json-to-csv": {
+    "date": "2026-09-09",
+    "hash": "90a10aced7101270"
+  },
+  "/convert/markdown-to-html": {
+    "date": "2026-09-09",
+    "hash": "7c47580c2529e512"
+  },
+  "/convert/markdown-to-pdf": {
+    "date": "2026-10-11",
+    "hash": "89c3be75fa5dd8f6"
+  },
+  "/convert/markdown-to-word": {
+    "date": "2026-09-09",
+    "hash": "120e152c9e44f30b"
+  },
+  "/convert/png-to-webp": {
+    "date": "2026-10-11",
+    "hash": "fba62e1ecfb1a43b"
+  },
+  "/convert/resize-image": {
+    "date": "2026-09-23",
+    "hash": "64b42cb6c932f393"
+  },
+  "/convert/svg-to-png": {
+    "date": "2026-10-11",
+    "hash": "f489447e2061b13c"
+  },
+  "/convert/text-to-pdf": {
+    "date": "2026-10-11",
+    "hash": "89ea47bd879f7890"
+  },
+  "/convert/webp-to-jpg": {
+    "date": "2026-09-23",
+    "hash": "fc23ff70ca9852fa"
+  },
+  "/convert/webp-to-png": {
+    "date": "2026-09-23",
+    "hash": "8e35597c48e1ae19"
+  },
+  "/diagram": {
+    "date": "2026-10-11",
+    "hash": "b505bf353e42f1c8"
+  },
+  "/diagram/aws-architecture-diagram": {
+    "date": "2026-10-09",
+    "hash": "e6bfb6f9f1ef2697"
+  },
+  "/diagram/diagram-studio": {
+    "date": "2026-10-11",
+    "hash": "db087e5fb1424643"
+  },
+  "/diagram/er-diagram-tool": {
+    "date": "2026-10-11",
+    "hash": "36834a71c068d934"
+  },
+  "/diagram/flowchart-maker": {
+    "date": "2026-10-11",
+    "hash": "0ce86e5896d7e8a8"
+  },
+  "/diagram/mind-map-maker": {
+    "date": "2026-10-09",
+    "hash": "b18052aabb75dd18"
+  },
+  "/diagram/network-diagram-tool": {
+    "date": "2026-10-11",
+    "hash": "b477f5018076c570"
+  },
+  "/diagram/org-chart-maker": {
+    "date": "2026-10-09",
+    "hash": "d02162110953b2f8"
+  },
+  "/diagram/process-diagram-maker": {
+    "date": "2026-10-09",
+    "hash": "98a33991243abd9f"
+  },
+  "/diagram/text-to-diagram": {
+    "date": "2026-10-11",
+    "hash": "37b9b6431c6d8ee3"
+  },
+  "/diagram/uml-diagram-tool": {
+    "date": "2026-10-11",
+    "hash": "8d49e9ad1e32ee2f"
+  },
+  "/disclaimer": {
+    "date": "2026-09-03",
+    "hash": "09179ab0a6367900"
+  },
+  "/excel": {
+    "date": "2026-09-23",
+    "hash": "4280a3525b590ad9"
+  },
+  "/excel/column-statistics": {
+    "date": "2026-09-09",
+    "hash": "f166eeefa7657b0d"
+  },
+  "/excel/csv-to-excel": {
+    "date": "2026-10-11",
+    "hash": "d31a25551adb4031"
+  },
+  "/excel/data-type-detection": {
+    "date": "2026-09-09",
+    "hash": "040d43d382805606"
+  },
+  "/excel/excel-formula-viewer": {
+    "date": "2026-10-11",
+    "hash": "356d3a1db4e6dba7"
+  },
+  "/excel/excel-to-csv": {
+    "date": "2026-10-11",
+    "hash": "5b94da63003c4c3c"
+  },
+  "/excel/excel-to-json": {
+    "date": "2026-10-11",
+    "hash": "7c9f80806c4fcb36"
+  },
+  "/excel/excel-to-word": {
+    "date": "2026-10-11",
+    "hash": "0843b1880a166b60"
+  },
+  "/excel/json-to-excel": {
+    "date": "2026-09-09",
+    "hash": "9ce680703b38e932"
+  },
+  "/excel/remove-blank-rows": {
+    "date": "2026-09-09",
+    "hash": "b7452461fce55430"
+  },
+  "/excel/remove-duplicate-rows": {
+    "date": "2026-09-09",
+    "hash": "e73a9140d76bf49a"
+  },
+  "/excel/spreadsheet-cleaner": {
+    "date": "2026-10-11",
+    "hash": "024a5ea8bd8267c0"
+  },
+  "/excel/xlsx-creator": {
+    "date": "2026-09-09",
+    "hash": "4dd97519646d8142"
+  },
+  "/file": {
+    "date": "2026-09-12",
+    "hash": "77a8c42c94e11c98"
+  },
+  "/file/batch-file-rename": {
+    "date": "2026-09-09",
+    "hash": "eaf26c03bf913842"
+  },
+  "/file/duplicate-file-detector": {
+    "date": "2026-10-11",
+    "hash": "2404d9aa4cce75e2"
+  },
+  "/file/file-hash-generator": {
+    "date": "2026-10-11",
+    "hash": "5b4cd7f2e5e218ff"
+  },
+  "/file/file-metadata-viewer": {
+    "date": "2026-09-09",
+    "hash": "c4dfd45310138f58"
+  },
+  "/file/file-signature-checker": {
+    "date": "2026-09-09",
+    "hash": "4be940eee4f0c617"
+  },
+  "/file/file-size-analyzer": {
+    "date": "2026-10-09",
+    "hash": "a560f321d618d9ad"
+  },
+  "/generate": {
+    "date": "2026-09-23",
+    "hash": "2c69012a11f11cf8"
+  },
+  "/generate/business-proposal-generator": {
+    "date": "2026-09-09",
+    "hash": "93f6ed809f471e79"
+  },
+  "/generate/certificate-generator": {
+    "date": "2026-10-11",
+    "hash": "893f3b052407132b"
+  },
+  "/generate/cover-letter-generator": {
+    "date": "2026-09-09",
+    "hash": "cd15e4e47b9fc842"
+  },
+  "/generate/experience-letter-generator": {
+    "date": "2026-09-09",
+    "hash": "18a7cb6822d400a4"
+  },
+  "/generate/invoice-generator": {
+    "date": "2026-10-11",
+    "hash": "59e511baf6d6128b"
+  },
+  "/generate/meeting-minutes-generator": {
+    "date": "2026-09-09",
+    "hash": "ae517a8d7a7a836e"
+  },
+  "/generate/offer-letter-generator": {
+    "date": "2026-09-09",
+    "hash": "5080fc68bda016d2"
+  },
+  "/generate/qr-code-generator": {
+    "date": "2026-09-23",
+    "hash": "ad7b205dd3db9891"
+  },
+  "/generate/quotation-generator": {
+    "date": "2026-10-11",
+    "hash": "bbaac72aec6db128"
+  },
+  "/generate/resume-builder": {
+    "date": "2026-10-11",
+    "hash": "8c9296e70285e8b5"
+  },
+  "/generate/salary-slip-generator": {
+    "date": "2026-10-11",
+    "hash": "0535a9769bb25d75"
+  },
+  "/guides": {
+    "date": "2026-10-09",
+    "hash": "2e23413cabaf0f8e"
+  },
+  "/guides/how-to-clean-up-a-messy-spreadsheet": {
+    "date": "2026-09-06",
+    "hash": "5fdbeda3c1da049e"
+  },
+  "/guides/how-to-compare-two-word-documents": {
+    "date": "2026-09-06",
+    "hash": "a9c421e293d39843"
+  },
+  "/guides/how-to-compress-a-pdf-without-making-text-blurry": {
+    "date": "2026-10-08",
+    "hash": "3cc8462d898a3067"
+  },
+  "/guides/how-to-convert-images-between-png-jpg-and-webp": {
+    "date": "2026-09-06",
+    "hash": "662c9ec75bd882e1"
+  },
+  "/guides/how-to-convert-markdown-to-word-pdf-or-html": {
+    "date": "2026-09-06",
+    "hash": "e7063720d0105088"
+  },
+  "/guides/how-to-convert-pdf-to-word-without-losing-formatting": {
+    "date": "2026-09-03",
+    "hash": "771650cb74c7fd88"
+  },
+  "/guides/how-to-convert-word-to-pdf-and-keep-your-fonts": {
+    "date": "2026-09-03",
+    "hash": "9e3fa572d3cd86fc"
+  },
+  "/guides/how-to-extract-text-from-a-pdf": {
+    "date": "2026-09-03",
+    "hash": "06a0bf10de75a7d2"
+  },
+  "/guides/how-to-find-duplicate-files-on-your-computer": {
+    "date": "2026-09-06",
+    "hash": "28d2c9fe20365890"
+  },
+  "/guides/how-to-fix-a-sideways-scanned-pdf": {
+    "date": "2026-09-03",
+    "hash": "da56ad3096e332d5"
+  },
+  "/guides/how-to-make-an-invoice-without-signing-up": {
+    "date": "2026-09-06",
+    "hash": "ced5b1513f5a6b4e"
+  },
+  "/guides/how-to-merge-pdfs-without-uploading": {
+    "date": "2026-09-03",
+    "hash": "811b0b9da4e5e176"
+  },
+  "/guides/how-to-open-docx-xlsx-and-pptx-without-microsoft-office": {
+    "date": "2026-09-03",
+    "hash": "dc6ebecc9ca1344e"
+  },
+  "/guides/how-to-password-protect-a-pdf": {
+    "date": "2026-09-03",
+    "hash": "57d194d0f124d3c2"
+  },
+  "/guides/how-to-remove-metadata-from-a-document-before-sharing": {
+    "date": "2026-09-03",
+    "hash": "27200e04ca543f7d"
+  },
+  "/guides/how-to-split-a-pdf-by-chapter": {
+    "date": "2026-09-03",
+    "hash": "ff19daceac2de309"
+  },
+  "/guides/how-to-watermark-a-pdf-and-what-it-actually-stops": {
+    "date": "2026-09-06",
+    "hash": "b2e7b1790d4130ea"
+  },
+  "/guides/how-to-work-with-confidential-documents-online": {
+    "date": "2026-09-03",
+    "hash": "ef47e93e7c601789"
+  },
+  "/guides/how-to-write-a-resume-an-ats-can-read": {
+    "date": "2026-09-06",
+    "hash": "9f40cef363609a5a"
+  },
+  "/guides/is-it-safe-to-use-online-pdf-converters": {
+    "date": "2026-09-03",
+    "hash": "26f56eefde00fa2c"
+  },
+  "/guides/what-happens-when-you-upload-a-file-to-a-converter": {
+    "date": "2026-09-03",
+    "hash": "d6e02a911386587b"
+  },
+  "/guides/why-excel-dates-break-when-you-export-to-csv": {
+    "date": "2026-10-08",
+    "hash": "9989fdd3ace2195c"
+  },
+  "/guides/why-your-powerpoint-is-too-big-to-email": {
+    "date": "2026-10-08",
+    "hash": "0d01fa556f352dc4"
+  },
+  "/pdf": {
+    "date": "2026-10-09",
+    "hash": "43eb51f0ba310bbc"
+  },
+  "/pdf/add-watermark-to-pdf": {
+    "date": "2026-09-09",
+    "hash": "cd18d3b5c2b3815f"
+  },
+  "/pdf/compress-pdf": {
+    "date": "2026-10-11",
+    "hash": "c9bc5046473bd410"
+  },
+  "/pdf/delete-pages-from-pdf": {
+    "date": "2026-09-09",
+    "hash": "c666738b2af4e23a"
+  },
+  "/pdf/extract-pdf-pages": {
+    "date": "2026-09-09",
+    "hash": "b1ef74336627563b"
+  },
+  "/pdf/images-to-pdf": {
+    "date": "2026-09-09",
+    "hash": "0182acbec87aeeb9"
+  },
+  "/pdf/merge-pdf": {
+    "date": "2026-10-09",
+    "hash": "9bf9af68ade58863"
+  },
+  "/pdf/organize-pdf": {
+    "date": "2026-10-11",
+    "hash": "8d21a39a9692b238"
+  },
+  "/pdf/pdf-to-csv": {
+    "date": "2026-09-23",
+    "hash": "f855df4b0e409958"
+  },
+  "/pdf/pdf-to-excel": {
+    "date": "2026-09-23",
+    "hash": "06f0dc39115196a3"
+  },
+  "/pdf/pdf-to-images": {
+    "date": "2026-10-11",
+    "hash": "12815b51b44498bc"
+  },
+  "/pdf/pdf-to-powerpoint": {
+    "date": "2026-10-11",
+    "hash": "2c4e0b38e477d9f8"
+  },
+  "/pdf/pdf-to-text": {
+    "date": "2026-09-09",
+    "hash": "e4ea19bb61fcab5a"
+  },
+  "/pdf/pdf-to-word": {
+    "date": "2026-09-09",
+    "hash": "6fc65f0c5e622c16"
+  },
+  "/pdf/protect-pdf": {
+    "date": "2026-09-09",
+    "hash": "b86ff9a219648f73"
+  },
+  "/pdf/remove-watermark-from-pdf": {
+    "date": "2026-09-09",
+    "hash": "24b42ffcaa9d1698"
+  },
+  "/pdf/reorder-pdf-pages": {
+    "date": "2026-09-09",
+    "hash": "bc813dcb8c874361"
+  },
+  "/pdf/rotate-pdf": {
+    "date": "2026-09-09",
+    "hash": "302060beaea1151a"
+  },
+  "/pdf/sign-pdf": {
+    "date": "2026-10-11",
+    "hash": "7b142639126fa2d5"
+  },
+  "/pdf/split-pdf": {
+    "date": "2026-09-09",
+    "hash": "a17382b471cdf0fa"
+  },
+  "/pdf/unlock-pdf": {
+    "date": "2026-09-09",
+    "hash": "da6ebaebc1f0e3b9"
+  },
+  "/powerpoint": {
+    "date": "2026-09-23",
+    "hash": "ac8e50094a9354fc"
+  },
+  "/powerpoint/extract-images-from-powerpoint": {
+    "date": "2026-10-11",
+    "hash": "1b183132f8b464cc"
+  },
+  "/powerpoint/extract-text-from-powerpoint": {
+    "date": "2026-09-09",
+    "hash": "244565cd5a70ea4e"
+  },
+  "/powerpoint/powerpoint-to-images": {
+    "date": "2026-09-09",
+    "hash": "3640e8400e0d525e"
+  },
+  "/powerpoint/powerpoint-to-pdf": {
+    "date": "2026-09-09",
+    "hash": "4dc7118e0388c893"
+  },
+  "/powerpoint/pptx-creator": {
+    "date": "2026-10-11",
+    "hash": "ae34c1b75535aa27"
+  },
+  "/powerpoint/slide-selector": {
+    "date": "2026-10-11",
+    "hash": "57fc90f9317d610c"
+  },
+  "/privacy": {
+    "date": "2026-10-11",
+    "hash": "7c4b574b2559a097"
+  },
+  "/terms": {
+    "date": "2026-09-05",
+    "hash": "6fef1b0d6067eac2"
+  },
+  "/tools": {
+    "date": "2026-10-11",
+    "hash": "709b2d01bfa3bd58"
+  },
+  "/view": {
+    "date": "2026-10-11",
+    "hash": "babdda194a5aeea7"
+  },
+  "/view/csv-viewer": {
+    "date": "2026-10-11",
+    "hash": "3aa0ae1dcaec774b"
+  },
+  "/view/document-viewer": {
+    "date": "2026-10-11",
+    "hash": "471c3e64de2e26a4"
+  },
+  "/view/excel-viewer": {
+    "date": "2026-10-11",
+    "hash": "78fea34089236b67"
+  },
+  "/view/html-viewer": {
+    "date": "2026-10-11",
+    "hash": "d2a4ed578daca653"
+  },
+  "/view/json-viewer": {
+    "date": "2026-10-11",
+    "hash": "93ffe0132b55bd56"
+  },
+  "/view/markdown-viewer": {
+    "date": "2026-10-11",
+    "hash": "458f7674f3090f4a"
+  },
+  "/view/pdf-viewer": {
+    "date": "2026-09-09",
+    "hash": "f35fb7a13f0ea76b"
+  },
+  "/view/powerpoint-viewer": {
+    "date": "2026-10-11",
+    "hash": "3ec440dea0fcb5a2"
+  },
+  "/view/text-viewer": {
+    "date": "2026-10-11",
+    "hash": "b29b20080d58545e"
+  },
+  "/view/word-viewer": {
+    "date": "2026-10-11",
+    "hash": "bacd854aed77f1bd"
+  },
+  "/view/xml-viewer": {
+    "date": "2026-09-09",
+    "hash": "c7e700efe9a936be"
+  },
+  "/word": {
+    "date": "2026-09-23",
+    "hash": "a82f594b6bebd594"
+  },
+  "/word/compare-word-documents": {
+    "date": "2026-10-11",
+    "hash": "114ed9e7a72f6b33"
+  },
+  "/word/docx-creator": {
+    "date": "2026-09-09",
+    "hash": "0431351664b8c95a"
+  },
+  "/word/extract-images-from-word": {
+    "date": "2026-09-09",
+    "hash": "b35e8d6a0cfa8f03"
+  },
+  "/word/extract-text-from-word": {
+    "date": "2026-10-11",
+    "hash": "2652e60887d662e2"
+  },
+  "/word/word-count": {
+    "date": "2026-09-09",
+    "hash": "86e511ad0f03db72"
+  },
+  "/word/word-metadata-viewer": {
+    "date": "2026-09-09",
+    "hash": "8241672e12fc3536"
+  },
+  "/word/word-to-html": {
+    "date": "2026-09-09",
+    "hash": "db0c30facca31317"
+  },
+  "/word/word-to-markdown": {
+    "date": "2026-09-09",
+    "hash": "d4c09d2fc674c6d6"
+  },
+  "/word/word-to-pdf": {
+    "date": "2026-09-09",
+    "hash": "f63756d8dfc18de4"
+  },
+  "/word/word-to-text": {
+    "date": "2026-09-09",
+    "hash": "7f46b20c0a308137"
+  }
 }

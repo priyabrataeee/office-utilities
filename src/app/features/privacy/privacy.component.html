@@ -10,6 +10,7 @@
       {{ site.name }} has no backend. Your documents are read, processed and written entirely inside
       this browser tab — there is no upload endpoint they could be sent to.
     </p>
+    <p class="updated">Last updated {{ updated }}</p>
   </header>
 
   <section class="claims">
@@ -32,8 +33,10 @@
       <app-icon name="eye-off" [size]="20" />
       <h2>No analytics on your documents</h2>
       <p>
-        We do not record file names, types, sizes or contents. We could not attribute a conversion
-        to you even if we wanted to, because the conversion happens on your machine.
+        We do not send file names, types, sizes or contents anywhere. The names and sizes of files
+        you recently opened are kept only in this browser, in the history listed below. We could
+        not attribute a conversion to you even if we wanted to, because the conversion happens on
+        your machine.
       </p>
     </article>
 
@@ -77,8 +80,14 @@
         target="_blank"
         rel="noopener"
         >how Google uses data from sites that use its services</a
-      >, and visitors in the EEA, the UK and Switzerland are asked for consent
-      before any personalised ad is loaded.
+      >.
+      @if (adsLive) {
+        Visitors in the EEA, the UK and Switzerland are asked for consent before any personalised
+        ad is loaded.
+      } @else {
+        For visitors in the EEA, the UK and Switzerland, advertising and analytics storage is
+        switched off by default.
+      }
     </p>
     <p>
       Third-party vendors, including Google, use cookies to serve ads based on your
@@ -104,8 +113,9 @@
   <section class="stored">
     <h2>What is stored on this device</h2>
     <p class="ou-muted">
-      To be useful across visits, a few preferences are saved in your browser's local storage. All
-      of it is listed here, and you can erase it at any time.
+      To be useful across visits, your preferences and a history of recently used tools and
+      recently opened files (name, size, type and time, not the file itself) are saved in your
+      browser's local storage. All of it is listed here, and you can erase it at any time.
     </p>
 
     <div class="stored__grid">
@@ -182,9 +192,15 @@
       exist to tell a returning visitor from a new one.
     </p>
     <p>
-      In the EEA, the UK and Switzerland those cookies are not set until you agree to them: consent
-      defaults to denied there and is only granted if you choose it in the consent message. File
-      download and form tracking are switched off, so the names of files you save are never
+      @if (adsLive) {
+        In the EEA, the UK and Switzerland those cookies are not set until you agree to them:
+        consent defaults to denied there and is only granted if you choose it in the consent
+        message.
+      } @else {
+        In the EEA, the UK and Switzerland those cookies are not set: consent defaults to denied
+        there, and because no consent message is shown yet it stays denied.
+      }
+      File download and form tracking are switched off, so the names of files you save are never
       recorded.
     </p>
     <p>
@@ -265,10 +281,16 @@
 
     <h3>If you are in the EEA, the UK or Switzerland</h3>
     <p>
-      Nothing is stored for advertising or analytics until you agree to it. A consent message from
-      Google appears on your first visit, and your answer is applied before any personalised ad or
-      analytics cookie is loaded. You can change it at any time through that message. Under the
-      GDPR you also have the right to ask what data is held about you, to have it corrected or
+      @if (adsLive) {
+        Nothing is stored for advertising or analytics until you agree to it. A consent message
+        from Google appears the first time you open a page that carries ads (the home page, a tool
+        or a guide), and your answer is applied before any personalised ad or analytics cookie is
+        loaded.
+      } @else {
+        Analytics storage defaults to denied for these regions. No ads are loaded yet, so no
+        consent message is shown, the setting stays denied and no analytics cookie is set.
+      }
+      Under the GDPR you also have the right to ask what data is held about you, to have it corrected or
       deleted, and to object to its processing — for Google's share of it, use
       <a href="https://myaccount.google.com/privacy" target="_blank" rel="noopener"
         >your Google account privacy controls</a

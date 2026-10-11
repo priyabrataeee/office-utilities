@@ -29,7 +29,7 @@ limited by the memory available to the browser.
 - [Excel (XLSX) Viewer](https://office-utilities.org/view/excel-viewer): Browse workbooks, sheets and cell values in a fast grid.
 - [CSV Viewer](https://office-utilities.org/view/csv-viewer): Open delimited files with type detection and sorting.
 - [PowerPoint (PPTX) Viewer](https://office-utilities.org/view/powerpoint-viewer): Flip through slides, notes and slide text.
-- [Markdown Viewer](https://office-utilities.org/view/markdown-viewer): Render Markdown with syntax highlighting and a live outline.
+- [Markdown Viewer](https://office-utilities.org/view/markdown-viewer): Render Markdown safely, with a live outline of its headings.
 - [JSON Viewer](https://office-utilities.org/view/json-viewer): Explore, format and validate JSON in a collapsible tree.
 - [XML Viewer](https://office-utilities.org/view/xml-viewer): Pretty-print and explore XML documents.
 - [Text & Log Viewer](https://office-utilities.org/view/text-viewer): Open large plain-text and log files without lag.
@@ -135,7 +135,7 @@ limited by the memory available to the browser.
 ## Diagram Studio
 
 - [Diagram Studio](https://office-utilities.org/diagram/diagram-studio): A Visio-style canvas with shapes, connectors and export.
-- [Text to Diagram](https://office-utilities.org/diagram/text-to-diagram): Write Mermaid or PlantUML and see it render instantly.
+- [Text to Diagram](https://office-utilities.org/diagram/text-to-diagram): Write Mermaid or an indented outline and see it render instantly.
 - [Flowchart Maker](https://office-utilities.org/diagram/flowchart-maker): Start from a flowchart template with the right shapes.
 - [UML Diagram Tool](https://office-utilities.org/diagram/uml-diagram-tool): Class, sequence and use-case diagrams.
 - [ER Diagram Tool](https://office-utilities.org/diagram/er-diagram-tool): Model entities, attributes and relationships.

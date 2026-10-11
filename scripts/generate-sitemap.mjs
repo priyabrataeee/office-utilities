@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -68,21 +68,7 @@ const staticPaths = [
 const categoryPaths = categorySlugList.map((slug) => `/${slug}`);
 const allPaths = [...new Set([...staticPaths, ...categoryPaths, ...toolPathList])];
 
-const SNAPSHOT_NAME = 'content-dates.json';
-const snapshotPath = resolve(here, SNAPSHOT_NAME);
-
-function hasFullHistory() {
-  try {
-    const shallow = execSync('git rev-parse --is-shallow-repository', {
-      cwd: rootDir,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }).trim();
-    return shallow === 'false';
-  } catch {
-    return false;
-  }
-}
+const snapshotPath = resolve(here, 'content-dates.json');
 
 function readSnapshot() {
   try {
@@ -92,81 +78,54 @@ function readSnapshot() {
   }
 }
 
-const fullHistory = hasFullHistory();
 const snapshot = readSnapshot();
+const today = new Date().toLocaleDateString('en-CA');
 
-const gitDateCache = new Map();
-function gitDate(file) {
-  if (!gitDateCache.has(file)) {
-    let iso = '';
-    try {
-      iso = execSync(`git log -1 --format=%cI -- "${file}"`, {
-        cwd: rootDir,
-        encoding: 'utf8',
-        stdio: ['ignore', 'pipe', 'ignore'],
-      }).trim();
-    } catch {
-      iso = '';
-    }
-    gitDateCache.set(file, iso);
-  }
-  return gitDateCache.get(file);
+function toolCopy(main) {
+  const head = main.match(/<header[^>]*class="head"[\s\S]*?<\/header>/)?.[0] ?? '';
+  const copy = main.match(/<section[^>]*class="(?:about|detail)[\s\S]*$/)?.[0] ?? '';
+  return (
+    head +
+    copy
+      .replace(/<app-tool-card[\s\S]*?<\/app-tool-card>/g, ' ')
+      .replace(/<ul[^>]*class="assurances"[\s\S]*?<\/ul>/, ' ')
+  );
 }
 
-function lastCommitDate(path, files) {
-  const declared = guideDateBySlug.get(path);
-  if (declared) return declared;
-  if (!fullHistory) {
-    return snapshot[path] ?? '';
-  }
-  let newest = '';
-  for (const file of files) {
-    const iso = gitDate(file);
-    if (iso && iso > newest) newest = iso;
-  }
-  return newest ? newest.slice(0, 10) : '';
-}
-
-const CATALOG = 'src/app/core/data/tool-catalog.ts';
-const TOOL_COPY = 'src/app/core/data/tool-content.ts';
-const CATEGORY_COPY = 'src/app/core/data/category-content.ts';
-
-const guideFileBySlug = new Map();
-guideFiles.forEach((file, index) => {
-  const slug = guideSlugs[index];
-  if (slug) guideFileBySlug.set(`/guides/${slug}`, `src/app/core/data/guides/${file}.ts`);
-});
-
-const staticSources = {
-  '/': 'src/app/features/home',
-  '/tools': 'src/app/features/all-tools',
-  '/categories': 'src/app/features/categories',
-  '/about': 'src/app/features/about',
-  '/privacy': 'src/app/features/privacy',
-  '/contact': 'src/app/features/contact',
-  '/terms': 'src/app/features/terms',
-  '/disclaimer': 'src/app/features/disclaimer',
-  '/guides': 'src/app/features/guides',
-};
-
-function sourcesFor(path) {
-  if (guideFileBySlug.has(path)) return [guideFileBySlug.get(path)];
-  if (staticSources[path]) return [staticSources[path]];
-  if (path.split('/').length === 2) return [CATEGORY_COPY, CATALOG];
-  return [CATALOG, TOOL_COPY];
+function pageText(path) {
+  const file = join(outputDir, path.slice(1), 'index.html');
+  if (!existsSync(file)) return '';
+  const main = readFileSync(file, 'utf8').match(/<main[\s\S]*<\/main>/)?.[0] ?? '';
+  const isTool = path.split('/').length === 3 && !path.startsWith('/guides/');
+  return (isTool ? toolCopy(main) : main)
+    .replace(/<(script|style|svg)[\s\S]*?<\/\1>/g, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 const resolvedDates = {};
+
+function lastModified(path) {
+  const stored = snapshot[path];
+  const previous = typeof stored === 'string' ? { date: stored, hash: '' } : (stored ?? { date: '', hash: '' });
+  const text = pageText(path);
+  const hash = text ? createHash('sha256').update(text).digest('hex').slice(0, 16) : previous.hash;
+  const changed = previous.hash !== '' && hash !== previous.hash;
+  const date = guideDateBySlug.get(path) ?? (changed ? today : previous.date || today);
+  resolvedDates[path] = { date, hash };
+  return date;
+}
+
 const sitemapUrls = allPaths.map((path) => {
-  const lastmod = lastCommitDate(path, sourcesFor(path));
-  if (lastmod) resolvedDates[path] = lastmod;
+  const lastmod = lastModified(path);
   return `  <url>
-    <loc>${site}${path === '/' ? '' : path}</loc>${lastmod ? `
-    <lastmod>${lastmod}</lastmod>` : ''}
+    <loc>${site}${path === '/' ? '' : path}</loc>
+    <lastmod>${lastmod}</lastmod>
   </url>`;
 });
 
-if (fullHistory) {
+if (existsSync(outputDir)) {
   const sorted = Object.fromEntries(Object.entries(resolvedDates).sort(([a], [b]) => a.localeCompare(b)));
   writeFileSync(snapshotPath, JSON.stringify(sorted, null, 2) + '\n');
 }

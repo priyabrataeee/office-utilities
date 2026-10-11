@@ -74,7 +74,7 @@ export class QrCodeComponent extends ToolBase {
 
   protected readonly level = signal<Correction>('M');
   protected readonly size = signal(512);
-  protected readonly margin = signal(2);
+  protected readonly margin = signal(4);
   protected readonly dark = signal('#101322');
   protected readonly light = signal('#ffffff');
 
@@ -108,11 +108,10 @@ export class QrCodeComponent extends ToolBase {
       case 'email': {
         const address = this.email().trim();
         if (!address) return '';
-        const params = new URLSearchParams();
-        if (this.subject().trim()) params.set('subject', this.subject().trim());
-        if (this.body().trim()) params.set('body', this.body().trim());
-        const query = params.toString();
-        return `mailto:${address}${query ? `?${query}` : ''}`;
+        const parts: string[] = [];
+        if (this.subject().trim()) parts.push(`subject=${encodeURIComponent(this.subject().trim())}`);
+        if (this.body().trim()) parts.push(`body=${encodeURIComponent(this.body().trim())}`);
+        return `mailto:${address}${parts.length ? `?${parts.join('&')}` : ''}`;
       }
       case 'phone': {
         const number = this.phone().replace(/\s+/g, '');

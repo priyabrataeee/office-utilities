@@ -76,12 +76,17 @@
   min-width: 0;
 }
 
-.head__title {
+.head__heading {
   display: flex;
   align-items: center;
-  gap: var(--ou-s-3);
-  font-size: var(--ou-fs-2xl);
+  flex-wrap: wrap;
+  gap: var(--ou-s-1) var(--ou-s-3);
   margin-bottom: var(--ou-s-1);
+}
+
+.head__title {
+  margin: 0;
+  font-size: var(--ou-fs-2xl);
 }
 
 .head__summary {

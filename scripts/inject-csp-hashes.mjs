@@ -22,8 +22,15 @@ function htmlFilesIn(dir) {
 
 const pages = htmlFilesIn(browserDir);
 
-if (pages.length && /script-src[^;"]*'unsafe-inline'/.test(readFileSync(pages[0], 'utf8'))) {
-  console.log("CSP hash injection skipped: script-src carries 'unsafe-inline' (ads enabled).");
+const adsEnabled = /adsense:\s*\{\s*enabled:\s*true/.test(
+  readFileSync(resolve(rootDir, 'src/app/core/site.config.ts'), 'utf8'),
+);
+const policyPage = pages.find((page) => CSP_META.test(readFileSync(page, 'utf8')));
+const allowsInline =
+  !!policyPage && /script-src[^;"]*'unsafe-inline'/.test(readFileSync(policyPage, 'utf8'));
+
+if (adsEnabled && allowsInline) {
+  console.log("CSP hash injection skipped: ads are enabled and script-src carries 'unsafe-inline'.");
   process.exit(0);
 }
 const distinct = new Set();

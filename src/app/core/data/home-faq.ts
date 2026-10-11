@@ -5,7 +5,7 @@ export const HOME_FAQ: readonly { readonly q: string; readonly a: string }[] = [
   },
   {
     q: 'Do I need an account?',
-    a: 'No. There is no sign-up, no email address and no login. Nothing is stored between visits except a few display preferences in your own browser, which you can clear at any time.',
+    a: 'No. There is no sign-up, no email address and no login. What is kept between visits stays in your own browser: display preferences and a history of recently used tools and file names (not the files themselves), which you can clear at any time.',
   },
   {
     q: 'Is it really free?',

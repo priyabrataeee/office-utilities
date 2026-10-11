@@ -9,7 +9,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
 import { ToastService } from '../../core/services/toast.service';
 import { SeoService } from '../../core/services/seo.service';
 import { PrivacyChoicesService } from '../../core/services/privacy-choices.service';
-import { SITE } from '../../core/site.config';
+import { MONETIZATION, SITE } from '../../core/site.config';
 
 @Component({
   selector: 'app-privacy',
@@ -28,13 +28,15 @@ export class PrivacyComponent {
   protected readonly choices = inject(PrivacyChoicesService);
 
   protected readonly site = SITE;
+  protected readonly adsLive = MONETIZATION.adsense.enabled;
+  protected readonly updated = 'October 2026';
 
   protected onAdsOptOut(event: Event): void {
     this.choices.setAdsOptOut((event.target as HTMLInputElement).checked);
     this.toast.success(
       (event.target as HTMLInputElement).checked
         ? 'Personalised advertising is off for this device.'
-        : 'Personalised advertising is on again.',
+        : 'Opt-out removed. It applies from the next page you load.',
     );
   }
   protected readonly localBytes = signal(0);
