@@ -27,7 +27,7 @@ type Format = 'text' | 'markdown' | 'json';
           [accepts]="['.pptx']"
           [compact]="!!deck()"
           title="Drop a presentation"
-          hint="Titles, bullets, tables and speaker notes, grouped by slide."
+          hint="Titles, bullets and speaker notes, grouped by slide."
           icon="text-select"
           (filesChange)="onFiles($event)"
         />

@@ -78,7 +78,7 @@ export class TextToDiagramComponent extends ToolBase {
   private renderVersion = 0;
 
   protected readonly samples: readonly { value: Syntax; label: string; icon: string }[] = [
-    { value: 'mermaid', label: 'Mermaid / PlantUML-style', icon: 'workflow' },
+    { value: 'mermaid', label: 'Mermaid', icon: 'workflow' },
     { value: 'outline', label: 'Indented outline', icon: 'git-branch' },
   ];
 
@@ -132,6 +132,10 @@ export class TextToDiagramComponent extends ToolBase {
           theme: this.theme.resolved() === 'dark' ? 'dark' : 'default',
           securityLevel: 'strict',
           fontFamily: 'Inter, Segoe UI, system-ui, sans-serif',
+          // HTML labels are drawn with <foreignObject>, which taints a canvas
+          // and makes PNG export fail. Plain SVG text exports cleanly.
+          htmlLabels: false,
+          flowchart: { htmlLabels: false },
         });
 
         const { svg } = await mermaid.render(`m-${version}`, text);

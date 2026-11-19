@@ -166,7 +166,7 @@ export class TermsComponent {
   constructor() {
     this.seo.apply({
       title: 'Terms of use',
-      description: `The terms covering use of ${SITE.name} — a free, browser-based document toolkit with no accounts and no uploads.`,
+      description: `The terms for using ${SITE.name}, a free browser-based document toolkit with no accounts and no uploads: acceptable use, liability, advertising and contact.`,
       path: '/terms',
       keywords: ['terms of use', 'terms and conditions', 'terms of service'],
       structuredData: [

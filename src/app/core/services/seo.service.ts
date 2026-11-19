@@ -3,6 +3,7 @@ import { Meta, Title } from '@angular/platform-browser';
 import { SITE } from '../site.config';
 import type { ResolvedTool, ToolCategory } from '../models/tool.model';
 import type { ResolvedGuide } from '../models/guide.model';
+import { TOOL_META_DESCRIPTIONS } from '../data/tool-meta-descriptions';
 
 export interface PageSeo {
   readonly title: string;
@@ -118,7 +119,8 @@ export class SeoService {
 
     return {
       title: `${tool.title} — Free, No Uploads`,
-      description: tool.description,
+      // A curated summary where the catalogue text would be cut too short.
+      description: TOOL_META_DESCRIPTIONS[tool.id] ?? tool.description,
       path: tool.path,
       image: `${SITE.origin}/og/categories/${tool.categoryRef.id}.svg`,
       imageAlt: `${tool.title} — ${SITE.name}`,

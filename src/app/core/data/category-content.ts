@@ -27,6 +27,8 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategoryId, CategoryContent>> 
     ],
     notes: [
       'These are readers rather than editors, and the distinction is deliberate: a reader can open a very large file quickly and cannot damage it. Where a format has behaviour as well as content — a spreadsheet macro, a script in an HTML page — it is not executed here, which is the point rather than a shortcoming.',
+      'Each viewer has controls suited to its format. The PDF viewer renders pages on demand in a background worker, so long documents open quickly. The CSV viewer keeps leading zeros such as 00123 instead of turning them into numbers. The text viewer reads files as UTF-8 and shows the first 20,000 lines, which covers most logs.',
+      'The HTML viewer is meant for attachments you do not trust: scripts are not run, and remote images and other resources are not loaded, so opening the file does not tell its sender that you read it. The JSON and XML viewers show the content as a collapsible tree as well as formatted text.',
     ],
   },
 
@@ -70,6 +72,8 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategoryId, CategoryContent>> 
     ],
     notes: [
       'Word documents carry more than they display. Author names, the total time a file has been edited, tracked comments and text hidden in headers or text boxes all travel with the file and are readable by anyone who receives it. Checking the metadata before sending a document outside your organisation takes a few seconds and is the step most often skipped.',
+      'Compare Word Documents matches paragraphs first and then compares each edited paragraph word by word, so a changed sentence shows its changed words rather than a whole new paragraph. A moved paragraph appears as one deletion and one insertion. Word Count adds reading and speaking time and a keyword density table to the usual totals.',
+      'Conversions to Markdown, HTML and plain text keep structure — headings, lists, tables and links — and drop formatting that the target format cannot express. Extract Text can include comments, but that option is off by default, so tick it when you need them.',
     ],
   },
 
@@ -110,6 +114,9 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategoryId, CategoryContent>> 
     ],
     notes: [
       'Charts, SmartArt, 3-D effects, transitions and animations are not reproduced by any of these tools. Those are behaviours of PowerPoint’s own renderer rather than content stored in the file, and a converter claiming to reproduce them is generally rasterising a screenshot. Ordinary slides of text, shapes, tables and images convert faithfully.',
+      'Slide Selector writes a new deck with only the slides you keep, in their original order, and leaves the source untouched. The removed slides and their notes are deleted, but pictures used only on those slides can remain in the file’s shared media store, so check Extract Images if a removed slide contained something sensitive.',
+      'Extract Images lists every picture stored in the presentation once, even if it appears on twenty slides, and includes images held on masters and layouts. Export to Images draws each slide at the scale you choose; doubling the scale roughly quadruples the pixel count and the file size, so pick the size you actually need.',
+      'Create Presentation writes a genuine editable .pptx with PptxGenJS. Titles and bullets are ordinary text boxes rather than template placeholders, so every word stays editable, but applying a corporate template afterwards will not restyle the slides automatically.',
     ],
   },
 
@@ -156,6 +163,8 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategoryId, CategoryContent>> 
     ],
     notes: [
       'Because nothing is stored between visits, the record-keeping is yours. Save each PDF into a folder you control and name it so it sorts correctly, and keep invoice and quotation numbers in the same place you keep the documents — most tax authorities expect several years of records, and a sequence with gaps in it is a question you will eventually be asked.',
+      'Each document generator has the same controls: Load sample fills the form with fictional details you can edit, Print opens your browser’s print dialog, and Download PDF and Download DOCX save the result. Invoices, quotations and proposals add up line items, discounts and tax as you type, and amounts are formatted with your browser’s number settings.',
+      'These are templates, not advice. An offer letter, salary slip or experience letter has legal and tax meaning that varies by country, so check the wording and figures against your own records and local rules before you send one. The QR code generator encodes a link or text you supply; test the printed code with a phone before a print run.',
     ],
   },
 
@@ -176,6 +185,8 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategoryId, CategoryContent>> 
     ],
     notes: [
       'A diagram defined as text can be reviewed in a pull request and regenerated when the system changes; one drawn by hand gives you control over exactly how it looks. Both are here for that reason. If a diagram documents something that changes, keeping its source next to the thing it describes is what stops it going quietly out of date.',
+      'Diagram Studio is the full editor; the named makers open it with a starting layout for that kind of diagram. Diagrams export as SVG for documents and web pages, PNG for slides and chat, and JSON so you can reopen and keep editing later. Nothing is saved between visits unless you export it.',
+      'Text to Diagram accepts Mermaid or a simple indented outline and redraws as you type. PlantUML is not supported. The org chart is drawn by hand: there is no CSV import and no automatic tree layout, so position people yourself and connect the reporting lines.',
     ],
   },
 
@@ -194,6 +205,9 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategoryId, CategoryContent>> 
     ],
     notes: [
       'Hashing is the tool worth understanding here, because it answers a question nothing else answers exactly. Two files with the same digest are byte-for-byte identical whatever they are named; different digests mean genuinely different content. It also verifies a download against a published checksum, which is worth doing for installers regardless of whether you are hunting duplicates.',
+      'The hash generator reports SHA-256, SHA-384, SHA-512 and CRC32. SHA-384 and SHA-512 use the browser’s Web Crypto API; SHA-256 and CRC32 run in a worker that reads the file in chunks, so very large files can be hashed without loading them into memory at once. Compare a digest with the one the publisher lists, character for character.',
+      'Duplicate File Detector groups files by size first, because files of different lengths cannot match, and only then hashes the candidates with SHA-256. It shows which files are identical and how much space removing the copies would save, but it never deletes anything: the browser has read access to the folder, not write access, so the clean-up is yours to do.',
+      'Batch Rename shows every old and new name before anything changes, refuses rules that would give two files the same name, and pads sequence numbers so file-002 sorts before file-010. File Metadata reports what the browser knows about a file separately from what the file says about itself, which is how a mislabelled extension shows up.',
     ],
   },
 };

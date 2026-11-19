@@ -237,7 +237,14 @@ export async function convertDataUrl(dataUrl: string, mime: ImageMime): Promise<
 
 export async function svgToRaster(
   svg: string,
-  options: { scale?: number; width?: number; height?: number; mime?: ImageMime; background?: string } = {},
+  options: {
+    scale?: number;
+    width?: number;
+    height?: number;
+    mime?: ImageMime;
+    background?: string;
+    quality?: number;
+  } = {},
 ): Promise<Blob> {
   const withSize = ensureSvgDimensions(svg);
   const blob = new Blob([withSize], { type: 'image/svg+xml;charset=utf-8' });
@@ -247,18 +254,33 @@ export async function svgToRaster(
     width: options.width,
     height: options.height,
     background: options.background,
-    quality: 0.95,
+    quality: options.quality ?? 0.95,
   });
 }
 
+/**
+ * An <img> needs an absolute width and height to rasterise an SVG. Mermaid
+ * writes width="100%" and no height, and adding a second width attribute made
+ * the SVG invalid, so relative or missing sizes are replaced from the viewBox.
+ */
 function ensureSvgDimensions(svg: string): string {
-  if (/<svg[^>]*\swidth=/i.test(svg) && /<svg[^>]*\sheight=/i.test(svg)) return svg;
-  const viewBox = svg.match(/viewBox\s*=\s*["']([^"']+)["']/i);
+  const open = svg.match(/<svg\b[^>]*>/i);
+  if (!open) return svg;
+  const tag = open[0];
+  const absolute = (name: string) =>
+    new RegExp(`\\s${name}\\s*=\\s*["']\\s*[\\d.]+(px)?\\s*["']`, 'i').test(tag);
+  if (absolute('width') && absolute('height')) return svg;
+
+  const viewBox = tag.match(/viewBox\s*=\s*["']([^"']+)["']/i);
   if (!viewBox) return svg;
   const parts = viewBox[1].trim().split(/[\s,]+/).map(Number);
   if (parts.length !== 4 || parts.some((n) => !Number.isFinite(n))) return svg;
   const [, , width, height] = parts;
-  return svg.replace(/<svg\b/i, `<svg width="${width}" height="${height}"`);
+
+  const sized = tag
+    .replace(/\s(width|height)\s*=\s*["'][^"']*["']/gi, '')
+    .replace(/<svg\b/i, `<svg width="${width}" height="${height}"`);
+  return svg.replace(tag, sized);
 }
 
 export async function compressToTarget(

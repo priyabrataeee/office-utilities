@@ -143,7 +143,7 @@ export class PptxExportComponent extends ToolBase {
     indices: readonly number[],
   ): Promise<void> {
     const base = baseNameOf(fileName);
-    const extension = this.format() === 'image/jpeg' ? '.jpg' : '.png';
+    const extension = this.format() === 'image/jpeg' ? '.jpg' : this.format() === 'image/webp' ? '.webp' : '.png';
     const pad = String(deck.slides.length).length;
 
     const outputs = await this.run('Rendering slides…', async () => {

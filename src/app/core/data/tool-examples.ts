@@ -1,3 +1,10 @@
+import { CONVERTER_EXAMPLES } from './examples/converters';
+import { EXCEL_DIAGRAM_EXAMPLES } from './examples/excel-diagram';
+import { GENERATOR_EXAMPLES } from './examples/generators';
+import { PDF_EXAMPLES } from './examples/pdf';
+import { VIEWER_FILE_EXAMPLES } from './examples/viewers-files';
+import { WORD_POWERPOINT_EXAMPLES } from './examples/word-powerpoint';
+
 export interface ToolExample {
   readonly title: string;
   readonly steps: readonly string[];
@@ -86,4 +93,10 @@ export const TOOL_EXAMPLES: Record<string, ToolExample> = {
     steps: ['Start with the process template and rename the stages.', 'Label who owns each stage and what must be handed to the next team.', 'Trace both the usual path and an exception path before exporting.'],
     check: 'The diagram communicates a process. It does not run a workflow or check BPMN compliance.',
   },
+  ...VIEWER_FILE_EXAMPLES,
+  ...PDF_EXAMPLES,
+  ...WORD_POWERPOINT_EXAMPLES,
+  ...EXCEL_DIAGRAM_EXAMPLES,
+  ...CONVERTER_EXAMPLES,
+  ...GENERATOR_EXAMPLES,
 };

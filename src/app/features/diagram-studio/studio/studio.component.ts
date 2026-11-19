@@ -43,7 +43,7 @@ const MAX_HISTORY = 50;
 type Interaction =
   | { kind: 'none' }
   | { kind: 'move'; id: string; offsetX: number; offsetY: number; moved: boolean }
-  | { kind: 'resize'; id: string; startX: number; startY: number; width: number; height: number }
+  | { kind: 'resize'; id: string; startX: number; startY: number; width: number; height: number; resized: boolean }
   | { kind: 'pan'; startX: number; startY: number; originX: number; originY: number };
 
 @Component({
@@ -124,24 +124,38 @@ export class StudioComponent {
     effect(() => {
       const diagram = this.diagram();
       untracked(() => {
+        // Never touch storage before this tool's saved diagram has been read.
+        if (!this.loaded) return;
         if (diagram.nodes.length || diagram.edges.length) {
-          this.storage.write(AUTOSAVE_KEY, diagram);
+          this.storage.write(this.autosaveKey, diagram);
+        } else {
+          // An emptied canvas falls back to the starting template next time.
+          this.storage.remove(this.autosaveKey);
         }
       });
     });
   }
 
+  /**
+   * Each tool keeps its own autosave. A single shared slot meant opening, say,
+   * the org chart maker overwrote the diagram saved in Diagram Studio.
+   */
+  private autosaveKey = AUTOSAVE_KEY;
+  private loaded = false;
+
   private initialise(toolId: string): void {
     const template = templateFor(toolId);
+    this.autosaveKey = template ? `${AUTOSAVE_KEY}:${toolId}` : AUTOSAVE_KEY;
+    const saved = this.storage.read<Diagram | null>(this.autosaveKey, null);
+    this.loaded = true;
 
     if (template) {
       this.activeStencil.set(template.stencil);
-      this.diagram.set(template.build());
+      this.diagram.set(saved && saved.nodes ? saved : template.build());
       this.recent.trackTool(toolId);
       return;
     }
 
-    const saved = this.storage.read<Diagram | null>(AUTOSAVE_KEY, null);
     this.diagram.set(saved && saved.nodes ? saved : emptyDiagram('My diagram'));
   }
 
@@ -256,6 +270,7 @@ export class StudioComponent {
       startY: point.y,
       width: node.width,
       height: node.height,
+      resized: false,
     };
     (event.target as Element).setPointerCapture?.(event.pointerId);
   }
@@ -303,6 +318,11 @@ export class StudioComponent {
     }
 
     if (interaction.kind === 'resize') {
+      // Record the size before the first change, so undo restores it.
+      if (!interaction.resized) {
+        this.snapshot();
+        this.interaction = { ...interaction, resized: true };
+      }
       this.mutateSilently((draft) => {
         const node = draft.nodes.find((candidate) => candidate.id === interaction.id);
         if (!node) return;
@@ -313,7 +333,6 @@ export class StudioComponent {
   }
 
   protected onPointerUp(): void {
-    if (this.interaction.kind === 'resize') this.snapshot();
     this.interaction = { kind: 'none' };
   }
 
@@ -437,21 +456,32 @@ export class StudioComponent {
     });
   }
 
+  /** One undo step per title edit, not one per keystroke. */
+  private editingTitle = false;
+
   protected setTitle(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
+    if (!this.editingTitle) {
+      this.snapshot();
+      this.editingTitle = true;
+    }
     this.mutateSilently((draft) => {
       draft.title = value;
     });
   }
 
+  protected endTitleEdit(): void {
+    this.editingTitle = false;
+  }
+
   protected toggleGrid(): void {
-    this.mutateSilently((draft) => {
+    this.mutate((draft) => {
       draft.showGrid = !draft.showGrid;
     });
   }
 
   protected toggleSnap(): void {
-    this.mutateSilently((draft) => {
+    this.mutate((draft) => {
       draft.snapToGrid = !draft.snapToGrid;
     });
   }
@@ -519,6 +549,13 @@ export class StudioComponent {
   private toDiagramSpace(event: PointerEvent): Point {
     const svg = this.surface()?.nativeElement;
     if (!svg) return { x: 0, y: 0 };
+    // The screen matrix includes the CSS zoom and pan and the viewBox
+    // letterboxing, so a pointer maps to the right diagram point at any zoom.
+    const matrix = svg.getScreenCTM();
+    if (matrix) {
+      const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse());
+      return { x: point.x, y: point.y };
+    }
     const rect = svg.getBoundingClientRect();
     const diagram = this.diagram();
     return {

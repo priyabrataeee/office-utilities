@@ -83,7 +83,6 @@ export const SALARY_SLIP: GeneratorDef = {
         { key: 'payDate', label: 'Payment date', type: 'date' },
         { key: 'currency', label: 'Currency symbol', type: 'text' },
         { key: 'workingDays', label: 'Working days', type: 'number', min: 0, max: 31 },
-        { key: 'paidDays', label: 'Days paid', type: 'number', min: 0, max: 31 },
         { key: 'lopDays', label: 'Loss-of-pay days', type: 'number', min: 0, max: 31 },
       ],
     },
@@ -152,7 +151,6 @@ export const SALARY_SLIP: GeneratorDef = {
     payDate: today(),
     currency: '$',
     workingDays: 22,
-    paidDays: 22,
     lopDays: 0,
     employeeName: 'Jordan Reyes',
     employeeId: 'NW-0142',
@@ -180,9 +178,26 @@ export const SALARY_SLIP: GeneratorDef = {
   render: (data) => {
     const currency = str(data, 'currency', '$');
     const earnings = rows(data, 'earnings');
-    const deductions = rows(data, 'deductions');
+    const deductions = [...rows(data, 'deductions')];
 
     const grossPay = earnings.reduce((sum, item) => sum + num(item, 'amount'), 0);
+
+    // Loss of pay: the earnings are full-month amounts, so unpaid days are
+    // deducted pro rata as gross ÷ working days × loss-of-pay days.
+    const workingDays = Math.max(0, num(data, 'workingDays'));
+    const lopDays = Math.min(workingDays, Math.max(0, num(data, 'lopDays')));
+    const paidDays = workingDays - lopDays;
+    const lopAmount =
+      workingDays > 0 && lopDays > 0
+        ? Math.round(((grossPay * lopDays) / workingDays) * 100) / 100
+        : 0;
+    if (lopAmount > 0) {
+      deductions.push({
+        label: `Loss of pay (${lopDays} day${lopDays === 1 ? '' : 's'})`,
+        amount: lopAmount,
+      });
+    }
+
     const totalDeductions = deductions.reduce((sum, item) => sum + num(item, 'amount'), 0);
     const netPay = grossPay - totalDeductions;
 
@@ -235,9 +250,7 @@ export const SALARY_SLIP: GeneratorDef = {
           detail('Payment date', formatDate(str(data, 'payDate'))),
           detail(
             'Days paid',
-            `${num(data, 'paidDays')} of ${num(data, 'workingDays')}${
-              num(data, 'lopDays') ? ` (LOP ${num(data, 'lopDays')})` : ''
-            }`,
+            `${paidDays} of ${workingDays}${lopDays ? ` (LOP ${lopDays})` : ''}`,
           ),
           detail('Bank account', str(data, 'bankAccount')),
         ],
@@ -331,7 +344,7 @@ export const OFFER_LETTER: GeneratorDef = {
       icon: 'wallet',
       fields: [
         { key: 'currency', label: 'Currency symbol', type: 'text' },
-        { key: 'salary', label: 'Annual salary', type: 'number', min: 0, step: 100 },
+        { key: 'salary', label: 'Salary', type: 'number', min: 0, step: 100 },
         { key: 'salaryPeriod', label: 'Salary period', type: 'select', options: [
           { value: 'per year', label: 'Per year' },
           { value: 'per month', label: 'Per month' },
@@ -415,7 +428,7 @@ export const OFFER_LETTER: GeneratorDef = {
       para([
         run('Your salary will be '),
         run(`${money(num(data, 'salary'), currency)} ${str(data, 'salaryPeriod')}`, { bold: true }),
-        run(', paid monthly in arrears and subject to the usual statutory deductions.'),
+        run(', subject to the usual statutory deductions.'),
       ]),
       ...(benefits.length
         ? [

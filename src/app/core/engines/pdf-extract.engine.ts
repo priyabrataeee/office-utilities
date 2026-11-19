@@ -1,5 +1,5 @@
 import type { PDFDocumentProxy } from 'pdfjs-dist';
-import type { DocBlock, InlineRun, ListItem } from './doc-model';
+import { blockText, type DocBlock, type InlineRun, type ListItem } from './doc-model';
 import { closePdf, openPdf } from './pdfjs.engine';
 
 interface RawItem {
@@ -98,14 +98,7 @@ export async function extractPdfDocument(
 
     return {
       blocks,
-      text: pages
-        .map((lines) =>
-          lines
-            .filter((line) => !repeated.has(normalise(line.text)))
-            .map((line) => line.text)
-            .join('\n'),
-        )
-        .join('\n\n'),
+      text: plainText(blocks),
       pageCount: doc.numPages,
       hasTextLayer: true,
       droppedLines: [...repeated],
@@ -335,4 +328,37 @@ function findRepeated(pages: readonly Line[][]): Set<string> {
     if (count >= threshold && key.length > 0) repeated.add(key);
   }
   return repeated;
+}
+
+/**
+ * The text download is built from the same blocks as the preview, so the
+ * options apply to it too: joined paragraphs, dropped running headers and,
+ * when asked, a marker line between pages.
+ */
+function plainText(blocks: readonly DocBlock[]): string {
+  const parts: string[] = [];
+  let page = 1;
+  for (const block of blocks) {
+    if (block.type === 'pagebreak') {
+      page++;
+      parts.push(`--- Page ${page} ---`);
+      continue;
+    }
+    if (block.type === 'list') {
+      // Keep the list markers that block text alone would drop.
+      parts.push(
+        block.items
+          .map((item, index) => {
+            const indent = '  '.repeat(item.level ?? 0);
+            const marker = block.ordered ? `${index + 1}.` : '-';
+            return `${indent}${marker} ${item.content.map((r) => r.text).join('')}`;
+          })
+          .join('\n'),
+      );
+      continue;
+    }
+    const text = blockText(block);
+    if (text) parts.push(text);
+  }
+  return parts.join('\n\n');
 }

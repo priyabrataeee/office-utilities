@@ -116,7 +116,7 @@ limited by the memory available to the browser.
 - [HEIC to JPG](https://office-utilities.org/convert/heic-to-jpg): Convert iPhone photos to JPEG, on your own device.
 - [Resize Image](https://office-utilities.org/convert/resize-image): Resize to exact pixels, a percentage or a size limit.
 - [Crop Image](https://office-utilities.org/convert/crop-image): Crop to a shape, a ratio or exact pixel bounds.
-- [Case Converter](https://office-utilities.org/convert/case-converter): Change text between twelve capitalisation styles.
+- [Case Converter](https://office-utilities.org/convert/case-converter): Change text between thirteen capitalisation styles.
 
 ## Document Generators
 
@@ -137,7 +137,7 @@ limited by the memory available to the browser.
 - [Diagram Studio](https://office-utilities.org/diagram/diagram-studio): A Visio-style canvas with shapes, connectors and export.
 - [Text to Diagram](https://office-utilities.org/diagram/text-to-diagram): Write Mermaid or an indented outline and see it render instantly.
 - [Flowchart Maker](https://office-utilities.org/diagram/flowchart-maker): Start from a flowchart template with the right shapes.
-- [UML Diagram Tool](https://office-utilities.org/diagram/uml-diagram-tool): Class, sequence and use-case diagrams.
+- [UML Diagram Tool](https://office-utilities.org/diagram/uml-diagram-tool): Class and use-case diagrams on an editable canvas.
 - [ER Diagram Tool](https://office-utilities.org/diagram/er-diagram-tool): Model entities, attributes and relationships.
 - [Cloud Architecture Diagram](https://office-utilities.org/diagram/aws-architecture-diagram): Lay out cloud services, regions, VPCs and data flows.
 - [Network Diagram Tool](https://office-utilities.org/diagram/network-diagram-tool): Map servers, switches, firewalls and links.

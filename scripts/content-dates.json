@@ -16,132 +16,132 @@
     "hash": "52bdb0cdcb4986ff"
   },
   "/convert": {
-    "date": "2026-10-11",
-    "hash": "9079c08ece6240da"
+    "date": "2026-11-20",
+    "hash": "b75555bf82a147f7"
   },
   "/convert/case-converter": {
-    "date": "2026-09-23",
-    "hash": "d4b865c5893b0b0a"
+    "date": "2026-11-20",
+    "hash": "7993dc3327d6fd81"
   },
   "/convert/crop-image": {
-    "date": "2026-09-23",
-    "hash": "e0961dddb8bfa949"
+    "date": "2026-11-20",
+    "hash": "9faea0a47cd5ed04"
   },
   "/convert/csv-to-json": {
-    "date": "2026-09-09",
-    "hash": "6893992961d767ed"
+    "date": "2026-11-20",
+    "hash": "ed97a07b82cf63c8"
   },
   "/convert/excel-to-pdf": {
-    "date": "2026-10-11",
-    "hash": "03aaefabe175abdd"
+    "date": "2026-11-20",
+    "hash": "14e679e631ac28fd"
   },
   "/convert/heic-to-jpg": {
-    "date": "2026-10-11",
-    "hash": "95489bd24e70bd58"
+    "date": "2026-11-20",
+    "hash": "c8f3f28a68652400"
   },
   "/convert/html-to-markdown": {
-    "date": "2026-09-09",
-    "hash": "b697101a8ab44945"
+    "date": "2026-11-20",
+    "hash": "d2f19fe2d512061f"
   },
   "/convert/html-to-pdf": {
-    "date": "2026-09-09",
-    "hash": "b272faea7b55cba6"
+    "date": "2026-11-20",
+    "hash": "51b3186763bac6e4"
   },
   "/convert/html-to-word": {
-    "date": "2026-09-09",
-    "hash": "4f9d64c97c074cec"
+    "date": "2026-11-20",
+    "hash": "5672629d2301c3ee"
   },
   "/convert/image-converter": {
-    "date": "2026-09-09",
-    "hash": "a23fba0bb26c861b"
+    "date": "2026-11-20",
+    "hash": "14226e6dd22dd314"
   },
   "/convert/jpg-to-png": {
-    "date": "2026-09-09",
-    "hash": "74526635ff093910"
+    "date": "2026-11-20",
+    "hash": "2f23d4f5c94aa843"
   },
   "/convert/json-to-csv": {
-    "date": "2026-09-09",
-    "hash": "90a10aced7101270"
+    "date": "2026-11-20",
+    "hash": "669fa297ddaafac4"
   },
   "/convert/markdown-to-html": {
-    "date": "2026-09-09",
-    "hash": "7c47580c2529e512"
+    "date": "2026-11-20",
+    "hash": "3ae50b23dd02c998"
   },
   "/convert/markdown-to-pdf": {
-    "date": "2026-10-11",
-    "hash": "89c3be75fa5dd8f6"
+    "date": "2026-11-20",
+    "hash": "267ff913d4b484b3"
   },
   "/convert/markdown-to-word": {
-    "date": "2026-09-09",
-    "hash": "120e152c9e44f30b"
+    "date": "2026-11-20",
+    "hash": "69fdebacfc57cdb3"
   },
   "/convert/png-to-webp": {
-    "date": "2026-10-11",
-    "hash": "fba62e1ecfb1a43b"
+    "date": "2026-11-20",
+    "hash": "f7b495df06c50333"
   },
   "/convert/resize-image": {
-    "date": "2026-09-23",
-    "hash": "64b42cb6c932f393"
+    "date": "2026-11-20",
+    "hash": "518e6724649ab3a7"
   },
   "/convert/svg-to-png": {
-    "date": "2026-10-11",
-    "hash": "f489447e2061b13c"
+    "date": "2026-11-20",
+    "hash": "7d9ede74bcd90d9d"
   },
   "/convert/text-to-pdf": {
-    "date": "2026-10-11",
-    "hash": "89ea47bd879f7890"
+    "date": "2026-11-20",
+    "hash": "1e5c6b405f1d200e"
   },
   "/convert/webp-to-jpg": {
-    "date": "2026-09-23",
-    "hash": "fc23ff70ca9852fa"
+    "date": "2026-11-20",
+    "hash": "e9e2b2a0a0b9c69d"
   },
   "/convert/webp-to-png": {
-    "date": "2026-09-23",
-    "hash": "8e35597c48e1ae19"
+    "date": "2026-11-20",
+    "hash": "9179c18f9ec0bec6"
   },
   "/diagram": {
-    "date": "2026-10-11",
-    "hash": "b505bf353e42f1c8"
+    "date": "2026-11-20",
+    "hash": "8973de5eee04d6bd"
   },
   "/diagram/aws-architecture-diagram": {
-    "date": "2026-10-09",
-    "hash": "e6bfb6f9f1ef2697"
+    "date": "2026-11-20",
+    "hash": "4a95f6fab3713cde"
   },
   "/diagram/diagram-studio": {
-    "date": "2026-10-11",
-    "hash": "db087e5fb1424643"
+    "date": "2026-11-20",
+    "hash": "ad312b1d3b278126"
   },
   "/diagram/er-diagram-tool": {
-    "date": "2026-10-11",
-    "hash": "36834a71c068d934"
+    "date": "2026-11-20",
+    "hash": "8539c18c0ff7ab3e"
   },
   "/diagram/flowchart-maker": {
-    "date": "2026-10-11",
-    "hash": "0ce86e5896d7e8a8"
+    "date": "2026-11-20",
+    "hash": "f2e5edd93f540caf"
   },
   "/diagram/mind-map-maker": {
-    "date": "2026-10-09",
-    "hash": "b18052aabb75dd18"
+    "date": "2026-11-20",
+    "hash": "31d39daf9f39ddf7"
   },
   "/diagram/network-diagram-tool": {
-    "date": "2026-10-11",
-    "hash": "b477f5018076c570"
+    "date": "2026-11-20",
+    "hash": "adc391a2b440ed9e"
   },
   "/diagram/org-chart-maker": {
-    "date": "2026-10-09",
-    "hash": "d02162110953b2f8"
+    "date": "2026-11-20",
+    "hash": "2a04b5955a96d141"
   },
   "/diagram/process-diagram-maker": {
-    "date": "2026-10-09",
-    "hash": "98a33991243abd9f"
+    "date": "2026-11-20",
+    "hash": "195c09b3e2597cf1"
   },
   "/diagram/text-to-diagram": {
-    "date": "2026-10-11",
-    "hash": "37b9b6431c6d8ee3"
+    "date": "2026-11-20",
+    "hash": "f3242bf29e1fed87"
   },
   "/diagram/uml-diagram-tool": {
-    "date": "2026-10-11",
-    "hash": "8d49e9ad1e32ee2f"
+    "date": "2026-11-20",
+    "hash": "d908ad850a9248b8"
   },
   "/disclaimer": {
     "date": "2026-09-03",
@@ -152,128 +152,128 @@
     "hash": "4280a3525b590ad9"
   },
   "/excel/column-statistics": {
-    "date": "2026-09-09",
-    "hash": "f166eeefa7657b0d"
+    "date": "2026-11-20",
+    "hash": "7795104f94bb2d09"
   },
   "/excel/csv-to-excel": {
-    "date": "2026-10-11",
-    "hash": "d31a25551adb4031"
+    "date": "2026-11-20",
+    "hash": "bde15ce4997408f8"
   },
   "/excel/data-type-detection": {
-    "date": "2026-09-09",
-    "hash": "040d43d382805606"
+    "date": "2026-11-20",
+    "hash": "6b6de60dbf507cc5"
   },
   "/excel/excel-formula-viewer": {
-    "date": "2026-10-11",
-    "hash": "356d3a1db4e6dba7"
+    "date": "2026-11-20",
+    "hash": "4b05ac60302c336a"
   },
   "/excel/excel-to-csv": {
     "date": "2026-10-11",
     "hash": "5b94da63003c4c3c"
   },
   "/excel/excel-to-json": {
-    "date": "2026-10-11",
-    "hash": "7c9f80806c4fcb36"
+    "date": "2026-11-20",
+    "hash": "bd5f374fc2c3d04c"
   },
   "/excel/excel-to-word": {
-    "date": "2026-10-11",
-    "hash": "0843b1880a166b60"
+    "date": "2026-11-20",
+    "hash": "797348138886b836"
   },
   "/excel/json-to-excel": {
-    "date": "2026-09-09",
-    "hash": "9ce680703b38e932"
+    "date": "2026-11-20",
+    "hash": "b6b9de9a510bc489"
   },
   "/excel/remove-blank-rows": {
-    "date": "2026-09-09",
-    "hash": "b7452461fce55430"
+    "date": "2026-11-20",
+    "hash": "222d6e41a64371da"
   },
   "/excel/remove-duplicate-rows": {
-    "date": "2026-09-09",
-    "hash": "e73a9140d76bf49a"
+    "date": "2026-11-20",
+    "hash": "831bdf5fdb3cdb24"
   },
   "/excel/spreadsheet-cleaner": {
-    "date": "2026-10-11",
-    "hash": "024a5ea8bd8267c0"
+    "date": "2026-11-20",
+    "hash": "ef5a2c7e923555d6"
   },
   "/excel/xlsx-creator": {
-    "date": "2026-09-09",
-    "hash": "4dd97519646d8142"
+    "date": "2026-11-20",
+    "hash": "61af3bb599c7a02f"
   },
   "/file": {
-    "date": "2026-09-12",
-    "hash": "77a8c42c94e11c98"
+    "date": "2026-11-20",
+    "hash": "9ac1129d7fec2382"
   },
   "/file/batch-file-rename": {
-    "date": "2026-09-09",
-    "hash": "eaf26c03bf913842"
+    "date": "2026-11-20",
+    "hash": "e13253dd97303048"
   },
   "/file/duplicate-file-detector": {
-    "date": "2026-10-11",
-    "hash": "2404d9aa4cce75e2"
+    "date": "2026-11-20",
+    "hash": "a6841a8e9d09a1a8"
   },
   "/file/file-hash-generator": {
-    "date": "2026-10-11",
-    "hash": "5b4cd7f2e5e218ff"
+    "date": "2026-11-20",
+    "hash": "43a4429efd25a2e0"
   },
   "/file/file-metadata-viewer": {
-    "date": "2026-09-09",
-    "hash": "c4dfd45310138f58"
+    "date": "2026-11-20",
+    "hash": "f3b58510af6548e7"
   },
   "/file/file-signature-checker": {
-    "date": "2026-09-09",
-    "hash": "4be940eee4f0c617"
+    "date": "2026-11-20",
+    "hash": "668d3ed42c4e2af9"
   },
   "/file/file-size-analyzer": {
     "date": "2026-10-09",
     "hash": "a560f321d618d9ad"
   },
   "/generate": {
-    "date": "2026-09-23",
-    "hash": "2c69012a11f11cf8"
+    "date": "2026-11-20",
+    "hash": "5d6ecf64ae9f1d4a"
   },
   "/generate/business-proposal-generator": {
-    "date": "2026-09-09",
-    "hash": "93f6ed809f471e79"
+    "date": "2026-11-20",
+    "hash": "da8b1838aa368fb7"
   },
   "/generate/certificate-generator": {
     "date": "2026-10-11",
     "hash": "893f3b052407132b"
   },
   "/generate/cover-letter-generator": {
-    "date": "2026-09-09",
-    "hash": "cd15e4e47b9fc842"
+    "date": "2026-11-20",
+    "hash": "6077a05855e35a09"
   },
   "/generate/experience-letter-generator": {
-    "date": "2026-09-09",
-    "hash": "18a7cb6822d400a4"
+    "date": "2026-11-20",
+    "hash": "257d4706b72c3785"
   },
   "/generate/invoice-generator": {
-    "date": "2026-10-11",
-    "hash": "59e511baf6d6128b"
+    "date": "2026-11-20",
+    "hash": "9bfc38dbd2a36152"
   },
   "/generate/meeting-minutes-generator": {
-    "date": "2026-09-09",
-    "hash": "ae517a8d7a7a836e"
+    "date": "2026-11-20",
+    "hash": "a5f33176f229fd4b"
   },
   "/generate/offer-letter-generator": {
-    "date": "2026-09-09",
-    "hash": "5080fc68bda016d2"
+    "date": "2026-11-20",
+    "hash": "47da28fc7dac40be"
   },
   "/generate/qr-code-generator": {
-    "date": "2026-09-23",
-    "hash": "ad7b205dd3db9891"
+    "date": "2026-11-20",
+    "hash": "a44c5664109b9f7e"
   },
   "/generate/quotation-generator": {
-    "date": "2026-10-11",
-    "hash": "bbaac72aec6db128"
+    "date": "2026-11-20",
+    "hash": "f009c1d6fb71d4cc"
   },
   "/generate/resume-builder": {
-    "date": "2026-10-11",
-    "hash": "8c9296e70285e8b5"
+    "date": "2026-11-20",
+    "hash": "97180d2770b33f11"
   },
   "/generate/salary-slip-generator": {
-    "date": "2026-10-11",
-    "hash": "0535a9769bb25d75"
+    "date": "2026-11-20",
+    "hash": "fd1dbc9a0b83d614"
   },
   "/guides": {
     "date": "2026-10-09",
@@ -376,112 +376,112 @@
     "hash": "43eb51f0ba310bbc"
   },
   "/pdf/add-watermark-to-pdf": {
-    "date": "2026-09-09",
-    "hash": "cd18d3b5c2b3815f"
+    "date": "2026-11-20",
+    "hash": "7dcbe552b42a1983"
   },
   "/pdf/compress-pdf": {
     "date": "2026-10-11",
     "hash": "c9bc5046473bd410"
   },
   "/pdf/delete-pages-from-pdf": {
-    "date": "2026-09-09",
-    "hash": "c666738b2af4e23a"
+    "date": "2026-11-20",
+    "hash": "a96f49568b5ddae2"
   },
   "/pdf/extract-pdf-pages": {
-    "date": "2026-09-09",
-    "hash": "b1ef74336627563b"
+    "date": "2026-11-20",
+    "hash": "db82a536cf8f1c53"
   },
   "/pdf/images-to-pdf": {
-    "date": "2026-09-09",
-    "hash": "0182acbec87aeeb9"
+    "date": "2026-11-20",
+    "hash": "22cc73c5df9ffd97"
   },
   "/pdf/merge-pdf": {
     "date": "2026-10-09",
     "hash": "9bf9af68ade58863"
   },
   "/pdf/organize-pdf": {
-    "date": "2026-10-11",
-    "hash": "8d21a39a9692b238"
+    "date": "2026-11-20",
+    "hash": "b89996fe82aafadc"
   },
   "/pdf/pdf-to-csv": {
-    "date": "2026-09-23",
-    "hash": "f855df4b0e409958"
+    "date": "2026-11-20",
+    "hash": "9be6f07afcf92545"
   },
   "/pdf/pdf-to-excel": {
-    "date": "2026-09-23",
-    "hash": "06f0dc39115196a3"
+    "date": "2026-11-20",
+    "hash": "3da320cda060c5c9"
   },
   "/pdf/pdf-to-images": {
-    "date": "2026-10-11",
-    "hash": "12815b51b44498bc"
+    "date": "2026-11-20",
+    "hash": "3ee35cdb1291fbe3"
   },
   "/pdf/pdf-to-powerpoint": {
-    "date": "2026-10-11",
-    "hash": "2c4e0b38e477d9f8"
+    "date": "2026-11-20",
+    "hash": "614120ca5479f263"
   },
   "/pdf/pdf-to-text": {
-    "date": "2026-09-09",
-    "hash": "e4ea19bb61fcab5a"
+    "date": "2026-11-20",
+    "hash": "7b2841b21f917e11"
   },
   "/pdf/pdf-to-word": {
-    "date": "2026-09-09",
-    "hash": "6fc65f0c5e622c16"
+    "date": "2026-11-20",
+    "hash": "fd9c75093e910609"
   },
   "/pdf/protect-pdf": {
-    "date": "2026-09-09",
-    "hash": "b86ff9a219648f73"
+    "date": "2026-11-20",
+    "hash": "06284f81f3912f1d"
   },
   "/pdf/remove-watermark-from-pdf": {
-    "date": "2026-09-09",
-    "hash": "24b42ffcaa9d1698"
+    "date": "2026-11-20",
+    "hash": "cfb4bca13fe81850"
   },
   "/pdf/reorder-pdf-pages": {
-    "date": "2026-09-09",
-    "hash": "bc813dcb8c874361"
+    "date": "2026-11-20",
+    "hash": "982c7114c2b6c6ee"
   },
   "/pdf/rotate-pdf": {
-    "date": "2026-09-09",
-    "hash": "302060beaea1151a"
+    "date": "2026-11-20",
+    "hash": "fb1cecc68810a300"
   },
   "/pdf/sign-pdf": {
-    "date": "2026-10-11",
-    "hash": "7b142639126fa2d5"
+    "date": "2026-11-20",
+    "hash": "0509fc6f005fa137"
   },
   "/pdf/split-pdf": {
-    "date": "2026-09-09",
-    "hash": "a17382b471cdf0fa"
+    "date": "2026-11-20",
+    "hash": "364f745fdd9fb58c"
   },
   "/pdf/unlock-pdf": {
-    "date": "2026-09-09",
-    "hash": "da6ebaebc1f0e3b9"
+    "date": "2026-11-20",
+    "hash": "32b38f4f764f80da"
   },
   "/powerpoint": {
-    "date": "2026-09-23",
-    "hash": "ac8e50094a9354fc"
+    "date": "2026-11-20",
+    "hash": "1f4a9d525c625934"
   },
   "/powerpoint/extract-images-from-powerpoint": {
-    "date": "2026-10-11",
-    "hash": "1b183132f8b464cc"
+    "date": "2026-11-20",
+    "hash": "8cc0d8e3f457942d"
   },
   "/powerpoint/extract-text-from-powerpoint": {
-    "date": "2026-09-09",
-    "hash": "244565cd5a70ea4e"
+    "date": "2026-11-20",
+    "hash": "4fe274999a5ef042"
   },
   "/powerpoint/powerpoint-to-images": {
-    "date": "2026-09-09",
-    "hash": "3640e8400e0d525e"
+    "date": "2026-11-20",
+    "hash": "2c1c4dc0df3e9126"
   },
   "/powerpoint/powerpoint-to-pdf": {
-    "date": "2026-09-09",
-    "hash": "4dc7118e0388c893"
+    "date": "2026-11-20",
+    "hash": "ff12e76ac1afa222"
   },
   "/powerpoint/pptx-creator": {
-    "date": "2026-10-11",
-    "hash": "ae34c1b75535aa27"
+    "date": "2026-11-20",
+    "hash": "5188a59561200435"
   },
   "/powerpoint/slide-selector": {
-    "date": "2026-10-11",
-    "hash": "57fc90f9317d610c"
+    "date": "2026-11-20",
+    "hash": "22e051f8c36549df"
   },
   "/privacy": {
     "date": "2026-10-11",
@@ -492,99 +492,99 @@
     "hash": "6fef1b0d6067eac2"
   },
   "/tools": {
-    "date": "2026-10-11",
-    "hash": "709b2d01bfa3bd58"
+    "date": "2026-11-20",
+    "hash": "96d81d62ae5c280e"
   },
   "/view": {
-    "date": "2026-10-11",
-    "hash": "babdda194a5aeea7"
+    "date": "2026-11-20",
+    "hash": "69469cca396a97bc"
   },
   "/view/csv-viewer": {
-    "date": "2026-10-11",
-    "hash": "3aa0ae1dcaec774b"
+    "date": "2026-11-20",
+    "hash": "db1722a85b6f8bfa"
   },
   "/view/document-viewer": {
-    "date": "2026-10-11",
-    "hash": "471c3e64de2e26a4"
+    "date": "2026-11-20",
+    "hash": "2d0c6079d41b6325"
   },
   "/view/excel-viewer": {
-    "date": "2026-10-11",
-    "hash": "78fea34089236b67"
+    "date": "2026-11-20",
+    "hash": "10a2006f030b7843"
   },
   "/view/html-viewer": {
-    "date": "2026-10-11",
-    "hash": "d2a4ed578daca653"
+    "date": "2026-11-20",
+    "hash": "7e38385ed4e1249c"
   },
   "/view/json-viewer": {
-    "date": "2026-10-11",
-    "hash": "93ffe0132b55bd56"
+    "date": "2026-11-20",
+    "hash": "a37b778184383c5c"
   },
   "/view/markdown-viewer": {
-    "date": "2026-10-11",
-    "hash": "458f7674f3090f4a"
+    "date": "2026-11-20",
+    "hash": "298a875bfebe41d9"
   },
   "/view/pdf-viewer": {
-    "date": "2026-09-09",
-    "hash": "f35fb7a13f0ea76b"
+    "date": "2026-11-20",
+    "hash": "61f21eeda0eb8abc"
   },
   "/view/powerpoint-viewer": {
-    "date": "2026-10-11",
-    "hash": "3ec440dea0fcb5a2"
+    "date": "2026-11-20",
+    "hash": "fefc47119cfd9fc1"
   },
   "/view/text-viewer": {
-    "date": "2026-10-11",
-    "hash": "b29b20080d58545e"
+    "date": "2026-11-20",
+    "hash": "934202c7ab956317"
   },
   "/view/word-viewer": {
     "date": "2026-10-11",
     "hash": "bacd854aed77f1bd"
   },
   "/view/xml-viewer": {
-    "date": "2026-09-09",
-    "hash": "c7e700efe9a936be"
+    "date": "2026-11-20",
+    "hash": "9d6324c6b64b9e7d"
   },
   "/word": {
-    "date": "2026-09-23",
-    "hash": "a82f594b6bebd594"
+    "date": "2026-11-20",
+    "hash": "8b09342a815161b3"
   },
   "/word/compare-word-documents": {
-    "date": "2026-10-11",
-    "hash": "114ed9e7a72f6b33"
+    "date": "2026-11-20",
+    "hash": "8cff9c37354cd5fd"
   },
   "/word/docx-creator": {
-    "date": "2026-09-09",
-    "hash": "0431351664b8c95a"
+    "date": "2026-11-20",
+    "hash": "5d9662f56214cb91"
   },
   "/word/extract-images-from-word": {
-    "date": "2026-09-09",
-    "hash": "b35e8d6a0cfa8f03"
+    "date": "2026-11-20",
+    "hash": "d4540f4446a99bb6"
   },
   "/word/extract-text-from-word": {
-    "date": "2026-10-11",
-    "hash": "2652e60887d662e2"
+    "date": "2026-11-20",
+    "hash": "6eff1f26e9f0860d"
   },
   "/word/word-count": {
-    "date": "2026-09-09",
-    "hash": "86e511ad0f03db72"
+    "date": "2026-11-20",
+    "hash": "7d4e16c0e7e5db93"
   },
   "/word/word-metadata-viewer": {
-    "date": "2026-09-09",
-    "hash": "8241672e12fc3536"
+    "date": "2026-11-20",
+    "hash": "7c5a024fe2071d4a"
   },
   "/word/word-to-html": {
-    "date": "2026-09-09",
-    "hash": "db0c30facca31317"
+    "date": "2026-11-20",
+    "hash": "8fc83c2a15470b12"
   },
   "/word/word-to-markdown": {
-    "date": "2026-09-09",
-    "hash": "d4c09d2fc674c6d6"
+    "date": "2026-11-20",
+    "hash": "b313d76a6e5de157"
   },
   "/word/word-to-pdf": {
-    "date": "2026-09-09",
-    "hash": "f63756d8dfc18de4"
+    "date": "2026-11-20",
+    "hash": "a0dc4d65e26d8328"
   },
   "/word/word-to-text": {
-    "date": "2026-09-09",
-    "hash": "7f46b20c0a308137"
+    "date": "2026-11-20",
+    "hash": "fff3a751cfb73e9b"
   }
 }

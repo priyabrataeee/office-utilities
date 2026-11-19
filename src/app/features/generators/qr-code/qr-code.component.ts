@@ -35,7 +35,7 @@ const CORRECTION_LEVELS: readonly { value: Correction; label: string }[] = [
   { value: 'L', label: 'Low — simplest pattern, for clean screens' },
   { value: 'M', label: 'Medium — the usual choice' },
   { value: 'Q', label: 'Quartile — for print' },
-  { value: 'H', label: 'High — survives damage, allows a logo' },
+  { value: 'H', label: 'High — survives the most damage' },
 ];
 
 @Component({

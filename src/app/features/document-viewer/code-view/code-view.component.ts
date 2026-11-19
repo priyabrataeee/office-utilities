@@ -226,7 +226,9 @@ export class CodeViewComponent {
   protected async downloadFormatted(): Promise<void> {
     const file = this.file();
     const suffix = this.kind() === 'json' ? '.json' : this.kind() === 'xml' ? '.xml' : '.txt';
-    await this.downloads.saveText(this.formatted(), withExtension(file.name, suffix));
+    // Save what the Source tab shows (for example, after Minify); other tabs save the indented text.
+    const text = this.tab() === 'raw' ? this.raw() : this.formatted();
+    await this.downloads.saveText(text, withExtension(file.name, suffix));
   }
 
   protected highlight(line: string): string {

@@ -839,7 +839,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Pull all of it in one pass.',
     ],
     howItWorks: [
-      'Each slide’s XML is read directly from the .pptx archive and the shape tree walked, collecting text runs from title and body placeholders, free-standing text boxes and table cells. Speaker notes live in separate parts of the archive and are read from there.',
+      'Each slide’s XML is read directly from the .pptx archive and the shape tree walked, collecting text runs from title and body placeholders and free-standing text boxes. Text inside tables is not collected, so copy table content from the deck itself. Speaker notes live in separate parts of the archive and are read from there.',
       'Reading the container rather than a rendering is what makes this complete. Text positioned off the edge of a slide, or on a slide hidden from the presentation, is still in the file and is still extracted — which is useful when auditing and surprising when you had forgotten it was there.',
       'Text inside a picture is not text and cannot be extracted. A slide whose content is a screenshot yields nothing, because there is nothing in the file but an image.',
     ],
@@ -1412,12 +1412,17 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
   'diagram-studio': {
     about: [
       'Diagramming tools are almost all cloud services now, which means every architecture diagram and every network map is stored on somebody else’s infrastructure.',
-      'An editor on an infinite grid with routed connectors, running entirely in the browser.',
+      'An editor on a 1,600 × 1,000 canvas with a snap grid and attached connectors, running entirely in the browser.',
+      'It opens on the diagram last autosaved in this browser, or on an empty canvas called My diagram, with all seven palette tabs available.',
     ],
     howItWorks: [
-      'Shapes, connectors and text are held as a document model and rendered as vectors, so the canvas stays sharp at any zoom and exports at any size without pixelation.',
+      'Shapes, connectors and text are held as a document model and rendered as vectors, so the canvas stays sharp at any window size and the SVG export scales without pixelation.',
       'Connectors are routed rather than drawn as straight lines: they attach to shapes and re-route when a shape moves, which is what keeps a diagram legible after the tenth rearrangement instead of degrading into crossed lines.',
+      'Clicking a palette item places the shape on the canvas. To connect two shapes, select one, click the + handle at its top-right corner, then click the target. The Connection panel sets the label, routing (Right-angled, Straight or Curved), line colour, start and end markers, and Dashed line.',
+      'Ctrl+Z and Ctrl+Shift+Z undo and redo, Ctrl+D duplicates, Delete removes the selection and the arrow keys nudge by one grid step. Only one item can be selected at a time.',
+      'JSON keeps every shape, connection and setting, and reopens through Import. SVG is cropped to the shapes and leaves out the grid; PNG is the same image at twice the size.',
       'Nothing is saved to a server, which has a consequence worth planning around — the only copy is the auto-saved one in this browser until you export it, and clearing browser data removes it. That is the trade for a diagram of your internal network that never leaves your machine.',
+      'There is one autosave slot, and opening another diagram tool replaces it with that tool’s template, so export JSON before switching.',
     ],
     useCases: [
       'Documenting an internal system architecture that should not be stored externally.',
@@ -1431,10 +1436,13 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     about: [
       'Dragging boxes is slow, and a diagram defined as text can be version-controlled, reviewed in a pull request and regenerated when the system changes.',
       'Type Mermaid or a simple indented outline.',
+      'Mermaid covers flowcharts, sequence, class and state diagrams among others. The outline needs no syntax at all and becomes a radial mind map. Whatever you type is kept in this browser and is there when you come back.',
     ],
     howItWorks: [
       'The text is parsed and laid out automatically — you describe what connects to what, and positioning is computed rather than chosen. That is the trade: less control over the exact look, and no manual rearranging when a node is added.',
       'The diagram redraws as you type, which makes the syntax easy to learn by experiment rather than by reading a specification.',
+      'In the outline, the first line is the centre and every two spaces of indentation, or one tab, is one level deeper. The centre is drawn as an ellipse, first-level topics as rounded boxes and anything deeper as rectangles. Each first-level branch gets its own colour, and links are curved lines without arrowheads.',
+      'Mermaid text is drawn by the Mermaid library and follows the site’s light or dark theme, so the exported SVG does too. A syntax error is shown under the source while the preview keeps the last diagram that rendered. Copy SVG, SVG and PNG sit above the preview; JSON is offered only for the outline, and that file opens in Diagram Studio through Import.',
       'Because the source is text, it belongs in the repository next to the thing it documents. A diagram stored as a PNG goes stale silently; one stored as a few lines of text gets updated in the same commit as the change it describes.',
     ],
     useCases: [
@@ -1442,6 +1450,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Generating a flowchart from a description without positioning anything by hand.',
       'Producing a sequence or state diagram for documentation.',
       'Drafting a diagram quickly during a discussion where dragging shapes is too slow.',
+      'Turning an indented list of meeting topics into a mind map, then finishing it by hand in Diagram Studio.',
     ],
   },
 
@@ -1449,17 +1458,22 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     about: [
       'A flowchart earns its place when a process has branches. Prose describing three conditional paths is far harder to follow than a picture of them.',
       'Opens the studio with a flowchart stencil ready.',
+      'The starting chart is an order approval flow: Order received, an In stock? decision, then Pick and pack and Ship to customer on one branch, Raise back-order and Notify customer on the other, both ending at Done. The two decision branches are already labelled yes and no.',
     ],
     howItWorks: [
       'The stencil carries the standard flowchart vocabulary — terminators for start and end, rectangles for processes, diamonds for decisions, parallelograms for input and output. Those shapes are a convention readers already know, which is what makes a flowchart readable without a legend.',
+      'The Flowchart tab has seven items: Start / End, Process, Decision, Input / Output, Document, Database and Preparation. Document is a folded-corner note, Database a cylinder and Preparation a hexagon. Each arrives with placeholder text such as Process or Decision? to replace in the Text field.',
       'Connectors stay attached to their shapes and follow them when they move, so adding a step to the middle of a chart does not mean redrawing everything after it.',
+      'A new connection is right-angled with an arrow at the end. Its ends meet the shape’s bounding box, so a diagonal connector can stop short of a diamond’s outline; lining the shapes up vertically or horizontally brings it to the point.',
       'A decision diamond should have every branch labelled. An unlabelled fork is the most common flaw in a hand-drawn flowchart and the one that makes readers guess.',
+      'Select a connection and type in Label to name a branch; the label sits at the middle of the line. Nothing checks the logic, so a decision with one branch or a step with no exit is drawn without complaint.',
     ],
     useCases: [
       'Documenting an approval process with its exception paths.',
       'Mapping a customer journey including where it fails.',
       'Explaining an algorithm or a decision rule to non-technical colleagues.',
       'Writing down an internal procedure that has only ever existed in someone’s head.',
+      'Drawing a flowchart for a procedure document and exporting it as SVG.',
     ],
   },
 
@@ -1467,10 +1481,13 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     about: [
       'UML is worth using for the parts people actually read: class structure and the relationships between types. The rest of the specification is rarely the point.',
       'Class boxes, interfaces, inheritance and association connectors.',
+      'The starting diagram is a small domain model: Order, Customer and OrderLine classes and a Payable interface, joined by two diamond-ended connectors labelled 1 … * and a dashed implements line ending in a triangle.',
     ],
     howItWorks: [
-      'Class boxes carry the three standard compartments — name, attributes, operations — because that layout is what makes a class diagram scannable by anyone who has seen one before.',
-      'Relationships use their conventional notation: a hollow triangle for inheritance, plain lines for association. The distinction between "is a" and "has a" is the main thing a class diagram communicates, and drawing both as the same line loses it.',
+      'Class boxes have a name header above a list of members, attributes first and operations after them, because that layout is what makes a class diagram scannable by anyone who has seen one before.',
+      'The UML tab offers Class, Interface, Actor, Use case, Package and Note. Members go in the Rows (one per line) field, drawn in a monospaced font; there is no dividing line between attributes and operations. The box does not grow with its rows, so drag the corner handle or set Height as you add members.',
+      'Relationships can use their conventional notation: set End to Triangle for inheritance, or None for a plain association. The distinction between "is a" and "has a" is the main thing a class diagram communicates, and drawing both as the same line loses it.',
+      'Triangle, Diamond and Circle markers are hollow, so aggregation can be drawn but filled composition cannot. Tick Dashed line for realisation or dependency. Package is a dashed container drawn behind other shapes; moving it does not move the classes on it.',
       'Drawing by hand rather than generating from code is deliberate here. A diagram of the design you intend is a different and often more useful document than a diagram of every class that currently exists.',
     ],
     useCases: [
@@ -1478,6 +1495,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Documenting the important types in a system for someone joining it.',
       'Explaining an inheritance hierarchy in a design review.',
       'Sketching a structure during a discussion without generating it from a codebase.',
+      'Drawing a use-case diagram with actors and use cases for a requirements document.',
     ],
   },
 
@@ -1485,17 +1503,22 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     about: [
       'A schema is far easier to reason about as a picture, and the relationships between tables are what a written schema hides.',
       'Entity tables with typed attribute rows, primary and foreign keys, and cardinality.',
+      'The starting diagram is a shop schema: customer, order, order_item and product tables, each with a PK id row, joined by relationships labelled places 1:N, contains 1:N and appears in 1:N.',
     ],
     howItWorks: [
       'Entities are drawn as tables with one row per attribute and its type, which mirrors how the schema will actually be written and makes the diagram directly translatable into DDL.',
+      'The ER model tab offers Entity, Weak entity, Relationship and Attribute. Entity and Weak entity are the same table shape in different colours: the table name goes in Text and the columns in Rows (one per line), drawn in a monospaced font. A table does not grow as rows are added, so set its Height to fit.',
       'Keys are marked explicitly. A foreign key is the relationship, so showing which column carries it — rather than only drawing a line between two boxes — is what makes the diagram usable when writing the migration.',
+      'PK and FK are typed as part of the row text. Nothing checks that a foreign key points at a real primary key, and there is no SQL import or export.',
       'Cardinality on each relationship is the detail that changes the design. One-to-many and many-to-many produce different schemas, and leaving it off means the diagram cannot answer the question it was drawn for.',
+      'Connectors end in None, Arrow, Triangle, Diamond or Circle; there is no crow’s-foot marker, so write the cardinality in the connection Label, as the template does.',
     ],
     useCases: [
       'Designing a database schema before creating any tables.',
       'Documenting an existing database for people who have to query it.',
       'Reviewing a proposed schema change with colleagues.',
       'Mapping a schema containing commercially sensitive structure without a cloud tool.',
+      'Keeping a schema sketch as JSON so it can be updated when a migration changes it.',
     ],
   },
 
@@ -1503,10 +1526,14 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     about: [
       'Cloud architecture diagrams are needed for design reviews, audits and handovers — and they describe exactly the infrastructure you would least like stored on a third-party service.',
       'A stencil of common building blocks: compute, storage, networking, databases.',
+      'The starting diagram is a web application: a CDN above a Region — eu-west-1 container, a VPC 10.0.0.0/16 inside it, a load balancer feeding two app servers, a primary database and a job queue. The connections are labelled https, sql and enqueue.',
     ],
     howItWorks: [
       'The stencil uses generic building blocks rather than one vendor’s icon set, which keeps a diagram readable across providers and avoids the trademark questions that come with redistributing official icons.',
+      'The Cloud & infrastructure tab offers Region, VPC, Compute, Load balancer, Database, Object store, Queue, CDN and Gateway. Each is a plain shape with a text label: cylinders for storage, a hexagon for the load balancer and gateway, a cloud for the CDN.',
       'Grouping matters more than the icons. A diagram that shows which components sit inside a VPC, a subnet or an availability zone communicates the security boundaries — and those boundaries are what a design review is actually examining.',
+      'Region and VPC are dashed containers drawn behind other shapes, labelled from the first line of their text. They are boundaries, not groups: moving a container leaves the components on it where they were. For a subnet or availability zone, add a Container from Basic shapes and rename it.',
+      'The template draws the queue connection dashed, a simple way to separate asynchronous paths from request paths.',
       'Nothing leaves this tab, which is the substantive point for this diagram in particular. An architecture diagram is a map of your attack surface, and it is routinely uploaded to services that keep it indefinitely.',
     ],
     useCases: [
@@ -1514,6 +1541,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Planning an infrastructure change before making it.',
       'Explaining a deployment to colleagues or auditors.',
       'Drawing infrastructure under a confidentiality obligation.',
+      'Drawing the current and proposed versions of an environment side by side.',
     ],
   },
 
@@ -1521,10 +1549,13 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     about: [
       'Network documentation is the thing everyone agrees should exist and nobody has, until an outage makes its absence expensive.',
       'Routers, switches, firewalls, servers, clients and the links between them.',
+      'The starting diagram is an office network: Internet, a Firewall, a Core router, two floor switches on VLAN 10 and VLAN 20 with their workstations, and a file server on a 10 GbE link.',
     ],
     howItWorks: [
       'The stencil is a set of labelled, colour-coded shapes — router, switch, firewall, server, client, wireless access point and an internet cloud — rather than vendor icon artwork. Keep the labels: network diagrams are read under pressure by people who did not draw them, and a named box is unambiguous.',
+      'In the Network tab the firewall is red, switches teal, clients green and routers blue; Fill and Stroke in the Shape panel change any of them. Wireless AP places an ellipse labelled AP and Internet places a cloud.',
       'Connections can carry labels for interface, VLAN or address, and those labels are usually the reason the diagram is being consulted at all — a topology with no addressing tells you what connects to what but not where to look.',
+      'Each connection has one single-line label at its midpoint, so an interface and a VLAN share one line. Links attach to the shape, not to a port, and two links between the same pair of shapes are drawn on top of each other.',
       'It stays on your machine. A network diagram names your internal addressing, your segmentation and your security appliances; it is among the most useful documents an attacker could obtain, and uploading one to a free diagramming service is a genuine exposure rather than a theoretical one.',
     ],
     useCases: [
@@ -1532,6 +1563,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Planning a segmentation or addressing change.',
       'Producing network documentation for an audit or a compliance requirement.',
       'Handing over infrastructure knowledge when someone leaves.',
+      'Recording which VLAN each switch carries before a change window.',
     ],
   },
 
@@ -1539,17 +1571,22 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     about: [
       'Mind maps work when thinking is faster than typing, which means the interaction has to keep up with you.',
       'Start with a launch-planning template and arrange connected ideas on the canvas.',
+      'The template puts Product launch at the centre with Marketing, Engineering, Support and Legal around it, and tasks such as Press kit, Pricing page, Load testing and Help articles further out.',
     ],
     howItWorks: [
       'Add shapes from the palette, edit their labels and connect ideas using the canvas controls.',
+      'The palette opens on the Org & process tab, where Idea adds an amber ellipse. The template’s branches are curved lines with no arrowheads, but a connection you draw starts right-angled with an arrow, so set Routing to Curved and End to None to match.',
       'Arrange new branches manually and choose their colours in the inspector. Automatic radial layout and Tab/Enter branching are not available.',
+      'Ctrl+D duplicates the selected idea with its shape and colours, which is the quickest way to add a sibling; connect it afterwards. If you would rather type the structure, Text to Diagram turns an indented outline into a radial map, and its JSON opens here through Import.',
       'Export SVG or PNG to share the map. Save JSON for later editing; text-outline export is not available.',
+      'Deleting an idea also deletes its connections, so reconnect its sub-branches to another idea. The SVG export is cropped to the map with a small margin, and the PNG is the same image at twice the size.',
     ],
     useCases: [
       'Brainstorming before any structure exists.',
       'Breaking a large piece of work into parts.',
       'Taking notes in a session where ideas arrive faster than sentences.',
       'Planning the structure of a document or a talk.',
+      'Grouping research themes before writing a report.',
     ],
   },
 
@@ -1557,10 +1594,13 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     about: [
       'Org charts are needed for onboarding, planning and reorganisations — and they are a list of named employees and their reporting lines, which is personal data.',
       'Editable text cards connected by reporting lines.',
+      'The template has a Chief Executive with three direct reports — CTO, COO and CFO — and Engineering, Design, Operations and Finance teams beneath them. The names are fictional placeholders.',
     ],
     howItWorks: [
       'The starter hierarchy is already positioned. Additional nodes and reporting lines are arranged manually; there is no automatic tree layout or CSV employee import.',
+      'The Org & process tab offers Person, a rounded card, and Team, a rectangle. Ctrl+D duplicates the selected card, and the arrow keys nudge it by one grid step to line it up with its neighbours.',
       'Use each text label for a name, title and department. Export JSON for later editing, or SVG and PNG for sharing.',
+      'The first line of a card is drawn in a heavier weight, so put the name first. The template’s reporting lines have no arrowhead; a line you draw ends in an arrow, so set End to None to match. Deleting a person also deletes their reporting lines, so their reports need reconnecting.',
       'Everything stays in this tab. A complete org chart is a roster of your staff, their seniority and your management structure — useful to a recruiter, useful to anyone attempting social engineering, and routinely uploaded to free chart tools.',
     ],
     useCases: [
@@ -1568,6 +1608,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       'Planning a reorganisation before it is announced.',
       'Documenting reporting lines for an audit or a funding application.',
       'Mapping a team structure containing staff names without putting it on a third-party service.',
+      'Showing a proposed structure next to the current one during planning.',
     ],
   },
 
@@ -1575,17 +1616,22 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     about: [
       'The useful thing about a business process diagram is not the steps, which everyone knows, but the handoffs between people — which is where processes actually fail.',
       'Swimlanes per role, sequential steps and decision gateways.',
+      'The template is an expense approval across Employee, Manager and Finance lanes: Submit, Attach receipts, Review claim and an Approve? gateway, with Schedule payment on yes and Amend claim on no, and a dashed line from Amend claim back to Attach receipts.',
     ],
     howItWorks: [
       'Swimlanes assign every step to a role, which forces the question a plain flowchart lets you avoid: who does this. A process diagram without lanes describes what happens; one with lanes describes who is responsible.',
+      'The Org & process tab offers Swimlane, Step, Gateway and Event, alongside Person, Team and Idea. A Swimlane is a wide dashed container drawn behind other shapes; resize it from the corner handle or with Width and Height.',
       'Handoffs become visible as connectors crossing a lane boundary. Counting those crossings is a reliable way to find delay in a process, because each one is a wait for another person.',
+      'Lanes do not hold their steps: moving a lane leaves the steps where they were, so move them separately. Event places a circle labelled Start; duplicate it and rename the copy for the end.',
       'Decision gateways branch the flow with labelled conditions, so exception paths are documented rather than left as the part everyone improvises.',
+      'There are no BPMN task types, message flows or timer events. Steps are plain boxes, and a dashed line for rework is a convention you choose rather than one the tool enforces.',
     ],
     useCases: [
       'Mapping an approval or onboarding process across several departments.',
       'Finding the handoffs that cause delay before trying to fix them.',
       'Documenting a procedure for training or for an audit.',
       'Agreeing who owns which step when responsibilities are disputed.',
+      'Showing a proposed process next to the current one before a change is agreed.',
     ],
   },
 
@@ -1882,7 +1928,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
   'case-converter': {
     about: [
       'Text arrives in the wrong case constantly — a heading pasted in from a spreadsheet that shouts, a column exported in block capitals, a label that has to become a variable name.',
-      'Twelve styles, applied as you type, on text that stays in your browser. The output can be pushed back into the input, so conversions can be chained when one pass is not enough.',
+      'Thirteen styles, applied as you type, on text that stays in your browser. The output can be pushed back into the input, so conversions can be chained when one pass is not enough.',
     ],
     howItWorks: [
       'Title Case follows the convention publishers actually use rather than capitalising indiscriminately: short articles, conjunctions and prepositions stay lowercase unless they open or close the line or follow a colon. "The Cost of a Good Name" is a title; "The Cost Of A Good Name" is the thing a naive converter produces.',

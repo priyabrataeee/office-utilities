@@ -327,7 +327,12 @@ export class ImageConvertComponent extends ToolBase {
           let blob: Blob;
           if (extensionOf(entry.file.name) === '.svg') {
             const svg = await readAsText(entry.file);
-            blob = await svgToRaster(svg, { scale: this.scale(), mime, background });
+            blob = await svgToRaster(svg, {
+              scale: this.scale(),
+              mime,
+              background,
+              quality: lossy ? this.quality() : undefined,
+            });
           } else {
             blob = await encodeImage(entry.source, {
               mime,

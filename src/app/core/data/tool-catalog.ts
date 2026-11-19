@@ -566,7 +566,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Delete PDF Pages',
     summary: 'Remove the pages you do not need.',
     description:
-      'Select pages by clicking thumbnails or by typing a range such as 2, 5-9, 12 and remove them. Everything else in the document — fonts, links, form fields — is left exactly as it was.',
+      'Select pages by clicking thumbnails or by typing a range such as 2, 5-9, 12 and remove them. The remaining pages are copied unchanged into a new PDF; document bookmarks are not carried over.',
     icon: 'trash',
     keywords: ['remove pdf pages', 'delete page', 'erase pages'],
     accepts: ['.pdf'],
@@ -835,7 +835,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Remove Watermark from PDF',
     summary: 'Strip stamp annotations and repeated overlay objects.',
     description:
-      'Detects watermarks that were added as annotations or as a form XObject repeated on every page and removes them. Watermarks burned into a scanned image cannot be removed cleanly — for those, the tool offers a cover-and-flatten fallback.',
+      'Detects watermarks that were added as annotations or as a form XObject repeated on every page and removes them. Watermarks burned into a scanned image cannot be removed — for those, the tool can paint a box over the area, but the content underneath stays in the file.',
     icon: 'eraser',
     keywords: ['delete watermark', 'clean pdf', 'unstamp'],
     accepts: ['.pdf'],
@@ -1775,7 +1775,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Extract Slide Text',
     summary: 'Get all titles, bullets and speaker notes as text.',
     description:
-      'Pull the text out of every slide — titles, body placeholders, text boxes, tables and speaker notes — grouped by slide number. Export as plain text, Markdown or JSON.',
+      'Pull the text out of every slide — titles, body placeholders, text boxes and speaker notes — grouped by slide number. Table text is not included. Export as plain text, Markdown or JSON.',
     icon: 'text-select',
     keywords: ['pptx text', 'slide transcript', 'presentation text'],
     accepts: ['.pptx'],
@@ -2041,7 +2041,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'HTML to Word',
     summary: 'Convert markup into an editable .docx.',
     description:
-      'Convert HTML into a Word document with mapped heading styles, lists, tables and images, so content from a CMS or an email template becomes something a colleague can edit in Word.',
+      'Convert HTML into a Word document with mapped heading styles, lists and tables, so content from a CMS or an email template becomes something a colleague can edit in Word. Only images embedded in the HTML as data URLs are included.',
     icon: 'file-word',
     keywords: ['html to docx', 'web to word', 'export word'],
     accepts: ['.html', '.htm'],
@@ -2437,7 +2437,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     category: 'convert',
     slug: 'case-converter',
     title: 'Case Converter',
-    summary: 'Change text between twelve capitalisation styles.',
+    summary: 'Change text between thirteen capitalisation styles.',
     description:
       'Convert text to UPPER CASE, lower case, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case and more, as you type. Useful for headings pasted in the wrong case and for turning a label into an identifier.',
     icon: 'type',
@@ -2788,7 +2788,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Diagram Studio',
     summary: 'A Visio-style canvas with shapes, connectors and export.',
     description:
-      'Drag shapes onto a grid, connect them with straight, right-angled or curved arrows, add text labels, snap everything to the grid, and undo any step. Export to PNG, SVG or JSON, and everything you draw auto-saves to your browser. Shapes are selected one at a time; there is no grouping or automatic alignment.',
+      'Add shapes from the stencil to a grid, connect them with straight, right-angled or curved arrows, add text labels, snap everything to the grid, and undo any step. Export to PNG, SVG or JSON, and everything you draw auto-saves to your browser. Shapes are selected one at a time; there is no grouping or automatic alignment.',
     icon: 'workflow',
     keywords: ['visio alternative', 'draw diagram', 'canvas editor', 'shapes'],
     accepts: ['.json'],
@@ -2820,7 +2820,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     description:
       'Type Mermaid or a simple indented outline and watch the diagram redraw as you type. Export SVG or PNG. An outline can also be saved as JSON and opened in Diagram Studio to fine-tune by hand. PlantUML is not supported.',
     icon: 'terminal',
-    keywords: ['mermaid', 'plantuml', 'diagram as code', 'text diagram'],
+    keywords: ['mermaid', 'diagram as code', 'text diagram'],
     accepts: ['.mmd', '.txt'],
     popular: true,
     faq: [
@@ -2850,7 +2850,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     description:
       'Opens Diagram Studio preloaded with a flowchart stencil — terminators, processes, decisions, inputs and connectors — plus a starter chart you can rewrite. Snap-to-grid keeps everything aligned.',
     icon: 'workflow',
-    keywords: ['flow chart', 'process flow', 'decision tree', 'swimlane'],
+    keywords: ['flow chart', 'process flow', 'decision tree'],
     accepts: [],
     faq: [
       {
@@ -2875,11 +2875,11 @@ export const TOOLS: readonly ToolDefinition[] = [
     category: 'diagram',
     slug: 'uml-diagram-tool',
     title: 'UML Diagram Tool',
-    summary: 'Class, sequence and use-case diagrams.',
+    summary: 'Class and use-case diagrams on an editable canvas.',
     description:
       'Draw UML by hand with class boxes, interfaces, actors, use cases and packages, joined by connectors with arrow, hollow-triangle, diamond or circle ends. To generate a class diagram from text instead, use Text to Diagram with Mermaid.',
     icon: 'boxes',
-    keywords: ['class diagram', 'sequence diagram', 'use case', 'software design'],
+    keywords: ['class diagram', 'use case', 'software design'],
     accepts: [],
     faq: [
       {
@@ -2908,7 +2908,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     description:
       'Design a database schema with entity tables, typed attribute rows, primary and foreign keys written on each row, and labelled relationship connectors. Export as SVG for documentation or JSON to keep editing later.',
     icon: 'database',
-    keywords: ['entity relationship', 'database design', 'schema diagram', 'crow foot'],
+    keywords: ['entity relationship', 'database design', 'schema diagram'],
     accepts: [],
     faq: [
       {
@@ -2935,7 +2935,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Cloud Architecture Diagram',
     summary: 'Lay out cloud services, regions, VPCs and data flows.',
     description:
-      'Build cloud architecture diagrams with a stencil of common building blocks — compute, storage, queues, databases, load balancers, CDN, gateways — plus region and VPC containers that group what sits inside them.',
+      'Build cloud architecture diagrams with a stencil of common building blocks — compute, storage, queues, databases, load balancers, CDN, gateways — plus region and VPC containers drawn behind other shapes to mark boundaries. Containers do not move the shapes placed on them.',
     icon: 'cloud',
     keywords: ['aws diagram', 'azure', 'gcp', 'cloud architecture', 'vpc'],
     accepts: [],
@@ -2948,7 +2948,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Can I show regions and VPCs?',
         a:
-          'Yes. Container shapes group what sits inside them, so network and regional boundaries are visible rather than implied.',
+          'Yes. Region and VPC containers draw a labelled boundary behind other shapes. They do not group them, so move the shapes inside separately when you move a container.',
       },
       {
         q: 'What should I export for a design document?',
@@ -3051,7 +3051,7 @@ export const TOOLS: readonly ToolDefinition[] = [
     title: 'Process Diagram Maker',
     summary: 'Document business processes with lanes and steps.',
     description:
-      'Map a business process using swimlanes per role, sequential step boxes, decision gateways and start and end events — a lightweight BPMN-flavoured stencil without the ceremony.',
+      'Map a business process using swimlanes per role, sequential step boxes, decision gateways and a start event — a lightweight BPMN-flavoured stencil without the ceremony.',
     icon: 'workflow',
     keywords: ['bpmn', 'business process', 'swimlane', 'workflow diagram'],
     accepts: [],
@@ -3064,7 +3064,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       {
         q: 'Is this full BPMN?',
         a:
-          'No. It offers step boxes, decision gateways and start and end events — BPMN-flavoured without the ceremony of the complete specification.',
+          'No. It offers step boxes, decision gateways and a start event — BPMN-flavoured without the ceremony of the complete specification.',
       },
       {
         q: 'When should I use this over a flowchart?',

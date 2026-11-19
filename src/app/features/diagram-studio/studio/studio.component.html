@@ -14,6 +14,7 @@
         class="ou-input title"
         [value]="diagram().title"
         (input)="setTitle($event)"
+        (blur)="endTitleEdit()"
         aria-label="Diagram title"
       />
 
@@ -145,6 +146,7 @@
         <svg
           #surface
           class="canvas__svg"
+          [style.transform]="transform()"
           [attr.viewBox]="viewBox()"
           preserveAspectRatio="xMidYMid meet"
           (pointerdown)="onCanvasPointerDown($event)"
@@ -666,7 +668,7 @@
             </div>
           } @else {
             <h3>Diagram</h3>
-            <p class="empty-hint">Click a shape from the stencil, then drop it on the canvas.</p>
+            <p class="empty-hint">Click a shape in the stencil to add it to the canvas.</p>
             <ul class="tips">
               <li><strong>Drag</strong> to move · <strong>Shift-drag</strong> the canvas to pan</li>
               <li><strong>Click the +</strong> handle on a shape to connect to another one</li>

@@ -1,3 +1,23 @@
+# Content follow-up — 20 November 2026
+
+AdSense still reports "Low-value content". ads.txt, payments and the EU and US consent messages are in place.
+
+Changes:
+
+- Worked exercises on every tool page: 15 before, all 106 now. Each was written from the tool's component and engine code, using exact UI labels and stating a real limit. Files: `src/app/core/data/examples/*.ts`, merged in `tool-examples.ts`.
+- Category hubs for viewers, Word, PowerPoint, generators, diagrams and file utilities gained verified notes.
+- Diagram tool explanations extended from the studio code.
+- 22 tool pages had meta descriptions under 120 characters; they now use curated 150–160 character summaries (`tool-meta-descriptions.ts`). The Terms description was lengthened.
+- Copy corrected where it contradicted the code: Delete PDF Pages (bookmarks are dropped), Remove Watermark (the fallback covers, it does not flatten), Extract Text from PowerPoint (table text is not collected), Case Converter (13 styles), HTML to Word (only data-URL images).
+- Diagram Studio fixes: the zoom and pan controls now move the canvas, and pointer positions stay correct at any zoom; undo after a resize restores the earlier size; each diagram tool keeps its own autosave instead of overwriting one shared slot (an emptied canvas falls back to the tool's starting template).
+- Code fixes: PowerPoint to Images now saves WebP with a `.webp` extension; the QR "High" option no longer promises a logo; the offer letter no longer states monthly pay regardless of the chosen period, and its field is labelled Salary.
+
+- Further fixes: PDF to Text builds its .txt download from the processed text, so Join wrapped lines, Remove running headers and Mark page breaks (a "--- Page N ---" line) all apply; Text to Diagram exports Mermaid diagrams to PNG (labels are drawn as SVG text, and relative SVG sizes are replaced from the viewBox); Diagram Studio title edits (one step per edit) and the Grid and Snap toggles are now undoable.
+
+Last three quirks fixed: the salary slip deducts loss of pay pro rata (gross ÷ working days × LOP days) and derives Days paid; the JSON viewer saves the minified text after Minify; SVG to JPEG, WebP or AVIF now uses the Quality slider.
+
+Build and `npm run verify:review` pass. Not deployed. Request AdSense review 4–8 weeks after deployment.
+
 # Review follow-up — 8 October 2026
 
 ## Implemented locally
