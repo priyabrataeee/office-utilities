@@ -38,7 +38,7 @@ export const MONETIZATION = {
   donationUrl: 'https://buymeacoffee.com/priyabrataeee',
 
   adsense: {
-    enabled: false,
+    enabled: true,
     client: 'ca-pub-4291402082894202',
     slots: {
       toolFooter: '6795054730',
